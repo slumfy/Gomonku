@@ -19,7 +19,8 @@ class Go:
 				it += 1
 			else:
 				break
-		self.win(player,it)
+		if self.win(player,it) == 1:
+			return(1)
 		#leftright solution
 		it = 1
 		for n in range(1,18):
@@ -32,7 +33,8 @@ class Go:
 				it += 1
 			else:
 				break
-		self.win(player,it)
+		if self.win(player,it) == 1:
+			return(1)
 		#diagdownleft solution
 		it = 1
 		for n in range(1,18):
@@ -41,28 +43,120 @@ class Go:
 			else:
 				break
 		for n in range(1,18):
-			if x + n >= 0 and y - n < 18 and self.table[x + n][y - n] == player:
+			if x + n < 18 and y - n >= 0 and self.table[x + n][y - n] == player:
 				it += 1
 			else:
 				break
-		self.win(player,it)
+		if self.win(player,it) == 1:
+			return(1)
 		#diagupleft solution
 		it = 1
 		for n in range(1,18):
-			if x + n >= 0 and y + n < 18 and self.table[x + n][y + n] == player:
+			if x + n < 18 and y + n < 18 and self.table[x + n][y + n] == player:
 				it += 1
 			else:
 				break
 		for n in range(1,18):
-			if x - n >= 0 and y - n < 18 and self.table[x - n][y - n] == player:
+			if x - n >= 0 and y - n >= 0 and self.table[x - n][y - n] == player:
 				it += 1
 			else:
 				break
-		self.win(player,it)
+		if self.win(player,it) == 1:
+			return(1)
+		return(0)
 		
 	def win(self,player,it):
+		print("player: ",player, "iter: ",it)
 		if it == 5:
 			print("player ", player, " win")
+			return(1)
+		return(0)
+
+	def check_wrong_position(self,player,x,y):
+		if x > 18 or x < 0 or y > 18 or y < 0 or self.table[x][y] != 0:
+			return(1)
+		#updown solution
+		it = 1
+		uptrap = 0
+		downtrap = 0
+		for n in range(1,3):
+			if x + n < 18 and self.table[x + n][y] != player and self.table[x + n][y] != 0:
+				uptrap = 1
+			if x + n < 18 and self.table[x + n][y] == player:
+				it += 1
+			else:
+				break
+		for n in range(1,3):
+			if x - n >= 0 and self.table[x - n][y] != player and self.table[x - n][y] != 0:
+				downtrap = 1
+			if x - n >= 0 and self.table[x - n][y] == player:
+				it += 1
+			else:
+				break
+		if it <= 2 and uptrap and downtrap:
+			return(1)
+		#leftright solution
+		it = 1
+		uptrap = 0
+		downtrap = 0
+		for n in range(1,3):
+			if y + n < 18 and self.table[x][y + n] != player and self.table[x][y + n] != 0:
+				uptrap = 1
+			if y + n < 18 and self.table[x][y + n] == player:
+				it += 1
+			else:
+				break
+		for n in range(1,3):
+			if y - n >= 0 and self.table[x][y - n] != player and self.table[x][y - n] != 0:
+				downtrap = 1
+			if y - n >= 0 and self.table[x][y - n] == player:
+				it += 1
+			else:
+				break
+		if it <= 2 and uptrap and downtrap:
+			return(1)
+		#diagdownleft solution
+		it = 1
+		uptrap = 0
+		downtrap = 0
+		for n in range(1,3):
+			if x - n >= 0 and y + n < 18 and self.table[x - n][y + n] != player and self.table[x - n][y + n] != 0:
+				uptrap = 1
+			if x - n >= 0 and y + n < 18 and self.table[x - n][y + n] == player:
+				it += 1
+			else:
+				break
+		for n in range(1,3):
+			if x + n < 18 and y - n >= 0 and self.table[x + n][y - n] != player and self.table[x + n][y - n] != 0:
+				downtrap = 1
+			if x + n < 18 and y - n >= 0 and self.table[x + n][y - n] == player:
+				it += 1
+			else:
+				break
+		if it <= 2 and uptrap and downtrap:
+			return(1)
+		#diagupleft solution
+		it = 1
+		uptrap = 0
+		downtrap = 0
+		for n in range(1,3):
+			if x + n < 18 and y + n < 18 and self.table[x + n][y + n] != player and self.table[x + n][y + n] != 0:
+				uptrap = 1
+			if x + n < 18 and y + n < 18 and self.table[x + n][y + n] == player:
+				it += 1
+			else:
+				break
+		for n in range(1,3):
+			if x - n >= 0 and y - n >= 0 and self.table[x - n][y - n] != player and self.table[x - n][y - n] != 0:
+				downtrap = 1
+			if x - n >= 0 and y - n >= 0 and self.table[x - n][y - n] == player:
+				it += 1
+			else:
+				break
+		if it <= 2 and uptrap and downtrap:
+			return(1)
+		return(0)
+
 
 	def check_eat_position(self,player,x,y):
 		# backward take
@@ -131,13 +225,14 @@ class Go:
 					self.table[x - 2][y - 2] = 0
 
 	def place_stone(self,player, x,y):
-		if self.table[x][y] != 0:
-			print("illegal move")
+		if self.check_wrong_position(player,x,y) == 1:
+			return(-1)
 		else:
 			self.table[x][y] = player
 			self.check_eat_position(player,x,y)
-			self.check_win_position(player,x,y)
-			# self.print_table()
+			if self.check_win_position(player,x,y) != 0:
+				return(player)
+			return(0)
 
 	def print_table(self):
 		for line in self.table:
