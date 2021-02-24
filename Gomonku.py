@@ -5,4 +5,5 @@ if __name__ == "__main__":
 	go = Go()
 	go.print_table()
 	game_inst = Game()
-	game_inst.playing(go)
+	game_inst.menu(go)
+	# game_inst.playing(go)
