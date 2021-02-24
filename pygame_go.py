@@ -86,6 +86,8 @@ class Game:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     go.clear_board()
+                    for player in go.player_list:
+                        player.eat_piece = 0
                     self.player = []
                     self.menu(go)
 
