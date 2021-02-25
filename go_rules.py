@@ -13,62 +13,41 @@ class Go:
         self.player_list.append(Player(2, 0, "Black"))
         print(self.player_list[0].nb, self.player_list[1].nb)
 
+    def check_win_routine(self, player, x, y, xsign, ysign):
+        it = 1
+        for n in range(1, 18):
+            if (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x + n * xsign][y + n * ysign] == player
+            ):
+                it += 1
+            else:
+                break
+        for n in range(1, 18):
+            if (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x - n * xsign][y - n * ysign] == player
+            ):
+                it += 1
+            else:
+                break
+        print("it", it)
+        if self.win(player, it) == 1:
+            return 1
+        return 0
+
     def check_win_position(self, player, x, y):
         # updown solution
-        it = 1
-        for n in range(1, 18):
-            if x + n < 18 and self.table[x + n][y] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 18):
-            if x - n >= 0 and self.table[x - n][y] == player:
-                it += 1
-            else:
-                break
-        if self.win(player, it) == 1:
+        if self.check_win_routine(player, x, y, 1, 0) == 1:
             return 1
         # leftright solution
-        it = 1
-        for n in range(1, 18):
-            if y + n < 18 and self.table[x][y + n] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 18):
-            if y - n >= 0 and self.table[x][y - n] == player:
-                it += 1
-            else:
-                break
-        if self.win(player, it) == 1:
+        if self.check_win_routine(player, x, y, 0, 1) == 1:
             return 1
         # diagdownleft solution
-        it = 1
-        for n in range(1, 18):
-            if x - n >= 0 and y + n < 18 and self.table[x - n][y + n] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 18):
-            if x + n < 18 and y - n >= 0 and self.table[x + n][y - n] == player:
-                it += 1
-            else:
-                break
-        if self.win(player, it) == 1:
+        if self.check_win_routine(player, x, y, -1, 1) == 1:
             return 1
         # diagupleft solution
-        it = 1
-        for n in range(1, 18):
-            if x + n < 18 and y + n < 18 and self.table[x + n][y + n] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 18):
-            if x - n >= 0 and y - n >= 0 and self.table[x - n][y - n] == player:
-                it += 1
-            else:
-                break
-        if self.win(player, it) == 1:
+        if self.check_win_routine(player, x, y, 1, 1) == 1:
             return 1
         return 0
 
@@ -79,112 +58,59 @@ class Go:
             return 1
         return 0
 
+    def check_wrong_routine(self, player, x, y, xsign, ysign):
+        it = 1
+        uptrap = 0
+        downtrap = 0
+        for n in range(1, 3):
+            if (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x + n * xsign][y + n * ysign] != player
+                and self.table[x + n * xsign][y + n * ysign] != 0
+            ):
+                uptrap = 1
+            if (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x + n * xsign][y + n * ysign] == player
+            ):
+                it += 1
+            else:
+                break
+        for n in range(1, 3):
+            if (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x - n * xsign][y - n * ysign] != player
+                and self.table[x - n * xsign][y - n * ysign] != 0
+            ):
+                downtrap = 1
+            if (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x - n * xsign][y - n * ysign] == player
+            ):
+                it += 1
+            else:
+                break
+        if it <= 2 and uptrap == 1 and downtrap == 1:
+            return 1
+
     def check_wrong_position(self, player, x, y):
-        if x > 18 or x < 0 or y > 18 or y < 0 or self.table[x][y] != 0:
+        if self.check_is_in_table(x, y, 0, 0, 0) or self.table[x][y] != 0:
             return 1
         # updown solution
-        it = 1
-        uptrap = 0
-        downtrap = 0
-        for n in range(1, 3):
-            if x + n < 18 and self.table[x + n][y] != player and self.table[x + n][y] != 0:
-                uptrap = 1
-            if x + n < 18 and self.table[x + n][y] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 3):
-            if x - n >= 0 and self.table[x - n][y] != player and self.table[x - n][y] != 0:
-                downtrap = 1
-            if x - n >= 0 and self.table[x - n][y] == player:
-                it += 1
-            else:
-                break
-        if it <= 2 and uptrap and downtrap:
+        elif self.check_wrong_routine(player, x, y, 1, 0) == 1:
             return 1
         # leftright solution
-        it = 1
-        uptrap = 0
-        downtrap = 0
-        for n in range(1, 3):
-            if y + n < 18 and self.table[x][y + n] != player and self.table[x][y + n] != 0:
-                uptrap = 1
-            if y + n < 18 and self.table[x][y + n] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 3):
-            if y - n >= 0 and self.table[x][y - n] != player and self.table[x][y - n] != 0:
-                downtrap = 1
-            if y - n >= 0 and self.table[x][y - n] == player:
-                it += 1
-            else:
-                break
-        if it <= 2 and uptrap and downtrap:
+        elif self.check_wrong_routine(player, x, y, 0, 1) == 1:
             return 1
         # diagdownleft solution
-        it = 1
-        uptrap = 0
-        downtrap = 0
-        for n in range(1, 3):
-            if (
-                x - n >= 0
-                and y + n < 18
-                and self.table[x - n][y + n] != player
-                and self.table[x - n][y + n] != 0
-            ):
-                uptrap = 1
-            if x - n >= 0 and y + n < 18 and self.table[x - n][y + n] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 3):
-            if (
-                x + n < 18
-                and y - n >= 0
-                and self.table[x + n][y - n] != player
-                and self.table[x + n][y - n] != 0
-            ):
-                downtrap = 1
-            if x + n < 18 and y - n >= 0 and self.table[x + n][y - n] == player:
-                it += 1
-            else:
-                break
-        if it <= 2 and uptrap and downtrap:
+        elif self.check_wrong_routine(player, x, y, -1, 1) == 1:
             return 1
         # diagupleft solution
-        it = 1
-        uptrap = 0
-        downtrap = 0
-        for n in range(1, 3):
-            if (
-                x + n < 18
-                and y + n < 18
-                and self.table[x + n][y + n] != player
-                and self.table[x + n][y + n] != 0
-            ):
-                uptrap = 1
-            if x + n < 18 and y + n < 18 and self.table[x + n][y + n] == player:
-                it += 1
-            else:
-                break
-        for n in range(1, 3):
-            if (
-                x - n >= 0
-                and y - n >= 0
-                and self.table[x - n][y - n] != player
-                and self.table[x - n][y - n] != 0
-            ):
-                downtrap = 1
-            if x - n >= 0 and y - n >= 0 and self.table[x - n][y - n] == player:
-                it += 1
-            else:
-                break
-        if it <= 2 and uptrap and downtrap:
+        elif self.check_wrong_routine(player, x, y, 1, 1) == 1:
             return 1
         return 0
 
-    def check_eat_in_table(self, player, x, y, xsign, ysign, offset):
+    def check_is_in_table(self, x, y, xsign, ysign, offset):
         if (
             x + offset * xsign > 18
             or x + offset * xsign < 0
@@ -196,21 +122,21 @@ class Go:
 
     def eat_position_routine(self, player, x, y, xsign, ysign):
         if (
-            self.check_eat_in_table(player, x, y, xsign, ysign, 1) == 0
+            self.check_is_in_table(x, y, xsign, ysign, 1) == 0
             and self.table[x + 1 * xsign][y + 1 * ysign] != player.nb
             and self.table[x + 1 * xsign][y + 1 * ysign] != 0
         ):
             if (
-                self.check_eat_in_table(player, x, y, xsign, ysign, 2) == 0
+                self.check_is_in_table(x, y, xsign, ysign, 2) == 0
                 and self.table[x + 2 * xsign][y + 2 * ysign] == player.nb
             ):
                 self.eat_stone(player, [(x + 1 * xsign, y + 1 * ysign)])
             elif (
-                self.check_eat_in_table(player, x, y, xsign, ysign, 2) == 0
+                self.check_is_in_table(x, y, xsign, ysign, 2) == 0
                 and self.table[x + 2 * xsign][y + 2 * ysign] != 0
             ):
                 if (
-                    self.check_eat_in_table(player, x, y, xsign, ysign, 3) == 0
+                    self.check_is_in_table(x, y, xsign, ysign, 3) == 0
                     and self.table[x + 3 * xsign][y + 3 * ysign] == player.nb
                 ):
                     self.eat_stone(
