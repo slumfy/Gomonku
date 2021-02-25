@@ -13,6 +13,60 @@ class Go:
         self.player_list.append(Player(2, 0, "Black"))
         print(self.player_list[0].nb, self.player_list[1].nb)
 
+    def check_three_routine(self, player, x, y, xsign, ysign):
+        it = 1
+        uptrap = 0
+        downtrap = 0
+        for n in range(1, 4):
+            if (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x + n * xsign][y + n * ysign] == 0
+            ):
+                uptrap = 1
+            elif (
+                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                and self.table[x + n * xsign][y + n * ysign] == player
+            ):
+                it += 1
+            else:
+                break
+        for n in range(1, 4):
+            if (
+                self.check_is_in_table(x, y, -xsign, -ysign, n) == 0
+                and self.table[x - n * xsign][y - n * ysign] == 0
+            ):
+                downtrap = 1
+            elif (
+                self.check_is_in_table(x, y, -xsign, -ysign, n) == 0
+                and self.table[x - n * xsign][y - n * ysign] == player
+            ):
+                it += 1
+            else:
+                break
+        # print("it:", it, "trap:", uptrap, downtrap)
+        if it >= 3 and uptrap == 1 and downtrap == 1:
+            return 1
+        return 0
+
+    def check_three_position(self, player, x, y):
+        three_count = 0
+        # updown solution
+        if self.check_three_routine(player, x, y, 1, 0) == 1:
+            three_count += 1
+        # leftright solution
+        if self.check_three_routine(player, x, y, 0, 1) == 1:
+            three_count += 1
+        # diagdownleft solution
+        if self.check_three_routine(player, x, y, -1, 1) == 1:
+            three_count += 1
+        # diagupleft solution
+        if self.check_three_routine(player, x, y, 1, 1) == 1:
+            three_count += 1
+        # print("threecount", three_count)
+        if three_count < 2:
+            return 0
+        return 1
+
     def check_win_routine(self, player, x, y, xsign, ysign):
         it = 1
         for n in range(1, 18):
@@ -25,13 +79,12 @@ class Go:
                 break
         for n in range(1, 18):
             if (
-                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                self.check_is_in_table(x, y, -xsign, -ysign, n) == 0
                 and self.table[x - n * xsign][y - n * ysign] == player
             ):
                 it += 1
             else:
                 break
-        print("it", it)
         if self.win(player, it) == 1:
             return 1
         return 0
@@ -52,7 +105,6 @@ class Go:
         return 0
 
     def win(self, player, it):
-        print("player: ", player, "iter: ", it)
         if it == 5:
             print("player ", player, " win")
             return 1
@@ -69,7 +121,7 @@ class Go:
                 and self.table[x + n * xsign][y + n * ysign] != 0
             ):
                 uptrap = 1
-            if (
+            elif (
                 self.check_is_in_table(x, y, xsign, ysign, n) == 0
                 and self.table[x + n * xsign][y + n * ysign] == player
             ):
@@ -78,13 +130,13 @@ class Go:
                 break
         for n in range(1, 3):
             if (
-                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+                self.check_is_in_table(x, y, -xsign, -ysign, n) == 0
                 and self.table[x - n * xsign][y - n * ysign] != player
                 and self.table[x - n * xsign][y - n * ysign] != 0
             ):
                 downtrap = 1
-            if (
-                self.check_is_in_table(x, y, xsign, ysign, n) == 0
+            elif (
+                self.check_is_in_table(x, y, -xsign, -ysign, n) == 0
                 and self.table[x - n * xsign][y - n * ysign] == player
             ):
                 it += 1
@@ -92,9 +144,12 @@ class Go:
                 break
         if it <= 2 and uptrap == 1 and downtrap == 1:
             return 1
+        return 0
 
     def check_wrong_position(self, player, x, y):
         if self.check_is_in_table(x, y, 0, 0, 0) or self.table[x][y] != 0:
+            return 1
+        if self.check_three_position(player, x, y) != 0:
             return 1
         # updown solution
         elif self.check_wrong_routine(player, x, y, 1, 0) == 1:
@@ -175,7 +230,8 @@ class Go:
             if player.eat_piece >= 10:
                 return player.nb
             if self.check_win_position(player.nb, x, y) != 0:
-                return player.nb
+                player.wining_position.append([x, y])
+                return 0
             return 0
 
     def clear_board(self):

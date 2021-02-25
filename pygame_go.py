@@ -97,14 +97,23 @@ class Game:
         self.screen.blit(self.goboard_resize, self.startpoint)
         pygame.display.flip()
         self.player = go.player_list[0]
+        win_status = 0
         while 1:
+            for pos in self.player.wining_position:
+                if go.check_win_position(self.player.nb, pos[0], pos[1]) != 0:
+                    print("tatata")
+                    win_status = 1
+            if win_status != 0:
+                self.print_font(132, "player " + str(self.player.nb) + " win", 100, 300)
+                pygame.display.flip()
+                self.win(go)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     self.screen.blit(self.goboard_resize, self.startpoint)
                     # img position for mouse position
-                    print(event.pos)
+                    # print(event.pos)
                     x = int((event.pos[1] - offset) / space)
                     modx = int((event.pos[1] - offset) % space)
                     if modx > space / 2 and x < 18:
@@ -113,10 +122,10 @@ class Game:
                     mody = int((event.pos[0] - offset) % space)
                     if mody > space / 2 and y < 18:
                         y += 1
-                    print(x, modx, y, mody)
+                    # print(x, modx, y, mody)
                     # end
                     stonestatus = go.place_stone(self.player, x, y)
-                    print("stonestatus: ", stonestatus)
+                    # print("stonestatus: ", stonestatus)
                     if stonestatus == -1:
                         self.print_font(
                             32,
@@ -160,11 +169,7 @@ class Game:
                                         L * space + offset - self.stone_size[1] / 2,
                                     ),
                                 )
-                    if stonestatus > 0:
-                        self.print_font(132, "player " + str(stonestatus) + " win", 100, 300)
-                    pygame.display.flip()
-                    if stonestatus > 0:
-                        self.win(go)
+            pygame.display.flip()
 
     def print_font(self, size, msg, x, y):
         BLACK = (0, 0, 0)
