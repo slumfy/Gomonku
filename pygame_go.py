@@ -101,10 +101,11 @@ class Game:
         while 1:
             for pos in self.player.wining_position:
                 if go.check_win_position(self.player.nb, pos[0], pos[1]) != 0:
-                    print("tatata")
                     win_status = 1
             if win_status != 0:
-                self.print_font(132, "player " + str(self.player.nb) + " win", 100, 300)
+                self.print_font(
+                    132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
+                )
                 pygame.display.flip()
                 self.win(go)
             for event in pygame.event.get():
@@ -135,6 +136,7 @@ class Game:
                             + "Illegal move",
                             64,
                             32,
+                            "Black",
                         )
                     elif stonestatus == 0:
                         if self.player.nb == 1:
@@ -150,7 +152,10 @@ class Game:
                             + self.map_notation[1][y],
                             64,
                             32,
+                            "Black",
                         )
+                    else:
+                        win_status = 1
                     for L in range(len(go.table)):
                         for l in range(len(go.table[L])):
                             if go.table[L][l] == 1:
@@ -169,11 +174,21 @@ class Game:
                                         L * space + offset - self.stone_size[1] / 2,
                                     ),
                                 )
+            if win_status != 0:
+                self.print_font(
+                    132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
+                )
             pygame.display.flip()
+            if win_status != 0:
+                self.win(go)
 
-    def print_font(self, size, msg, x, y):
+    def print_font(self, size, msg, x, y, color):
         BLACK = (0, 0, 0)
+        WHITE = (255, 255, 255)
         sysfont = pygame.font.get_default_font()
         font = pygame.font.SysFont(None, size)
-        render = font.render(msg, True, BLACK)
+        if color == "Black":
+            render = font.render(msg, True, BLACK)
+        else:
+            render = font.render(msg, True, WHITE)
         self.screen.blit(render, (x, y))
