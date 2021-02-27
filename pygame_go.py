@@ -67,7 +67,7 @@ class Game:
         self.black_stone = pygame.image.load("ressources/images/blackcircle.png")
         self.black_stone_resize = pygame.transform.scale(self.black_stone, self.stone_size)
 
-    def menu(self, go):
+    def Menu(self, go):
         self.screen.blit(self.gomenu, self.startpoint)
         pygame.display.flip()
         while 1:
@@ -79,17 +79,17 @@ class Game:
                     if event.pos[1] <= 585 and event.pos[1] >= 505:
                         self.playing(go)
 
-    def win(self, go):
+    def Win(self, go):
         while 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    go.clear_board()
+                    go.Clear_Board()
                     for player in go.player_list:
                         player.eat_piece = 0
                     self.player = []
-                    self.menu(go)
+                    self.Menu(go)
 
     def playing(self, go):
         offset = 62
@@ -100,14 +100,14 @@ class Game:
         win_status = 0
         while 1:
             for pos in self.player.wining_position:
-                if go.check_win_position(self.player.nb, pos[0], pos[1]) != 0:
+                if go.Check_Win_Position(self.player.nb, pos[0], pos[1]) != 0:
                     win_status = 1
             if win_status != 0:
-                self.print_font(
+                self.Print_Font(
                     132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
                 )
                 pygame.display.flip()
-                self.win(go)
+                self.Win(go)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -125,10 +125,10 @@ class Game:
                         y += 1
                     # print(x, modx, y, mody)
                     # end
-                    stonestatus = go.place_stone(self.player, x, y)
+                    stonestatus = go.Place_Stone(self.player, x, y)
                     # print("stonestatus: ", stonestatus)
                     if stonestatus == -1:
-                        self.print_font(
+                        self.Print_Font(
                             32,
                             "Player Turn: "
                             + self.player.color
@@ -143,7 +143,7 @@ class Game:
                             self.player = go.player_list[1]
                         elif self.player.nb == 2:
                             self.player = go.player_list[0]
-                        self.print_font(
+                        self.Print_Font(
                             32,
                             "Player Turn: "
                             + self.player.color
@@ -175,14 +175,14 @@ class Game:
                                     ),
                                 )
             if win_status != 0:
-                self.print_font(
+                self.Print_Font(
                     132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
                 )
             pygame.display.flip()
             if win_status != 0:
-                self.win(go)
+                self.Win(go)
 
-    def print_font(self, size, msg, x, y, color):
+    def Print_Font(self, size, msg, x, y, color):
         BLACK = (0, 0, 0)
         WHITE = (255, 255, 255)
         sysfont = pygame.font.get_default_font()
