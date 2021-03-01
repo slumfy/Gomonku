@@ -114,7 +114,6 @@ class Go_Rules:
 
     def Win(self, player, it):
         if it == 5:
-            print("player ", player, " win")
             return 1
         return 0
 
@@ -122,7 +121,7 @@ class Go_Rules:
         for L in range(len(self.table)):
             for l in range((len(self.table[L]))):
                 self.table[L][l] = 0
-        self.print_table()
+        self.Print_Table()
 
     def Print_Table(self):
         for line in self.table:
