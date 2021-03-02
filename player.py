@@ -3,9 +3,10 @@ class Player:
     player_type = 0
     eat_piece = 0
     color = None
-    wining_position = []
 
     def __init__(self, nb, player_type, color):
         self.nb = nb
         self.player_type = player_type
+        self.eat_piece = 0
         self.color = color
+        self.wining_position = []
