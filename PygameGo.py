@@ -2,6 +2,8 @@ import sys
 
 import pygame
 
+from BoardState import BoardState
+
 
 class PyGameGo:
     map_notation = [
@@ -60,17 +62,17 @@ class PyGameGo:
 
         self.screen = pygame.display.set_mode(self.size)
 
-        self.goboard = pygame.image.load("ressources/images/goboard.png")
-        self.gomenu = pygame.image.load("ressources/images/gomenu.png")
-        self.goboard_resize = pygame.transform.scale(self.goboard, self.size)
-        self.startpoint = [0, 0]
+        self.go_board = pygame.image.load("ressources/images/goboard.png")
+        self.go_menu = pygame.image.load("ressources/images/gomenu.png")
+        self.go_board_resize = pygame.transform.scale(self.go_board, self.size)
+        self.start_point = [0, 0]
         self.white_stone = pygame.image.load("ressources/images/whitecircle.png")
         self.white_stone_resize = pygame.transform.scale(self.white_stone, self.stone_size)
         self.black_stone = pygame.image.load("ressources/images/blackcircle.png")
         self.black_stone_resize = pygame.transform.scale(self.black_stone, self.stone_size)
 
     def menu(self, go):
-        self.screen.blit(self.gomenu, self.startpoint)
+        self.screen.blit(self.go_menu, self.start_point)
         pygame.display.flip()
         while 1:
             for event in pygame.event.get():
@@ -94,7 +96,7 @@ class PyGameGo:
                     self.menu(go)
 
     def playing(self, go):
-        self.screen.blit(self.goboard_resize, self.startpoint)
+        self.screen.blit(self.go_board_resize, self.start_point)
         pygame.display.flip()
         self.player = go.player_list[0]
         while 1:
@@ -115,11 +117,16 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.screen.blit(self.goboard_resize, self.startpoint)
+                    self.screen.blit(self.go_board_resize, self.start_point)
                     x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                     y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
-                    stonestatus = go.place_stone(self.player, x, y)
-                    if stonestatus == -1:
+                    stone_status = go.place_stone(self.player, x, y)
+                    # test state
+                    state = BoardState(go, self.player)
+                    print("STATEMOVE: ")
+                    print(state.available_move)
+                    # end test
+                    if stone_status == -1:
                         self.print_font(
                             32,
                             "Player Turn: "
@@ -130,7 +137,7 @@ class PyGameGo:
                             32,
                             "Black",
                         )
-                    elif stonestatus == 0:
+                    elif stone_status == 0:
                         pygame.mixer.music.play()  # pygame move sound from init
                         if self.player.nb == 1:
                             self.player = go.player_list[1]

@@ -1,6 +1,6 @@
 # implémentation of Alpha-Beta Pruning
 
-function minimax(position, depth, alpha, beta, maximizingPlayer)
+class minimax(position, depth, alpha, beta, maximizingPlayer):
 	if depth == 0 or game over in position
 		return static evaluation of position
  
@@ -25,4 +25,4 @@ function minimax(position, depth, alpha, beta, maximizingPlayer)
 		return minEval
 
 // initial call
-minimax(currentPosition, 3, -∞, +∞, true)
+minimax(currentPosition, 2, -∞, +∞, true)

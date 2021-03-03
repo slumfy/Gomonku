@@ -33,21 +33,27 @@ class GoRules:
         return 1
 
     def check_win_position(self, player, x, y):
+        it = 0
+        tmp = 0
         if self.table[x][y] != player:
             return 0
         # updown solution
-        if self.check_win_routine(player, x, y, 1, 0) == 1:
-            return 1
+        tmp = self.check_win_routine(player, x, y, 1, 0)
+        if tmp > it:
+            it = tmp
         # leftright solution
-        if self.check_win_routine(player, x, y, 0, 1) == 1:
-            return 1
+        tmp = self.check_win_routine(player, x, y, 0, 1)
+        if tmp > it:
+            it = tmp
         # diagdownleft solution
-        if self.check_win_routine(player, x, y, -1, 1) == 1:
-            return 1
+        tmp = self.check_win_routine(player, x, y, -1, 1)
+        if tmp > it:
+            it = tmp
         # diagupleft solution
-        if self.check_win_routine(player, x, y, 1, 1) == 1:
-            return 1
-        return 0
+        tmp = self.check_win_routine(player, x, y, 1, 1)
+        if tmp > it:
+            it = tmp
+        return it
 
     def check_wrong_position(self, player, x, y):
         if self.check_is_in_table(x, y, 0, 0, 0) or self.table[x][y] != 0:
@@ -99,7 +105,7 @@ class GoRules:
             self.check_eat_position(player, x, y)
             if player.eat_piece >= 10:
                 return player.nb
-            if self.check_win_position(player.nb, x, y) != 0:
+            if self.check_win_position(player.nb, x, y) == 5:
                 for p in self.player_list:
                     if p.nb == player.nb:
                         p.wining_position.append([x, y])
@@ -113,11 +119,6 @@ class GoRules:
             or y + offset * ysign > 18
             or y + offset * ysign < 0
         ):
-            return 1
-        return 0
-
-    def win(self, player, it):
-        if it == 5:
             return 1
         return 0
 
@@ -212,9 +213,7 @@ class GoRules:
                 it += 1
             else:
                 break
-        if self.win(player, it) == 1:
-            return 1
-        return 0
+        return it
 
     def check_three_routine(self, player, x, y, xsign, ysign):
         it = 1
