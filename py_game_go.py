@@ -112,7 +112,7 @@ class PyGameGo:
                     win_status = 1
                 else:
                     self.player.wining_position.remove(pos)
-            if win_status != 0:
+            if win_status == 5:
                 self.print_font(
                     132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
                 )
