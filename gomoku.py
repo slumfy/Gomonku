@@ -13,7 +13,6 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
     go_rules = GoRules()
-    print("args.no_sound = ", args.no_sound)
     game = PyGameGo(sound_status=not args.no_sound)
     game.menu(go_rules=go_rules)
 
