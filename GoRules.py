@@ -1,5 +1,5 @@
 from Player import Player
-import string_sum
+import gomoku_rust
 
 class GoRules:
     table = []
@@ -106,7 +106,7 @@ class GoRules:
             if player.eat_piece >= 10:
                 return player.nb
             print("python ",  self.check_win_position(player.nb, x, y))
-            print("RUST ",string_sum.sum_as_string(self.table,player.nb,x,y))
+            print("RUST ",gomoku_rust.rust_calculating_move(self.table,player.nb,x,y))
             if self.check_win_position(player.nb, x, y) == 5:
                 for p in self.player_list:
                     if p.nb == player.nb:

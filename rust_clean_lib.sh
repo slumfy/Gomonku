@@ -2,4 +2,4 @@
 cd gomoku_rust_lib
 cargo clean
 cd ../
-rm string_sum.pyd
+rm gomoku_rust.pyd

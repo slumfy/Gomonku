@@ -3,7 +3,7 @@ use pyo3::wrap_pyfunction;
 
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn sum_as_string(map: [[i32; 19]; 19],player: i32,x: i32, y: i32) -> PyResult<i32> {
+fn rust_calculating_move(map: [[i32; 19]; 19],player: i32,x: i32, y: i32) -> PyResult<i32> {
 	// println!("{} player ", player);
 	// println!("{} x ", x);
 	// println!("{} y ", y);
@@ -73,7 +73,7 @@ return it;
 
 /// A Python module implemented in Rust.
 #[pymodule]
-fn string_sum(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
+fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(rust_calculating_move, m)?)?;
     Ok(())
 }

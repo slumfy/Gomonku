@@ -1,6 +1,6 @@
 #!/bin/sh
 cd gomoku_rust_lib
 cargo build --release
-cp target/release/string_sum.dll ../
+cp target/release/gomoku_rust.dll ../
 cd ../
-mv string_sum.dll string_sum.pyd
+mv gomoku_rust.dll gomoku_rust.pyd
