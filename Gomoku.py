@@ -1,5 +1,5 @@
 from go_rules import GoRules
-from PyGameGo import PyGameGo
+from py_game_go import PyGameGo
 
 
 if __name__ == "__main__":
