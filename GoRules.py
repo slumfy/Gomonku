@@ -1,5 +1,5 @@
 from Player import Player
-
+import string_sum
 
 class GoRules:
     table = []
@@ -105,6 +105,8 @@ class GoRules:
             self.check_eat_position(player, x, y)
             if player.eat_piece >= 10:
                 return player.nb
+            print("python ",  self.check_win_position(player.nb, x, y))
+            print("RUST ",string_sum.sum_as_string(self.table,player.nb,x,y))
             if self.check_win_position(player.nb, x, y) == 5:
                 for p in self.player_list:
                     if p.nb == player.nb:
