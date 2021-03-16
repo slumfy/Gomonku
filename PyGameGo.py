@@ -54,6 +54,9 @@ class PyGameGo:
     def __init__(self):
         pygame.init()
         pygame.mixer.init()
+        pygame.mixer.music.load("ressources/sound/bensound-thejazzpiano.mp3")
+        pygame.mixer.music.set_volume(0.05)
+        pygame.mixer.music.play(-1)
         self.placing_stone_sound = pygame.mixer.Sound("ressources/sound/MOVE.wav")
 
         self.size = width, height = 720, 720
