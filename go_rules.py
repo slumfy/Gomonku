@@ -1,6 +1,7 @@
 from Player import Player
 import gomoku_rust
 
+
 class GoRules:
     table = []
     player_list = []
@@ -105,8 +106,8 @@ class GoRules:
             self.check_eat_position(player, x, y)
             if player.eat_piece >= 10:
                 return player.nb
-            print("python ",  self.check_win_position(player.nb, x, y))
-            print("RUST ",gomoku_rust.rust_calculating_move(self.table,player.nb,x,y))
+            print("python ", self.check_win_position(player.nb, x, y))
+            print("RUST ", gomoku_rust.rust_calculating_move(self.table, player.nb, x, y))
             if self.check_win_position(player.nb, x, y) == 5:
                 for p in self.player_list:
                     if p.nb == player.nb:

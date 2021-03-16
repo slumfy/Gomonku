@@ -1,7 +1,7 @@
 import sys
-
 import pygame
 
+from go_rules import GoRules
 from BoardState import BoardState
 
 
@@ -75,7 +75,7 @@ class PyGameGo:
         self.black_stone = pygame.image.load("ressources/images/blackcircle.png")
         self.black_stone_resize = pygame.transform.scale(self.black_stone, self.stone_size)
 
-    def menu(self, go):
+    def menu(self, go_rules: GoRules):
         self.screen.blit(self.go_menu, self.start_point)
         pygame.display.flip()
         while 1:
@@ -83,31 +83,30 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(event.pos)
                     if event.pos[1] <= 585 and event.pos[1] >= 505:
-                        self.playing(go)
+                        self.playing(go_rules)
 
-    def win(self, go):
+    def win(self, go_rules: GoRules):
         while 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    go.clear_board()
-                    for player in go.player_list:
+                    go_rules.clear_board()
+                    for player in go_rules.player_list:
                         player.eat_piece = 0
                     self.player = []
-                    self.menu(go)
+                    self.menu(go_rules)
 
-    def playing(self, go):
+    def playing(self, go_rules: GoRules):
         self.screen.blit(self.go_board_resize, self.start_point)
         pygame.display.flip()
-        self.player = go.player_list[0]
+        self.player = go_rules.player_list[0]
         while 1:
             win_status = 0
             for pos in self.player.wining_position:
                 print("player: ", self.player.color, "pos: ", self.player.wining_position)
-                if go.check_win_position(self.player.nb, pos[0], pos[1]) != 0:
+                if go_rules.check_win_position(self.player.nb, pos[0], pos[1]) != 0:
                     win_status = 1
                 else:
                     self.player.wining_position.remove(pos)
@@ -116,7 +115,7 @@ class PyGameGo:
                     132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
                 )
                 pygame.display.flip()
-                self.win(go)
+                self.win(go_rules)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -124,9 +123,9 @@ class PyGameGo:
                     self.screen.blit(self.go_board_resize, self.start_point)
                     x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                     y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
-                    stone_status = go.place_stone(self.player, x, y)
+                    stone_status = go_rules.place_stone(self.player, x, y)
                     # test state
-                    state = BoardState(go, self.player)
+                    state = BoardState(go_rules, self.player)
                     print("STATEMOVE: ")
                     print(state.available_move)
                     # end test
@@ -144,9 +143,9 @@ class PyGameGo:
                     elif stone_status == 0:
                         self.placing_stone_sound.play()
                         if self.player.nb == 1:
-                            self.player = go.player_list[1]
+                            self.player = go_rules.player_list[1]
                         elif self.player.nb == 2:
-                            self.player = go.player_list[0]
+                            self.player = go_rules.player_list[0]
                         self.print_font(
                             32,
                             "Player Turn: "
@@ -160,14 +159,14 @@ class PyGameGo:
                         )
                     else:
                         win_status = 1
-                    self.board_screen_blit(go, 33, 62)
+                    self.board_screen_blit(go_rules, 33, 62)
             if win_status != 0:
                 self.print_font(
                     132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
                 )
             pygame.display.flip()
             if win_status != 0:
-                self.win(go)
+                self.win(go_rules)
 
     def mouse_pos_to_piece_pos(self, pos, space, offset):
         var = int((pos - offset) / space)
@@ -176,10 +175,10 @@ class PyGameGo:
             var += 1
         return var
 
-    def board_screen_blit(self, go, space, offset):
-        for L in range(len(go.table)):
-            for l in range(len(go.table[L])):
-                if go.table[L][l] == 1:
+    def board_screen_blit(self, go_rules: GoRules, space, offset):
+        for L in range(len(go_rules.table)):
+            for l in range(len(go_rules.table[L])):
+                if go_rules.table[L][l] == 1:
                     self.screen.blit(
                         self.white_stone_resize,
                         (
@@ -187,7 +186,7 @@ class PyGameGo:
                             L * space + offset - self.stone_size[1] / 2,
                         ),
                     )
-                elif go.table[L][l] == 2:
+                elif go_rules.table[L][l] == 2:
                     self.screen.blit(
                         self.black_stone_resize,
                         (
