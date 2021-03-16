@@ -108,7 +108,7 @@ class PyGameGo:
             win_status = 0
             for pos in self.player.wining_position:
                 print("player: ", self.player.color, "pos: ", self.player.wining_position)
-                if go_rules.check_win_position(self.player.nb, pos[0], pos[1]) != 0:
+                if go_rules.check_win_position(self.player.nb, pos[0], pos[1]) == 5:
                     win_status = 1
                 else:
                     self.player.wining_position.remove(pos)
