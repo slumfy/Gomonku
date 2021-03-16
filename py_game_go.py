@@ -58,13 +58,15 @@ class PyGameGo:
         pygame.mixer.music.set_volume(0.05)
         pygame.mixer.music.play(-1)
         self.placing_stone_sound = pygame.mixer.Sound("ressources/sound/MOVE.wav")
+        icon = pygame.image.load("ressources/images/Jeu-de-Go-logo.jpg")
+        pygame.display.set_icon(icon)
 
         self.size = width, height = 720, 720
         self.board_size = width, height = 720, 720
         self.stone_size = width, height = 24, 24
         self.player = []
 
-        self.screen = pygame.display.set_mode(self.size)
+        self.screen = pygame.display.set_mode(size=self.size)
 
         self.go_board = pygame.image.load("ressources/images/goboard.png")
         self.go_menu = pygame.image.load("ressources/images/gomenu.png")
@@ -84,7 +86,7 @@ class PyGameGo:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.pos[1] <= 585 and event.pos[1] >= 505:
-                        self.playing(go_rules)
+                        self.playing(go_rules=go_rules)
 
     def win(self, go_rules: GoRules):
         while 1:
