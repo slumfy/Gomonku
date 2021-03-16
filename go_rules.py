@@ -129,6 +129,17 @@ class GoRules:
         for player in self.player_list:
             print("player: ", player.color, "")
 
+    def reset_players(self):
+        self.player_list.clear()
+        self.player_list.append(Player(1, 0, "White"))
+        self.player_list.append(Player(2, 0, "Black"))
+        print("ici printing player list")
+        print(self.player_list)
+
+    def reset_game(self):
+        self.reset_players()
+        self.clear_board()
+
     def clear_board(self):
         for L in range(len(self.table)):
             for l in range((len(self.table[L]))):
