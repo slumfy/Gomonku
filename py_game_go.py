@@ -52,26 +52,30 @@ class PyGameGo:
         ],
     ]
 
-    def __init__(self, sound=bool):
+    def __init__(self, sound_status=bool):
         pygame.init()
-        if sound is True:
-            pygame.mixer.init()
-            pygame.mixer.music.load("ressources/sound/bensound-thejazzpiano.mp3")
-            pygame.mixer.music.set_volume(0.05)
-            pygame.mixer.music.play(-1)
+        pygame.mixer.init()
+        pygame.mixer.music.load("ressources/sound/bensound-thejazzpiano.mp3")
+
+        self.sound_status = sound_status
         self.placing_stone_sound = pygame.mixer.Sound("ressources/sound/MOVE.wav")
-        icon = pygame.image.load("ressources/images/Jeu-de-Go-logo.jpg")
-        pygame.display.set_icon(icon)
 
         self.size = width, height = 720, 720
         self.board_size = width, height = 720, 720
         self.stone_size = width, height = 24, 24
+        self.sound_icon_size = width, height = 32, 32
         self.player: Player = None
 
         self.screen = pygame.display.set_mode(size=self.size)
 
         self.go_board = pygame.image.load("ressources/images/goboard.png")
         self.go_menu = pygame.image.load("ressources/images/gomenu.png")
+        self.go_sound_off = pygame.transform.scale(
+            pygame.image.load("ressources/images/sound-icon/sound_off.png"), self.sound_icon_size
+        )
+        self.go_sound_on = pygame.transform.scale(
+            pygame.image.load("ressources/images/sound-icon/sound_on.png"), self.sound_icon_size
+        )
         self.go_board_resize = pygame.transform.scale(self.go_board, self.size)
         self.start_point = [0, 0]
         self.white_stone = pygame.image.load("ressources/images/whitecircle.png")
@@ -79,8 +83,22 @@ class PyGameGo:
         self.black_stone = pygame.image.load("ressources/images/blackcircle.png")
         self.black_stone_resize = pygame.transform.scale(self.black_stone, self.stone_size)
 
+    def update_sound_status(self, sound_status: bool):
+        self.sound_status = sound_status
+        if self.sound_status is True:
+            pygame.mixer.music.set_volume(0.05)
+            pygame.mixer.music.play(-1)
+            self.screen.blit(self.go_sound_on, (self.size[0] - self.sound_icon_size[0], 0))
+            print("Sound is on.")
+        else:
+            self.screen.blit(self.go_sound_off, (self.size[0] - self.sound_icon_size[0], 0))
+            pygame.mixer.music.stop()
+            print("Sound is off.")
+        pygame.display.flip()
+
     def menu(self, go_rules: GoRules):
         self.screen.blit(self.go_menu, self.start_point)
+        self.update_sound_status(self.sound_status)
         pygame.display.flip()
         while 1:
             for event in pygame.event.get():
@@ -89,6 +107,14 @@ class PyGameGo:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.pos[1] <= 585 and event.pos[1] >= 505:
                         self.playing(go_rules=go_rules)
+                    if (
+                        event.pos[1] <= self.sound_icon_size[1]
+                        and event.pos[1] >= 0
+                        and event.pos[0] >= self.size[0] - self.sound_icon_size[0]
+                        and event.pos[0] <= self.size[0]
+                    ):
+                        self.screen.blit(self.go_menu, self.start_point)
+                        self.update_sound_status(not self.sound_status)
 
     def win(self, go_rules: GoRules):
         while 1:
@@ -154,15 +180,14 @@ class PyGameGo:
                     # end test
                     if stone_status == -1:
                         self.print_illegal_move()
-
                     elif stone_status == 0:
-                        self.placing_stone_sound.play()
+                        if self.sound_status:
+                            self.placing_stone_sound.play()
                         if self.player.nb == 1:
                             self.player = go_rules.player_list[1]
                         elif self.player.nb == 2:
                             self.player = go_rules.player_list[0]
                         self.print_player_move(x=x, y=y)
-
                     else:
                         win_status = 1
                     self.board_screen_blit(go_rules, 33, 62)

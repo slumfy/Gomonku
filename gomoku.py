@@ -9,11 +9,12 @@ def main(argv=None):
     parser.add_argument(
         "--no_sound",
         help="Disable or enable sound.",
-        action="store_false",
+        action="store_true",
     )
     args = parser.parse_args(argv)
     go_rules = GoRules()
-    game = PyGameGo(sound=args.no_sound)
+    print("args.no_sound = ", args.no_sound)
+    game = PyGameGo(sound_status=not args.no_sound)
     game.menu(go_rules=go_rules)
 
 
