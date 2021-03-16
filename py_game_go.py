@@ -2,7 +2,7 @@ import sys
 import pygame
 
 from go_rules import GoRules
-from BoardState import BoardState
+from board_state import BoardState
 
 
 class PyGameGo:
