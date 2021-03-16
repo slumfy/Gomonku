@@ -121,6 +121,7 @@ class PyGameGo:
                     x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                     y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                     stone_status = go.place_stone(self.player, x, y)
+                    pygame.mixer.music.play()  # pygame move sound from init
                     # test state
                     state = BoardState(go, self.player)
                     print("STATEMOVE: ")
@@ -138,7 +139,6 @@ class PyGameGo:
                             "Black",
                         )
                     elif stone_status == 0:
-                        pygame.mixer.music.play()  # pygame move sound from init
                         if self.player.nb == 1:
                             self.player = go.player_list[1]
                         elif self.player.nb == 2:
