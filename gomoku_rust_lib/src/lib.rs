@@ -2,6 +2,8 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 mod check;
+mod tata;
+use crate::tata::__pyo3_get_function_toto;
 
 #[pyfunction]
 fn win_check(mut map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResult<i32> {
@@ -69,6 +71,7 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(wrong_check, m)?)?;
     m.add_function(wrap_pyfunction!(eat_check, m)?)?;
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
+	m.add_function(wrap_pyfunction!(toto, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }

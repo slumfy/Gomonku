@@ -113,6 +113,7 @@ class GoRules:
     def place_stone(self, player, x, y):
         print("python ", self.check_wrong_position(player.nb, x, y))
         print("RUST ", gomoku_rust.wrong_check(self.table, player.nb, x, y))
+        print("RUST ", gomoku_rust.toto(self.table, player.nb, x, y))
         print("RUST ", gomoku_rust.place_stone(self.table, player.nb, x, y))
         if self.check_wrong_position(player.nb, x, y) == 1:
             return -1
