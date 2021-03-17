@@ -111,6 +111,8 @@ class GoRules:
             player.eat_piece += 1
 
     def place_stone(self, player, x, y):
+        print("python ", self.check_wrong_position(player.nb, x, y))
+        print("RUST ", gomoku_rust.wrong_check(self.table, player.nb, x, y))
         if self.check_wrong_position(player.nb, x, y) == 1:
             return -1
         else:
@@ -119,7 +121,7 @@ class GoRules:
             if player.eat_piece >= 10:
                 return player.nb
             print("python ", self.check_win_position(player.nb, x, y))
-            print("RUST ", gomoku_rust.rust_calculating_move(self.table, player.nb, x, y))
+            print("RUST ", gomoku_rust.win_check(self.table, player.nb, x, y))
             if self.check_win_position(player.nb, x, y) == 5:
                 for p in self.player_list:
                     if p.nb == player.nb:
