@@ -19,35 +19,36 @@ from global_var import BOARD_NOTATION, MAIN_WINDOW_SIZE, STONE_SIZE
 # }
 
 class PyGameGo:
-    def __init__(self, sound_status=bool):
-        pygame.init()
-        pygame.mixer.init()
-        pygame.mixer.music.load("ressources/sound/bensound-thejazzpiano.mp3")
+    def __init__(self, sound_status:bool=False, test_mode:bool=False):
+        self.test_mode = test_mode
 
         self.logger = logger_factory("PyGameGo")
 
-        self.sound_status = sound_status
-        self.placing_stone_sound = pygame.mixer.Sound("ressources/sound/MOVE.wav")
+        # Creating GUI and sound
+        if not self.test_mode:
+            pygame.init()
+            pygame.mixer.init()
+            pygame.mixer.music.load("ressources/sound/bensound-thejazzpiano.mp3")
+            self.sound_status = sound_status
+            self.placing_stone_sound = pygame.mixer.Sound("ressources/sound/MOVE.wav")
+            self.sound_icon_size = width, height = 32, 32
+            self.screen = pygame.display.set_mode(size=MAIN_WINDOW_SIZE)
+            self.go_board = pygame.image.load("ressources/images/goboard.png")
+            self.go_menu = pygame.image.load("ressources/images/gomenu.png")
+            self.go_sound_off = pygame.transform.scale(
+                pygame.image.load("ressources/images/sound-icon/sound_off.png"), self.sound_icon_size
+            )
+            self.go_sound_on = pygame.transform.scale(
+                pygame.image.load("ressources/images/sound-icon/sound_on.png"), self.sound_icon_size
+            )
+            self.go_board_resize = pygame.transform.scale(self.go_board, MAIN_WINDOW_SIZE)
+            self.start_point = [0, 0]
+            self.white_stone = pygame.image.load("ressources/images/whitecircle.png")
+            self.white_stone_resize = pygame.transform.scale(self.white_stone, STONE_SIZE)
+            self.black_stone = pygame.image.load("ressources/images/blackcircle.png")
+            self.black_stone_resize = pygame.transform.scale(self.black_stone, STONE_SIZE)
 
-        self.sound_icon_size = width, height = 32, 32
         self.player: Player = None
-
-        self.screen = pygame.display.set_mode(size=MAIN_WINDOW_SIZE)
-
-        self.go_board = pygame.image.load("ressources/images/goboard.png")
-        self.go_menu = pygame.image.load("ressources/images/gomenu.png")
-        self.go_sound_off = pygame.transform.scale(
-            pygame.image.load("ressources/images/sound-icon/sound_off.png"), self.sound_icon_size
-        )
-        self.go_sound_on = pygame.transform.scale(
-            pygame.image.load("ressources/images/sound-icon/sound_on.png"), self.sound_icon_size
-        )
-        self.go_board_resize = pygame.transform.scale(self.go_board, MAIN_WINDOW_SIZE)
-        self.start_point = [0, 0]
-        self.white_stone = pygame.image.load("ressources/images/whitecircle.png")
-        self.white_stone_resize = pygame.transform.scale(self.white_stone, STONE_SIZE)
-        self.black_stone = pygame.image.load("ressources/images/blackcircle.png")
-        self.black_stone_resize = pygame.transform.scale(self.black_stone, STONE_SIZE)
 
     def update_sound_status(self, sound_status: bool):
         self.sound_status = sound_status
