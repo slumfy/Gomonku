@@ -8,6 +8,16 @@ from utils import logger_factory
 from global_var import BOARD_NOTATION, MAIN_WINDOW_SIZE, STONE_SIZE
 
 
+# rust_response = {
+# 	"board" = [],
+# 	"sugest_move" = (0,0),
+# 	"eated_piece" = 0,
+# 	"game_status" = 0,
+# 	"player_to_play" = 0,
+# 	"wining_player" = 0
+# 	"wining_position" = 0
+# }
+
 class PyGameGo:
     def __init__(self, sound_status=bool):
         pygame.init()
