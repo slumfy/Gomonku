@@ -2,7 +2,6 @@ use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 mod check;
 
-/// Formats the sum of two numbers as string.
 #[pyfunction]
 fn rust_calculating_move(map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResult<i32> {
     // println!("{} player ", player);

@@ -121,35 +121,41 @@ fn check_wrong_routine(
     let mut it = 1;
     let mut uptrap = 0;
     let mut downtrap = 0;
-    // 	for n in range(1, 3):
-    // 		if (
-    // 			self.check_is_in_table(x, y, xsign, ysign, n) == 0
-    // 			and self.table[x + n * xsign][y + n * ysign] != player
-    // 			and self.table[x + n * xsign][y + n * ysign] != 0
-    // 		):
-    // 			uptrap = 1
-    // 		elif (
-    // 			self.check_is_in_table(x, y, xsign, ysign, n) == 0
-    // 			and self.table[x + n * xsign][y + n * ysign] == player
-    // 		):
-    // 			it += 1
-    // 		else:
-    // 			break
-    // 	for n in range(1, 3):
-    // 		if (
-    // 			self.check_is_in_table(x, y, -xsign, -ysign, n) == 0
-    // 			and self.table[x - n * xsign][y - n * ysign] != player
-    // 			and self.table[x - n * xsign][y - n * ysign] != 0
-    // 		):
-    // 			downtrap = 1
-    // 		elif (
-    // 			self.check_is_in_table(x, y, -xsign, -ysign, n) == 0
-    // 			and self.table[x - n * xsign][y - n * ysign] == player
-    // 		):
-    // 			it += 1
-    // 		else:
-    // 			break
-    // 	if it <= 2 and uptrap == 1 and downtrap == 1:
-    // 		return 1
-    // 	return 0
+	for n in 1..3 {
+		if 
+			check_is_in_table(x, y, xsign, ysign, n) == 0
+			&& map[(x + n * xsign) as usize][(y + n * ysign) as usize] != player
+			&& map[(x + n * xsign) as usize][(y + n * ysign) as usize] != 0 {
+			uptrap = 1;
+			}
+		elif (
+			check_is_in_table(x, y, xsign, ysign, n) == 0
+			&& map[(x + n * xsign) as usize][(y + n * ysign) as usize] == player
+		):
+			it += 1;
+		else:
+			break;
+		}
+	for n in 1..3) {
+		if
+			check_is_in_table(x, y, -xsign, -ysign, n) == 0
+			&& map[(x - n * xsign) as usize][(y - n * ysign) as usize] != player
+			&& map[(x - n * xsign) as usize][(y - n * ysign) as usize] != 0
+		{
+			downtrap = 1;
+		}
+		else if 
+			check_is_in_table(x, y, -xsign, -ysign, n) == 0
+			&& map[(x - n * xsign) as usize][(y - n * ysign) as usize] == player
+		{
+			it += 1;
+		}
+		else {
+			break;
+		}
+	if it <= 2 && uptrap == 1 && downtrap == 1 {
+		return 1;
+	}
+	return 0;
+	}
 }
