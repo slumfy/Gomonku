@@ -3,7 +3,9 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 mod check;
 mod tests;
+use crate::tests::__pyo3_get_function_test_get_PyObject;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
+use crate::tests::__pyo3_get_function_test_updating_map_from_other_function;
 
 #[pyfunction]
 fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<PyObject> {
@@ -11,21 +13,21 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
     let py = gil.python();
     let dict = PyDict::new(py);
     let mut map: Vec<Vec<i32>> = board;
-    map[x as usize][y as usize] = player;
+    // map[x as usize][y as usize] = player;
     let mut eated_piece = 0i32;
-    let wrong_status = check::check_wrong_position(&map, player, x, y);
-    if wrong_status == 1 {
-        dict.set_item("game_status", -1);
-    } else {
-        dict.set_item("game_status", 0);
-    }
-    if wrong_status == 0 {
-        map[x as usize][y as usize] = player;
-        eated_piece = check::check_eat_position(&map, player, x, y);
-    }
-    if check::check_win_position(&map, player, x, y) == 5 {
-        dict.set_item("wining_position", (x, y));
-    }
+    // let wrong_status = check::check_wrong_position(&map, player, x, y);
+    // if wrong_status == 1 {
+    //     dict.set_item("game_status", -1);
+    // } else {
+    //     dict.set_item("game_status", 0);
+    // }
+    // if wrong_status == 0 {
+    //     map[x as usize][y as usize] = player;
+    //     eated_piece = check::check_eat_position(&map, player, x, y);
+    // }
+    // if check::check_win_position(&map, player, x, y) == 5 {
+    //     dict.set_item("wining_position", (x, y));
+    // }
     dict.set_item("eated_piece", eated_piece);
     println!("LIB RUST => {:?}", map);
     dict.set_item("board", &map);
@@ -36,6 +38,8 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
 #[pymodule]
 pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(test_returning_dict_to_python, m)?)?;
+    m.add_function(wrap_pyfunction!(test_updating_map_from_other_function, m)?)?;
+    m.add_function(wrap_pyfunction!(test_get_PyObject, m)?)?;
     Ok(())
 }
 

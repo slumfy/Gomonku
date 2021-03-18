@@ -70,7 +70,7 @@ pub fn check_three_position(mut map: &Vec<Vec<i32>>, player: i32, x: i32, y: i32
 }
 
 pub fn check_eat_position(mut map: &Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> i32 {
-	let mut eat_nb = 0;
+    let mut eat_nb = 0;
     eat_nb += eat_position_routine(map, player, x, y, 0, 1);
     eat_nb += eat_position_routine(map, player, x, y, 0, -1);
     eat_nb += eat_position_routine(map, player, x, y, 1, 0);
@@ -79,8 +79,8 @@ pub fn check_eat_position(mut map: &Vec<Vec<i32>>, player: i32, x: i32, y: i32) 
     eat_nb += eat_position_routine(map, player, x, y, 1, -1);
     eat_nb += eat_position_routine(map, player, x, y, -1, 1);
     eat_nb += eat_position_routine(map, player, x, y, -1, -1);
-	println!("manger {}", eat_nb);
-	return eat_nb;
+    println!("manger {}", eat_nb);
+    return eat_nb;
 }
 
 fn check_win_routine(
@@ -211,7 +211,7 @@ pub fn eat_position_routine(
     ysign: i32,
 ) -> i32 {
     let mut poslist = Vec::new();
-	let mut eat_nb = 0; 
+    let mut eat_nb = 0;
     if check_is_in_table(x, y, xsign, ysign, 1) == 0
         && map[(x + 1 * xsign) as usize][(y + 1 * ysign) as usize] != player
         && map[(x + 1 * xsign) as usize][(y + 1 * ysign) as usize] != 0
@@ -233,14 +233,14 @@ pub fn eat_position_routine(
             }
         }
     }
-	return eat_nb;
+    return eat_nb;
 }
 
 fn eat_stone(mut map: &Vec<Vec<i32>>, poslist: Vec<(i32, i32)>) -> i32 {
-	let mut eat_nb = 0; 
+    let mut eat_nb = 0;
     for (x, y) in poslist {
-        map[x as usize][y as usize] = 0;
+        // map[x as usize][y as usize] = 0;
         eat_nb += 1;
     }
-	return eat_nb;
+    return eat_nb;
 }
