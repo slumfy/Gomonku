@@ -6,47 +6,27 @@ mod tests;
 use crate::tests::__pyo3_get_function_test_getting_dict_from_python;
 
 #[pyfunction]
-fn win_check(mut map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResult<i32> {
-    // println!("{} player ", player);
-    // println!("{} x ", x);
-    // println!("{} y ", y);
-    // println!("{:?} map ", map);
-    Ok(check::check_win_position(map, player, x, y))
-}
-
-#[pyfunction]
-fn eat_check(mut map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResult<i32> {
-    // println!("{} player ", player);
-    // println!("{} x ", x);
-    // println!("{} y ", y);
-    // println!("{:?} map ", map);
-    check::check_eat_position(map, player, x, y);
-    Ok(1)
-}
-
-#[pyfunction]
-fn wrong_check(mut map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResult<i32> {
-    // println!("{} player ", player);
-    // println!("{} x ", x);
-    // println!("{} y ", y);
-    // println!("{:?} map ", map);
-    Ok(check::check_wrong_position(map, player, x, y))
-}
-
-#[pyfunction]
 fn place_stone(mut map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
-    println!("{} player ", player);
-    println!("{} x ", x);
-    println!("{} y ", y);
-    println!("{:?} map ", map);
-    if check::check_wrong_position(map, player, x, y) == 1 {
+	let mut eated_piece= 0i32;
+	let wrong_status = check::check_wrong_position(map, player, x, y);
+    if wrong_status == 1 {
         dict.set_item("game_status", -1);
     } else {
         dict.set_item("game_status", 0);
     }
+	if wrong_status == 0 {
+		map[x as usize][y as usize] = player;
+		eated_piece = check::check_eat_position(map, player, x, y);
+	}
+	if check::check_win_position(map, player, x, y) == 5 {
+		dict.set_item("wining_position",(x,y));
+	}
+	dict.set_item("eated_piece",eated_piece);
+	// dict.set_item("board", map);
+	println!("{:?} map ", map);
     Ok(dict.to_object(py))
 }
 
@@ -60,9 +40,6 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
 /// A Python module implemented in Rust.
 #[pymodule]
 fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(win_check, m)?)?;
-    m.add_function(wrap_pyfunction!(wrong_check, m)?)?;
-    m.add_function(wrap_pyfunction!(eat_check, m)?)?;
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
