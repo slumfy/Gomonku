@@ -2,7 +2,7 @@ from go_rules import GoRules
 from py_game_go import PyGameGo
 from player import Player
 
-def test_tests():
+def test_placing_stone_in_already_taken_place():
     go_rules = GoRules()
     game = PyGameGo(sound_status=False, test_mode=True)
     game.player = go_rules.player_list[0]

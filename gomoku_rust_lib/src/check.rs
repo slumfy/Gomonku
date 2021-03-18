@@ -239,7 +239,7 @@ pub fn eat_position_routine(
 fn eat_stone(mut map:&mut Vec<Vec<i32>>, poslist: Vec<(i32, i32)>) -> i32 {
     let mut eat_nb = 0;
     for (x, y) in poslist {
-        map[x as usize][y as usize] = 0;
+        // map[x as usize][y as usize] = 0;
         eat_nb += 1;
     }
     return eat_nb;

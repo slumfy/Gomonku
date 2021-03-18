@@ -3,7 +3,9 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 mod check;
 mod tests;
+use crate::tests::__pyo3_get_function_test_get_PyObject;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
+use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
 #[pyfunction]
 fn check_win(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<i32> {
@@ -43,6 +45,8 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
 #[pymodule]
 pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(test_returning_dict_to_python, m)?)?;
+    m.add_function(wrap_pyfunction!(test_updating_from_other_function, m)?)?;
+    m.add_function(wrap_pyfunction!(test_get_PyObject, m)?)?;
     Ok(())
 }
 
