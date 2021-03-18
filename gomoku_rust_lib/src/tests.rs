@@ -1,6 +1,5 @@
 extern crate pyo3;
 
-use pyo3::exceptions::*;
 use pyo3::prelude::*;
 use pyo3::types::*;
 
@@ -19,6 +18,9 @@ pub fn test_returning_dict_to_python(
 
     dict.set_item("eated_piece", 10)?;
     dict.set_item("board", &map)?;
+    dict.set_item("player", player)?;
+    dict.set_item("x", x)?;
+    dict.set_item("y", y)?;
     Ok(dict.to_object(py))
 }
 
@@ -51,4 +53,4 @@ pub fn test_updating_from_other_function(
 }
 
 #[pyfunction]
-pub fn test_get_pyobject(python_obj: PyObject) {}
+pub fn test_get_pyobject() {}
