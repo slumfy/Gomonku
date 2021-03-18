@@ -23,9 +23,27 @@ def test_call_returning_dict_to_python():
         "x": 0,
         "y": 0,
     }
-    output_dic = gomoku_rust.gomoku_tests.test_updating_map_from_other_function(dic["map"], dic["player"], dic["x"], dic["y"])
+    output_dic = gomoku_rust.gomoku_tests.test_returning_dict_to_python(dic["map"], dic["player"], dic["x"], dic["y"])
     assert output_dic["eated_piece"] == 10
     assert output_dic["board"] == map
+
+def test_call_updating_map_from_other_function():
+    map = []
+    m = 19
+    n = 19
+    map = [[0] * m for i in range(n)]
+    dic = {
+        "map": map,
+        "player": 1,
+        "x": 0,
+        "y": 0,
+    }
+    output_dic = gomoku_rust.gomoku_tests.test_updating_from_other_function(dic["map"], dic["player"], dic["x"], dic["y"])
+    map[0][0] = dic["player"]
+    map[0][1] = 2
+    assert output_dic["eated_piece"] == 10
+    assert output_dic["board"] == map
+
 
 def test_call_sending_dict_to_python():
     map = []
