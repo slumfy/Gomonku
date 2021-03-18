@@ -56,4 +56,4 @@ def test_call_sending_dict_to_python():
         "x": 0,
         "y": 0,
     }
-    gomoku_rust.gomoku_tests.test_get_PyObject(dic)
+    gomoku_rust.gomoku_tests.test_get_pyobject(dic)
