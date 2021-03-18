@@ -144,8 +144,8 @@ class PyGameGo:
                     stone_status = go_rules.place_stone(self.player, x, y)
                     # test state
                     state = BoardState(go_rules, self.player)
-                    print("STATEMOVE: ")
-                    print(state.available_move)
+                    # print("STATEMOVE: ")
+                    # print(state.available_move)
                     # end test
                     if stone_status == -1:
                         self.print_illegal_move()
