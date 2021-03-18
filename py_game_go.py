@@ -124,7 +124,7 @@ class PyGameGo:
             win_status = 0
             for pos in self.player.wining_position:
                 print("player: ", self.player.color, "pos: ", self.player.wining_position)
-                if go_rules.check_win_position(self.player.nb, pos[0], pos[1]) == 5:
+                if go_rules.check_win_rust(self.player.nb, pos[0], pos[1]) == 5:
                     win_status = 1
                 else:
                     self.player.wining_position.remove(pos)
@@ -142,11 +142,6 @@ class PyGameGo:
                     x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                     y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                     stone_status = go_rules.place_stone(self.player, x, y)
-                    # test state
-                    state = BoardState(go_rules, self.player)
-                    # print("STATEMOVE: ")
-                    # print(state.available_move)
-                    # end test
                     if stone_status == -1:
                         self.print_illegal_move()
                     elif stone_status == 0:
