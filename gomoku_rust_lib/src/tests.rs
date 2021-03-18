@@ -2,6 +2,7 @@ extern crate pyo3;
 
 use pyo3::prelude::*;
 use pyo3::types::*;
+use std::collections::HashMap;
 
 #[pyfunction]
 pub fn test_returning_dict_to_python(
@@ -53,4 +54,11 @@ pub fn test_updating_from_other_function(
 }
 
 #[pyfunction]
-pub fn test_get_pyobject() {}
+pub fn test_get_pyobject(py_obj: HashMap<String, i32>) {
+    for key in py_obj.keys() {
+        println!("{}", key);
+    }
+    for val in py_obj.values() {
+        println!("{}", val);
+    }
+}

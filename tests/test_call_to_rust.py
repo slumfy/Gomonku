@@ -12,6 +12,8 @@ except ImportError:
     import gomoku_rust
 
 
+
+
 def test_call_returning_dict_to_python():
     map = []
     m = 19
@@ -46,12 +48,9 @@ def test_call_updating_map_from_other_function():
 
 
 def test_call_sending_dict_to_python():
-    map = []
-    m = 19
-    n = 19
-    map = [[0] * m for i in range(n)]
+    # Cannot send different type for values...
     dic = {
-        "map": map,
+        "map": 0,
         "player": 1,
         "x": 0,
         "y": 0,
