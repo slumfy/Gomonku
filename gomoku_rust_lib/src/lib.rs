@@ -2,6 +2,8 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 mod check;
+mod tests;
+use crate::tests::__pyo3_get_function_test_getting_dict_from_python;
 
 #[pyfunction]
 fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<PyObject> {
@@ -28,13 +30,6 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
 	println!("LIB RUST => {:?}",map);
 	dict.set_item("board", &map);
     Ok(dict.to_object(py))
-}
-
-#[pyfunction]
-pub fn test_getting_dict_from_python(dict: PyObject) {
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    println!("In test_getting_dict_from_python.");
 }
 
 /// A Python module implemented in Rust.
