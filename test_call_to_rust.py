@@ -16,7 +16,6 @@ m = 19
 n = 19
 board = [[0] * m for i in range(n)]
 dic = {
-    "map": board,
     "player": 0,
     "x": 0,
     "y": 0,

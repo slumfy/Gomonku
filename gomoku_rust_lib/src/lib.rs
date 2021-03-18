@@ -2,8 +2,8 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 mod check;
-mod tata;
-use crate::tata::__pyo3_get_function_toto;
+mod tests;
+use crate::tests::__pyo3_get_function_test_getting_dict_from_python;
 
 #[pyfunction]
 fn win_check(mut map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResult<i32> {
@@ -50,13 +50,6 @@ fn place_stone(mut map: [[i32; 19]; 19], player: i32, x: i32, y: i32) -> PyResul
     Ok(dict.to_object(py))
 }
 
-#[pyfunction]
-pub fn test_getting_dict_from_python(dict: PyObject) {
-    let gil = Python::acquire_gil();
-    let py = gil.python();
-    println!("In test_getting_dict_from_python.");
-}
-
 /// A Python module implemented in Rust.
 #[pymodule]
 pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -71,7 +64,6 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(wrong_check, m)?)?;
     m.add_function(wrap_pyfunction!(eat_check, m)?)?;
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
-	m.add_function(wrap_pyfunction!(toto, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }
