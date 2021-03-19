@@ -65,3 +65,24 @@ def test_white_prevent_black_win(black_winning_state, x):
     game.player = go_rules.player_list[0]
     state = go_rules.place_stone(game.player, 12, x)
     assert state == 0
+
+
+# @pytest.mark.parametrize("x", [1, 3])
+# def test_black_prevent_white_win_diagonal(x):
+#     go_rules = GoRules()
+#     game = PyGameGo(sound_status=False, test_mode=True)
+
+#     game.player = go_rules.player_list[0]
+#     go_rules.place_stone(game.player, 5, 0)
+#     game.player = go_rules.player_list[1]
+#     go_rules.place_stone(game.player, 11, 2)
+#     for i in range(4):
+#         game.player = go_rules.player_list[0]
+#         go_rules.place_stone(game.player, 10, i)
+#         game.player = go_rules.player_list[1]
+#         go_rules.place_stone(game.player, 15, i)
+#     game.player = go_rules.player_list[0]
+#     go_rules.place_stone(game.player, 10, i + 1)
+#     game.player = go_rules.player_list[1]
+#     state = go_rules.place_stone(game.player, 9, x)
+#     assert state == 0
