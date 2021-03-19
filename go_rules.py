@@ -31,7 +31,6 @@ class GoRules:
 
     def place_stone(self, player, x, y):
         Rust_res = gomoku_rust.place_stone(self.table, player.nb, x, y)
-        print(Rust_res)
         if Rust_res["game_status"] == -1:
             return -1
         else:
@@ -53,8 +52,6 @@ class GoRules:
         self.player_list.clear()
         self.player_list.append(Player(1, 0, "White"))
         self.player_list.append(Player(2, 0, "Black"))
-        print("ici printing player list")
-        print(self.player_list)
 
     def reset_game(self):
         self.reset_players()

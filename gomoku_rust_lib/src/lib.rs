@@ -22,7 +22,6 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
     let mut map: Vec<Vec<i32>> = board;
     let mut eated_piece = 0i32;
     let wrong_status = check::check_wrong_position(&mut map, player, x, y);
-    println!("wrongstatus => {}", wrong_status);
     if wrong_status == 1 {
         dict.set_item("game_status", -1)?;
     } else {
@@ -36,7 +35,6 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
         dict.set_item("wining_position", (x, y))?;
     }
     dict.set_item("eated_piece", eated_piece)?;
-    println!("LIB RUST => {:?}", map);
     dict.set_item("board", &map)?;
     Ok(dict.to_object(py))
 }
