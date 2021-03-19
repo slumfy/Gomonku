@@ -7,17 +7,6 @@ from player import Player
 from utils import logger_factory
 from global_var import BOARD_NOTATION, MAIN_WINDOW_SIZE, STONE_SIZE
 
-
-# rust_response = {
-# 	"board" = [],
-# 	"sugest_move" = (0,0),
-# 	"eated_piece" = 0,
-# 	"game_status" = 0,
-# 	"player_to_play" = 0,
-# 	"wining_player" = 0
-# 	"wining_position" = 0
-# }
-
 class PyGameGo:
     def __init__(self, sound_status:bool=False, test_mode:bool=False):
         self.test_mode = test_mode
@@ -162,9 +151,9 @@ class PyGameGo:
         return var
 
     def board_screen_blit(self, go_rules: GoRules, space, offset):
-        for L in range(len(go_rules.table)):
-            for l in range(len(go_rules.table[L])):
-                if go_rules.table[L][l] == 1:
+        for L in range(len(go_rules.board)):
+            for l in range(len(go_rules.board[L])):
+                if go_rules.board[L][l] == 1:
                     self.screen.blit(
                         self.white_stone_resize,
                         (
@@ -172,7 +161,7 @@ class PyGameGo:
                             L * space + offset - STONE_SIZE[1] / 2,
                         ),
                     )
-                elif go_rules.table[L][l] == 2:
+                elif go_rules.board[L][l] == 2:
                     self.screen.blit(
                         self.black_stone_resize,
                         (

@@ -15,24 +15,24 @@ from player import Player
 
 
 class GoRules:
-    table = []
+    board = []
     player_list = []
 
     def __init__(self):
         m = 19
         n = 19
-        self.table = [[0] * m for i in range(n)]
+        self.board = [[0] * m for i in range(n)]
         self.player_list.append(Player(1, 0, "White"))
         self.player_list.append(Player(2, 0, "Black"))
         print(self.player_list[0].nb, self.player_list[1].nb)
 
     def place_stone(self, player, x, y):
-        gomoku_rust.show_state(self.table,player.nb)
-        Rust_res = gomoku_rust.place_stone(self.table, player.nb, x, y)
+        gomoku_rust.show_state(self.board,player.nb)
+        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
         if Rust_res["game_status"] == -1:
             return -1
         else:
-            self.table = Rust_res["board"]
+            self.board = Rust_res["board"]
             player.eat_piece += Rust_res["eated_piece"]
             if player.eat_piece >= 10:
                 return player.nb
@@ -44,7 +44,7 @@ class GoRules:
                 if pl != player:
                     if pl.wining_position:
                         for win  in pl.wining_position:
-                            if gomoku_rust.check_win(self.table, pl.nb, win[0], win[1]) >= 5:
+                            if gomoku_rust.check_win(self.board, pl.nb, win[0], win[1]) >= 5:
                                 return pl.nb
                             else:
                                 pl.wining_position.remove(win)
@@ -64,6 +64,6 @@ class GoRules:
         self.clear_board()
 
     def clear_board(self):
-        for L in range(len(self.table)):
-            for l in range((len(self.table[L]))):
-                self.table[L][l] = 0
+        for L in range(len(self.board)):
+            for l in range((len(self.board[L]))):
+                self.board[L][l] = 0

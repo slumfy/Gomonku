@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 #[pyfunction]
 pub fn test_returning_dict_to_python(
-    map: Vec<Vec<i32>>,
+    board: Vec<Vec<i32>>,
     player: i32,
     x: i32,
     y: i32,
@@ -18,15 +18,15 @@ pub fn test_returning_dict_to_python(
     let dict = PyDict::new(py);
 
     dict.set_item("eated_piece", 10)?;
-    dict.set_item("board", &map)?;
+    dict.set_item("board", &board)?;
     dict.set_item("player", player)?;
     dict.set_item("x", x)?;
     dict.set_item("y", y)?;
     Ok(dict.to_object(py))
 }
 
-fn update_map_board(map: &mut Vec<Vec<i32>>, player: i32, x: i32, y: i32) {
-    map[x as usize][y as usize] = player;
+fn update_map_board(board: &mut Vec<Vec<i32>>, player: i32, x: i32, y: i32) {
+    board[x as usize][y as usize] = player;
 }
 
 fn update_player(player: &mut i32, new_player: i32) {
@@ -35,7 +35,7 @@ fn update_player(player: &mut i32, new_player: i32) {
 
 #[pyfunction]
 pub fn test_updating_from_other_function(
-    mut map: Vec<Vec<i32>>,
+    mut board: Vec<Vec<i32>>,
     mut player: i32,
     x: i32,
     y: i32,
@@ -43,11 +43,11 @@ pub fn test_updating_from_other_function(
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
-    update_map_board(&mut map, player, x, y);
+    update_map_board(&mut board, player, x, y);
     update_player(&mut player, 2);
-    update_map_board(&mut map, player, 0, 1);
+    update_map_board(&mut board, player, 0, 1);
     dict.set_item("eated_piece", 10)?;
-    dict.set_item("board", &map)?;
+    dict.set_item("board", &board)?;
     Ok(dict.to_object(py))
 }
 
