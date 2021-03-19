@@ -31,7 +31,7 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
         map[x as usize][y as usize] = player;
         eated_piece = check::check_eat_position(&mut map, player, x, y);
     }
-    if check::check_win_position(&mut map, player, x, y) == 5 {
+    if check::check_win_position(&mut map, player, x, y) >= 5 {
         dict.set_item("wining_position", (x, y))?;
     }
     dict.set_item("eated_piece", eated_piece)?;

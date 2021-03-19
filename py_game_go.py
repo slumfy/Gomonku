@@ -122,18 +122,6 @@ class PyGameGo:
         self.player = go_rules.player_list[0]
         while 1:
             win_status = 0
-            for pos in self.player.wining_position:
-                print("player: ", self.player.color, "pos: ", self.player.wining_position)
-                if go_rules.check_win_rust(self.player.nb, pos[0], pos[1]) == 5:
-                    win_status = 1
-                else:
-                    self.player.wining_position.remove(pos)
-            if win_status == 5:
-                self.print_font(
-                    132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
-                )
-                pygame.display.flip()
-                self.win(go_rules=go_rules)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -153,11 +141,14 @@ class PyGameGo:
                             self.player = go_rules.player_list[0]
                         self.print_player_move(x=x, y=y)
                     else:
-                        win_status = 1
+                        win_status = stone_status
                     self.board_screen_blit(go_rules, 33, 62)
             if win_status != 0:
+                for pl in go_rules.player_list:
+                    if pl.nb == win_status:
+                        color = pl.color
                 self.print_font(
-                    132, "player " + str(self.player.nb) + " win", 100, 300, self.player.color
+                    132, "player " + str(stone_status) + " win", 100, 300, color
                 )
             pygame.display.flip()
             if win_status != 0:
