@@ -40,8 +40,6 @@ pub fn test_updating_from_other_function(
     x: i32,
     y: i32,
 ) -> PyResult<PyObject> {
-    println!("In test_updating_map_from_other_function.");
-
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
@@ -54,11 +52,21 @@ pub fn test_updating_from_other_function(
 }
 
 #[pyfunction]
-pub fn test_get_pyobject(py_obj: HashMap<String, i32>) {
-    for key in py_obj.keys() {
-        println!("{}", key);
-    }
-    for val in py_obj.values() {
-        println!("{}", val);
-    }
+pub fn test_get_pydict(py_obj: HashMap<String, i32>) {
+    assert_eq!(
+        py_obj.get_key_value(&String::from("map")),
+        Some((&String::from("map"), &0i32))
+    );
+    assert_eq!(
+        py_obj.get_key_value(&String::from("player")),
+        Some((&String::from("player"), &1i32))
+    );
+    assert_eq!(
+        py_obj.get_key_value(&String::from("x")),
+        Some((&String::from("x"), &3i32))
+    );
+    assert_eq!(
+        py_obj.get_key_value(&String::from("y")),
+        Some((&String::from("y"), &0i32))
+    );
 }

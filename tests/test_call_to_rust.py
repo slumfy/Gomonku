@@ -52,7 +52,7 @@ def test_call_sending_dict_to_python():
     dic = {
         "map": 0,
         "player": 1,
-        "x": 0,
+        "x": 3,
         "y": 0,
     }
-    gomoku_rust.gomoku_tests.test_get_pyobject(dic)
+    gomoku_rust.gomoku_tests.test_get_pydict(dic)
