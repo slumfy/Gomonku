@@ -61,4 +61,3 @@ class GoRules:
         for L in range(len(self.table)):
             for l in range((len(self.table[L]))):
                 self.table[L][l] = 0
-        self.print_table()
