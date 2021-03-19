@@ -27,6 +27,7 @@ class GoRules:
         print(self.player_list[0].nb, self.player_list[1].nb)
 
     def place_stone(self, player, x, y):
+        gomoku_rust.show_state(self.table,player.nb)
         Rust_res = gomoku_rust.place_stone(self.table, player.nb, x, y)
         if Rust_res["game_status"] == -1:
             return -1
