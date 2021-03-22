@@ -10,9 +10,9 @@ use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
 #[pyfunction]
 fn show_state(board: Vec<Vec<i32>>, player: i32) {
-	let mut mutboard: Vec<Vec<i32>> = board;
-    let state: state::State = state::create_new_state(&mut mutboard,player);
-	state::print_state(state);
+    let mut mutboard: Vec<Vec<i32>> = board;
+    let state: state::State = state::create_new_state(&mut mutboard, player);
+    state::print_state(state);
 }
 
 #[pyfunction]
@@ -60,7 +60,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
 #[pymodule]
 fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
-	m.add_function(wrap_pyfunction!(show_state, m)?)?;
+    m.add_function(wrap_pyfunction!(show_state, m)?)?;
     m.add_function(wrap_pyfunction!(check_win, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
