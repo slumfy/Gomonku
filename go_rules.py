@@ -24,7 +24,6 @@ class GoRules:
         self.board = [[0] * m for i in range(n)]
         self.player_list.append(Player(1, 0, "White"))
         self.player_list.append(Player(2, 0, "Black"))
-        print(self.player_list[0].nb, self.player_list[1].nb)
 
     def place_stone(self, player, x, y):
         gomoku_rust.show_state(self.board, player.nb)
@@ -44,7 +43,10 @@ class GoRules:
                 if pl != player:
                     if pl.wining_position:
                         for position in pl.wining_position:
-                            if gomoku_rust.check_win(self.board, pl.nb, position[0], position[1]) >= 5:
+                            if (
+                                gomoku_rust.check_win(self.board, pl.nb, position[0], position[1])
+                                >= 5
+                            ):
                                 return pl.nb
                             else:
                                 pl.wining_position.remove(position)
