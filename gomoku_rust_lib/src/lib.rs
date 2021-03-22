@@ -10,11 +10,12 @@ use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
 #[pyfunction]
-fn negamax(board: Vec<Vec<i32>>, player: i32,x: i32, y: i32) {
+fn negamax(board: Vec<Vec<i32>>, player: i32,x: i32, y: i32) -> PyResult<((i32,i32),i32)>{
 	let mut mutboard: Vec<Vec<i32>> = board;
     let mut state: state::State = state::create_new_state(&mut mutboard,player,(x,y));
 	let value = negamax::negamax(&mut state, 1 ,player);
-	println!("negamax {}", value);
+	println!("negamax {:?}", value);
+	Ok(value)
 
 }
 

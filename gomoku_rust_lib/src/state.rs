@@ -37,9 +37,10 @@ pub fn print_state(state: State) {
 pub fn create_child(state: &mut State) -> Vec<State> {
 	let mut cpyboard: Vec<Vec<i32>>;
 	let mut childlist: Vec<State>;
+	let indexbox: ((i32,i32),(i32,i32)) = get_box(state);
 	childlist = Vec::new();
-	for x in 0..state.board.len() {
-		for y in 0..state.board[x].len() {
+	for x in indexbox.0.0..indexbox.0.1 {
+		for y in indexbox.1.0..indexbox.1.1 {
 			if check::check_wrong_position(&mut state.board, state.player_to_play, x as i32, y as i32) == 0 {
 				cpyboard = state.board.clone();
 				cpyboard[x as usize][y as usize] == -state.player_to_play;
@@ -49,4 +50,23 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 		}
 	}
 	return childlist;
+}
+
+fn get_box(state: &mut State) -> ((i32,i32),(i32,i32)) {
+	let mut x_tuple: (i32,i32) = (0,18);
+	let mut y_tuple: (i32,i32) = (0,18);
+	if state.current_move.0 - 5 >= 0 {
+		x_tuple.0 = state.current_move.0 - 5;
+	}
+	if state.current_move.0 + 5 <=18 {
+		x_tuple.1 = state.current_move.1 + 5;
+	}
+	if state.current_move.1 - 5 >= 0 {
+		y_tuple.0 = state.current_move.0 - 5;
+	}
+	if state.current_move.1 + 5 <= 18 {
+		y_tuple.1 = state.current_move.1 + 5;
+	}
+	println!("box {:?}",(x_tuple,y_tuple));
+	return (x_tuple,y_tuple);
 }

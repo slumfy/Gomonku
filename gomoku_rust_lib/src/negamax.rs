@@ -1,20 +1,27 @@
 use crate::state::State;
 use crate::state::create_child;
 
-pub fn negamax(mut state:&mut State, depth: i32, color: i32) -> i32 {
-	state.available_move = create_child(&mut state);
+pub fn negamax(mut state:&mut State, depth: i32, color: i32) -> ((i32,i32),i32) {
+	if depth != 0 { 
+		state.available_move = create_child(&mut state);
+	}
 	println!("current state: {:?}", state.current_move);
 	if depth == 0 || state.available_move.len() == 0 {
-		return state.heuristic * color;
+		return ((state.current_move),state.heuristic * color);
 	}
-	let mut value = -1000i32;
+	let mut value:((i32,i32),i32) = ((-1,-1),-1000);
 	for child in 0..state.available_move.len() {
-		value = std::cmp::max(value, -negamax(&mut state.available_move[child], depth - 1, -color))
+		value = max(value, negamax(&mut state.available_move[child], depth - 1, -color))
 	}
 	return value;
 }
 
-
+fn max(value: ((i32,i32),i32),childvalue: ((i32,i32),i32)) -> ((i32,i32),i32) {
+	if value.1 > childvalue.1 {
+		return value;
+	}
+	return childvalue;
+	}
 // function negamax(node, depth, color) is
 //     if depth = 0 or node is a terminal node then
 //         return color × the heuristic value of node
