@@ -119,19 +119,21 @@ class PyGameGo:
         while 1:
             win_status = 0
             if self.player.player_type == 1:
+                self.screen.blit(self.go_board_resize, self.start_point)
                 AI_move = go_rules.AI_move(self.player,x,y)
                 x,y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
                 self.play_piece(go_rules,stone_status,win_status,x,y)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    self.screen.blit(self.go_board_resize, self.start_point)
-                    x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
-                    y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
-                    stone_status = go_rules.place_stone(self.player, x, y)
-                    self.play_piece(go_rules,stone_status,win_status,x,y)
+            else:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        sys.exit()
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        self.screen.blit(self.go_board_resize, self.start_point)
+                        x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
+                        y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
+                        stone_status = go_rules.place_stone(self.player, x, y)
+                        self.play_piece(go_rules,stone_status,win_status,x,y)
                     
 
     def play_piece(self,go_rules,stone_status,win_status,x,y):
@@ -152,7 +154,7 @@ class PyGameGo:
             for pl in go_rules.player_list:
                 if pl.nb == win_status:
                     color = pl.color
-            self.print_font(132, "player " + str(stone_status) + " win", 100, 300, color)
+                    self.print_font(132, "player " + str(stone_status) + " win", 100, 300, color)
         pygame.display.flip()
         if win_status != 0:
             self.win(go_rules=go_rules)

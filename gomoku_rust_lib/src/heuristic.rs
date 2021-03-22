@@ -4,7 +4,7 @@ use crate::state::State;
 pub fn heuristic(board: &mut Vec<Vec<i32>>, state: &State) -> i32 {
 	let mut value = 0i32;
 	value += check::check_win_position(board,state.player_to_play,state.current_move.0,state.current_move.1); //current alignement
-	value += count_diff_piece(board, state);
+	value += count_diff_piece(board, state) * 10;
 
 	// println!("value x {}", state.current_move.0);
 	// println!("value y {}", state.current_move.1);

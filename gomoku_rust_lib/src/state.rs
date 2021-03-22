@@ -53,19 +53,20 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 }
 
 fn get_box(state: &mut State) -> ((i32,i32),(i32,i32)) {
+	let offset = 3;
 	let mut x_tuple: (i32,i32) = (0,18);
 	let mut y_tuple: (i32,i32) = (0,18);
-	if state.current_move.0 - 5 >= 0 {
-		x_tuple.0 = state.current_move.0 - 5;
+	if state.current_move.0 - offset >= 0 {
+		x_tuple.0 = state.current_move.0 - offset;
 	}
-	if state.current_move.0 + 5 <=18 {
-		x_tuple.1 = state.current_move.1 + 5;
+	if state.current_move.0 + offset <=18 {
+		x_tuple.1 = state.current_move.1 + offset;
 	}
-	if state.current_move.1 - 5 >= 0 {
-		y_tuple.0 = state.current_move.0 - 5;
+	if state.current_move.1 - offset >= 0 {
+		y_tuple.0 = state.current_move.0 - offset;
 	}
-	if state.current_move.1 + 5 <= 18 {
-		y_tuple.1 = state.current_move.1 + 5;
+	if state.current_move.1 + offset <= 18 {
+		y_tuple.1 = state.current_move.1 + offset;
 	}
 	println!("box {:?}",(x_tuple,y_tuple));
 	return (x_tuple,y_tuple);
