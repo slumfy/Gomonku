@@ -1,6 +1,5 @@
 import subprocess
 
-
 # Trying to import the gomoku_rust lib, if not compiled, execute the script to compile it.
 try:
     import gomoku_rust
@@ -10,8 +9,6 @@ except ImportError:
     process.wait()
     print(process.returncode)
     import gomoku_rust
-
-
 
 
 def test_call_returning_dict_to_python():
@@ -25,9 +22,12 @@ def test_call_returning_dict_to_python():
         "x": 0,
         "y": 0,
     }
-    output_dic = gomoku_rust.gomoku_tests.test_returning_dict_to_python(dic["map"], dic["player"], dic["x"], dic["y"])
+    output_dic = gomoku_rust.gomoku_tests.test_returning_dict_to_python(
+        dic["map"], dic["player"], dic["x"], dic["y"]
+    )
     assert output_dic["eated_piece"] == 10
     assert output_dic["board"] == map
+
 
 def test_call_updating_map_from_other_function():
     map = []
@@ -40,7 +40,9 @@ def test_call_updating_map_from_other_function():
         "x": 0,
         "y": 0,
     }
-    output_dic = gomoku_rust.gomoku_tests.test_updating_from_other_function(dic["map"], dic["player"], dic["x"], dic["y"])
+    output_dic = gomoku_rust.gomoku_tests.test_updating_from_other_function(
+        dic["map"], dic["player"], dic["x"], dic["y"]
+    )
     map[0][0] = dic["player"]
     map[0][1] = 2
     assert output_dic["eated_piece"] == 10
