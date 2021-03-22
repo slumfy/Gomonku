@@ -71,26 +71,179 @@ def test_white_prevent_black_win(black_winning_state, x):
     assert state == 0
 
 
-@pytest.mark.parametrize("x", [7, 8, 9, 10, 11, 12, 13])
-@pytest.mark.parametrize("y", [8, 9, 10, 11, 12])
-def test_white_prevent_black_win_diagonal(x, y):
-    gui_from_board = GuiFromBoard()
+@pytest.mark.parametrize("y", [7, 8, 9, 10, 11, 12, 13])
+@pytest.mark.parametrize("winning_pos_y", [8, 9, 10, 11, 12])
+def test_white_prevent_black_win_diagonal(y, winning_pos_y):
 
     go_rules = GoRules()
     go_rules.player_list[1].eat_piece = 0
     game = PyGameGo(sound_status=False, test_mode=True)
     go_rules.board[2] = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
     go_rules.board[3] = [2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
-    go_rules.player_list[0].wining_position.append([2, y])
+    go_rules.player_list[0].wining_position.append([2, winning_pos_y])
 
     game.player = go_rules.player_list[1]
-    state = go_rules.place_stone(game.player, 1, x)
+    state = go_rules.place_stone(game.player, 1, y)
 
     # # Print the gui moves
+    # gui_from_board = GuiFromBoard()
     # gui_from_board.display_current_state(go_rules.board)
     # time.sleep(0.5)
 
-    if x == 7 or x == 9 or x == 11 or x == 13:
+    if y == 7 or y == 9 or y == 11 or y == 13:
         assert state == 1
     else:
         assert state == 0
+
+
+@pytest.mark.parametrize("y", [7, 8, 9, 10, 11, 12, 13])
+@pytest.mark.parametrize("winning_pos_y", [8, 9, 10, 11, 12])
+def test_black_prevent_white_win_diagonal(y, winning_pos_y):
+
+    go_rules = GoRules()
+    go_rules.player_list[0].eat_piece = 0
+    game = PyGameGo(sound_status=False, test_mode=True)
+    go_rules.board[2] = [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0]
+    go_rules.board[3] = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1]
+    go_rules.player_list[1].wining_position.append([2, winning_pos_y])
+
+    game.player = go_rules.player_list[0]
+    state = go_rules.place_stone(game.player, 1, y)
+
+    # # Print the gui moves
+    # gui_from_board = GuiFromBoard()
+    # gui_from_board.display_current_state(go_rules.board)
+    # time.sleep(0.5)
+
+    if y == 7 or y == 9 or y == 11 or y == 13:
+        assert state == 2
+    else:
+        assert state == 0
+
+
+def test_white_eat_win():
+
+    go_rules = GoRules()
+    go_rules.player_list[1].eat_piece = 0
+    go_rules.player_list[0].eat_piece = 0
+    game = PyGameGo(sound_status=False, test_mode=True)
+    go_rules.board[2] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+    go_rules.board[3] = [2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2]
+
+    state = 0
+    for l in range(4):
+        if state == 1:
+            break
+        for i in range(4):
+            game.player = go_rules.player_list[0]
+            state = go_rules.place_stone(game.player, 4, i + l * 5)
+            if state == 1:
+                assert l == 2
+                assert i == 0
+                assert go_rules.player_list[0].eat_piece == 10
+                break
+            game.player = go_rules.player_list[1]
+            go_rules.place_stone(game.player, 10, i + l * 5)
+            # # Print the gui moves
+            # gui_from_board = GuiFromBoard()
+            # gui_from_board.display_current_state(go_rules.board)
+            # time.sleep(0.4)
+    # # Print the gui final moves
+    # gui_from_board.display_current_state(go_rules.board)
+    # time.sleep(0.4)
+
+
+def test_black_eat_win():
+
+    go_rules = GoRules()
+    go_rules.player_list[1].eat_piece = 0
+    go_rules.player_list[0].eat_piece = 0
+    game = PyGameGo(sound_status=False, test_mode=True)
+    go_rules.board[2] = [2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2]
+    go_rules.board[3] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1]
+
+    state = 0
+    for l in range(4):
+        if state == 2:
+            break
+        for i in range(4):
+            game.player = go_rules.player_list[0]
+            go_rules.place_stone(game.player, 10, i + l * 5)
+            game.player = go_rules.player_list[1]
+            state = go_rules.place_stone(game.player, 4, i + l * 5)
+            if state == 2:
+                assert l == 2
+                assert i == 0
+                assert go_rules.player_list[1].eat_piece == 10
+                break
+            # # Print the gui moves
+            # gui_from_board = GuiFromBoard()
+            # gui_from_board.display_current_state(go_rules.board)
+            # time.sleep(0.4)
+    # # Print the gui final moves
+    # gui_from_board.display_current_state(go_rules.board)
+    # time.sleep(0.4)
+
+
+def test_white_eat_more_than_10_win():
+
+    go_rules = GoRules()
+    go_rules.player_list[1].eat_piece = 0
+    go_rules.player_list[0].eat_piece = 0
+    game = PyGameGo(sound_status=False, test_mode=True)
+    go_rules.board[2] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1]
+    go_rules.board[3] = [2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 2, 2, 2]
+
+    state = 0
+    for l in range(4):
+        if state == 1:
+            break
+        for i in range(4):
+            game.player = go_rules.player_list[0]
+            state = go_rules.place_stone(game.player, 4, i + l * 5)
+            if state == 1:
+                assert l == 3
+                assert i == 0
+                assert go_rules.player_list[0].eat_piece == 11
+                break
+            game.player = go_rules.player_list[1]
+            go_rules.place_stone(game.player, 10, i + l * 5)
+            # # Print the gui moves
+            # gui_from_board = GuiFromBoard()
+            # gui_from_board.display_current_state(go_rules.board)
+            # time.sleep(0.4)
+    # # Print the gui final moves
+    # gui_from_board.display_current_state(go_rules.board)
+    # time.sleep(0.4)
+
+
+def test_black_eat_more_than_10_win():
+
+    go_rules = GoRules()
+    go_rules.player_list[1].eat_piece = 0
+    go_rules.player_list[0].eat_piece = 0
+    game = PyGameGo(sound_status=False, test_mode=True)
+    go_rules.board[2] = [2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 2, 2, 2]
+    go_rules.board[3] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1]
+
+    state = 0
+    for l in range(4):
+        if state == 2:
+            break
+        for i in range(4):
+            game.player = go_rules.player_list[0]
+            go_rules.place_stone(game.player, 10, i + l * 5)
+            game.player = go_rules.player_list[1]
+            state = go_rules.place_stone(game.player, 4, i + l * 5)
+            if state == 2:
+                assert l == 3
+                assert i == 0
+                assert go_rules.player_list[1].eat_piece == 11
+                break
+    #         # Print the gui moves
+    #         gui_from_board = GuiFromBoard()
+    #         gui_from_board.display_current_state(go_rules.board)
+    #         time.sleep(0.4)
+    # # Print the gui final moves
+    # gui_from_board.display_current_state(go_rules.board)
+    # time.sleep(0.4)

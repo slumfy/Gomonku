@@ -43,11 +43,11 @@ class GoRules:
             for pl in self.player_list:
                 if pl != player:
                     if pl.wining_position:
-                        for win in pl.wining_position:
-                            if gomoku_rust.check_win(self.board, pl.nb, win[0], win[1]) >= 5:
+                        for position in pl.wining_position:
+                            if gomoku_rust.check_win(self.board, pl.nb, position[0], position[1]) >= 5:
                                 return pl.nb
                             else:
-                                pl.wining_position.remove(win)
+                                pl.wining_position.remove(position)
             return 0
 
     def print_game_status(self):
