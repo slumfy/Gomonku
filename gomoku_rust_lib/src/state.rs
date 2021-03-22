@@ -1,5 +1,7 @@
 #[path = "check.rs"]
 mod check;
+#[path = "heuristic.rs"]
+mod heuristic;
 
 pub struct State {
     board: Vec<Vec<i32>>,
@@ -7,16 +9,19 @@ pub struct State {
     player_to_play: i32,
     winstate: i32,
     heuristic: i32,
+	current_move: (i32,i32)
 }
 
-pub fn create_new_state(board: &mut Vec<Vec<i32>>, player: i32) -> State {
+pub fn create_new_state(board: &mut Vec<Vec<i32>>, player: i32, current_move: (i32,i32)) -> State {
     let mut new_state = State {
         board: board.to_vec(),
         player_to_play: player,
         available_move: vec![],
         winstate: 0,
         heuristic: 0,
+		current_move: current_move
     };
+	new_state.heuristic = heuristic::heuristic(board, &new_state);
     for x in 0..new_state.board.len() {
         for y in 0..new_state.board[x].len() {
             if check::check_wrong_position(&mut new_state.board, player, x as i32, y as i32) == 0 {
@@ -33,4 +38,5 @@ pub fn print_state(state: State) {
     println!("player {:?}", state.player_to_play);
     println!("win  {:?}", state.winstate);
     println!("heuristic  {:?}", state.heuristic);
+	println!("current_move  {:?}", state.current_move);
 }
