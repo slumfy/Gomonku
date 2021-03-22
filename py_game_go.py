@@ -120,14 +120,14 @@ class PyGameGo:
                     x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                     y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                     stone_status = go_rules.place_stone(self.player, x, y)
-                    if stone_status == -1:
+                    if stone_status == -2:
                         self.print_illegal_move()
                     elif stone_status == 0:
                         if self.sound_status:
                             self.placing_stone_sound.play()
                         if self.player.nb == 1:
                             self.player = go_rules.player_list[1]
-                        elif self.player.nb == 2:
+                        elif self.player.nb == -1:
                             self.player = go_rules.player_list[0]
                         self.print_player_move(x=x, y=y)
                     else:
@@ -160,7 +160,7 @@ class PyGameGo:
                             L * space + offset - STONE_SIZE[1] / 2,
                         ),
                     )
-                elif go_rules.board[L][l] == 2:
+                elif go_rules.board[L][l] == -1:
                     self.screen.blit(
                         self.black_stone_resize,
                         (

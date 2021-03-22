@@ -23,16 +23,17 @@ class GoRules:
         n = 19
         self.board = [[0] * m for i in range(n)]
         self.player_list.append(Player(1, 0, "White"))
-        self.player_list.append(Player(2, 0, "Black"))
+        self.player_list.append(Player(-1, 0, "Black"))
 
     def place_stone(self, player, x, y):
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
-        gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
         if Rust_res["game_status"] == -1:
-            return -1
+            return -2
         else:
             self.board = Rust_res["board"]
             player.eat_piece += Rust_res["eated_piece"]
+            # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
+            gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
             if player.eat_piece >= 10:
                 return player.nb
             if "wining_position" in Rust_res.keys():
