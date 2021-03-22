@@ -1,25 +1,32 @@
 use crate::state::State;
 use crate::state::create_child;
+use std::cmp::Reverse;
 
-pub fn negamax(mut state:&mut State, depth: i32, color: i32) -> ((i32,i32),i32) {
+pub fn negamax(mut state:&mut State, depth: i32, mut alpha: i32,mut  beta: i32,color: i32) -> ((i32,i32),i32) {
 	if depth != 0 { 
 		state.available_move = create_child(&mut state);
+		state.available_move.sort_by_key(|d| Reverse(d.heuristic));
 	}
-	println!("current state: {:?}", state.current_move);
+	println!("current state: {:?} current heuristic {} depth {}", state.current_move, state.heuristic, depth);
 	if depth == 0 || state.available_move.len() == 0 {
 		return ((state.current_move),state.heuristic * color);
 	}
 	let mut value:((i32,i32),i32) = ((-1,-1),-1000);
-	for child in 0..state.available_move.len() {
-		let mut childvalue = negamax(&mut state.available_move[child], depth - 1, -color);
+	let len = state.available_move.len();
+	for child in 0..len {
+		let mut childvalue = negamax(&mut state.available_move[child], depth - 1,-beta,-alpha, -color);
 		childvalue.1 = -childvalue.1;
-		value = max(value, childvalue);
+		value = maxtuple(value, childvalue);
+		alpha = std::cmp::max(alpha, value.0.1);
+		if alpha >= beta {
+			break ;
+		}
 	}
 	return value;
 }
 
-fn max(value: ((i32,i32),i32),childvalue: ((i32,i32),i32)) -> ((i32,i32),i32) {
-	if value.1 >= childvalue.1 {
+fn maxtuple(value: ((i32,i32),i32),childvalue: ((i32,i32),i32)) -> ((i32,i32),i32) {
+	if value.1 > childvalue.1 {
 		return value;
 	}
 	return childvalue;

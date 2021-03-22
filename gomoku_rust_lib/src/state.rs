@@ -19,7 +19,7 @@ pub fn create_new_state(board: &mut Vec<Vec<i32>>, player: i32, current_move: (i
         available_move: vec![],
         winstate: 0,
         heuristic: 0,
-		current_move: current_move
+		current_move: current_move,
     };
 	new_state.heuristic = heuristic::heuristic(board, &new_state);
     return new_state;
@@ -43,7 +43,8 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 		for y in indexbox.1.0..indexbox.1.1 {
 			if check::check_wrong_position(&mut state.board, state.player_to_play, x as i32, y as i32) == 0 {
 				cpyboard = state.board.clone();
-				cpyboard[x as usize][y as usize] == -state.player_to_play;
+				cpyboard[x as usize][y as usize] = -state.player_to_play;
+				// println!("board {} {} {}", x,y, cpyboard[x as usize][y as usize]);
 				let child = create_new_state(&mut cpyboard,-state.player_to_play,(x as i32, y as i32));
 				childlist.push(child);
 			}
@@ -53,7 +54,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 }
 
 fn get_box(state: &mut State) -> ((i32,i32),(i32,i32)) {
-	let offset = 3;
+	let offset = 5;
 	let mut x_tuple: (i32,i32) = (0,18);
 	let mut y_tuple: (i32,i32) = (0,18);
 	if state.current_move.0 - offset >= 0 {
@@ -68,6 +69,5 @@ fn get_box(state: &mut State) -> ((i32,i32),(i32,i32)) {
 	if state.current_move.1 + offset <= 18 {
 		y_tuple.1 = state.current_move.1 + offset;
 	}
-	println!("box {:?}",(x_tuple,y_tuple));
 	return (x_tuple,y_tuple);
 }
