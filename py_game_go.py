@@ -2,13 +2,13 @@ import sys
 import pygame
 
 from go_rules import GoRules
-from board_state import BoardState
 from player import Player
 from utils import logger_factory
 from global_var import BOARD_NOTATION, MAIN_WINDOW_SIZE, STONE_SIZE
 
+
 class PyGameGo:
-    def __init__(self, sound_status:bool=False, test_mode:bool=False):
+    def __init__(self, sound_status: bool = False, test_mode: bool = False):
         self.test_mode = test_mode
 
         self.logger = logger_factory("PyGameGo")
@@ -25,7 +25,8 @@ class PyGameGo:
             self.go_board = pygame.image.load("ressources/images/goboard.png")
             self.go_menu = pygame.image.load("ressources/images/gomenu.png")
             self.go_sound_off = pygame.transform.scale(
-                pygame.image.load("ressources/images/sound-icon/sound_off.png"), self.sound_icon_size
+                pygame.image.load("ressources/images/sound-icon/sound_off.png"),
+                self.sound_icon_size,
             )
             self.go_sound_on = pygame.transform.scale(
                 pygame.image.load("ressources/images/sound-icon/sound_on.png"), self.sound_icon_size
@@ -136,9 +137,7 @@ class PyGameGo:
                 for pl in go_rules.player_list:
                     if pl.nb == win_status:
                         color = pl.color
-                self.print_font(
-                    132, "player " + str(stone_status) + " win", 100, 300, color
-                )
+                self.print_font(132, "player " + str(stone_status) + " win", 100, 300, color)
             pygame.display.flip()
             if win_status != 0:
                 self.win(go_rules=go_rules)

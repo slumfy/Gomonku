@@ -27,7 +27,7 @@ class GoRules:
         print(self.player_list[0].nb, self.player_list[1].nb)
 
     def place_stone(self, player, x, y):
-        gomoku_rust.show_state(self.board,player.nb)
+        gomoku_rust.show_state(self.board, player.nb)
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
         if Rust_res["game_status"] == -1:
             return -1
@@ -43,7 +43,7 @@ class GoRules:
             for pl in self.player_list:
                 if pl != player:
                     if pl.wining_position:
-                        for win  in pl.wining_position:
+                        for win in pl.wining_position:
                             if gomoku_rust.check_win(self.board, pl.nb, win[0], win[1]) >= 5:
                                 return pl.nb
                             else:

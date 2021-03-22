@@ -12,6 +12,10 @@ fn check_is_in_table(x: i32, y: i32, xsign: i32, ysign: i32, offset: i32) -> i32
 pub fn check_win_position(board: &mut Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> i32 {
     let mut it = 0;
     let mut tmp: i32;
+
+    if check_is_in_table(x, y, 0, 0, 0) == 1 || board[x as usize][y as usize] != player {
+        return 0;
+    }
     tmp = check_win_routine(board, player, x, y, 1, 0);
     if tmp > it {
         it = tmp;
