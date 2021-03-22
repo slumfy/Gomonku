@@ -60,7 +60,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
 #[pymodule]
 fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
-	m.add_function(wrap_pyfunction!(show_state, m)?)?;
+    m.add_function(wrap_pyfunction!(show_state, m)?)?;
     m.add_function(wrap_pyfunction!(check_win, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
