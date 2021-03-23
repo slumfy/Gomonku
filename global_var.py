@@ -1,3 +1,5 @@
+from enum import Enum
+
 BOARD_NOTATION = (
     (
         "19",
@@ -48,3 +50,8 @@ BOARD_SIZE = (720, 720)
 STONE_SIZE = (32, 32)
 PLAYER_WHITE_NB = 1
 PLAYER_BLACK_NB = -1
+
+
+class PlayerType(Enum):
+    HUMAN = 0
+    AI = 1

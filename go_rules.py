@@ -12,7 +12,7 @@ except ImportError:
     import gomoku_rust
 
 from player import Player
-from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB
+from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB, PlayerType
 
 
 class GoRules:
@@ -23,8 +23,8 @@ class GoRules:
         m = 19
         n = 19
         self.board = [[0] * m for i in range(n)]
-        self.player_list.append(Player(1, 0, "White"))
-        self.player_list.append(Player(-1, 0, "Black"))
+        self.player_list.append(Player(PLAYER_WHITE_NB, PlayerType.HUMAN.value, "White"))
+        self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.HUMAN.value, "Black"))
 
     def place_stone(self, player, x, y):
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
