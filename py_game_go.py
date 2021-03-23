@@ -4,7 +4,13 @@ import pygame
 from go_rules import GoRules
 from player import Player
 from utils import logger_factory
-from global_var import BOARD_NOTATION, MAIN_WINDOW_SIZE, STONE_SIZE
+from global_var import (
+    BOARD_NOTATION,
+    MAIN_WINDOW_SIZE,
+    STONE_SIZE,
+    PLAYER_WHITE_NB,
+    PLAYER_BLACK_NB,
+)
 
 
 class PyGameGo:
@@ -141,9 +147,9 @@ class PyGameGo:
         elif stone_status == 0:
             if self.sound_status:
                 self.placing_stone_sound.play()
-            if self.player.nb == 1:
+            if self.player.nb == PLAYER_WHITE_NB:
                 self.player = go_rules.player_list[1]
-            elif self.player.nb == -1:
+            elif self.player.nb == PLAYER_BLACK_NB:
                 self.player = go_rules.player_list[0]
             self.print_player_move(x=x, y=y)
         else:

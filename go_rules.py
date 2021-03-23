@@ -12,6 +12,7 @@ except ImportError:
     import gomoku_rust
 
 from player import Player
+from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB
 
 
 class GoRules:
@@ -65,8 +66,8 @@ class GoRules:
 
     def reset_players(self):
         self.player_list.clear()
-        self.player_list.append(Player(1, 0, "White"))
-        self.player_list.append(Player(-1, 0, "Black"))
+        self.player_list.append(Player(PLAYER_WHITE_NB, 0, "White"))
+        self.player_list.append(Player(PLAYER_BLACK_NB, 0, "Black"))
 
     def reset_game(self):
         self.reset_players()
