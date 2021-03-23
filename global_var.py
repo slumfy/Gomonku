@@ -1,5 +1,7 @@
 from enum import Enum
 
+
+# DISPLAY
 BOARD_NOTATION = (
     (
         "19",
@@ -48,6 +50,8 @@ BOARD_NOTATION = (
 MAIN_WINDOW_SIZE = (720, 720)
 BOARD_SIZE = (720, 720)
 STONE_SIZE = (32, 32)
+
+# PLAYER GLOBAL VAR
 PLAYER_WHITE_NB = 1
 PLAYER_BLACK_NB = -1
 

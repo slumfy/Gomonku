@@ -10,6 +10,7 @@ from global_var import (
     STONE_SIZE,
     PLAYER_WHITE_NB,
     PLAYER_BLACK_NB,
+    PlayerType,
 )
 
 
@@ -124,7 +125,7 @@ class PyGameGo:
         y = 0
         while 1:
             win_status = 0
-            if self.player.player_type == 1:
+            if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
                 AI_move = go_rules.AI_move(self.player, x, y)
                 x, y = AI_move[0]
