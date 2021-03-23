@@ -11,8 +11,13 @@ def main(argv=None):
         help="Disable or enable sound.",
         action="store_true",
     )
+    parser.add_argument(
+        "--no_ai_helper",
+        help="Disable or enable AI helper.",
+        action="store_false",
+    )
     args = parser.parse_args(argv)
-    go_rules = GoRules()
+    go_rules = GoRules(ai_helper=args.no_ai_helper)
     game = PyGameGo(sound_status=not args.no_sound)
     game.menu(go_rules=go_rules)
 

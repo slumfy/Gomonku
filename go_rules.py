@@ -18,8 +18,10 @@ from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB, PlayerType
 class GoRules:
     board = []
     player_list = []
+    ai_helper: bool = False
 
-    def __init__(self):
+    def __init__(self, ai_helper: bool = False):
+        self.ai_helper = ai_helper
         m = 19
         n = 19
         self.board = [[0] * m for i in range(n)]
@@ -34,7 +36,8 @@ class GoRules:
             self.board = Rust_res["board"]
             player.eat_piece += Rust_res["eated_piece"]
             # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
-            gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
+            if self.ai_helper:
+                gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
             if player.eat_piece >= 10:
                 return player.nb
             if "wining_position" in Rust_res.keys():
