@@ -2,28 +2,33 @@ use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 mod check;
+mod negamax;
 mod state;
 mod tests;
-mod negamax;
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
-#[pyfunction]
-fn negamax(board: Vec<Vec<i32>>, player: i32,x: i32, y: i32) -> PyResult<((i32,i32),i32)>{
-	let mut mutboard: Vec<Vec<i32>> = board;
-    let mut state: state::State = state::create_new_state(&mut mutboard,player,(x,y));
-	let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
-	println!("negamax {:?}", value);
-	Ok(value)
+static ALPHABET: [char; 26] = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+    'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+];
 
+#[pyfunction]
+fn negamax(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<((i32, i32), i32)> {
+    let mut mutboard: Vec<Vec<i32>> = board;
+    let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
+    let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
+    println!("negamax {:?}:{}", value.0 .0, ALPHABET[value.0 .1 as usize]);
+    println!("negamax heuristic {:?}", value.1);
+    Ok(value)
 }
 
 #[pyfunction]
-fn show_state(board: Vec<Vec<i32>>, player: i32,x: i32, y: i32) {
-	let mut mutboard: Vec<Vec<i32>> = board;
-    let state: state::State = state::create_new_state(&mut mutboard,player,(x,y));
-	state::print_state(state);
+fn show_state(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) {
+    let mut mutboard: Vec<Vec<i32>> = board;
+    let state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
+    state::print_state(state);
 }
 
 #[pyfunction]
@@ -73,7 +78,7 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
     m.add_function(wrap_pyfunction!(show_state, m)?)?;
     m.add_function(wrap_pyfunction!(check_win, m)?)?;
-	m.add_function(wrap_pyfunction!(negamax, m)?)?;
+    m.add_function(wrap_pyfunction!(negamax, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }
