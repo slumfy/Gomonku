@@ -54,9 +54,9 @@ class GoRules:
             return 0
 
     def AI_move(self, player, x, y):
-        print(player,x,y)
+        print(player, x, y)
         move = gomoku_rust.negamax(self.board, player.nb, x, y)
-        print("AI: ",move)
+        print("AI: ", move)
         return move
 
     def print_game_status(self):

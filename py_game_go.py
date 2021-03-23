@@ -120,10 +120,10 @@ class PyGameGo:
             win_status = 0
             if self.player.player_type == 1:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                AI_move = go_rules.AI_move(self.player,x,y)
-                x,y = AI_move[0]
+                AI_move = go_rules.AI_move(self.player, x, y)
+                x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
-                self.play_piece(go_rules,stone_status,win_status,x,y)
+                self.play_piece(go_rules, stone_status, win_status, x, y)
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -133,12 +133,11 @@ class PyGameGo:
                         x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                         y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                         stone_status = go_rules.place_stone(self.player, x, y)
-                        self.play_piece(go_rules,stone_status,win_status,x,y)
-                    
+                        self.play_piece(go_rules, stone_status, win_status, x, y)
 
-    def play_piece(self,go_rules,stone_status,win_status,x,y):
+    def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
-                self.print_illegal_move()
+            self.print_illegal_move()
         elif stone_status == 0:
             if self.sound_status:
                 self.placing_stone_sound.play()
@@ -158,7 +157,6 @@ class PyGameGo:
         pygame.display.flip()
         if win_status != 0:
             self.win(go_rules=go_rules)
-
 
     def mouse_pos_to_piece_pos(self, pos, space, offset):
         var = int((pos - offset) / space)
