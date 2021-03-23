@@ -12,18 +12,21 @@ except ImportError:
     import gomoku_rust
 
 from player import Player
+from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB, PlayerType
 
 
 class GoRules:
     board = []
     player_list = []
+    ai_helper: bool = False
 
-    def __init__(self):
+    def __init__(self, ai_helper: bool = False):
+        self.ai_helper = ai_helper
         m = 19
         n = 19
         self.board = [[0] * m for i in range(n)]
-        self.player_list.append(Player(1, 0, "White"))
-        self.player_list.append(Player(-1, 0, "Black"))
+        self.player_list.append(Player(PLAYER_WHITE_NB, PlayerType.HUMAN.value, "White"))
+        self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.HUMAN.value, "Black"))
 
     def place_stone(self, player, x, y):
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
@@ -33,7 +36,8 @@ class GoRules:
             self.board = Rust_res["board"]
             player.eat_piece += Rust_res["eated_piece"]
             # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
-            gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
+            if self.ai_helper:
+                gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
             if player.eat_piece >= 10:
                 return player.nb
             if "wining_position" in Rust_res.keys():
@@ -54,9 +58,9 @@ class GoRules:
             return 0
 
     def AI_move(self, player, x, y):
-        print(player,x,y)
+        print(player, x, y)
         move = gomoku_rust.negamax(self.board, player.nb, x, y)
-        print("AI: ",move)
+        print("AI: ", move)
         return move
 
     def print_game_status(self):
@@ -65,8 +69,8 @@ class GoRules:
 
     def reset_players(self):
         self.player_list.clear()
-        self.player_list.append(Player(1, 0, "White"))
-        self.player_list.append(Player(-1, 0, "Black"))
+        self.player_list.append(Player(PLAYER_WHITE_NB, 0, "White"))
+        self.player_list.append(Player(PLAYER_BLACK_NB, 0, "Black"))
 
     def reset_game(self):
         self.reset_players()
