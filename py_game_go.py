@@ -4,7 +4,13 @@ import pygame
 from go_rules import GoRules
 from player import Player
 from utils import logger_factory
-from global_var import BOARD_NOTATION, MAIN_WINDOW_SIZE, STONE_SIZE
+from global_var import (
+    BOARD_NOTATION,
+    MAIN_WINDOW_SIZE,
+    STONE_SIZE,
+    PLAYER_WHITE_NB,
+    PLAYER_BLACK_NB,
+)
 
 
 class PyGameGo:
@@ -120,10 +126,10 @@ class PyGameGo:
             win_status = 0
             if self.player.player_type == 1:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                AI_move = go_rules.AI_move(self.player,x,y)
-                x,y = AI_move[0]
+                AI_move = go_rules.AI_move(self.player, x, y)
+                x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
-                self.play_piece(go_rules,stone_status,win_status,x,y)
+                self.play_piece(go_rules, stone_status, win_status, x, y)
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -133,18 +139,17 @@ class PyGameGo:
                         x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                         y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                         stone_status = go_rules.place_stone(self.player, x, y)
-                        self.play_piece(go_rules,stone_status,win_status,x,y)
-                    
+                        self.play_piece(go_rules, stone_status, win_status, x, y)
 
-    def play_piece(self,go_rules,stone_status,win_status,x,y):
+    def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
-                self.print_illegal_move()
+            self.print_illegal_move()
         elif stone_status == 0:
             if self.sound_status:
                 self.placing_stone_sound.play()
-            if self.player.nb == 1:
+            if self.player.nb == PLAYER_WHITE_NB:
                 self.player = go_rules.player_list[1]
-            elif self.player.nb == -1:
+            elif self.player.nb == PLAYER_BLACK_NB:
                 self.player = go_rules.player_list[0]
             self.print_player_move(x=x, y=y)
         else:
@@ -158,7 +163,6 @@ class PyGameGo:
         pygame.display.flip()
         if win_status != 0:
             self.win(go_rules=go_rules)
-
 
     def mouse_pos_to_piece_pos(self, pos, space, offset):
         var = int((pos - offset) / space)

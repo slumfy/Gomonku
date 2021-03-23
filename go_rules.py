@@ -12,6 +12,7 @@ except ImportError:
     import gomoku_rust
 
 from player import Player
+from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB
 
 
 class GoRules:
@@ -54,9 +55,9 @@ class GoRules:
             return 0
 
     def AI_move(self, player, x, y):
-        print(player,x,y)
+        print(player, x, y)
         move = gomoku_rust.negamax(self.board, player.nb, x, y)
-        print("AI: ",move)
+        print("AI: ", move)
         return move
 
     def print_game_status(self):
@@ -65,8 +66,8 @@ class GoRules:
 
     def reset_players(self):
         self.player_list.clear()
-        self.player_list.append(Player(1, 0, "White"))
-        self.player_list.append(Player(-1, 0, "Black"))
+        self.player_list.append(Player(PLAYER_WHITE_NB, 0, "White"))
+        self.player_list.append(Player(PLAYER_BLACK_NB, 0, "Black"))
 
     def reset_game(self):
         self.reset_players()
