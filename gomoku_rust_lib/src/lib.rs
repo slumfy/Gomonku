@@ -12,10 +12,10 @@ use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
-static _ALPHABET: [char; 26] = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-    'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-];
+// static _ALPHABET: [char; 26] = [
+//     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+//     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+// ];
 
 #[pyfunction]
 fn negamax(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<((i32, i32), i32)> {
