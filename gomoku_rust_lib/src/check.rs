@@ -39,7 +39,7 @@ pub fn check_wrong_position(board: &mut Vec<Vec<i32>>, player: i32, x: i32, y: i
     if check_is_in_table(x, y, 0, 0, 0) == 1 || board[x as usize][y as usize] != 0 {
         return 1;
     }
-    if check_three_position(board, player, x, y) != 0 {
+    if check_three_position(board, player, x, y) > 1 {
         return 1;
     } else if check_wrong_routine(board, player, x, y, 1, 0) == 1 {
         return 1;
@@ -67,10 +67,7 @@ pub fn check_three_position(board: &mut Vec<Vec<i32>>, player: i32, x: i32, y: i
     if check_three_routine(board, player, x, y, 1, 1) == 1 {
         three_count += 1;
     }
-    if three_count < 2 {
-        return 0;
-    }
-    return 1;
+    return three_count;
 }
 
 pub fn check_eat_position(board: &mut Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> i32 {

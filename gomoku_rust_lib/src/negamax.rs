@@ -1,36 +1,42 @@
 use crate::state::State;
 use crate::state::create_child;
 use std::cmp::Reverse;
-
-pub fn negamax(mut state:&mut State, depth: i32, mut alpha: i32,mut  beta: i32,color: i32) -> ((i32,i32),i32) {
+pub fn negamax(mut state:&mut State, depth: i32, mut alpha: i32,mut  beta: i32,color: i32) -> i32 { 
+	
 	if depth != 0 { 
 		state.available_move = create_child(&mut state);
 		state.available_move.sort_by_key(|d| Reverse(d.heuristic));
 	}
-	println!("current state: {:?} current heuristic {} depth {}", state.current_move, state.heuristic, depth);
+	// println!("current state: {:?} current heuristic {} depth {}", state.current_move, state.heuristic, depth);
 	if depth == 0 || state.available_move.len() == 0 {
-		return ((state.current_move),state.heuristic * color);
+		return state.heuristic * color;
 	}
-	let mut value:((i32,i32),i32) = ((-1,-1),-1000);
+	let mut value: i32 = -1000;
 	let len = state.available_move.len();
 	for child in 0..len {
-		let mut childvalue = negamax(&mut state.available_move[child], depth - 1,-beta,-alpha, -color);
-		childvalue.1 = -childvalue.1;
-		value = maxtuple(value, childvalue);
-		alpha = std::cmp::max(alpha, value.0.1);
+		value = std::cmp::max(value, -negamax(&mut state.available_move[child], depth - 1,-beta,-alpha, -color));
+		alpha = std::cmp::max(alpha, value);
 		if alpha >= beta {
+			println!("pruning");
 			break ;
 		}
 	}
+	println!("alpha {}  beta {}", alpha, beta);
 	return value;
 }
 
-fn maxtuple(value: ((i32,i32),i32),childvalue: ((i32,i32),i32)) -> ((i32,i32),i32) {
-	if value.1 > childvalue.1 {
-		return value;
+pub fn return_move(state: &State, heuristic: i32) -> ((i32,i32),i32) {
+	println!("root node heur value = {:?}", state.heuristic);
+	let len = state.available_move.len();
+		for child in 0..len {
+			println!("child value = {:?}", ((state.available_move[child].current_move),state.available_move[child].heuristic));
+		if state.available_move[child].heuristic == heuristic {
+			return ((state.available_move[child].current_move),state.heuristic);
+		}
 	}
-	return childvalue;
+	return ((state.available_move[0].current_move),state.available_move[0].heuristic);
 }
+
 // function negamax(node, depth, color) is
 //     if depth = 0 or node is a terminal node then
 //         return color × the heuristic value of node

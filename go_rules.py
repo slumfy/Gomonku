@@ -36,8 +36,8 @@ class GoRules:
             self.board = Rust_res["board"]
             player.eat_piece += Rust_res["eated_piece"]
             # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
-            if self.ai_helper:
-                gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
+            # if self.ai_helper:
+            #     gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
             if player.eat_piece >= 10:
                 return player.nb
             if "wining_position" in Rust_res.keys():

@@ -21,11 +21,13 @@ fn negamax(board: Vec<Vec<i32>>, player: i32,x: i32, y: i32) -> PyResult<((i32,i
     let mut state: state::State = state::create_new_state(&mut mutboard,player,(x,y));
 	let start = Instant::now();
 	let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
+	let ai_move = negamax::return_move(&mut state, value);
 	let end = Instant::now();
+	println!("previous_move: {:?}", state.current_move);
 	println!("time to process {:?}", end.duration_since(start));
-	println!("negamax {:?}:{}", value.0 .0, ALPHABET[value.0 .1 as usize]);
-    println!("negamax heuristic {:?}", value.1);
-	Ok(value)
+	println!("negamax in board {:?}:{}", ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize]);
+    println!("negamax {:?}", ai_move);
+	Ok(ai_move)
 }
 
 #[pyfunction]
