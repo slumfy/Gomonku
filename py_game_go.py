@@ -28,6 +28,7 @@ class PyGameGo:
             self.sound_status = sound_status
             self.placing_stone_sound = pygame.mixer.Sound("ressources/sound/MOVE.wav")
             self.sound_icon_size = width, height = 32, 32
+            self.reset_icon_size = width, height = 32, 32
             self.screen = pygame.display.set_mode(size=MAIN_WINDOW_SIZE)
             self.go_board = pygame.image.load("ressources/images/goboard.png")
             self.go_menu = pygame.image.load("ressources/images/gomenu.png")
@@ -37,6 +38,10 @@ class PyGameGo:
             )
             self.go_sound_on = pygame.transform.scale(
                 pygame.image.load("ressources/images/sound-icon/sound_on.png"), self.sound_icon_size
+            )
+            self.reset_on = pygame.transform.scale(
+                pygame.image.load("ressources/images/reset-icon.png"),
+                self.reset_icon_size,
             )
             self.go_board_resize = pygame.transform.scale(self.go_board, MAIN_WINDOW_SIZE)
             self.start_point = [0, 0]
@@ -119,11 +124,14 @@ class PyGameGo:
 
     def playing(self, go_rules: GoRules):
         self.screen.blit(self.go_board_resize, self.start_point)
+        self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
         pygame.display.flip()
         self.player = go_rules.player_list[0]
         x = 0
         y = 0
         while 1:
+            self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
+            pygame.display.flip()
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
@@ -136,11 +144,19 @@ class PyGameGo:
                     if event.type == pygame.QUIT:
                         sys.exit()
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        self.screen.blit(self.go_board_resize, self.start_point)
-                        x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
-                        y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
-                        stone_status = go_rules.place_stone(self.player, x, y)
-                        self.play_piece(go_rules, stone_status, win_status, x, y)
+                        if (
+                            event.pos[1] <= self.sound_icon_size[1]
+                            and event.pos[1] >= 0
+                            and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0]
+                            and event.pos[0] <= MAIN_WINDOW_SIZE[0]
+                        ):
+                            x, y = self.reset_button(go_rules)
+                        else:
+                            self.screen.blit(self.go_board_resize, self.start_point)
+                            x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
+                            y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
+                            stone_status = go_rules.place_stone(self.player, x, y)
+                            self.play_piece(go_rules, stone_status, win_status, x, y)
 
     def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
@@ -202,3 +218,11 @@ class PyGameGo:
         else:
             render = font.render(msg, True, WHITE)
         self.screen.blit(render, (x, y))
+
+    def reset_button(self, go_rules):
+        go_rules.reset_game()
+        self.player = go_rules.player_list[0]
+        self.screen.blit(self.go_board_resize, self.start_point)
+        self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
+        pygame.display.flip()
+        return 0, 0
