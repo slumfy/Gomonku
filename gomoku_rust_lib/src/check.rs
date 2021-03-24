@@ -170,59 +170,33 @@ fn check_move_is_eating_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
     return count_eat;
 }
 
+fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
+    return true;
+    return false;
+}
+
 use std::time::Instant;
 
 pub fn count_biggest_alignment(state: State) -> i32 {
     let axes = create_axes_from_stone_position(&state);
-    let player = state.player_to_play;
+    let player: i8 = state.player_to_play;
     let mut count_eat = 0;
     println!("vertical x = {:?}", axes[0]);
     println!("horizontal y = {:?}", axes[1]);
     println!("diagonal top left = {:?}", axes[2]);
     println!("diagonal top right = {:?}", axes[3]);
-    let start_time_of_function = Instant::now();
 
+    let start = Instant::now();
     for axe in &axes {
-        let start_time = Instant::now();
         if check_move_is_in_sandwich_in_axe(&axe, player) {
-            let end_time = Instant::now();
-            println!("the var is in sandwich... wrong move.");
-            println!("time to process {:?}", end_time.duration_since(start_time));
             return 0;
         }
-        let end_time = Instant::now();
-        println!(
-            "time to process check_move is in sandwich {:?}",
-            end_time.duration_since(start_time)
-        );
-
-        let start_time = Instant::now();
         count_eat += check_move_is_eating_in_axe(&axe, player);
-        let end_time = Instant::now();
-        println!(
-            "time to process check_move_is_eating_in_axe {:?}",
-            end_time.duration_since(start_time)
-        );
     }
 
-    let start_time = Instant::now();
-    println!(
-        "biggest alignment in axe : {:?}",
-        check_move_biggest_alignment_in_axes(&axes, player)
-    );
-    let end_time = Instant::now();
-    println!(
-        "time to process biggest alignment {:?}",
-        end_time.duration_since(start_time)
-    );
-
-    println!("eated piece = {:?}", count_eat);
-    let end_time_of_function = Instant::now();
-    println!(
-        "time to process all function {:?}",
-        end_time_of_function.duration_since(start_time_of_function)
-    );
-    println!();
+    let biggest_alignement = check_move_biggest_alignment_in_axes(&axes, player);
+    let end = Instant::now();
+    println!("time of function = {:?}", end.checked_duration_since(start));
 
     return 0;
 }
