@@ -139,7 +139,7 @@ fn check_move_biggest_alignment_in_axes(axes: &Vec<Vec<i8>>, player: i8) -> i8 {
     return max(count_axe_0, max(count_axe_1, max(count_axe_2, count_axe_3)));
 }
 
-fn check_move_is_in_sandwich_in_axe(axe: &Vec<i8>, player: i8) -> bool {
+fn check_move_is_in_capturing_position_in_axe(axe: &Vec<i8>, player: i8) -> bool {
     let opponent: i8 = -player;
     if (axe[3] == opponent || (axe[3] == player && axe[2] == opponent))
         && (axe[5] == opponent || (axe[5] == player && axe[6] == opponent))
@@ -150,7 +150,7 @@ fn check_move_is_in_sandwich_in_axe(axe: &Vec<i8>, player: i8) -> bool {
     }
 }
 
-fn check_move_is_eating_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
+fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
     let opponent: i8 = -player;
     let mut count_eat: i8 = 0;
 
@@ -170,8 +170,32 @@ fn check_move_is_eating_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
     return count_eat;
 }
 
-fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
-    return true;
+/// Return true if there is any double triple in the axes, false otherwise.
+pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
+    let mut triple_count = 0;
+
+    for axe in axes {
+        if axe[0] == 0 {
+            if (axe[1] == player && (axe[2] == player && axe[3] == 0)
+                || (axe[2] == 0 && axe[3] == player))
+                || axe[1] == 0 && axe[2] == player && axe[3] == player
+            {
+                // adding something here
+                triple_count += 1;
+            }
+        } else if axe[8] == 0 {
+            if (axe[7] == player && (axe[6] == player && axe[5] == 0)
+                || (axe[6] == 0 && axe[5] == player))
+                || axe[7] == 0 && axe[6] == player && axe[5] == player
+            {
+                // adding something here
+                triple_count += 1;
+            }
+        }
+    }
+    if triple_count > 1 {
+        return true;
+    }
     return false;
 }
 
@@ -181,22 +205,26 @@ pub fn count_biggest_alignment(state: State) -> i32 {
     let axes = create_axes_from_stone_position(&state);
     let player: i8 = state.player_to_play;
     let mut count_eat = 0;
-    println!("vertical x = {:?}", axes[0]);
-    println!("horizontal y = {:?}", axes[1]);
-    println!("diagonal top left = {:?}", axes[2]);
-    println!("diagonal top right = {:?}", axes[3]);
+    // println!("vertical x = {:?}", axes[0]);
+    // println!("horizontal y = {:?}", axes[1]);
+    // println!("diagonal top left = {:?}", axes[2]);
+    // println!("diagonal top right = {:?}", axes[3]);
 
     let start = Instant::now();
     for axe in &axes {
-        if check_move_is_in_sandwich_in_axe(&axe, player) {
+        if check_move_is_in_capturing_position_in_axe(&axe, player) {
             return 0;
         }
-        count_eat += check_move_is_eating_in_axe(&axe, player);
+        count_eat += check_move_is_capturing_stone_in_axe(&axe, player);
     }
 
+    if check_move_is_double_triple(&axes, player) == true {
+        println!("wrong move, double triple...");
+    }
     let biggest_alignement = check_move_biggest_alignment_in_axes(&axes, player);
     let end = Instant::now();
-    println!("time of function = {:?}", end.checked_duration_since(start));
+    // println!("time of function = {:?}", end.checked_duration_since(start));
 
+    println!();
     return 0;
 }

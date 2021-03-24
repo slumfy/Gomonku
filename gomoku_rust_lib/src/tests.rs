@@ -1,4 +1,5 @@
 extern crate pyo3;
+use crate::check::check_move_is_double_triple;
 
 use pyo3::prelude::*;
 use pyo3::types::*;
@@ -69,4 +70,81 @@ pub fn test_get_pydict(py_obj: HashMap<String, i32>) {
         py_obj.get_key_value(&String::from("y")),
         Some((&String::from("y"), &0i32))
     );
+}
+
+#[pyfunction]
+pub fn test_double_triple() {
+    let player = 1;
+    let mut axes: Vec<Vec<i8>> = vec![];
+    // test no double triple, empty map
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), false);
+
+    // test in same axe more than triple
+    axes = vec![];
+
+    axes.push(vec![0, 0, 1, 1, player, 1, 0, 1, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), false);
+
+    // test in two different axes double triple
+    axes = vec![];
+    axes.push(vec![0, 0, 1, 1, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 1, 1, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), true);
+
+    // test in two different axes double triple
+    axes = vec![];
+    axes.push(vec![0, 1, 0, 1, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 1, 1, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), true);
+
+    // test in two different axes double triple
+    axes = vec![];
+    axes.push(vec![0, 1, 0, 1, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 1, 1, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), true);
+
+    // test in two different axes double triple
+    axes = vec![];
+    axes.push(vec![0, 1, 1, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 1, 0, 1, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), true);
+
+    // test in more than two different axes double triple
+    axes = vec![];
+    axes.push(vec![0, 1, 1, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 1, 1, 0, 0]);
+    axes.push(vec![0, 0, 1, 1, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 1, 0, 1, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), true);
+
+    // test in more than two different axes double triple
+    axes = vec![];
+    axes.push(vec![0, 1, 1, 0, player, 1, 1, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, player, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), false);
 }
