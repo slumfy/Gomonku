@@ -172,28 +172,32 @@ fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
 
 /// Return true if there is any double triple in the axes, false otherwise.
 pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
-    let mut triple_count = 0;
+    let mut triple_count_in_all_axes = 0;
+    let mut triple_count_in_one_axe;
 
     for axe in axes {
+        triple_count_in_one_axe = 0;
         if axe[0] == 0 {
             if (axe[1] == player && (axe[2] == player && axe[3] == 0)
                 || (axe[2] == 0 && axe[3] == player))
                 || axe[1] == 0 && axe[2] == player && axe[3] == player
             {
-                // adding something here
-                triple_count += 1;
+                triple_count_in_one_axe += 1;
             }
-        } else if axe[8] == 0 {
+        }
+        if axe[8] == 0 {
             if (axe[7] == player && (axe[6] == player && axe[5] == 0)
                 || (axe[6] == 0 && axe[5] == player))
                 || axe[7] == 0 && axe[6] == player && axe[5] == player
             {
-                // adding something here
-                triple_count += 1;
+                triple_count_in_one_axe += 1;
             }
         }
+        if triple_count_in_one_axe == 1 {
+            triple_count_in_all_axes += 1;
+        }
     }
-    if triple_count > 1 {
+    if triple_count_in_all_axes > 1 {
         return true;
     }
     return false;
