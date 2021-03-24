@@ -205,9 +205,27 @@ pub fn test_double_triple() {
 
     assert_eq!(check_move_is_double_triple(&axes, player), false);
 
-    // test is not double triple because blocked
+    // test is double triple but last one in axe is opponent
     axes = vec![];
     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, 0, -1]);
+    axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), false);
+
+    // test is not double triple because more than 3
+    axes = vec![];
+    axes.push(vec![0, 0, 0, 0, current_move, 1, 1, 1, 0]);
+    axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
+    axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+
+    assert_eq!(check_move_is_double_triple(&axes, player), false);
+
+    // test is not double triple because more than 3
+    axes = vec![];
+    axes.push(vec![0, 0, 0, 1, current_move, 1, 1, 0, 0]);
     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);

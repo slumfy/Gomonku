@@ -177,7 +177,7 @@ pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
 
     for axe in axes {
         triple_count_in_one_axe = 0;
-        if axe[0] == 0 {
+        if axe[0] == 0 && axe[5] == 0 {
             if (axe[1] == player
                 && (axe[2] == player && axe[3] == 0 || axe[2] == 0 && axe[3] == player))
                 || (axe[1] == 0 && axe[2] == player && axe[3] == player)
@@ -185,7 +185,7 @@ pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
                 triple_count_in_one_axe += 1;
             }
         }
-        if axe[8] == 0 {
+        if axe[8] == 0 && axe[3] == 0 {
             if (axe[7] == player
                 && (axe[6] == player && axe[5] == 0 || axe[6] == 0 && axe[5] == player))
                 || (axe[7] == 0 && axe[6] == player && axe[5] == player)
