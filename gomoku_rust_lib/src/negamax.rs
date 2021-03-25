@@ -25,11 +25,11 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, mut beta: i32,
         );
         alpha = std::cmp::max(alpha, value);
         if alpha >= beta {
-            println!("pruning");
+            // println!("pruning");
             break;
         }
     }
-    println!("alpha {}  beta {}", alpha, beta);
+    // println!("alpha {}  beta {}", alpha, beta);
     return value;
 }
 

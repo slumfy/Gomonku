@@ -38,10 +38,10 @@ fn get_box(state: &mut State) -> ((isize, isize), (isize, isize)) {
         x_tuple.0 = state.current_move.0 - offset;
     }
     if state.current_move.0 + offset <= 18 {
-        x_tuple.1 = state.current_move.1 + offset;
+        x_tuple.1 = state.current_move.0 + offset;
     }
     if state.current_move.1 - offset >= 0 {
-        y_tuple.0 = state.current_move.0 - offset;
+        y_tuple.0 = state.current_move.1 - offset;
     }
     if state.current_move.1 + offset <= 18 {
         y_tuple.1 = state.current_move.1 + offset;
@@ -54,13 +54,12 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     let mut childlist: Vec<State>;
     let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
     childlist = Vec::new();
-    for x in indexbox.0 .0..indexbox.0 .1 {
-        for y in indexbox.1 .0..indexbox.1 .1 {
+    for x in indexbox.0.0..indexbox.0.1 {
+        for y in indexbox.1.0..indexbox.1.1 {
             let axes = create_axes_from_stone_position(state);
             if check_is_wrong_move(state, &axes) == 0 {
                 cpyboard = state.board.clone();
                 cpyboard[x as usize][y as usize] = -state.player_to_play;
-                // println!("board {} {} {}", x,y, cpyboard[x as usize][y as usize]);
                 let child = create_new_state(&mut cpyboard, -state.player_to_play, (x, y));
                 childlist.push(child);
             }
