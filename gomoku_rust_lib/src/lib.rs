@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
-use std::time::{Duration, Instant};
+use std::time::Instant;
 mod check;
 mod negamax;
 mod state;
@@ -16,18 +16,21 @@ static ALPHABET: [char; 26] = [
 ];
 
 #[pyfunction]
-fn negamax(board: Vec<Vec<i32>>, player: i32,x: i32, y: i32) -> PyResult<((i32,i32),i32)>{
-	let mut mutboard: Vec<Vec<i32>> = board;
-    let mut state: state::State = state::create_new_state(&mut mutboard,player,(x,y));
-	let start = Instant::now();
-	let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
-	let ai_move = negamax::return_move(&mut state, value);
-	let end = Instant::now();
-	println!("previous_move: {:?}", state.current_move);
-	println!("time to process {:?}", end.duration_since(start));
-	println!("negamax in board {:?}:{}", ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize]);
+fn negamax(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<((i32, i32), i32)> {
+    let mut mutboard: Vec<Vec<i32>> = board;
+    let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
+    let start = Instant::now();
+    let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
+    let ai_move = negamax::return_move(&mut state, value);
+    let end = Instant::now();
+    println!("previous_move: {:?}", state.current_move);
+    println!("time to process {:?}", end.duration_since(start));
+    println!(
+        "negamax in board {:?}:{}",
+        ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize]
+    );
     println!("negamax {:?}", ai_move);
-	Ok(ai_move)
+    Ok(ai_move)
 }
 
 #[pyfunction]
@@ -46,7 +49,7 @@ fn check_win(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<i32>
 
 #[pyfunction]
 fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<PyObject> {
-	let start = Instant::now();
+    let start = Instant::now();
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
@@ -67,8 +70,8 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
     }
     dict.set_item("eated_piece", eated_piece)?;
     dict.set_item("board", &mutboard)?;
-	let end = Instant::now();
-	println!("time to process {:?}", end.duration_since(start));
+    let end = Instant::now();
+    println!("time to process {:?}", end.duration_since(start));
     Ok(dict.to_object(py))
 }
 
