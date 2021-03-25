@@ -46,7 +46,7 @@ fn get_box(state: &mut State) -> ((isize, isize), (isize, isize)) {
     if state.current_move.1 + offset <= 18 {
         y_tuple.1 = state.current_move.1 + offset;
     }
-	println!("tuple {:?}  x {} y {}",(x_tuple, y_tuple),state.current_move.0,state.current_move.1);
+	// println!("tuple {:?}  x {} y {}",(x_tuple, y_tuple),state.current_move.0,state.current_move.1);
     return (x_tuple, y_tuple);
 }
 
