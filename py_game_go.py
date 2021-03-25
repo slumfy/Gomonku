@@ -124,13 +124,13 @@ class PyGameGo:
 
     def playing(self, go_rules: GoRules):
         self.screen.blit(self.go_board_resize, self.start_point)
-        self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
+        self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
         pygame.display.flip()
         self.player = go_rules.player_list[0]
         x = 0
         y = 0
         while 1:
-            self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
+            self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
             pygame.display.flip()
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
@@ -147,7 +147,7 @@ class PyGameGo:
                         if (
                             event.pos[1] <= self.sound_icon_size[1]
                             and event.pos[1] >= 0
-                            and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0]
+                            and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0]
                             and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                         ):
                             x, y = self.reset_button(go_rules)
@@ -223,6 +223,6 @@ class PyGameGo:
         go_rules.reset_game()
         self.player = go_rules.player_list[0]
         self.screen.blit(self.go_board_resize, self.start_point)
-        self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
+        self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
         pygame.display.flip()
         return 0, 0
