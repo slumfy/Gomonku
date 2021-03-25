@@ -237,17 +237,19 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     let stone_y = state.current_move.1;
     if stone_x < 0 || stone_x > 19 || stone_y < 0 || stone_y > 19 {
         return -1;
+    } else if state.board[stone_x as usize][stone_y as usize] != 0 {
+        return -2;
     }
     let player: i8 = state.player_to_play;
 
     for axe in axes {
         if check_move_is_in_capturing_position_in_axe(&axe, player) {
-            return -2;
+            return -3;
         }
     }
 
     if check_move_is_double_triple(&axes, player) == true {
-        return -3;
+        return -4;
     }
     return 0;
 }
