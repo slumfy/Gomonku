@@ -59,7 +59,7 @@ class GoRules:
 
     def AI_move(self, player, x, y):
         print(player, x, y)
-        move = gomoku_rust.negamax(self.board, player.nb, x, y)
+        move = gomoku_rust.ai_move(self.board, player.nb, x, y)
         print("AI: ", move)
         return move
 

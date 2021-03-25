@@ -2,29 +2,21 @@
 mod check;
 use crate::state::State;
 
-pub fn heuristic(board: &mut Vec<Vec<i32>>, state: &State) -> i32 {
+pub fn heuristic(board: &mut Vec<Vec<i8>>, state: &State) -> i32 {
     let mut value = 0i32;
-    value += check::check_win_position(
-        board,
-        state.player_to_play,
-        state.current_move.0,
-        state.current_move.1,
-    ); //current alignement
-    value += check::check_three_position(
-        board,
-        state.player_to_play,
-        state.current_move.0,
-        state.current_move.1,
-    );
+    let board_check = check::checking_move_biggest_alignment_and_stone_captured(state);
+    value += (board_check["stone_captured"] * 10) as i32;
+    value += board_check["biggest_alignment"] as i32;
+    //current alignement
     value += count_diff_piece(board, state) * 10;
     value += count_default_value(state.current_move);
 
     return value;
 }
 
-fn count_diff_piece(board: &mut Vec<Vec<i32>>, state: &State) -> i32 {
-    let mut player = 0i32;
-    let mut advers = 0i32;
+fn count_diff_piece(board: &mut Vec<Vec<i8>>, state: &State) -> i32 {
+    let mut player = 0i8;
+    let mut advers = 0i8;
     for x in 0..board.len() {
         for y in 0..board.len() {
             if board[x as usize][y as usize] == state.player_to_play {
@@ -34,10 +26,10 @@ fn count_diff_piece(board: &mut Vec<Vec<i32>>, state: &State) -> i32 {
             }
         }
     }
-    return player - advers;
+    return (player - advers) as i32;
 }
 
-fn count_default_value(current_move: (i32, i32)) -> i32 {
+fn count_default_value(current_move: (isize, isize)) -> i32 {
     let default_table: [[i32; 19]; 19] = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],

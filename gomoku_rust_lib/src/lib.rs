@@ -3,7 +3,7 @@ use pyo3::types::PyDict;
 use std::collections::HashMap;
 
 use pyo3::{wrap_pyfunction, wrap_pymodule};
-// use std::time::Instant;
+use std::time::Instant;
 
 mod check;
 use check::checking_move_biggest_alignment_and_stone_captured;
@@ -17,14 +17,14 @@ use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
-// static _ALPHABET: [char; 26] = [
-//     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-//     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-// ];
+static ALPHABET: [char; 26] = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+    'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+];
 
 #[pyfunction]
-fn negamax(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<((i32, i32), i32)> {
-    let mut mutboard: Vec<Vec<i32>> = board;
+fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<((isize, isize), i32)> {
+    let mut mutboard: Vec<Vec<i8>> = board;
     let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
     let start = Instant::now();
     let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
@@ -38,23 +38,6 @@ fn negamax(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<((i32,
     );
     println!("negamax {:?}", ai_move);
     Ok(ai_move)
-}
-
-#[pyfunction]
-fn show_state(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) {
-    let mut mutboard: Vec<Vec<i32>> = board;
-    let state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
-
-    // let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
-    let _value = checking_move_biggest_alignment_and_stone_captured(&state);
-
-    // let start_time = Instant::now();
-    // let end_time = Instant::now();
-    // println!("time to process {:?}", end_time.duration_since(start_time));
-    // println!("negamax {:?}:{}", value.0 .0, ALPHABET[value.0 .1 as usize]);
-    // println!("negamax heuristic {:?}", value.1);
-
-    Ok(((0, 0), 0))
 }
 
 #[pyfunction]

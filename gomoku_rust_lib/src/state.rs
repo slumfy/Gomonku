@@ -1,5 +1,7 @@
 #[path = "check.rs"]
 mod check;
+use check::check_is_in_table;
+use check::check_is_wrong_move;
 use check::create_axes_from_stone_position;
 #[path = "heuristic.rs"]
 mod heuristic;
@@ -28,15 +30,43 @@ pub fn create_new_state(
     return new_state;
 }
 
-fn check_is_in_table(x: isize, y: isize, xsign: isize, ysign: isize, offset: isize) -> i8 {
-    if x + offset * xsign > 18
-        || x + offset * xsign < 0
-        || y + offset * ysign > 18
-        || y + offset * ysign < 0
-    {
-        return 1;
+fn get_box(state: &mut State) -> ((isize, isize), (isize, isize)) {
+    let offset = 5;
+    let mut x_tuple: (isize, isize) = (0, 18);
+    let mut y_tuple: (isize, isize) = (0, 18);
+    if state.current_move.0 - offset >= 0 {
+        x_tuple.0 = state.current_move.0 - offset;
     }
-    return 0;
+    if state.current_move.0 + offset <= 18 {
+        x_tuple.1 = state.current_move.1 + offset;
+    }
+    if state.current_move.1 - offset >= 0 {
+        y_tuple.0 = state.current_move.0 - offset;
+    }
+    if state.current_move.1 + offset <= 18 {
+        y_tuple.1 = state.current_move.1 + offset;
+    }
+    return (x_tuple, y_tuple);
+}
+
+pub fn create_child(state: &mut State) -> Vec<State> {
+    let mut cpyboard: Vec<Vec<i8>>;
+    let mut childlist: Vec<State>;
+    let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
+    childlist = Vec::new();
+    for x in indexbox.0 .0..indexbox.0 .1 {
+        for y in indexbox.1 .0..indexbox.1 .1 {
+            let axes = create_axes_from_stone_position(state);
+            if check_is_wrong_move(state, &axes) == 0 {
+                cpyboard = state.board.clone();
+                cpyboard[x as usize][y as usize] = -state.player_to_play;
+                // println!("board {} {} {}", x,y, cpyboard[x as usize][y as usize]);
+                let child = create_new_state(&mut cpyboard, -state.player_to_play, (x, y));
+                childlist.push(child);
+            }
+        }
+    }
+    return childlist;
 }
 
 fn capture_stone(board: &mut Vec<Vec<i8>>, poslist: Vec<(isize, isize)>) -> i8 {

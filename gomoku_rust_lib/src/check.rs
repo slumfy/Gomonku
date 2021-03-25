@@ -2,7 +2,18 @@ use crate::state::State;
 use std::cmp::max;
 use std::collections::HashMap;
 
-fn create_axes_from_stone_position(state: &State) -> Vec<Vec<i8>> {
+pub fn check_is_in_table(x: isize, y: isize, xsign: isize, ysign: isize, offset: isize) -> i8 {
+    if x + offset * xsign > 18
+        || x + offset * xsign < 0
+        || y + offset * ysign > 18
+        || y + offset * ysign < 0
+    {
+        return 1;
+    }
+    return 0;
+}
+
+pub fn create_axes_from_stone_position(state: &State) -> Vec<Vec<i8>> {
     let board = &state.board;
     let box_half_size: isize = 5;
     let player = state.player_to_play;
@@ -221,7 +232,7 @@ pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
     return false;
 }
 
-fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
+pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     let stone_x = state.current_move.0;
     let stone_y = state.current_move.1;
     if stone_x < 0 || stone_x > 19 || stone_y < 0 || stone_y > 19 {
