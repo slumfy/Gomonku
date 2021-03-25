@@ -247,14 +247,13 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
             return -3;
         }
     }
-
     if check_move_is_double_triple(&axes, player) == true {
         return -4;
     }
     return 0;
 }
 
-pub fn checking_move_biggest_alignment_and_stone_captured(state: &State) -> HashMap<String, i8> {
+pub fn checking_move(state: &State) -> HashMap<String, i8> {
     let mut board_check: HashMap<String, i8> = HashMap::new();
     let axes = create_axes_from_stone_position(state);
     let player: i8 = state.player_to_play;
@@ -274,5 +273,22 @@ pub fn checking_move_biggest_alignment_and_stone_captured(state: &State) -> Hash
         );
         board_check.insert(String::from("stone_captured"), count_eat);
     }
+    return board_check;
+}
+
+pub fn checking_move_biggest_alignment_and_stone_captured(state: &State) -> HashMap<String, i8> {
+    let mut board_check: HashMap<String, i8> = HashMap::new();
+    let axes = create_axes_from_stone_position(state);
+    let player: i8 = state.player_to_play;
+    let mut count_eat: i8 = 0;
+
+        for axe in &axes {
+            count_eat += check_move_is_capturing_stone_in_axe(&axe, player);
+        }
+        board_check.insert(
+            String::from("biggest_alignment"),
+            check_move_biggest_alignment_in_axes(&axes, player),
+        );
+        board_check.insert(String::from("stone_captured"), count_eat);
     return board_check;
 }

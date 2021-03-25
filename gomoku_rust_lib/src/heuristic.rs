@@ -5,8 +5,9 @@ use crate::state::State;
 pub fn heuristic(board: &mut Vec<Vec<i8>>, state: &State) -> i32 {
     let mut value = 0i32;
     let board_check = check::checking_move_biggest_alignment_and_stone_captured(state);
-    value += (board_check["stone_captured"] * 10) as i32;
-    value += board_check["biggest_alignment"] as i32;
+	// println!("boardcheck {:?}", board_check);
+	value += (board_check["stone_captured"] as i32) * 100;
+    value += (board_check["biggest_alignment"] as i32) * 10;
     //current alignement
     value += count_diff_piece(board, state) * 10;
     value += count_default_value(state.current_move);

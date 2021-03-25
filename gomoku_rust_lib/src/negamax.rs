@@ -34,16 +34,16 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, mut beta: i32,
 }
 
 pub fn return_move(state: &State, heuristic: i32) -> ((isize, isize), i32) {
-    println!("root node heur value = {:?}", state.heuristic);
+    // println!("heuristic ret = {:?}", heuristic);
     let len = state.available_move.len();
     for child in 0..len {
-        println!(
-            "child value = {:?}",
-            (
-                (state.available_move[child].current_move),
-                state.available_move[child].heuristic
-            )
-        );
+        // println!(
+        //     "child value = {:?}",
+        //     (
+        //         (state.available_move[child].current_move),
+        //         state.available_move[child].heuristic
+        //     )
+        // );
         if state.available_move[child].heuristic == heuristic {
             return ((state.available_move[child].current_move), state.heuristic);
         }
@@ -53,14 +53,6 @@ pub fn return_move(state: &State, heuristic: i32) -> ((isize, isize), i32) {
         state.available_move[0].heuristic,
     );
 }
-
-// function negamax(node, depth, color) is
-//     if depth = 0 or node is a terminal node then
-//         return color × the heuristic value of node
-//     value := −∞
-//     for each child of node do
-//         value := max(value, −negamax(child, depth − 1, −color))
-//     return value
 
 //example of negamax alpha beta pruning
 // function negamax(node, depth, α, β, color)

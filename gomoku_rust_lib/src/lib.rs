@@ -6,7 +6,8 @@ use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
 mod check;
-use check::checking_move_biggest_alignment_and_stone_captured;
+use check::checking_move;
+
 
 mod negamax;
 mod state;
@@ -26,7 +27,7 @@ static ALPHABET: [char; 26] = [
 fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<((isize, isize), i32)> {
     let mut mutboard: Vec<Vec<i8>> = board;
     let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
-    let start = Instant::now();
+	let start = Instant::now();
     let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
     let ai_move = negamax::return_move(&mut state, value);
     let end = Instant::now();
@@ -49,7 +50,7 @@ fn place_stone(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<
     let mut mutboard: Vec<Vec<i8>> = board;
     let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
     let board_check: HashMap<String, i8> =
-        checking_move_biggest_alignment_and_stone_captured(&state);
+        checking_move(&state);
     if board_check["is_wrong_move"] == 0 {
         apply_state_move(&mut state, board_check["stone_captured"]);
         dict.set_item("board", &state.board)?;
