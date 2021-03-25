@@ -172,32 +172,49 @@ fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
 
 /// Return true if there is any double triple in the axes, false otherwise.
 pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
-    let mut triple_count_in_all_axes = 0;
-    let mut triple_count_in_one_axe;
+    let mut triple_count = 0;
 
     for axe in axes {
-        triple_count_in_one_axe = 0;
-        if axe[0] == 0 && axe[5] == 0 {
-            if (axe[1] == player
-                && (axe[2] == player && axe[3] == 0 || axe[2] == 0 && axe[3] == player))
-                || (axe[1] == 0 && axe[2] == player && axe[3] == player)
-            {
-                triple_count_in_one_axe += 1;
-            }
+        // Checking left part of axe double triple
+        // 0110M0000
+        // 0101M0000
+        // 0011M0000
+        if axe[5] == 0
+            && ((axe[3] == player && axe[2] == player && axe[1] == 0)
+                || (axe[3] == player && axe[2] == 0 && axe[1] == player && axe[0] == 0)
+                || (axe[3] == 0 && axe[2] == player && axe[1] == player && axe[0] == 0))
+        {
+            triple_count += 1;
         }
-        if axe[8] == 0 && axe[3] == 0 {
-            if (axe[7] == player
-                && (axe[6] == player && axe[5] == 0 || axe[6] == 0 && axe[5] == player))
-                || (axe[7] == 0 && axe[6] == player && axe[5] == player)
-            {
-                triple_count_in_one_axe += 1;
-            }
+        // Checking right part of axe double triple
+        // 0000M1010
+        // 0000M1100
+        // 0000M0110
+        else if axe[3] == 0
+            && ((axe[5] == player && axe[6] == player && axe[7] == 0)
+                || (axe[5] == player && axe[6] == 0 && axe[7] == player && axe[8] == 0)
+                || (axe[5] == 0 && axe[6] == player && axe[7] == player && axe[8] == 0))
+        {
+            triple_count += 1;
         }
-        if triple_count_in_one_axe == 1 {
-            triple_count_in_all_axes += 1;
+        // Checking center part of axe double triple
+        // 0001M1000
+        // 0010M1000
+        else if axe[5] == player
+            && axe[6] == 0
+            && ((axe[3] == player && axe[2] == 0)
+                || (axe[3] == 0 && axe[2] == player && axe[1] == 0))
+        {
+            triple_count += 1;
+        }
+        // Checking center part of axe double triple
+        // 0001M0100
+        else if axe[5] == 0 && axe[6] == player && axe[7] == 0 && axe[3] == player && axe[2] == 0
+        {
+            triple_count += 1;
         }
     }
-    if triple_count_in_all_axes > 1 {
+    if triple_count > 1 {
         return true;
     }
     return false;
@@ -205,14 +222,10 @@ pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
 
 use std::time::Instant;
 
-pub fn count_biggest_alignment(state: State) -> i32 {
+pub fn checking_move(state: State) -> i32 {
     let axes = create_axes_from_stone_position(&state);
     let player: i8 = state.player_to_play;
     let mut count_eat = 0;
-    // println!("vertical x = {:?}", axes[0]);
-    // println!("horizontal y = {:?}", axes[1]);
-    // println!("diagonal top left = {:?}", axes[2]);
-    // println!("diagonal top right = {:?}", axes[3]);
 
     let start = Instant::now();
     for axe in &axes {
@@ -223,12 +236,11 @@ pub fn count_biggest_alignment(state: State) -> i32 {
     }
 
     if check_move_is_double_triple(&axes, player) == true {
-        println!("wrong move, double triple...");
+        return 0;
     }
     let biggest_alignement = check_move_biggest_alignment_in_axes(&axes, player);
-    let end = Instant::now();
+    // let end = Instant::now();
     // println!("time of function = {:?}", end.checked_duration_since(start));
 
-    println!();
     return 0;
 }

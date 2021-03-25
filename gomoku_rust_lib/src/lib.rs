@@ -3,7 +3,7 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 // use std::time::Instant;
 mod check;
-use check::count_biggest_alignment;
+use check::checking_move;
 
 mod negamax;
 mod state;
@@ -42,7 +42,7 @@ fn show_state(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) {
     let state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
 
     // let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
-    let _value = count_biggest_alignment(state);
+    let _value = checking_move(state);
 
     // let start_time = Instant::now();
     // let end_time = Instant::now();
