@@ -1,12 +1,16 @@
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
+use std::collections::HashMap;
+
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 // use std::time::Instant;
+
 mod check;
-use check::checking_move;
+use check::checking_move_biggest_alignment_and_stone_captured;
 
 mod negamax;
 mod state;
+use state::apply_state_move;
 mod tests;
 use crate::tests::__pyo3_get_function_test_double_triple;
 use crate::tests::__pyo3_get_function_test_get_pydict;
@@ -42,7 +46,7 @@ fn show_state(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) {
     let state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
 
     // let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
-    let _value = checking_move(state);
+    let _value = checking_move_biggest_alignment_and_stone_captured(&state);
 
     // let start_time = Instant::now();
     // let end_time = Instant::now();
@@ -54,30 +58,27 @@ fn show_state(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) {
 }
 
 #[pyfunction]
-fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<PyObject> {
-    let start = Instant::now();
+fn place_stone(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
-    let mut mutboard: Vec<Vec<i32>> = board;
-    let mut eated_piece = 0i32;
-    let wrong_status = 0;
-    if wrong_status == 1 {
-        dict.set_item("game_status", -1)?;
-    } else {
+
+    let mut mutboard: Vec<Vec<i8>> = board;
+    let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
+    let board_check: HashMap<String, i8> =
+        checking_move_biggest_alignment_and_stone_captured(&state);
+    if board_check["is_wrong_move"] == 0 {
+        apply_state_move(&mut state, board_check["stone_captured"]);
+        dict.set_item("board", &state.board)?;
         dict.set_item("game_status", 0)?;
+        dict.set_item("stone_captured", board_check["stone_captured"])?;
+
+        if board_check["biggest_alignment"] >= 5 {
+            dict.set_item("wining_position", &state.current_move)?;
+        }
+    } else {
+        dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-    if wrong_status == 0 {
-        mutboard[x as usize][y as usize] = player;
-        eated_piece = 0;
-    }
-    if 0 >= 5 {
-        dict.set_item("wining_position", (x, y))?;
-    }
-    dict.set_item("eated_piece", eated_piece)?;
-    dict.set_item("board", &mutboard)?;
-    let end = Instant::now();
-    println!("time to process {:?}", end.duration_since(start));
     Ok(dict.to_object(py))
 }
 

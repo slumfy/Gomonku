@@ -30,11 +30,11 @@ class GoRules:
 
     def place_stone(self, player, x, y):
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
-        if Rust_res["game_status"] == -1:
+        if Rust_res["game_status"] != 0:
             return -2
         else:
             self.board = Rust_res["board"]
-            player.eat_piece += Rust_res["eated_piece"]
+            player.eat_piece += Rust_res["stone_captured"]
             # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
             # if self.ai_helper:
             #     gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)

@@ -1,5 +1,6 @@
 use crate::state::State;
 use std::cmp::max;
+use std::collections::HashMap;
 
 fn create_axes_from_stone_position(state: &State) -> Vec<Vec<i8>> {
     let board = &state.board;
@@ -220,27 +221,45 @@ pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
     return false;
 }
 
-use std::time::Instant;
-
-pub fn checking_move(state: State) -> i32 {
-    let axes = create_axes_from_stone_position(&state);
+fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
+    let stone_x = state.current_move.0;
+    let stone_y = state.current_move.1;
+    if stone_x < 0 || stone_x > 19 || stone_y < 0 || stone_y > 19 {
+        return -1;
+    }
     let player: i8 = state.player_to_play;
-    let mut count_eat = 0;
 
-    let start = Instant::now();
-    for axe in &axes {
+    for axe in axes {
         if check_move_is_in_capturing_position_in_axe(&axe, player) {
-            return 0;
+            return -2;
         }
-        count_eat += check_move_is_capturing_stone_in_axe(&axe, player);
     }
 
     if check_move_is_double_triple(&axes, player) == true {
-        return 0;
+        return -3;
     }
-    let biggest_alignement = check_move_biggest_alignment_in_axes(&axes, player);
-    // let end = Instant::now();
-    // println!("time of function = {:?}", end.checked_duration_since(start));
-
     return 0;
+}
+
+pub fn checking_move_biggest_alignment_and_stone_captured(state: &State) -> HashMap<String, i8> {
+    let mut board_check: HashMap<String, i8> = HashMap::new();
+    let axes = create_axes_from_stone_position(state);
+    let player: i8 = state.player_to_play;
+    let mut count_eat: i8 = 0;
+
+    board_check.insert(
+        String::from("is_wrong_move"),
+        check_is_wrong_move(state, &axes),
+    );
+    if board_check["is_wrong_move"] == 0 {
+        for axe in &axes {
+            count_eat += check_move_is_capturing_stone_in_axe(&axe, player);
+        }
+        board_check.insert(
+            String::from("biggest_alignment"),
+            check_move_biggest_alignment_in_axes(&axes, player),
+        );
+        board_check.insert(String::from("stone_captured"), count_eat);
+    }
+    return board_check;
 }
