@@ -62,36 +62,41 @@ class PyGameGo:
         if self.sound_status is True:
             pygame.mixer.music.set_volume(0.05)
             pygame.mixer.music.play(-1)
-            self.screen.blit(self.go_sound_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
-            self.logger.info("Sound is on.")
         else:
-            self.screen.blit(self.go_sound_off, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
             pygame.mixer.music.stop()
-            self.logger.info("Sound is off.")
+        self.display_sound_icon()
+
+    def display_sound_icon(self):
+        self.screen.blit(self.go_menu, self.start_point)
+
+        if self.sound_status is True:
+            self.screen.blit(self.go_sound_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
+        else:
+            self.screen.blit(
+                self.go_sound_off,
+                (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0),
+            )
         pygame.display.flip()
 
     def menu(self, go_rules: GoRules):
         self.screen.blit(self.go_menu, self.start_point)
         self.update_sound_status(self.sound_status)
         pygame.display.flip()
+        self.player = go_rules.player_list[0]
         while 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # click on playing button
-                    # print(event.pos[0],event.pos[1])
+                    # click on playing vs AI button
                     if event.pos[1] <= 500 and event.pos[1] >= 415:
                         go_rules.player_list[1].player_type = 1
                         self.playing(go_rules=go_rules)
-                        self.screen.blit(self.go_menu, self.start_point)
-                        self.update_sound_status(self.sound_status)
-                        pygame.display.flip()
+                        self.display_sound_icon()
+                    # click on playing vs human button
                     if event.pos[1] <= 585 and event.pos[1] >= 505:
                         self.playing(go_rules=go_rules)
-                        self.screen.blit(self.go_menu, self.start_point)
-                        self.update_sound_status(self.sound_status)
-                        pygame.display.flip()
+                        self.display_sound_icon()
                     # click on sound icon
                     if (
                         event.pos[1] <= self.sound_icon_size[1]
@@ -138,9 +143,11 @@ class PyGameGo:
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
         self.screen.blit(self.return_on, (0, 0))
         pygame.display.flip()
-        self.player = go_rules.player_list[0]
+
         x = 0
         y = 0
+        self.board_screen_blit(go_rules, 33, 62)
+
         while 1:
             self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
             self.screen.blit(self.return_on, (0, 0))
@@ -157,6 +164,7 @@ class PyGameGo:
                     if event.type == pygame.QUIT:
                         sys.exit()
                     if event.type == pygame.MOUSEBUTTONDOWN:
+                        # Reset game button
                         if (
                             event.pos[1] <= self.sound_icon_size[1]
                             and event.pos[1] >= 0
@@ -164,13 +172,13 @@ class PyGameGo:
                             and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                         ):
                             x, y = self.reset_button(go_rules)
+                        # Return to menu button
                         elif (
                             event.pos[1] >= 0
-                            and event.pos[1] <= 32
+                            and event.pos[1] <= self.return_icon_size[0]
                             and event.pos[0] >= 0
                             and event.pos[0] <= self.return_icon_size[1]
                         ):
-                            print("Return")
                             return 0
                         else:
                             self.screen.blit(self.go_board_resize, self.start_point)
