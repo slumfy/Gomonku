@@ -46,6 +46,7 @@ fn check_win(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<i32>
 
 #[pyfunction]
 fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<PyObject> {
+	let start = Instant::now();
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
@@ -66,6 +67,8 @@ fn place_stone(board: Vec<Vec<i32>>, player: i32, x: i32, y: i32) -> PyResult<Py
     }
     dict.set_item("eated_piece", eated_piece)?;
     dict.set_item("board", &mutboard)?;
+	let end = Instant::now();
+	println!("time to process {:?}", end.duration_since(start));
     Ok(dict.to_object(py))
 }
 
