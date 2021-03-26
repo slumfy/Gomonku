@@ -59,7 +59,8 @@ class GoRules:
 
     def AI_move(self, player, x, y):
         print(player, x, y)
-        move = gomoku_rust.ai_move(self.board, -player.nb, x, y)
+        opponant = -player.nb
+        move = gomoku_rust.ai_move(self.board, opponant, x, y)
         print("AI: ", move)
         return move
 

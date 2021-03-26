@@ -6,7 +6,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
-    println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
+    // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
     if depth == 0 || state.available_move.len() == 0 {
         return state.heuristic * color as i32;
     }
@@ -28,8 +28,8 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
             // println!("pruning");
             break;
         }
-    }
-    // println!("alpha {}  beta {}", alpha, beta);
+     }
+    // // println!("alpha {}  beta {}", alpha, beta);
 	state.heuristic = value;
     return value;
 }

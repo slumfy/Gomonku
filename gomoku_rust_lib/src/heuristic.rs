@@ -8,7 +8,6 @@ pub fn heuristic(board: &mut Vec<Vec<i8>>, state: &State) -> i32 {
 	// println!("boardcheck {:?}", board_check);
 	value += (board_check["stone_captured"] as i32) * 100;
     value += (board_check["biggest_alignment"] as i32) * 10;
-    //current alignement
     value += count_default_value(state.current_move);
 
     return value;

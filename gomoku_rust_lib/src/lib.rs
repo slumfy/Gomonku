@@ -26,6 +26,7 @@ static ALPHABET: [char; 26] = [
 #[pyfunction]
 fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<((isize, isize), i32)> {
     println!("player {:?} x {:?} y {:?}",player ,x,y);
+	// let opponent = -player;
 	let mut mutboard: Vec<Vec<i8>> = board;
     let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
 	let start = Instant::now();
