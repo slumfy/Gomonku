@@ -6,7 +6,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
-    // println!("current state: {:?} current heuristic {} depth {}", state.current_move, state.heuristic, depth);
+    println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
     if depth == 0 || state.available_move.len() == 0 {
         return state.heuristic * color as i32;
     }
@@ -30,6 +30,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         }
     }
     // println!("alpha {}  beta {}", alpha, beta);
+	state.heuristic = value;
     return value;
 }
 
@@ -45,6 +46,7 @@ pub fn return_move(state: &State, heuristic: i32) -> ((isize, isize), i32) {
         //         state.available_move[child].heuristic
         //     )
         // );
+		// println!("bestmove : {} worst move : {}",state.available_move[child].available_move[0].heuristic ,state.available_move[child].available_move[state.available_move[child].available_move.len() - 1].heuristic);
         if state.available_move[child].heuristic == heuristic {
             return ((state.available_move[child].current_move), state.heuristic);
         }
@@ -65,7 +67,7 @@ pub fn print_heuristic_table(state: &State) {
 	let mut ymin = 18;
 	let mut trigger = 0;
 	for idx in 0..len {
-		println!("x {} y {}", state.available_move[idx].current_move.0, state.available_move[idx].current_move.1);
+		// println!("x {} y {}", state.available_move[idx].current_move.0, state.available_move[idx].current_move.1);
 		xmax = std::cmp::max(state.available_move[idx].current_move.0,xmax);
 		xmin = std::cmp::min(xmin,state.available_move[idx].current_move.0);
 		ymax = std::cmp::max(ymax,state.available_move[idx].current_move.1);

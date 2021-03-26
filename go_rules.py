@@ -30,6 +30,7 @@ class GoRules:
 
     def place_stone(self, player, x, y):
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
+        print(Rust_res)
         if Rust_res["game_status"] != 0:
             return -2
         else:
@@ -49,8 +50,7 @@ class GoRules:
                     if pl.wining_position:
                         for position in pl.wining_position:
                             if (
-                                gomoku_rust.check_win(self.board, pl.nb, position[0], position[1])
-                                >= 5
+                                gomoku_rust.check_move_is_a_fiverow(self.board, pl.nb, position[0], position[1]) == True
                             ):
                                 return pl.nb
                             else:
@@ -59,7 +59,7 @@ class GoRules:
 
     def AI_move(self, player, x, y):
         print(player, x, y)
-        move = gomoku_rust.ai_move(self.board, player.nb, x, y)
+        move = gomoku_rust.ai_move(self.board, -player.nb, x, y)
         print("AI: ", move)
         return move
 

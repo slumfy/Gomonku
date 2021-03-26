@@ -7,7 +7,7 @@ use std::time::Instant;
 
 mod check;
 use check::checking_move;
-
+use check::checking_move_biggest_alignment_and_stone_captured;
 
 mod negamax;
 mod state;
@@ -25,13 +25,14 @@ static ALPHABET: [char; 26] = [
 
 #[pyfunction]
 fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<((isize, isize), i32)> {
-    let mut mutboard: Vec<Vec<i8>> = board;
+    println!("player {:?} x {:?} y {:?}",player ,x,y);
+	let mut mutboard: Vec<Vec<i8>> = board;
     let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
 	let start = Instant::now();
-    let value = negamax::negamax(&mut state, 2, -1000, 1000, player);
+    let value = negamax::negamax(&mut state, 3, -1000, 1000, player);
     let ai_move = negamax::return_move(&mut state, value);
     let end = Instant::now();
-    println!("previous_move: {:?}", state.current_move);
+    println!("previous_move: {:?} heuristic {}", state.current_move, state.heuristic);
     println!("time to process {:?}", end.duration_since(start));
     println!(
         "negamax in board {:?}:{}",
@@ -39,6 +40,19 @@ fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<((is
     );
     println!("negamax {:?}", ai_move);
     Ok(ai_move)
+}
+
+#[pyfunction]
+fn check_move_is_a_fiverow(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize) -> PyResult<bool> {
+	let mut mutboard: Vec<Vec<i8>> = board;
+	let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y));
+	let alignement = checking_move_biggest_alignment_and_stone_captured(&state);
+	if alignement["biggest_alignment"] >= 5 {
+	Ok(true)
+	}
+	else {
+	Ok(false)
+	}
 }
 
 #[pyfunction]
@@ -81,6 +95,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
 fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
+	m.add_function(wrap_pyfunction!(check_move_is_a_fiverow, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }

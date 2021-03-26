@@ -9,25 +9,9 @@ pub fn heuristic(board: &mut Vec<Vec<i8>>, state: &State) -> i32 {
 	value += (board_check["stone_captured"] as i32) * 100;
     value += (board_check["biggest_alignment"] as i32) * 10;
     //current alignement
-    value += count_diff_piece(board, state) * 10;
     value += count_default_value(state.current_move);
 
     return value;
-}
-
-fn count_diff_piece(board: &mut Vec<Vec<i8>>, state: &State) -> i32 {
-    let mut player = 0i8;
-    let mut advers = 0i8;
-    for x in 0..board.len() {
-        for y in 0..board.len() {
-            if board[x as usize][y as usize] == state.player_to_play {
-                player += 1;
-            } else if board[x as usize][y as usize] != 0 {
-                advers += 1;
-            }
-        }
-    }
-    return (player - advers) as i32;
 }
 
 fn count_default_value(current_move: (isize, isize)) -> i32 {
