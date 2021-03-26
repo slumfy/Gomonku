@@ -13,15 +13,16 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
     let mut value: i32 = -1000;
     let len = state.available_move.len();
     for child in 0..len {
+		let negamax = -negamax(
+			&mut state.available_move[child],
+			depth - 1,
+			-beta,
+			-alpha,
+			-color,
+		);
         value = std::cmp::max(
             value,
-            -negamax(
-                &mut state.available_move[child],
-                depth - 1,
-                -beta,
-                -alpha,
-                -color,
-            ),
+            negamax
         );
         alpha = std::cmp::max(alpha, value);
         if alpha >= beta {
