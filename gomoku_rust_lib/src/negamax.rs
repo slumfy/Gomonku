@@ -8,6 +8,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
     }
     // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
     if depth == 0 || state.available_move.len() == 0 {
+		state.heuristic = state.heuristic * color as i32;
         return state.heuristic * color as i32;
     }
     let mut value: i32 = -1000;

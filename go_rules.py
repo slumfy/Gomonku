@@ -19,6 +19,7 @@ class GoRules:
     board = []
     player_list = []
     ai_helper: bool = False
+    ai_versus = 0
 
     def __init__(self, ai_helper: bool = False):
         self.ai_helper = ai_helper

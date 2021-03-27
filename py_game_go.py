@@ -88,7 +88,14 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # click on playing vs AI button
+                    # click on playing AI vs AI button
+                    if event.pos[1] <= 720 and event.pos[1] >= 585:
+                        go_rules.player_list[0].player_type = 1
+                        go_rules.player_list[1].player_type = 1
+                        go_rules.ai_versus = 1
+                        self.playing(go_rules=go_rules)
+                        self.display_sound_icon()
+                    # click on playing HUMAN vs AI button
                     if event.pos[1] <= 500 and event.pos[1] >= 415:
                         go_rules.player_list[1].player_type = 1
                         self.playing(go_rules=go_rules)
@@ -144,8 +151,10 @@ class PyGameGo:
         self.screen.blit(self.return_on, (0, 0))
         pygame.display.flip()
 
-        x = 0
-        y = 0
+        if go_rules.ai_versus == 1:
+            x,y = 9,9
+        else:
+            x,y = 0,0
         self.board_screen_blit(go_rules, 33, 62)
 
         while 1:
