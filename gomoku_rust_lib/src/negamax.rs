@@ -59,6 +59,23 @@ pub fn return_move(state: &State, heuristic: i32) -> ((isize, isize), i32) {
     );
 }
 
+pub fn return_early_move(state: &State, turn: isize) -> ((isize,isize),i32) {
+	let mut pos : (isize,isize) = state.current_move;
+	if pos.0 / 9 == 0 && pos.0 % 9 != 0 {
+		pos.0 = pos.0 + 2;
+	}
+	else {
+		pos.0 = pos.0 - 2;
+	}
+	if pos.1 / 9 == 0 && pos.1 % 9 != 0 {
+		pos.1 = pos.1 + 2;
+	}
+	else {
+		pos.1 = pos.1 - 2;
+	}
+	return ((pos),0);
+}
+
 pub fn print_heuristic_table(state: &State) {
 	let len = state.available_move.len();
 	let mut table: Vec<Vec<i32>> = vec![];

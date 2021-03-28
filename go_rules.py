@@ -20,6 +20,7 @@ class GoRules:
     player_list = []
     ai_helper: bool = False
     ai_versus = 0
+	wining_position = []
 
     def __init__(self, ai_helper: bool = False):
         self.ai_helper = ai_helper
@@ -58,10 +59,10 @@ class GoRules:
                                 pl.wining_position.remove(position)
             return 0
 
-    def AI_move(self, player, x, y):
+    def AI_move(self, player, x, y, turn):
         print(player, x, y)
         opponant = -player.nb
-        move = gomoku_rust.ai_move(self.board, opponant, x, y)
+        move = gomoku_rust.ai_move(self.board, opponant, x, y, turn)
         print("AI: ", move)
         return move
 

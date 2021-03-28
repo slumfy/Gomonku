@@ -10,7 +10,10 @@ pub struct State {
     pub board: Vec<Vec<i8>>,
     pub available_move: Vec<State>,
     pub player_to_play: i8,
+	pub white_eat_value: i8,
+	pub black_eat_value: i8,
     pub heuristic: i32,
+	pub win_state: Vec<((isize,isize),i8)>,
     pub current_move: (isize, isize),
 }
 
@@ -18,15 +21,20 @@ pub fn create_new_state(
     board: &mut Vec<Vec<i8>>,
     player: i8,
     current_move: (isize, isize),
+	player_eat_value: (i8,i8),
+	win_state: Vec<((isize,isize),i8)>
 ) -> State {
     let mut new_state = State {
         board: board.to_vec(),
         player_to_play: player,
+		white_eat_value: player_eat_value.0,
+		black_eat_value: player_eat_value.1,
         available_move: vec![],
         heuristic: 0,
+		win_state: win_state,
         current_move: current_move,
     };
-	new_state.heuristic = heuristic::heuristic(board, &new_state);
+	new_state.heuristic = heuristic::heuristic(&mut new_state);
     return new_state;
 }
 
@@ -52,15 +60,18 @@ fn get_box(state: &mut State) -> ((isize, isize), (isize, isize)) {
 
 pub fn create_child(state: &mut State) -> Vec<State> {
     let mut cpyboard: Vec<Vec<i8>>;
+	let mut cpywinpos: Vec<((isize,isize),i8)>;
     let mut childlist: Vec<State>;
     let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
     childlist = Vec::new();
     for x in indexbox.0.0..indexbox.0.1 {
         for y in indexbox.1.0..indexbox.1.1 {
 			cpyboard = state.board.clone();
-			let child = create_new_state(&mut cpyboard, -state.player_to_play, (x, y));
+			cpywinpos = state.win_state.clone();
+			let mut child = create_new_state(&mut cpyboard, -state.player_to_play, (x, y), (state.white_eat_value,state.black_eat_value),cpywinpos);
             let axes = create_axes_from_stone_position(&child);
             if check_is_wrong_move(&child, &axes) == 0 {
+				apply_state_move(&mut child,8);
                 childlist.push(child);
             }
         }

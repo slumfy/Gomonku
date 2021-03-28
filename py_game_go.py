@@ -19,7 +19,7 @@ class PyGameGo:
         self.test_mode = test_mode
 
         self.logger = logger_factory("PyGameGo")
-
+        self.turn = 0
         # Creating GUI and sound
         if not self.test_mode:
             pygame.init()
@@ -115,6 +115,7 @@ class PyGameGo:
                         self.update_sound_status(not self.sound_status)
 
     def win(self, go_rules: GoRules):
+        self.turn = 0
         while 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -151,10 +152,7 @@ class PyGameGo:
         self.screen.blit(self.return_on, (0, 0))
         pygame.display.flip()
 
-        if go_rules.ai_versus == 1:
-            x,y = 9,9
-        else:
-            x,y = 0,0
+        x,y = 0,0
         self.board_screen_blit(go_rules, 33, 62)
 
         while 1:
@@ -164,10 +162,11 @@ class PyGameGo:
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                AI_move = go_rules.AI_move(self.player, x, y)
+                AI_move = go_rules.AI_move(self.player, x, y, self.turn)
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
+                self.turn += 1
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -195,6 +194,8 @@ class PyGameGo:
                             y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                             stone_status = go_rules.place_stone(self.player, x, y)
                             self.play_piece(go_rules, stone_status, win_status, x, y)
+                            self.turn += 1
+
 
     def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
@@ -259,6 +260,7 @@ class PyGameGo:
 
     def reset_button(self, go_rules):
         go_rules.reset_game()
+        self.turn = 0
         self.player = go_rules.player_list[0]
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
