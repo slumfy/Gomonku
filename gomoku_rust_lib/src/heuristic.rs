@@ -37,7 +37,7 @@ pub fn heuristic(state: &mut State) -> i32 {
 				}
 				break ;
 			}
-	}
+		}
 	}
     value += board_check["biggest_alignment"] as i32;
 	if board_check["biggest_alignment"] == 5 {
