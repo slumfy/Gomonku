@@ -6,6 +6,10 @@ use check::check_is_wrong_move;
 use check::create_axes_from_stone_position;
 #[path = "heuristic.rs"]
 mod heuristic;
+#[path = "search_space.rs"]
+mod search_space;
+// use crate::state::search_space::get_box;
+use crate::state::search_space::get_search_box;
 
 pub struct State {
     pub board: Vec<Vec<i8>>,
@@ -40,9 +44,9 @@ pub fn create_new_state(
     if new_state.win_move.len() > 0 {
         for winmove in 0..new_state.win_move.len() {
             if new_state.win_move[winmove].1 == new_state.player_to_play {
-                new_state.win_state == 1;
+                new_state.win_state = 1;
             } else {
-                new_state.win_state == -1;
+                new_state.win_state = -1;
             }
             break;
         }
@@ -51,40 +55,25 @@ pub fn create_new_state(
     return new_state;
 }
 
-fn get_box(state: &mut State) -> ((isize, isize), (isize, isize)) {
-    let offset = 5;
-    let mut x_tuple: (isize, isize) = (0, 18);
-    let mut y_tuple: (isize, isize) = (0, 18);
-    if state.current_move.0 - offset >= 0 {
-        x_tuple.0 = state.current_move.0 - offset;
-    }
-    if state.current_move.0 + offset <= 18 {
-        x_tuple.1 = state.current_move.0 + offset;
-    }
-    if state.current_move.1 - offset >= 0 {
-        y_tuple.0 = state.current_move.1 - offset;
-    }
-    if state.current_move.1 + offset <= 18 {
-        y_tuple.1 = state.current_move.1 + offset;
-    }
-    // println!("tuple {:?}  x {} y {}",(x_tuple, y_tuple),state.current_move.0,state.current_move.1);
-    return (x_tuple, y_tuple);
-}
-
 pub fn create_child(state: &mut State) -> Vec<State> {
     let mut cpyboard: Vec<Vec<i8>>;
     let mut cpywinpos: Vec<((isize, isize), i8)>;
     let mut childlist: Vec<State>;
-    let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
+    // let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
+	let indexbox: Vec<(usize,usize)> = get_search_box(state);
+	let len = indexbox.len();
     childlist = Vec::new();
-    for x in indexbox.0 .0..indexbox.0 .1 {
-        for y in indexbox.1 .0..indexbox.1 .1 {
+    // for x in indexbox.0 .0..indexbox.0 .1 {
+    //     for y in indexbox.1 .0..indexbox.1 .1 {
+		for pos in 0..len {
+			let x = indexbox[pos].0;
+			let y = indexbox[pos].1;
             cpyboard = state.board.clone();
             cpywinpos = state.win_move.clone();
             let mut child = create_new_state(
                 &mut cpyboard,
                 -state.player_to_play,
-                (x, y),
+                (x as isize, y as isize),
                 (state.white_eat_value, state.black_eat_value),
                 cpywinpos,
             );
@@ -98,7 +87,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
                 apply_state_move(&mut child, 8);
                 childlist.push(child);
             }
-        }
+        // }
     }
     return childlist;
 }
