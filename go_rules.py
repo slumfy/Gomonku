@@ -19,6 +19,8 @@ class GoRules:
     board = []
     player_list = []
     ai_helper: bool = False
+    ai_versus = 0
+    wining_position = []
 
     def __init__(self, ai_helper: bool = False):
         self.ai_helper = ai_helper
@@ -29,7 +31,8 @@ class GoRules:
         self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.HUMAN.value, "Black"))
 
     def place_stone(self, player, x, y):
-        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
+        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y, self.wining_position)
+        # print(Rust_res)
         if Rust_res["game_status"] != 0:
             return -2
         else:
@@ -44,22 +47,23 @@ class GoRules:
                 for p in self.player_list:
                     if p.nb == player.nb:
                         p.wining_position.append([x, y])
+                self.wining_position.append(((x, y),player.nb))
             for pl in self.player_list:
                 if pl != player:
                     if pl.wining_position:
                         for position in pl.wining_position:
                             if (
-                                gomoku_rust.check_win(self.board, pl.nb, position[0], position[1])
-                                >= 5
+                                gomoku_rust.check_move_is_a_fiverow(self.board, pl.nb, position[0], position[1], self.wining_position) == True
                             ):
                                 return pl.nb
                             else:
                                 pl.wining_position.remove(position)
             return 0
 
-    def AI_move(self, player, x, y):
+    def AI_move(self, player, x, y, turn):
         print(player, x, y)
-        move = gomoku_rust.ai_move(self.board, player.nb, x, y)
+        opponant = -player.nb
+        move = gomoku_rust.ai_move(self.board, opponant, x, y, turn, self.wining_position)
         print("AI: ", move)
         return move
 

@@ -2,6 +2,7 @@ use crate::state::State;
 use std::cmp::max;
 use std::collections::HashMap;
 
+#[allow(dead_code)]
 pub fn check_is_in_table(x: isize, y: isize, xsign: isize, ysign: isize, offset: isize) -> i8 {
     if x + offset * xsign > 18
         || x + offset * xsign < 0
@@ -13,12 +14,17 @@ pub fn check_is_in_table(x: isize, y: isize, xsign: isize, ysign: isize, offset:
     return 0;
 }
 
-pub fn create_axes_from_stone_position(state: &State) -> Vec<Vec<i8>> {
+pub fn create_axes_from_stone_position(
+    state: &State,
+    x: isize,
+    y: isize,
+    player: i8,
+) -> Vec<Vec<i8>> {
     let board = &state.board;
     let box_half_size: isize = 5;
-    let player = state.player_to_play;
-    let stone_x = state.current_move.0;
-    let stone_y = state.current_move.1;
+    let player = player;
+    let stone_x = x;
+    let stone_y = y;
     let mut axes: Vec<Vec<i8>> = vec![];
 
     axes.push(vec![player]);
@@ -78,6 +84,7 @@ pub fn create_axes_from_stone_position(state: &State) -> Vec<Vec<i8>> {
     return axes;
 }
 
+#[allow(dead_code)]
 fn check_move_biggest_alignment_in_axes(axes: &Vec<Vec<i8>>, player: i8) -> i8 {
     let mut count_axe_0: i8 = 1;
     let mut count_axe_0_lock: bool = false;
@@ -151,6 +158,7 @@ fn check_move_biggest_alignment_in_axes(axes: &Vec<Vec<i8>>, player: i8) -> i8 {
     return max(count_axe_0, max(count_axe_1, max(count_axe_2, count_axe_3)));
 }
 
+#[allow(dead_code)]
 fn check_move_is_in_capturing_position_in_axe(axe: &Vec<i8>, player: i8) -> bool {
     let opponent: i8 = -player;
     if (axe[3] == opponent || (axe[3] == player && axe[2] == opponent))
@@ -182,6 +190,7 @@ fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
     return count_eat;
 }
 
+#[allow(dead_code)]
 /// Return true if there is any double triple in the axes, false otherwise.
 pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
     let mut triple_count = 0;
@@ -232,6 +241,7 @@ pub fn check_move_is_double_triple(axes: &Vec<Vec<i8>>, player: i8) -> bool {
     return false;
 }
 
+#[allow(dead_code)]
 pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     let stone_x = state.current_move.0;
     let stone_y = state.current_move.1;
@@ -253,9 +263,15 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     return 0;
 }
 
+#[allow(dead_code)]
 pub fn checking_move(state: &State) -> HashMap<String, i8> {
     let mut board_check: HashMap<String, i8> = HashMap::new();
-    let axes = create_axes_from_stone_position(state);
+    let axes = create_axes_from_stone_position(
+        state,
+        state.current_move.0,
+        state.current_move.1,
+        state.player_to_play,
+    );
     let player: i8 = state.player_to_play;
     let mut count_eat: i8 = 0;
 
@@ -276,19 +292,32 @@ pub fn checking_move(state: &State) -> HashMap<String, i8> {
     return board_check;
 }
 
+#[allow(dead_code)]
 pub fn checking_move_biggest_alignment_and_stone_captured(state: &State) -> HashMap<String, i8> {
     let mut board_check: HashMap<String, i8> = HashMap::new();
-    let axes = create_axes_from_stone_position(state);
     let player: i8 = state.player_to_play;
+    let axes =
+        create_axes_from_stone_position(state, state.current_move.0, state.current_move.1, player);
     let mut count_eat: i8 = 0;
 
-        for axe in &axes {
-            count_eat += check_move_is_capturing_stone_in_axe(&axe, player);
-        }
-        board_check.insert(
-            String::from("biggest_alignment"),
-            check_move_biggest_alignment_in_axes(&axes, player),
-        );
-        board_check.insert(String::from("stone_captured"), count_eat);
+    for axe in &axes {
+        count_eat += check_move_is_capturing_stone_in_axe(&axe, player);
+    }
+    board_check.insert(
+        String::from("biggest_alignment"),
+        check_move_biggest_alignment_in_axes(&axes, player),
+    );
+    board_check.insert(String::from("stone_captured"), count_eat);
     return board_check;
+}
+
+#[allow(dead_code)]
+pub fn check_alignment_for_given_pos(state: &State, x: isize, y: isize, player: i8) -> bool {
+    let axes = create_axes_from_stone_position(state, x, y, player);
+    if state.board[x as usize][y as usize] == player {
+        if check_move_biggest_alignment_in_axes(&axes, player) == 5 {
+            return true;
+        }
+    }
+    return false;
 }
