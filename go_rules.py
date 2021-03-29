@@ -32,7 +32,7 @@ class GoRules:
 
     def place_stone(self, player, x, y):
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y, self.wining_position)
-        print(Rust_res)
+        # print(Rust_res)
         if Rust_res["game_status"] != 0:
             return -2
         else:

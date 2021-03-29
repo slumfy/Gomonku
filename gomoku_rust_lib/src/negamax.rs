@@ -1,4 +1,5 @@
 use crate::state::create_child;
+use crate::state::state_is_terminated;
 use crate::state::State;
 use std::cmp::Reverse;
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
@@ -7,7 +8,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
     // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
-    if depth == 0 || state.available_move.len() == 0 {
+    if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
 		state.heuristic = state.heuristic * color as i32;
         return state.heuristic * color as i32;
     }
@@ -59,7 +60,7 @@ pub fn return_move(state: &State, heuristic: i32) -> ((isize, isize), i32) {
     );
 }
 
-pub fn return_early_move(state: &State, turn: isize) -> ((isize,isize),i32) {
+pub fn return_early_move(state: &State/*, turn: isize*/) -> ((isize,isize),i32) {
 	let mut pos : (isize,isize) = state.current_move;
 	if pos.0 / 9 == 0 && pos.0 % 9 != 0 {
 		pos.0 = pos.0 + 2;

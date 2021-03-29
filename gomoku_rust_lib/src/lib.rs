@@ -19,7 +19,6 @@ use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
 struct Player {
-	name: i8,
 	eat_value: i8
 }
 
@@ -28,8 +27,8 @@ static ALPHABET: [char; 26] = [
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 ];
 
-static mut WHITE: Player = Player {name: 1, eat_value: 0};
-static mut BLACK: Player = Player {name: -1, eat_value: 0};
+static mut WHITE: Player = Player {eat_value: 0};
+static mut BLACK: Player = Player {eat_value: 0};
 
 #[pyfunction]
 fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize, turn: isize, wining_position: Vec<((isize,isize),i8)>) -> PyResult<((isize, isize), i32)> {
@@ -38,7 +37,7 @@ fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize, turn: isize, win
 	let eat_player:(i8,i8);
 	unsafe {eat_player= (WHITE.eat_value,BLACK.eat_value);}
 	let mut mutboard: Vec<Vec<i8>> = board;
-	let mut ai_move : ((isize, isize), i32) = ((0,0), 0);
+	let ai_move : ((isize, isize), i32);
     let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
 	let start = Instant::now();
 	if turn < 2 {
@@ -46,7 +45,7 @@ fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize, turn: isize, win
 			ai_move = ((9,9), 0);
 		}
 		else {
-			ai_move = negamax::return_early_move(&state, turn);
+			ai_move = negamax::return_early_move(&state);
 		}
 	}
 	else {
@@ -58,8 +57,8 @@ fn ai_move(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize, turn: isize, win
     println!("time to process {:?}", end.duration_since(start));
 	println!("white eat: {:?} black eat: {:?}", eat_player.0, eat_player.0);
     println!(
-        "negamax in board {:?}:{}",
-        ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize]
+        "negamax in board {:?}:{} turn {}",
+        ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize], turn
     );
     println!("negamax {:?}", ai_move);
     Ok(ai_move)
@@ -70,7 +69,7 @@ fn check_move_is_a_fiverow(board: Vec<Vec<i8>>, player: i8, x: isize, y: isize, 
 	let mut mutboard: Vec<Vec<i8>> = board;
 	let eat_player:(i8,i8);
 	unsafe {eat_player= (WHITE.eat_value,BLACK.eat_value);}
-	let mut state: state::State = state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
+	let state: state::State = state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
 	let alignement = checking_move_biggest_alignment_and_stone_captured(&state);
 	if alignement["biggest_alignment"] >= 5 {
 	Ok(true)

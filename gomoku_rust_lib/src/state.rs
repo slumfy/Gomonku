@@ -3,6 +3,7 @@ mod check;
 use check::check_is_in_table;
 use check::check_is_wrong_move;
 use check::create_axes_from_stone_position;
+use check::check_alignment_for_given_pos;
 #[path = "heuristic.rs"]
 mod heuristic;
 
@@ -69,7 +70,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 			cpyboard = state.board.clone();
 			cpywinpos = state.win_state.clone();
 			let mut child = create_new_state(&mut cpyboard, -state.player_to_play, (x, y), (state.white_eat_value,state.black_eat_value),cpywinpos);
-            let axes = create_axes_from_stone_position(&child);
+            let axes = create_axes_from_stone_position(&child,child.current_move.0,child.current_move.1,child.player_to_play);
             if check_is_wrong_move(&child, &axes) == 0 {
 				apply_state_move(&mut child,8);
                 childlist.push(child);
@@ -182,4 +183,17 @@ pub fn apply_state_move(state: &mut State, stone_captured: i8) {
     if stone_captured > 0 {
         apply_capturing_stone(state, stone_captured);
     }
+}
+
+pub fn state_is_terminated(state: &mut State) -> bool {
+	if state.player_to_play == 1 {
+		if state.white_eat_value >= 10 {return true;}
+	}
+	else {
+		if state.black_eat_value >= 10 {return true;}
+	}
+	if state.win_state.len() > 0 {
+	if check_alignment_for_given_pos(&state,state.win_state[0].0.0,state.win_state[0].0.1,state.win_state[0].1) == true {return true;}
+}
+	return false;
 }
