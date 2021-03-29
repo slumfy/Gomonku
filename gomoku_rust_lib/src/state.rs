@@ -1,9 +1,9 @@
 #[path = "check.rs"]
 mod check;
+use check::check_alignment_for_given_pos;
 use check::check_is_in_table;
 use check::check_is_wrong_move;
 use check::create_axes_from_stone_position;
-use check::check_alignment_for_given_pos;
 #[path = "heuristic.rs"]
 mod heuristic;
 
@@ -11,11 +11,11 @@ pub struct State {
     pub board: Vec<Vec<i8>>,
     pub available_move: Vec<State>,
     pub player_to_play: i8,
-	pub white_eat_value: i8,
-	pub black_eat_value: i8,
+    pub white_eat_value: i8,
+    pub black_eat_value: i8,
     pub heuristic: i32,
-	pub win_state:i32,
-	pub win_move: Vec<((isize,isize),i8)>,
+    pub win_state: i32,
+    pub win_move: Vec<((isize, isize), i8)>,
     pub current_move: (isize, isize),
 }
 
@@ -23,32 +23,31 @@ pub fn create_new_state(
     board: &mut Vec<Vec<i8>>,
     player: i8,
     current_move: (isize, isize),
-	player_eat_value: (i8,i8),
-	win_move: Vec<((isize,isize),i8)>
+    player_eat_value: (i8, i8),
+    win_move: Vec<((isize, isize), i8)>,
 ) -> State {
     let mut new_state = State {
         board: board.to_vec(),
         player_to_play: player,
-		white_eat_value: player_eat_value.0,
-		black_eat_value: player_eat_value.1,
+        white_eat_value: player_eat_value.0,
+        black_eat_value: player_eat_value.1,
         available_move: vec![],
         heuristic: 0,
-		win_move: win_move,
-		win_state: 0,
+        win_move: win_move,
+        win_state: 0,
         current_move: current_move,
     };
-	if new_state.win_move.len() > 0 {
-		for winmove in 0..new_state.win_move.len() {
-			if new_state.win_move[winmove].1 == new_state.player_to_play {
-				new_state.win_state == 1;
-			}
-			else {
-				new_state.win_state == -1;
-			}
-			break ;
-		}
-	}
-	new_state.heuristic = heuristic::heuristic(&mut new_state);
+    if new_state.win_move.len() > 0 {
+        for winmove in 0..new_state.win_move.len() {
+            if new_state.win_move[winmove].1 == new_state.player_to_play {
+                new_state.win_state == 1;
+            } else {
+                new_state.win_state == -1;
+            }
+            break;
+        }
+    }
+    new_state.heuristic = heuristic::heuristic(&mut new_state);
     return new_state;
 }
 
@@ -68,24 +67,35 @@ fn get_box(state: &mut State) -> ((isize, isize), (isize, isize)) {
     if state.current_move.1 + offset <= 18 {
         y_tuple.1 = state.current_move.1 + offset;
     }
-	// println!("tuple {:?}  x {} y {}",(x_tuple, y_tuple),state.current_move.0,state.current_move.1);
+    // println!("tuple {:?}  x {} y {}",(x_tuple, y_tuple),state.current_move.0,state.current_move.1);
     return (x_tuple, y_tuple);
 }
 
 pub fn create_child(state: &mut State) -> Vec<State> {
     let mut cpyboard: Vec<Vec<i8>>;
-	let mut cpywinpos: Vec<((isize,isize),i8)>;
+    let mut cpywinpos: Vec<((isize, isize), i8)>;
     let mut childlist: Vec<State>;
     let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
     childlist = Vec::new();
-    for x in indexbox.0.0..indexbox.0.1 {
-        for y in indexbox.1.0..indexbox.1.1 {
-			cpyboard = state.board.clone();
-			cpywinpos = state.win_move.clone();
-			let mut child = create_new_state(&mut cpyboard, -state.player_to_play, (x, y), (state.white_eat_value,state.black_eat_value),cpywinpos);
-            let axes = create_axes_from_stone_position(&child,child.current_move.0,child.current_move.1,child.player_to_play);
+    for x in indexbox.0 .0..indexbox.0 .1 {
+        for y in indexbox.1 .0..indexbox.1 .1 {
+            cpyboard = state.board.clone();
+            cpywinpos = state.win_move.clone();
+            let mut child = create_new_state(
+                &mut cpyboard,
+                -state.player_to_play,
+                (x, y),
+                (state.white_eat_value, state.black_eat_value),
+                cpywinpos,
+            );
+            let axes = create_axes_from_stone_position(
+                &child,
+                child.current_move.0,
+                child.current_move.1,
+                child.player_to_play,
+            );
             if check_is_wrong_move(&child, &axes) == 0 {
-				apply_state_move(&mut child,8);
+                apply_state_move(&mut child, 8);
                 childlist.push(child);
             }
         }
@@ -199,14 +209,25 @@ pub fn apply_state_move(state: &mut State, stone_captured: i8) {
 }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
-	if state.player_to_play == 1 {
-		if state.white_eat_value >= 10 {return true;}
-	}
-	else {
-		if state.black_eat_value >= 10 {return true;}
-	}
-	if state.win_move.len() > 0  && state.win_state == 1 {
-		if check_alignment_for_given_pos(&state,state.win_move[0].0.0,state.win_move[0].0.1,state.win_move[0].1) == true {return true;}
-	}
-	return false;
+    if state.player_to_play == 1 {
+        if state.white_eat_value >= 10 {
+            return true;
+        }
+    } else {
+        if state.black_eat_value >= 10 {
+            return true;
+        }
+    }
+    if state.win_move.len() > 0 && state.win_state == 1 {
+        if check_alignment_for_given_pos(
+            &state,
+            state.win_move[0].0 .0,
+            state.win_move[0].0 .1,
+            state.win_move[0].1,
+        ) == true
+        {
+            return true;
+        }
+    }
+    return false;
 }
