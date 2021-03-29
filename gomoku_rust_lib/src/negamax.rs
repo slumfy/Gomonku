@@ -2,6 +2,7 @@ use crate::state::create_child;
 use crate::state::state_is_terminated;
 use crate::state::State;
 use std::cmp::Reverse;
+
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
     if depth != 0 {
         state.available_move = create_child(&mut state);
