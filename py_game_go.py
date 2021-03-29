@@ -90,11 +90,12 @@ class PyGameGo:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # click on playing vs AI button
                     if event.pos[1] <= 500 and event.pos[1] >= 415:
-                        go_rules.player_list[1].player_type = 1
+                        go_rules.player_list[1].player_type = PlayerType.AI.value
                         self.playing(go_rules=go_rules)
                         self.display_sound_icon()
                     # click on playing vs human button
                     if event.pos[1] <= 585 and event.pos[1] >= 505:
+                        go_rules.player_list[1].player_type = PlayerType.HUMAN.value
                         self.playing(go_rules=go_rules)
                         self.display_sound_icon()
                     # click on sound icon

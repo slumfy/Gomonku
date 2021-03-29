@@ -68,9 +68,15 @@ class GoRules:
             print("player: ", player.color, "")
 
     def reset_players(self):
+        player_type = PlayerType.HUMAN.value
+        if self.player_list[1].player_type == PlayerType.AI.value:
+            player_type = PlayerType.AI.value
         self.player_list.clear()
-        self.player_list.append(Player(PLAYER_WHITE_NB, 0, "White"))
-        self.player_list.append(Player(PLAYER_BLACK_NB, 0, "Black"))
+        self.player_list.append(Player(PLAYER_WHITE_NB, PlayerType.HUMAN.value, "White"))
+        if player_type == PlayerType.AI.value:
+            self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.AI.value, "Black"))
+        else:
+            self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.HUMAN.value, "Black"))
 
     def reset_game(self):
         self.reset_players()
