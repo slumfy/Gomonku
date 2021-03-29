@@ -14,7 +14,8 @@ pub struct State {
 	pub white_eat_value: i8,
 	pub black_eat_value: i8,
     pub heuristic: i32,
-	pub win_state: Vec<((isize,isize),i8)>,
+	pub win_state:i32,
+	pub win_move: Vec<((isize,isize),i8)>,
     pub current_move: (isize, isize),
 }
 
@@ -23,7 +24,7 @@ pub fn create_new_state(
     player: i8,
     current_move: (isize, isize),
 	player_eat_value: (i8,i8),
-	win_state: Vec<((isize,isize),i8)>
+	win_move: Vec<((isize,isize),i8)>
 ) -> State {
     let mut new_state = State {
         board: board.to_vec(),
@@ -32,9 +33,21 @@ pub fn create_new_state(
 		black_eat_value: player_eat_value.1,
         available_move: vec![],
         heuristic: 0,
-		win_state: win_state,
+		win_move: win_move,
+		win_state: 0,
         current_move: current_move,
     };
+	if new_state.win_move.len() > 0 {
+		for winmove in 0..new_state.win_move.len() {
+			if new_state.win_move[winmove].1 == new_state.player_to_play {
+				new_state.win_state == 1;
+			}
+			else {
+				new_state.win_state == -1;
+			}
+			break ;
+		}
+	}
 	new_state.heuristic = heuristic::heuristic(&mut new_state);
     return new_state;
 }
@@ -68,7 +81,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     for x in indexbox.0.0..indexbox.0.1 {
         for y in indexbox.1.0..indexbox.1.1 {
 			cpyboard = state.board.clone();
-			cpywinpos = state.win_state.clone();
+			cpywinpos = state.win_move.clone();
 			let mut child = create_new_state(&mut cpyboard, -state.player_to_play, (x, y), (state.white_eat_value,state.black_eat_value),cpywinpos);
             let axes = create_axes_from_stone_position(&child,child.current_move.0,child.current_move.1,child.player_to_play);
             if check_is_wrong_move(&child, &axes) == 0 {
@@ -192,8 +205,8 @@ pub fn state_is_terminated(state: &mut State) -> bool {
 	else {
 		if state.black_eat_value >= 10 {return true;}
 	}
-	if state.win_state.len() > 0 {
-	if check_alignment_for_given_pos(&state,state.win_state[0].0.0,state.win_state[0].0.1,state.win_state[0].1) == true {return true;}
-}
+	if state.win_move.len() > 0  && state.win_state == 1 {
+		if check_alignment_for_given_pos(&state,state.win_move[0].0.0,state.win_move[0].0.1,state.win_move[0].1) == true {return true;}
+	}
 	return false;
 }
