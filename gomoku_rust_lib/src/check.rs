@@ -170,7 +170,7 @@ fn check_move_is_in_capturing_position_in_axe(axe: &Vec<i8>, player: i8) -> bool
     }
 }
 
-fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
+pub fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
     let opponent: i8 = -player;
     let mut count_eat: i8 = 0;
 

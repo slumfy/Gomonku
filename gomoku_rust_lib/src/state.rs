@@ -27,14 +27,15 @@ pub fn create_new_state(
     board: &mut Vec<Vec<i8>>,
     player: i8,
     current_move: (isize, isize),
-    player_eat_value: (i8, i8),
+    white_captured_stone: i8,
+    black_captured_stone: i8,
     win_move: Vec<((isize, isize), i8)>,
 ) -> State {
     let mut new_state = State {
         board: board.to_vec(),
         current_player: player,
-        white_captured_stone: player_eat_value.0,
-        black_captured_stone: player_eat_value.1,
+        white_captured_stone: white_captured_stone,
+        black_captured_stone: black_captured_stone,
         available_move: vec![],
         heuristic: 0,
         win_move: win_move,
@@ -59,12 +60,9 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     let mut cpyboard: Vec<Vec<i8>>;
     let mut cpywinpos: Vec<((isize, isize), i8)>;
     let mut childlist: Vec<State>;
-    // let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
     let indexbox: Vec<(usize, usize)> = get_search_box(state);
     let len = indexbox.len();
     childlist = Vec::new();
-    // for x in indexbox.0 .0..indexbox.0 .1 {
-    //     for y in indexbox.1 .0..indexbox.1 .1 {
     for pos in 0..len {
         let x = indexbox[pos].0;
         let y = indexbox[pos].1;
@@ -74,20 +72,14 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             &mut cpyboard,
             -state.current_player,
             (x as isize, y as isize),
-            (state.white_captured_stone, state.black_captured_stone),
+            state.white_captured_stone,
+            state.black_captured_stone,
             cpywinpos,
         );
-        let axes = create_axes_from_stone_position(
-            &child,
-            child.current_move.0,
-            child.current_move.1,
-            child.current_player,
-        );
-        if check_is_wrong_move(&child, &axes) == 0 {
+        if child.heuristic > -1000 {
             apply_state_move(&mut child, 8);
             childlist.push(child);
         }
-        // }
     }
     return childlist;
 }

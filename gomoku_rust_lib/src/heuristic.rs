@@ -1,10 +1,24 @@
 #[path = "check.rs"]
 mod check;
 use crate::check::check_alignment_for_given_pos;
+use crate::check::check_is_wrong_move;
+use crate::check::create_axes_from_stone_position;
 use crate::state::State;
 
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value = 0i32;
+
+    let axes = create_axes_from_stone_position(
+        state,
+        state.current_move.0,
+        state.current_move.1,
+        state.current_player,
+    );
+    let player = state.current_player;
+    if check_is_wrong_move(state, &axes) < 0 {
+        return -1000;
+    }
+
     let board_check = check::checking_move_biggest_alignment_and_stone_captured(state); // current alignement and current eat_value
     if state.current_player == 1 {
         state.white_captured_stone += board_check["stone_captured"];

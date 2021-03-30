@@ -19,17 +19,12 @@ use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 mod search_space;
 
-struct Player {
-    eat_value: i8,
-}
-
 static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 ];
-
-static mut WHITE: Player = Player { eat_value: 0 };
-static mut BLACK: Player = Player { eat_value: 0 };
+static mut WHITE_CAPTURED_STONE: i8 = 0;
+static mut BLACK_CAPTURED_STONE: i8 = 0;
 
 #[pyfunction]
 fn ai_move(
@@ -41,15 +36,22 @@ fn ai_move(
     wining_position: Vec<((isize, isize), i8)>,
 ) -> PyResult<((isize, isize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
-    // let opponent = -player;
-    let eat_player: (i8, i8);
+    let white_captured_stone: i8;
+    let black_captured_stone: i8;
     unsafe {
-        eat_player = (WHITE.eat_value, BLACK.eat_value);
+        white_captured_stone = WHITE_CAPTURED_STONE;
+        black_captured_stone = BLACK_CAPTURED_STONE;
     }
     let mut mutboard: Vec<Vec<i8>> = board;
     let ai_move: ((isize, isize), i32);
-    let mut state: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
+    let mut state: state::State = state::create_new_state(
+        &mut mutboard,
+        player,
+        (x, y),
+        white_captured_stone,
+        black_captured_stone,
+        wining_position,
+    );
     let start = Instant::now();
     if turn < 2 {
         if turn == 0 {
@@ -69,11 +71,11 @@ fn ai_move(
     println!("time to process {:?}", end.duration_since(start));
     println!(
         "white eat: {:?} black eat: {:?}",
-        eat_player.0, eat_player.0
+        white_captured_stone, black_captured_stone
     );
     println!(
         "negamax in board {:?}:{} turn {}",
-        ai_move.0.0, ALPHABET[ai_move.0.1 as usize], turn
+        ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize], turn
     );
     println!("negamax {:?}", ai_move);
     Ok(ai_move)
@@ -88,12 +90,20 @@ fn check_move_is_a_fiverow(
     wining_position: Vec<((isize, isize), i8)>,
 ) -> PyResult<bool> {
     let mut mutboard: Vec<Vec<i8>> = board;
-    let eat_player: (i8, i8);
+    let white_captured_stone: i8;
+    let black_captured_stone: i8;
     unsafe {
-        eat_player = (WHITE.eat_value, BLACK.eat_value);
+        white_captured_stone = WHITE_CAPTURED_STONE;
+        black_captured_stone = BLACK_CAPTURED_STONE;
     }
-    let state: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
+    let state: state::State = state::create_new_state(
+        &mut mutboard,
+        player,
+        (x, y),
+        white_captured_stone,
+        black_captured_stone,
+        wining_position,
+    );
     let alignement = checking_move_biggest_alignment_and_stone_captured(&state);
     if alignement["biggest_alignment"] >= 5 {
         Ok(true)
@@ -117,12 +127,20 @@ fn place_stone(
 	println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
     let mut mutboard: Vec<Vec<i8>> = board;
-    let eat_player: (i8, i8);
+    let white_captured_stone: i8;
+    let black_captured_stone: i8;
     unsafe {
-        eat_player = (WHITE.eat_value, BLACK.eat_value);
+        white_captured_stone = WHITE_CAPTURED_STONE;
+        black_captured_stone = BLACK_CAPTURED_STONE;
     }
-    let mut state: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
+    let mut state: state::State = state::create_new_state(
+        &mut mutboard,
+        player,
+        (x, y),
+        white_captured_stone,
+        black_captured_stone,
+        wining_position,
+    );
     let board_check: HashMap<String, i8> = checking_move(&state);
     if board_check["is_wrong_move"] == 0 {
         apply_state_move(&mut state, board_check["stone_captured"]);
@@ -131,11 +149,11 @@ fn place_stone(
         dict.set_item("stone_captured", board_check["stone_captured"])?;
         if player == 1 {
             unsafe {
-                WHITE.eat_value += board_check["stone_captured"];
+                WHITE_CAPTURED_STONE += board_check["stone_captured"];
             }
         } else {
             unsafe {
-                BLACK.eat_value += board_check["stone_captured"];
+                BLACK_CAPTURED_STONE += board_check["stone_captured"];
             }
         }
         if board_check["biggest_alignment"] >= 5 {
@@ -154,12 +172,11 @@ fn get_rust_box(
     x: isize,
     y: isize,
     wining_position: Vec<((isize, isize), i8)>,
-) -> PyResult<Vec<(usize,usize)>> {
+) -> PyResult<Vec<(usize, usize)>> {
     let mut mutboard: Vec<Vec<i8>> = board;
-    let eat_player: (i8, i8)= (0,0);
     let mut state: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
-	Ok(search_space::get_search_box(&mut state))
+        state::create_new_state(&mut mutboard, player, (x, y), 0, 0, wining_position);
+    Ok(search_space::get_search_box(&mut state))
 }
 
 /// A Python module implemented in Rust.
@@ -176,7 +193,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
 #[pymodule]
 fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
-	m.add_function(wrap_pyfunction!(get_rust_box, m)?)?;
+    m.add_function(wrap_pyfunction!(get_rust_box, m)?)?;
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
     m.add_function(wrap_pyfunction!(check_move_is_a_fiverow, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
