@@ -16,9 +16,14 @@ def main(argv=None):
         help="Disable or enable AI helper.",
         action="store_false",
     )
+    parser.add_argument(
+        "--with_search_box",
+        help="Disable or enable Search box.",
+        action="store_true",
+    )
     args = parser.parse_args(argv)
     go_rules = GoRules(ai_helper=args.no_ai_helper)
-    game = PyGameGo(sound_status=not args.no_sound)
+    game = PyGameGo(sound_status=not args.no_sound, search_box_status= args.with_search_box)
     game.menu(go_rules=go_rules)
 
 
