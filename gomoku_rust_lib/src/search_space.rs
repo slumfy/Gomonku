@@ -32,15 +32,15 @@ pub fn get_search_box(state: &mut State) -> Vec<(usize,usize)> {
 }
 
 fn create_box_for_pos(box_position: &mut Vec<(usize,usize)>, x: usize, y: usize) {
-	let offset = 2;
-	let xmin = if x < offset { 0 } else { x - offset};
-	let xmax = if  x + offset + 1 > 19 { y } else { x + offset + 1};
-	let ymin = if  y < offset { 0 } else { y - offset};
-	let ymax = if  y + offset + 1 > 19 { y } else { y + offset + 1};
+	let box_size = 2;
+	let xmin = if x < box_size { 0 } else { x - box_size};
+	let xmax = if  x + box_size + 1 > 19 { x } else { x + box_size + 1};
+	let ymin = if  y < box_size { 0 } else { y - box_size};
+	let ymax = if  y + box_size + 1 > 19 { y } else { y + box_size + 1};
 	for idx in xmin..xmax {
 		for idy in ymin..ymax{
-			if check_is_in_pos_list(box_position,idx,idy) == false {
-				box_position.push((idx,idy));
+			if check_is_in_pos_list(box_position, idx, idy) == false {
+				box_position.push((idx, idy));
 			}
 		}
 	}
@@ -49,7 +49,7 @@ fn create_box_for_pos(box_position: &mut Vec<(usize,usize)>, x: usize, y: usize)
 fn check_is_in_pos_list(box_position: &mut Vec<(usize,usize)>, x: usize, y: usize) -> bool {
 	let len = box_position.len();
 	for pos in 0..len {
-		if box_position[pos].0 == x && box_position[pos].1 == y{
+		if box_position[pos].0 == x && box_position[pos].1 == y {
 			return true;
 		}
 	}
