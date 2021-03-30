@@ -15,7 +15,7 @@ from global_var import (
 
 
 class PyGameGo:
-    def __init__(self, sound_status: bool = False, test_mode: bool = False):
+    def __init__(self, sound_status: bool = False, test_mode: bool = False, search_box_status: bool = False):
         self.test_mode = test_mode
 
         self.logger = logger_factory("PyGameGo")
@@ -26,6 +26,7 @@ class PyGameGo:
             pygame.mixer.init()
             pygame.mixer.music.load("ressources/sound/bensound-thejazzpiano.mp3")
             self.sound_status = sound_status
+            self.search_box_status = search_box_status
             self.placing_stone_sound = pygame.mixer.Sound("ressources/sound/MOVE.wav")
             self.sound_icon_size = width, height = 32, 32
             self.reset_icon_size = width, height = 32, 32
@@ -54,6 +55,8 @@ class PyGameGo:
             self.white_stone_resize = pygame.transform.scale(self.white_stone, STONE_SIZE)
             self.black_stone = pygame.image.load("ressources/images/blackcircle.png")
             self.black_stone_resize = pygame.transform.scale(self.black_stone, STONE_SIZE)
+            self.grey_stone = pygame.image.load("ressources/images/greycircle.png")
+            self.grey_stone_resize = pygame.transform.scale(self.grey_stone, STONE_SIZE)
 
         self.player: Player = None
 
@@ -212,6 +215,8 @@ class PyGameGo:
         else:
             win_status = stone_status
         self.board_screen_blit(go_rules, 33, 62)
+        if self.search_box_status == True:
+            self.print_box(go_rules, self.player, x, y, self.turn)
         if win_status != 0:
             for pl in go_rules.player_list:
                 if pl.nb == win_status:
@@ -267,3 +272,17 @@ class PyGameGo:
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
         pygame.display.flip()
         return 0, 0
+
+    def print_box(self, go_rules, player, x, y, turn):
+        space, offset = 33, 62
+        box = go_rules.print_search_box(self.player, x, y, self.turn)
+        for pos in box:
+                if go_rules.board[pos[0]][pos[1]] == 0:
+                     self.screen.blit(
+                        self.grey_stone_resize,
+                        (
+                            pos[1] * space + offset - STONE_SIZE[0] / 2,
+                            pos[0] * space + offset - STONE_SIZE[1] / 2,
+                        ),
+                    )
+        print(box)

@@ -17,6 +17,7 @@ use crate::tests::__pyo3_get_function_test_double_triple;
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
+mod search_space;
 
 struct Player {
     eat_value: i8,
@@ -72,7 +73,7 @@ fn ai_move(
     );
     println!(
         "negamax in board {:?}:{} turn {}",
-        ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize], turn
+        ai_move.0.0, ALPHABET[ai_move.0.1 as usize], turn
     );
     println!("negamax {:?}", ai_move);
     Ok(ai_move)
@@ -135,7 +136,6 @@ fn place_stone(
                 BLACK.eat_value += board_check["stone_captured"];
             }
         }
-
         if board_check["biggest_alignment"] >= 5 {
             dict.set_item("wining_position", &state.current_move)?;
         }
@@ -143,6 +143,21 @@ fn place_stone(
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
     Ok(dict.to_object(py))
+}
+
+#[pyfunction]
+fn get_rust_box(
+    board: Vec<Vec<i8>>,
+    player: i8,
+    x: isize,
+    y: isize,
+    wining_position: Vec<((isize, isize), i8)>,
+) -> PyResult<Vec<(usize,usize)>> {
+    let mut mutboard: Vec<Vec<i8>> = board;
+    let eat_player: (i8, i8)= (0,0);
+    let mut state: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, wining_position);
+	Ok(search_space::get_search_box(&mut state))
 }
 
 /// A Python module implemented in Rust.
@@ -159,6 +174,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
 #[pymodule]
 fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
+	m.add_function(wrap_pyfunction!(get_rust_box, m)?)?;
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
     m.add_function(wrap_pyfunction!(check_move_is_a_fiverow, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;

@@ -67,6 +67,11 @@ class GoRules:
         print("AI: ", move)
         return move
 
+    def print_search_box(self, player, x, y, turn):
+        opponant = -player.nb
+        box = gomoku_rust.get_rust_box(self.board, opponant, x, y, self.wining_position)
+        return box
+
     def print_game_status(self):
         for player in self.player_list:
             print("player: ", player.color, "")
