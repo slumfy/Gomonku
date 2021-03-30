@@ -14,9 +14,9 @@ use crate::state::search_space::get_search_box;
 pub struct State {
     pub board: Vec<Vec<i8>>,
     pub available_move: Vec<State>,
-    pub player_to_play: i8,
-    pub white_eat_value: i8,
-    pub black_eat_value: i8,
+    pub current_player: i8,
+    pub white_captured_stone: i8,
+    pub black_captured_stone: i8,
     pub heuristic: i32,
     pub win_state: i32,
     pub win_move: Vec<((isize, isize), i8)>,
@@ -32,9 +32,9 @@ pub fn create_new_state(
 ) -> State {
     let mut new_state = State {
         board: board.to_vec(),
-        player_to_play: player,
-        white_eat_value: player_eat_value.0,
-        black_eat_value: player_eat_value.1,
+        current_player: player,
+        white_captured_stone: player_eat_value.0,
+        black_captured_stone: player_eat_value.1,
         available_move: vec![],
         heuristic: 0,
         win_move: win_move,
@@ -43,7 +43,7 @@ pub fn create_new_state(
     };
     if new_state.win_move.len() > 0 {
         for winmove in 0..new_state.win_move.len() {
-            if new_state.win_move[winmove].1 == new_state.player_to_play {
+            if new_state.win_move[winmove].1 == new_state.current_player {
                 new_state.win_state = 1;
             } else {
                 new_state.win_state = -1;
@@ -60,33 +60,33 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     let mut cpywinpos: Vec<((isize, isize), i8)>;
     let mut childlist: Vec<State>;
     // let indexbox: ((isize, isize), (isize, isize)) = get_box(state);
-	let indexbox: Vec<(usize,usize)> = get_search_box(state);
-	let len = indexbox.len();
+    let indexbox: Vec<(usize, usize)> = get_search_box(state);
+    let len = indexbox.len();
     childlist = Vec::new();
     // for x in indexbox.0 .0..indexbox.0 .1 {
     //     for y in indexbox.1 .0..indexbox.1 .1 {
-		for pos in 0..len {
-			let x = indexbox[pos].0;
-			let y = indexbox[pos].1;
-            cpyboard = state.board.clone();
-            cpywinpos = state.win_move.clone();
-            let mut child = create_new_state(
-                &mut cpyboard,
-                -state.player_to_play,
-                (x as isize, y as isize),
-                (state.white_eat_value, state.black_eat_value),
-                cpywinpos,
-            );
-            let axes = create_axes_from_stone_position(
-                &child,
-                child.current_move.0,
-                child.current_move.1,
-                child.player_to_play,
-            );
-            if check_is_wrong_move(&child, &axes) == 0 {
-                apply_state_move(&mut child, 8);
-                childlist.push(child);
-            }
+    for pos in 0..len {
+        let x = indexbox[pos].0;
+        let y = indexbox[pos].1;
+        cpyboard = state.board.clone();
+        cpywinpos = state.win_move.clone();
+        let mut child = create_new_state(
+            &mut cpyboard,
+            -state.current_player,
+            (x as isize, y as isize),
+            (state.white_captured_stone, state.black_captured_stone),
+            cpywinpos,
+        );
+        let axes = create_axes_from_stone_position(
+            &child,
+            child.current_move.0,
+            child.current_move.1,
+            child.current_player,
+        );
+        if check_is_wrong_move(&child, &axes) == 0 {
+            apply_state_move(&mut child, 8);
+            childlist.push(child);
+        }
         // }
     }
     return childlist;
@@ -178,7 +178,7 @@ pub fn check_capturing_position(
 }
 
 fn apply_capturing_stone(state: &mut State, stone_captured: i8) {
-    let player = state.player_to_play;
+    let player = state.current_player;
     let board = &mut state.board;
     check_capturing_position(
         board,
@@ -191,19 +191,19 @@ fn apply_capturing_stone(state: &mut State, stone_captured: i8) {
 
 pub fn apply_state_move(state: &mut State, stone_captured: i8) {
     state.board[state.current_move.0 as usize][state.current_move.1 as usize] =
-        state.player_to_play;
+        state.current_player;
     if stone_captured > 0 {
         apply_capturing_stone(state, stone_captured);
     }
 }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
-    if state.player_to_play == 1 {
-        if state.white_eat_value >= 10 {
+    if state.current_player == 1 {
+        if state.white_captured_stone >= 10 {
             return true;
         }
     } else {
-        if state.black_eat_value >= 10 {
+        if state.black_captured_stone >= 10 {
             return true;
         }
     }

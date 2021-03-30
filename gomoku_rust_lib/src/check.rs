@@ -250,7 +250,7 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     } else if state.board[stone_x as usize][stone_y as usize] != 0 {
         return -2;
     }
-    let player: i8 = state.player_to_play;
+    let player: i8 = state.current_player;
 
     for axe in axes {
         if check_move_is_in_capturing_position_in_axe(&axe, player) {
@@ -270,9 +270,9 @@ pub fn checking_move(state: &State) -> HashMap<String, i8> {
         state,
         state.current_move.0,
         state.current_move.1,
-        state.player_to_play,
+        state.current_player,
     );
-    let player: i8 = state.player_to_play;
+    let player: i8 = state.current_player;
     let mut count_eat: i8 = 0;
 
     board_check.insert(
@@ -295,7 +295,7 @@ pub fn checking_move(state: &State) -> HashMap<String, i8> {
 #[allow(dead_code)]
 pub fn checking_move_biggest_alignment_and_stone_captured(state: &State) -> HashMap<String, i8> {
     let mut board_check: HashMap<String, i8> = HashMap::new();
-    let player: i8 = state.player_to_play;
+    let player: i8 = state.current_player;
     let axes =
         create_axes_from_stone_position(state, state.current_move.0, state.current_move.1, player);
     let mut count_eat: i8 = 0;
