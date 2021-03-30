@@ -5,19 +5,22 @@ use std::collections::HashMap;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
+mod utils;
+
 mod check;
+mod heuristic;
+mod negamax;
+mod search_space;
+mod state;
+mod tests;
 use check::checking_move;
 use check::checking_move_biggest_alignment_and_stone_captured;
 
-mod negamax;
-mod state;
-use state::apply_state_move;
-mod tests;
 use crate::tests::__pyo3_get_function_test_double_triple;
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
-mod search_space;
+use state::apply_state_move;
 
 static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -60,7 +63,7 @@ fn ai_move(
             ai_move = negamax::return_early_move(&state);
         }
     } else {
-        let value = negamax::negamax(&mut state, 3, -1000, 1000, player);
+        let value = negamax::negamax(&mut state, 1, -1000, 1000, player);
         ai_move = negamax::return_move(&mut state, value);
     }
     let end = Instant::now();

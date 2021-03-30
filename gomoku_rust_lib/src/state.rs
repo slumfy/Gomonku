@@ -1,11 +1,6 @@
-#[path = "check.rs"]
-mod check;
-use check::check_alignment_for_given_pos;
-use check::check_is_in_table;
-use check::check_is_wrong_move;
-use check::create_axes_from_stone_position;
-#[path = "heuristic.rs"]
-mod heuristic;
+use crate::check::check_alignment_for_given_pos;
+use crate::check::check_is_in_table;
+use crate::heuristic::heuristic;
 #[path = "search_space.rs"]
 mod search_space;
 // use crate::state::search_space::get_box;
@@ -52,7 +47,7 @@ pub fn create_new_state(
             break;
         }
     }
-    new_state.heuristic = heuristic::heuristic(&mut new_state);
+    new_state.heuristic = heuristic(&mut new_state);
     return new_state;
 }
 
