@@ -11,7 +11,7 @@ pub fn create_axes_from_stone_position(
     let player = player;
     let stone_x = x;
     let stone_y = y;
-    let mut axes: Vec<Vec<i8>> = vec![];
+    let mut axes: Vec<Vec<i8>> = Vec::new();
 
     axes.push(vec![player]);
     axes.push(vec![player]);

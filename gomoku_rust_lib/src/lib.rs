@@ -5,14 +5,14 @@ use std::collections::HashMap;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
-mod utils;
-
 mod check;
+mod global_var;
 mod heuristic;
 mod negamax;
 mod search_space;
 mod state;
 mod tests;
+mod utils;
 use check::checking_move;
 use check::checking_move_biggest_alignment_and_stone_captured;
 
@@ -26,8 +26,6 @@ static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 ];
-static mut WHITE_CAPTURED_STONE: i8 = 0;
-static mut BLACK_CAPTURED_STONE: i8 = 0;
 
 #[pyfunction]
 fn ai_move(
@@ -42,8 +40,8 @@ fn ai_move(
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     unsafe {
-        white_captured_stone = WHITE_CAPTURED_STONE;
-        black_captured_stone = BLACK_CAPTURED_STONE;
+        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
+        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
     let mut mutboard: Vec<Vec<i8>> = board;
     let ai_move: ((isize, isize), i32);
@@ -56,14 +54,16 @@ fn ai_move(
         wining_position,
     );
     let start = Instant::now();
-    if turn < 2 {
-        if turn == 0 {
-            ai_move = ((9, 9), 0);
-        } else {
-            ai_move = negamax::return_early_move(&state);
-        }
+    if turn == 0 {
+        ai_move = ((9, 9), 0);
     } else {
-        let value = negamax::negamax(&mut state, 1, -1000, 1000, player);
+        let value = negamax::negamax(
+            &mut state,
+            global_var::DEEP,
+            global_var::HEURISTIC_MIN_VALUE,
+            global_var::HEURISTIC_MAX_VALUE,
+            player,
+        );
         ai_move = negamax::return_move(&mut state, value);
     }
     let end = Instant::now();
@@ -96,8 +96,8 @@ fn check_move_is_a_fiverow(
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     unsafe {
-        white_captured_stone = WHITE_CAPTURED_STONE;
-        black_captured_stone = BLACK_CAPTURED_STONE;
+        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
+        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
     let state: state::State = state::create_new_state(
         &mut mutboard,
@@ -133,8 +133,8 @@ fn place_stone(
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     unsafe {
-        white_captured_stone = WHITE_CAPTURED_STONE;
-        black_captured_stone = BLACK_CAPTURED_STONE;
+        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
+        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
     let mut state: state::State = state::create_new_state(
         &mut mutboard,
@@ -152,11 +152,11 @@ fn place_stone(
         dict.set_item("stone_captured", board_check["stone_captured"])?;
         if player == 1 {
             unsafe {
-                WHITE_CAPTURED_STONE += board_check["stone_captured"];
+                global_var::WHITE_CAPTURED_STONE += board_check["stone_captured"];
             }
         } else {
             unsafe {
-                BLACK_CAPTURED_STONE += board_check["stone_captured"];
+                global_var::BLACK_CAPTURED_STONE += board_check["stone_captured"];
             }
         }
         if board_check["biggest_alignment"] >= 5 {
