@@ -285,4 +285,4 @@ class PyGameGo:
                             pos[0] * space + offset - STONE_SIZE[1] / 2,
                         ),
                     )
-        print(box)
+        # print(box)
