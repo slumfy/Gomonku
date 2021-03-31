@@ -47,13 +47,20 @@ class GoRules:
                 for p in self.player_list:
                     if p.nb == player.nb:
                         p.wining_position.append([x, y])
-                self.wining_position.append(((x, y),player.nb))
+                self.wining_position.append(((x, y), player.nb))
             for pl in self.player_list:
                 if pl != player:
                     if pl.wining_position:
                         for position in pl.wining_position:
                             if (
-                                gomoku_rust.check_move_is_a_fiverow(self.board, pl.nb, position[0], position[1], self.wining_position) == True
+                                gomoku_rust.check_move_is_a_fiverow(
+                                    self.board,
+                                    pl.nb,
+                                    position[0],
+                                    position[1],
+                                    self.wining_position,
+                                )
+                                == True
                             ):
                                 return pl.nb
                             else:
@@ -65,6 +72,7 @@ class GoRules:
         opponant = -player.nb
         move = gomoku_rust.ai_move(self.board, opponant, x, y, turn, self.wining_position)
         print("AI: ", move)
+
         return move
 
     def print_search_box(self, player, x, y, turn):
@@ -90,6 +98,7 @@ class GoRules:
     def reset_game(self):
         self.reset_players()
         self.clear_board()
+        gomoku_rust.reset_game()
 
     def clear_board(self):
         for L in range(len(self.board)):

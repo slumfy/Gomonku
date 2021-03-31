@@ -1,3 +1,4 @@
+use crate::global_var;
 use crate::state::create_child;
 use crate::state::state_is_terminated;
 use crate::state::State;
@@ -10,10 +11,9 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
     }
     // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
     if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
-        state.heuristic = state.heuristic * color as i32;
         return state.heuristic * color as i32;
     }
-    let mut value: i32 = -1000;
+    let mut value: i32 = global_var::HEURISTIC_MIN_VALUE;
     let len = state.available_move.len();
     for child in 0..len {
         let negamax = -negamax(
@@ -38,14 +38,15 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
 pub fn return_move(state: &mut State, heuristic: i32) -> ((isize, isize), i32) {
     let len = state.available_move.len();
     print_heuristic_table(state);
-	state.available_move.sort_by_key(|d| Reverse(d.heuristic));
-	return (
+    println!("heuristic of returned move : {:?}", heuristic);
+    state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+    return (
         (state.available_move[0].current_move),
         state.available_move[0].heuristic,
     );
 }
 
-pub fn return_early_move(state: &State /*, turn: isize*/) -> ((isize, isize), i32) {
+pub fn return_second_move(state: &State /*, turn: isize*/) -> ((isize, isize), i32) {
     let mut pos: (isize, isize) = state.current_move;
     if pos.0 / 9 == 0 && pos.0 % 9 != 0 {
         pos.0 = pos.0 + 2;
@@ -91,7 +92,7 @@ pub fn print_heuristic_table(state: &State) {
                 }
             }
             if trigger == 0 {
-                line.push(0);
+                line.push(-5);
             } else {
                 trigger = 0;
             }

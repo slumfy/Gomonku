@@ -1,4 +1,5 @@
 use crate::state::State;
+use crate::utils::create_axes_from_stone_position;
 use std::cmp::max;
 use std::collections::HashMap;
 
@@ -12,76 +13,6 @@ pub fn check_is_in_table(x: isize, y: isize, xsign: isize, ysign: isize, offset:
         return 1;
     }
     return 0;
-}
-
-pub fn create_axes_from_stone_position(
-    state: &State,
-    x: isize,
-    y: isize,
-    player: i8,
-) -> Vec<Vec<i8>> {
-    let board = &state.board;
-    let box_half_size: isize = 5;
-    let player = player;
-    let stone_x = x;
-    let stone_y = y;
-    let mut axes: Vec<Vec<i8>> = vec![];
-
-    axes.push(vec![player]);
-    axes.push(vec![player]);
-    axes.push(vec![player]);
-    axes.push(vec![player]);
-
-    for i in 1..box_half_size {
-        // Vertical x
-        if stone_x - i >= 0 {
-            axes[0].insert(0, board[(stone_x - i) as usize][stone_y as usize]);
-        } else {
-            axes[0].insert(0, -2);
-        }
-        if stone_x + i < 19 {
-            axes[0].push(board[(stone_x + i) as usize][stone_y as usize]);
-        } else {
-            axes[0].push(-2);
-        }
-
-        // Horizontal y
-        if stone_y - i >= 0 {
-            axes[1].insert(0, board[(stone_x) as usize][(stone_y - i) as usize]);
-        } else {
-            axes[1].insert(0, -2);
-        }
-        if stone_y + i < 19 {
-            axes[1].push(board[stone_x as usize][(stone_y + i) as usize]);
-        } else {
-            axes[1].push(-2);
-        }
-
-        // Diagonal top left
-        if stone_y + i < 19 && stone_x + i < 19 {
-            axes[2].push(board[(stone_x + i) as usize][(stone_y + i) as usize]);
-        } else {
-            axes[2].push(-2);
-        }
-        if stone_y - i >= 0 && stone_x - i >= 0 {
-            axes[2].insert(0, board[(stone_x - i) as usize][(stone_y - i) as usize]);
-        } else {
-            axes[2].insert(0, -2);
-        }
-
-        // Diagonal top right
-        if stone_y + i < 19 && stone_x - i >= 0 {
-            axes[3].push(board[(stone_x - i) as usize][(stone_y + i) as usize]);
-        } else {
-            axes[3].push(-2);
-        }
-        if stone_y - i >= 0 && stone_x + i < 19 {
-            axes[3].insert(0, board[(stone_x + i) as usize][(stone_y - i) as usize]);
-        } else {
-            axes[3].insert(0, -2);
-        }
-    }
-    return axes;
 }
 
 #[allow(dead_code)]
@@ -170,7 +101,7 @@ fn check_move_is_in_capturing_position_in_axe(axe: &Vec<i8>, player: i8) -> bool
     }
 }
 
-fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
+pub fn check_move_is_capturing_stone_in_axe(axe: &Vec<i8>, player: i8) -> i8 {
     let opponent: i8 = -player;
     let mut count_eat: i8 = 0;
 
@@ -250,7 +181,7 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     } else if state.board[stone_x as usize][stone_y as usize] != 0 {
         return -2;
     }
-    let player: i8 = state.player_to_play;
+    let player: i8 = state.current_player;
 
     for axe in axes {
         if check_move_is_in_capturing_position_in_axe(&axe, player) {
@@ -270,9 +201,9 @@ pub fn checking_move(state: &State) -> HashMap<String, i8> {
         state,
         state.current_move.0,
         state.current_move.1,
-        state.player_to_play,
+        state.current_player,
     );
-    let player: i8 = state.player_to_play;
+    let player: i8 = state.current_player;
     let mut count_eat: i8 = 0;
 
     board_check.insert(
@@ -295,7 +226,7 @@ pub fn checking_move(state: &State) -> HashMap<String, i8> {
 #[allow(dead_code)]
 pub fn checking_move_biggest_alignment_and_stone_captured(state: &State) -> HashMap<String, i8> {
     let mut board_check: HashMap<String, i8> = HashMap::new();
-    let player: i8 = state.player_to_play;
+    let player: i8 = state.current_player;
     let axes =
         create_axes_from_stone_position(state, state.current_move.0, state.current_move.1, player);
     let mut count_eat: i8 = 0;
