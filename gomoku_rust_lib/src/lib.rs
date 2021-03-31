@@ -42,7 +42,10 @@ fn ai_move(
 ) -> PyResult<((isize, isize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     // let opponent = -player;
-	let copywin: Vec<((isize, isize), i8)> = wining_position.clone();
+	let copywin_negascout: Vec<((isize, isize), i8)> = wining_position.clone();
+	let copywin_nega_tt: Vec<((isize, isize), i8)> = wining_position.clone();
+	let copywin_scout_tt: Vec<((isize, isize), i8)> = wining_position.clone();
+
     let eat_player: (i8, i8);
     unsafe {
         eat_player = (WHITE.eat_value, BLACK.eat_value);
@@ -64,12 +67,24 @@ fn ai_move(
 		let negend = Instant::now();
 		println!("time to process negamax {:?}", negend.duration_since(negstart));
 		let mut negstate: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin);
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_nega_tt);
 		let negstart = Instant::now();
-		let value = negamax::negascout(&mut negstate, 3, -1000, 1000, player);
+		let value = negamax::negamax_with_tt(&mut negstate, 3, -1000, 1000, player);
+		let negend = Instant::now();
+		println!("time to process negamax_with_tt {:?}", negend.duration_since(negstart));
+		let mut negttstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_negascout);
+		let negstart = Instant::now();
+		let value = negamax::negascout(&mut negttstate, 3, -1000, 1000, player);
 		let negend = Instant::now();
 		println!("time to process negascout {:?}", negend.duration_since(negstart));
-        ai_move = negamax::return_move(&mut state, value);
+		let mut scouttstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_scout_tt);
+		let negstart = Instant::now();
+		let value = negamax::negascout_with_tt(&mut scouttstate, 3, -1000, 1000, player);
+		let negend = Instant::now();
+		println!("time to process negascout_with_tt {:?}", negend.duration_since(negstart));
+        ai_move = negamax::return_move(&mut state);
     }
     let end = Instant::now();
     println!(
