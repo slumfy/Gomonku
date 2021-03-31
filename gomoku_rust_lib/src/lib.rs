@@ -69,24 +69,24 @@ fn ai_move(
 		let negend = Instant::now();
 		println!("time to process negamax {:?}", negend.duration_since(negstart));
 		let mut negttstate: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_nega_tt);
+        state::create_new_state(&mut mutboard, player, (x, y), white_captured_stone, black_captured_stone, copywin_nega_tt);
 		let negstart = Instant::now();
 		let value = negamax::negamax_with_tt(
             &mut negttstate, global_var::DEEP, global_var::HEURISTIC_MIN_VALUE, global_var::HEURISTIC_MAX_VALUE, player);
 		let negend = Instant::now();
 		println!("time to process negamax_with_tt {:?}", negend.duration_since(negstart));
-		let mut scouttate: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_negascout);
+		let mut scoutstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), white_captured_stone, black_captured_stone, copywin_negascout);
 		let negstart = Instant::now();
 		let value = negamax::negascout(
             &mut scoutstate, global_var::DEEP, global_var::HEURISTIC_MIN_VALUE, global_var::HEURISTIC_MAX_VALUE, player);
 		let negend = Instant::now();
 		println!("time to process negascout {:?}", negend.duration_since(negstart));
-		let mut scouttstate: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_scout_tt);
+		let mut scoutttstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), white_captured_stone, black_captured_stone, copywin_scout_tt);
 		let negstart = Instant::now();
 		let value = negamax::negascout_with_tt(
-            &mut scouttstate, global_var::DEEP, global_var::HEURISTIC_MIN_VALUE, global_var::HEURISTIC_MAX_VALUE, player);
+            &mut scoutttstate, global_var::DEEP, global_var::HEURISTIC_MIN_VALUE, global_var::HEURISTIC_MAX_VALUE, player);
 		let negend = Instant::now();
 		println!("time to process negascout_with_tt {:?}", negend.duration_since(negstart));
         ai_move = negamax::return_move(&mut state);
