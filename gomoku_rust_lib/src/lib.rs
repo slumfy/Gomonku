@@ -127,7 +127,7 @@ fn place_stone(
     let py = gil.python();
     let dict = PyDict::new(py);
 
-	println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
+    println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
     let mut mutboard: Vec<Vec<i8>> = board;
     let white_captured_stone: i8;
@@ -182,6 +182,14 @@ fn get_rust_box(
     Ok(search_space::get_search_box(&mut state))
 }
 
+#[pyfunction]
+fn reset_game() {
+    unsafe {
+        global_var::WHITE_CAPTURED_STONE = 0;
+        global_var::BLACK_CAPTURED_STONE = 0;
+    }
+}
+
 /// A Python module implemented in Rust.
 #[pymodule]
 pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
@@ -199,6 +207,7 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(get_rust_box, m)?)?;
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
     m.add_function(wrap_pyfunction!(check_move_is_a_fiverow, m)?)?;
+    m.add_function(wrap_pyfunction!(reset_game, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }

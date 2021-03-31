@@ -98,6 +98,7 @@ class GoRules:
     def reset_game(self):
         self.reset_players()
         self.clear_board()
+        gomoku_rust.reset_game()
 
     def clear_board(self):
         for L in range(len(self.board)):
