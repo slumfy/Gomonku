@@ -42,6 +42,7 @@ fn ai_move(
 ) -> PyResult<((isize, isize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     // let opponent = -player;
+	let copywin: Vec<((isize, isize), i8)> = wining_position.clone();
     let eat_player: (i8, i8);
     unsafe {
         eat_player = (WHITE.eat_value, BLACK.eat_value);
@@ -58,7 +59,16 @@ fn ai_move(
             ai_move = negamax::return_early_move(&state);
         }
     } else {
+		let negstart = Instant::now();
         let value = negamax::negamax(&mut state, 3, -1000, 1000, player);
+		let negend = Instant::now();
+		println!("time to process negamax {:?}", negend.duration_since(negstart));
+		let mut negstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin);
+		let negstart = Instant::now();
+		let value = negamax::negascout(&mut negstate, 3, -1000, 1000, player);
+		let negend = Instant::now();
+		println!("time to process negascout {:?}", negend.duration_since(negstart));
         ai_move = negamax::return_move(&mut state, value);
     }
     let end = Instant::now();
@@ -69,7 +79,7 @@ fn ai_move(
     println!("time to process {:?}", end.duration_since(start));
     println!(
         "white eat: {:?} black eat: {:?}",
-        eat_player.0, eat_player.0
+        eat_player.0, eat_player.1
     );
     println!(
         "negamax in board {:?}:{} turn {}",

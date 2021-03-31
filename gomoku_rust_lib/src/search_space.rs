@@ -47,9 +47,9 @@ fn create_box_for_pos(box_position: &mut Vec<(usize,usize)>, x: usize, y: usize)
 =======
 	let offset = 2;
 	let xmin = if x < offset { 0 } else { x - offset};
-	let xmax = if  x + offset + 1 > 19 { x } else { x + offset + 1};
+	let xmax = if  x + offset + 1 > 19 { x + 1 } else { x + offset + 1};
 	let ymin = if  y < offset { 0 } else { y - offset};
-	let ymax = if  y + offset + 1 > 19 { y } else { y + offset + 1};
+	let ymax = if  y + offset + 1 > 19 { y + 1 } else { y + offset + 1};
 	for idx in xmin..xmax {
 		for idy in ymin..ymax{
 			if check_is_in_pos_list(box_position,idx,idy) == false {
