@@ -39,6 +39,9 @@ fn ai_move(
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
+    // let opponent = -player;
+	let copywin: Vec<((isize, isize), i8)> = wining_position.clone();
+
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
@@ -57,13 +60,18 @@ fn ai_move(
     if turn == 0 {
         ai_move = ((9, 9), 0);
     } else {
+		let negstart = Instant::now();
         let value = negamax::negamax(
-            &mut state,
-            global_var::DEEP,
-            global_var::HEURISTIC_MIN_VALUE,
-            global_var::HEURISTIC_MAX_VALUE,
-            player,
-        );
+            &mut state, global_var::DEEP, global_var::HEURISTIC_MIN_VALUE, global_var::HEURISTIC_MAX_VALUE, player);
+		let negend = Instant::now();
+		println!("time to process negamax {:?}", negend.duration_since(negstart));
+		let mut negstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin);
+		let negstart = Instant::now();
+		let value = negamax::negascout(
+            &mut state, global_var::DEEP, global_var::HEURISTIC_MIN_VALUE, global_var::HEURISTIC_MAX_VALUE, player);
+		let negend = Instant::now();
+		println!("time to process negascout {:?}", negend.duration_since(negstart));
         ai_move = negamax::return_move(&mut state, value);
     }
     let end = Instant::now();
