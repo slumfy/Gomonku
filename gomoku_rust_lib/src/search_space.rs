@@ -28,17 +28,19 @@ pub fn get_search_box(state: &mut State) -> Vec<(usize,usize)> {
 			}
 		}
 	}
+	// println!("pos_box : {:?}",box_position);
 	return box_position;
 }
 
 fn create_box_for_pos(box_position: &mut Vec<(usize,usize)>, x: usize, y: usize) {
 	let box_size = 2;
 	let xmin = if x < box_size { 0 } else { x - box_size};
-	let xmax = if  x + box_size + 1 > 19 { x } else { x + box_size + 1};
+	let xmax = if  x + box_size >= 18 { 18 } else { x + box_size};
 	let ymin = if  y < box_size { 0 } else { y - box_size};
-	let ymax = if  y + box_size + 1 > 19 { y } else { y + box_size + 1};
-	for idx in xmin..xmax {
-		for idy in ymin..ymax{
+	let ymax = if  y + box_size >= 18 { 18 } else { y + box_size};
+	// println!("xmin: {} xmax: {} ymin: {} ymax: {}",xmin,xmax,ymin,ymax);
+	for idx in xmin..xmax + 1 {
+		for idy in ymin..ymax + 1 {
 			if check_is_in_pos_list(box_position, idx, idy) == false {
 				box_position.push((idx, idy));
 			}

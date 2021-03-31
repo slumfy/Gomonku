@@ -114,6 +114,8 @@ fn place_stone(
     let py = gil.python();
     let dict = PyDict::new(py);
 
+	println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
+
     let mut mutboard: Vec<Vec<i8>> = board;
     let eat_player: (i8, i8);
     unsafe {

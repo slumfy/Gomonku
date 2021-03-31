@@ -35,24 +35,11 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
     return value;
 }
 
-pub fn return_move(state: &State, heuristic: i32) -> ((isize, isize), i32) {
-    // println!("heuristic ret = {:?}", heuristic);
+pub fn return_move(state: &mut State, heuristic: i32) -> ((isize, isize), i32) {
     let len = state.available_move.len();
     print_heuristic_table(state);
-    for child in 0..len {
-        // println!(
-        //     "child value = {:?}",
-        //     (
-        //         (state.available_move[child].current_move),
-        //         state.available_move[child].heuristic
-        //     )
-        // );
-        // println!("bestmove : {} worst move : {}",state.available_move[child].available_move[0].heuristic ,state.available_move[child].available_move[state.available_move[child].available_move.len() - 1].heuristic);
-        if state.available_move[child].heuristic == heuristic {
-            return ((state.available_move[child].current_move), state.heuristic);
-        }
-    }
-    return (
+	state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+	return (
         (state.available_move[0].current_move),
         state.available_move[0].heuristic,
     );
