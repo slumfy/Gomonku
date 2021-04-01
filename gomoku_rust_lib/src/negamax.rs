@@ -36,7 +36,6 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
 }
 
 pub fn return_move(state: &mut State, heuristic: i32) -> ((isize, isize), i32) {
-    let len = state.available_move.len();
     print_heuristic_table(state);
     println!("heuristic of returned move : {:?}", heuristic);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));

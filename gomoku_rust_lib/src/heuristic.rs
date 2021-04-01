@@ -23,7 +23,6 @@ pub fn fibonacci_reccursive(n: i32) -> u64 {
 
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value = 0i32;
-    let mut alignment_value = 0i32;
     let player = state.current_player;
     let mut stone_captured = 0;
     let axes = create_axes_from_stone_position(
@@ -37,14 +36,12 @@ pub fn heuristic(state: &mut State) -> i32 {
     }
 
     let mut alignment_value: i32 = 0;
-    let mut flanked: i32 = 0;
     let mut free_space: i32 = 0;
     for axe in &axes {
         stone_captured += check_move_is_capturing_stone_in_axe(&axe, player);
 
         // Getting alignment value
         let alignment_value_dict = heuristic_get_alignment_and_flanks_values_from_axe(&axe, player);
-        flanked += alignment_value_dict["flanked"];
         free_space += alignment_value_dict["free_space"];
 
         if alignment_value_dict["flanked"] != 2 {
