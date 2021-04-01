@@ -5,6 +5,7 @@ use std::collections::HashMap;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
+mod bitboard;
 mod check;
 mod global_var;
 mod heuristic;
@@ -128,7 +129,7 @@ fn place_stone(
     let dict = PyDict::new(py);
 
     println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
-
+	
     let mut mutboard: Vec<Vec<i8>> = board;
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -165,6 +166,7 @@ fn place_stone(
     } else {
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
+	bitboard::create_bitboard_from_vec(&state.board);
     Ok(dict.to_object(py))
 }
 
