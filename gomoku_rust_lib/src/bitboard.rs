@@ -1,5 +1,3 @@
-use std::fmt;
-
 pub struct Bitboard {
     pub white_board: [i64; 6],
     pub black_board: [i64; 6],
