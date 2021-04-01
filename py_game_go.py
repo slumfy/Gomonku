@@ -196,12 +196,8 @@ class PyGameGo:
                             return 0
                         else:
                             self.screen.blit(self.go_board_resize, self.start_point)
-                            print("event.pos[1] = ", event.pos[1])
-                            print("event.pos[0] = ", event.pos[0])
                             x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                             y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
-                            print("ended x = ", x)
-                            print("ended y = ", y)
                             stone_status = go_rules.place_stone(self.player, x, y)
                             self.play_piece(go_rules, stone_status, win_status, x, y)
                             self.turn += 1
