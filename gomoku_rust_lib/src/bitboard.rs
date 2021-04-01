@@ -16,11 +16,11 @@ pub fn create_bitboard_from_vec(board: &Vec<Vec<i8>>) -> Bitboard {
             if board[x][y] == 1 {
                 let mask = 1 << bit_pos;
                 new_bitboard.white_board[bitboard_index] =
-                    (new_bitboard.white_board[bitboard_index] | mask);
+                    new_bitboard.white_board[bitboard_index] | mask;
             } else if board[x][y] == -1 {
                 let mask = 1 << bit_pos;
                 new_bitboard.black_board[bitboard_index] =
-                    (new_bitboard.black_board[bitboard_index] | mask);
+                    new_bitboard.black_board[bitboard_index] | mask;
             }
         }
     }
