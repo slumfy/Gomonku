@@ -166,7 +166,8 @@ fn place_stone(
     } else {
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-	bitboard::create_bitboard_from_vec(&state.board);
+	let bitboard = bitboard::create_bitboard_from_vec(&state.board);
+	bitboard::create_vec_from_bitboard(&bitboard);
     Ok(dict.to_object(py))
 }
 
