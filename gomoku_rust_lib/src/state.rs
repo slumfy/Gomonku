@@ -52,36 +52,36 @@ pub fn create_new_state(
 }
 
 pub fn create_child(state: &mut State) -> Vec<State> {
-    let mut cpyboard: Vec<Vec<i8>>;
-    let mut cpywinpos: Vec<((isize, isize), i8)>;
-    let mut childlist: Vec<State>;
-    let indexbox: Vec<(usize, usize)> = get_search_box(state);
-    let len = indexbox.len();
-    childlist = Vec::new();
+    let mut copy_board: Vec<Vec<i8>>;
+    let mut copy_win_pos: Vec<((isize, isize), i8)>;
+    let mut childs_list: Vec<State>;
+    let index_box: Vec<(usize, usize)> = get_search_box(state);
+    let len = index_box.len();
+    childs_list = Vec::new();
     for pos in 0..len {
-        let x = indexbox[pos].0;
-        let y = indexbox[pos].1;
-        cpyboard = state.board.clone();
-        cpywinpos = state.win_move.clone();
+        let x = index_box[pos].0;
+        let y = index_box[pos].1;
+        copy_board = state.board.clone();
+        copy_win_pos = state.win_move.clone();
         let mut child = create_new_state(
-            &mut cpyboard,
+            &mut copy_board,
             -state.current_player,
             (x as isize, y as isize),
             state.white_captured_stone,
             state.black_captured_stone,
-            cpywinpos,
+            copy_win_pos,
         );
         if child.heuristic > -1000 {
             apply_state_move(&mut child, 8);
-            childlist.push(child);
+            childs_list.push(child);
         }
     }
-    return childlist;
+    return childs_list;
 }
 
-fn capture_stone(board: &mut Vec<Vec<i8>>, poslist: Vec<(isize, isize)>) -> i8 {
+fn capture_stone(board: &mut Vec<Vec<i8>>, pos_list: Vec<(isize, isize)>) -> i8 {
     let mut count_capture: i8 = 0;
-    for (x, y) in poslist {
+    for (x, y) in pos_list {
         board[x as usize][y as usize] = 0;
         count_capture += 1;
     }
@@ -96,7 +96,7 @@ fn capture_position_routine(
     xsign: isize,
     ysign: isize,
 ) -> i8 {
-    let mut poslist = Vec::new();
+    let mut pos_list = Vec::new();
     let mut count_capture: i8 = 0;
     if check_is_in_table(x, y, xsign, ysign, 1) == 0
         && board[(x + 1 * xsign) as usize][(y + 1 * ysign) as usize] != player
@@ -105,17 +105,17 @@ fn capture_position_routine(
         if check_is_in_table(x, y, xsign, ysign, 2) == 0
             && board[(x + 2 * xsign) as usize][(y + 2 * ysign) as usize] == player
         {
-            poslist.push((x + 1 * xsign, y + 1 * ysign));
-            count_capture += capture_stone(board, poslist);
+            pos_list.push((x + 1 * xsign, y + 1 * ysign));
+            count_capture += capture_stone(board, pos_list);
         } else if check_is_in_table(x, y, xsign, ysign, 2) == 0
             && board[(x + 2 * xsign) as usize][(y + 2 * ysign) as usize] != 0
         {
             if check_is_in_table(x, y, xsign, ysign, 3) == 0
                 && board[(x + 3 * xsign) as usize][(y + 3 * ysign) as usize] == player
             {
-                poslist.push((x + 1 * xsign, y + 1 * ysign));
-                poslist.push((x + 2 * xsign, y + 2 * ysign));
-                count_capture += capture_stone(board, poslist);
+                pos_list.push((x + 1 * xsign, y + 1 * ysign));
+                pos_list.push((x + 2 * xsign, y + 2 * ysign));
+                count_capture += capture_stone(board, pos_list);
             }
         }
     }

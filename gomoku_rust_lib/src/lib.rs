@@ -129,7 +129,7 @@ fn place_stone(
     let dict = PyDict::new(py);
 
     println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
-	
+
     let mut mutboard: Vec<Vec<i8>> = board;
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -166,8 +166,8 @@ fn place_stone(
     } else {
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-	let bitboard = bitboard::create_bitboard_from_vec(&state.board);
-	bitboard::create_vec_from_bitboard(&bitboard);
+    let bitboard = bitboard::create_bitboard_from_vec(&state.board);
+    bitboard::create_vec_from_bitboard(&bitboard);
     Ok(dict.to_object(py))
 }
 

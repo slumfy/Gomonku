@@ -75,7 +75,7 @@ def test_white_prevent_black_win(black_winning_state, x):
 def test_white_prevent_black_win_diagonal(y, winning_pos_y):
 
     go_rules = GoRules()
-    go_rules.player_list[1].eat_piece = 0
+    go_rules.player_list[1].capture_piece = 0
     game = PyGameGo(sound_status=False, test_mode=True)
     go_rules.board[2] = [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
     go_rules.board[3] = [-1, -1, -1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -100,7 +100,7 @@ def test_white_prevent_black_win_diagonal(y, winning_pos_y):
 def test_black_prevent_white_win_diagonal(y, winning_pos_y):
 
     go_rules = GoRules()
-    go_rules.player_list[0].eat_piece = 0
+    go_rules.player_list[0].capture_piece = 0
     game = PyGameGo(sound_status=False, test_mode=True)
     go_rules.board[2] = [0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, 0, 0, 0, 0, 0, 0]
     go_rules.board[3] = [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1]
@@ -120,11 +120,11 @@ def test_black_prevent_white_win_diagonal(y, winning_pos_y):
         assert state == 0
 
 
-def test_white_eat_win():
+def test_white_capture_win():
 
     go_rules = GoRules()
-    go_rules.player_list[1].eat_piece = 0
-    go_rules.player_list[0].eat_piece = 0
+    go_rules.player_list[1].capture_piece = 0
+    go_rules.player_list[0].capture_piece = 0
     game = PyGameGo(sound_status=False, test_mode=True)
     go_rules.board[2] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1]
     go_rules.board[3] = [-1, -1, -1, -1, 0, -1, -1, -1, -1, 0, -1, -1, -1, -1, 0, -1, -1, -1, -1]
@@ -139,7 +139,7 @@ def test_white_eat_win():
             if state == PLAYER_WHITE_NB:
                 assert l == 2
                 assert i == 0
-                assert go_rules.player_list[0].eat_piece == 10
+                assert go_rules.player_list[0].capture_piece == 10
                 break
             game.player = go_rules.player_list[1]
             go_rules.place_stone(game.player, 10, i + l * 5)
@@ -152,11 +152,11 @@ def test_white_eat_win():
     # time.sleep(0.4)
 
 
-def test_black_eat_win():
+def test_black_capture_win():
 
     go_rules = GoRules()
-    go_rules.player_list[1].eat_piece = 0
-    go_rules.player_list[0].eat_piece = 0
+    go_rules.player_list[1].capture_piece = 0
+    go_rules.player_list[0].capture_piece = 0
     game = PyGameGo(sound_status=False, test_mode=True)
     go_rules.board[2] = [2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 2, 2, 2]
     go_rules.board[3] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 1]
@@ -173,7 +173,7 @@ def test_black_eat_win():
             if state == PLAYER_BLACK_NB:
                 assert l == 2
                 assert i == 0
-                assert go_rules.player_list[1].eat_piece == 10
+                assert go_rules.player_list[1].capture_piece == 10
                 break
             # # Print the gui moves
             # gui_from_board = GuiFromBoard()
@@ -184,11 +184,11 @@ def test_black_eat_win():
     # time.sleep(0.4)
 
 
-def test_white_eat_more_than_10_win():
+def test_white_capture_more_than_10_win():
 
     go_rules = GoRules()
-    go_rules.player_list[1].eat_piece = 0
-    go_rules.player_list[0].eat_piece = 0
+    go_rules.player_list[1].capture_piece = 0
+    go_rules.player_list[0].capture_piece = 0
     game = PyGameGo(sound_status=False, test_mode=True)
     go_rules.board[2] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1]
     go_rules.board[3] = [2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 2, 2, 2]
@@ -203,7 +203,7 @@ def test_white_eat_more_than_10_win():
             if state == PLAYER_WHITE_NB:
                 assert l == 3
                 assert i == 0
-                assert go_rules.player_list[0].eat_piece == 11
+                assert go_rules.player_list[0].capture_piece == 11
                 break
             game.player = go_rules.player_list[1]
             go_rules.place_stone(game.player, 10, i + l * 5)
@@ -216,11 +216,11 @@ def test_white_eat_more_than_10_win():
     # time.sleep(0.4)
 
 
-def test_black_eat_more_than_10_win():
+def test_black_capture_more_than_10_win():
 
     go_rules = GoRules()
-    go_rules.player_list[1].eat_piece = 0
-    go_rules.player_list[0].eat_piece = 0
+    go_rules.player_list[1].capture_piece = 0
+    go_rules.player_list[0].capture_piece = 0
     game = PyGameGo(sound_status=False, test_mode=True)
     go_rules.board[2] = [2, 2, 2, 2, 0, 2, 2, 2, 2, 0, 2, 0, 0, 0, 0, 2, 2, 2, 2]
     go_rules.board[3] = [1, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1]
@@ -237,7 +237,7 @@ def test_black_eat_more_than_10_win():
             if state == PLAYER_BLACK_NB:
                 assert l == 3
                 assert i == 0
-                assert go_rules.player_list[1].eat_piece == 11
+                assert go_rules.player_list[1].capture_piece == 11
                 break
     #         # Print the gui moves
     #         gui_from_board = GuiFromBoard()
