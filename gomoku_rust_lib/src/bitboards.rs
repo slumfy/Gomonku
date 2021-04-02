@@ -14,12 +14,11 @@ pub fn create_bitboards_from_vec(board: &Vec<Vec<i8>>) -> Bitboards {
             let real_pos = (x * 19 + y) % 64;
             let bit_pos = 63 - real_pos;
             let bitboards_index = (x * 19 + y) / 64;
+            let mask = 1 << bit_pos;
             if board[x][y] == 1 {
-                let mask = 1 << bit_pos;
                 new_bitboards.white_board[bitboards_index] =
                     new_bitboards.white_board[bitboards_index] | mask;
             } else if board[x][y] == -1 {
-                let mask = 1 << bit_pos;
                 new_bitboards.black_board[bitboards_index] =
                     new_bitboards.black_board[bitboards_index] | mask;
             }

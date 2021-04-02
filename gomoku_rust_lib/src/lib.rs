@@ -206,7 +206,11 @@ fn get_rust_box(
         0,
         wining_position,
     );
-    Ok(search_space::get_search_box(&mut state))
+    let search_bitbox = search_space::get_search_box_bitboard(bitboards);
+    println!("bitbox: {:?}", search_bitbox);
+    let search_box = search_space::unwrap_bitlist(search_bitbox);
+    println!("searchbox: {:?}", search_box);
+    Ok(search_box)
 }
 
 #[pyfunction]
