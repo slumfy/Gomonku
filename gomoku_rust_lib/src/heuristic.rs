@@ -52,11 +52,6 @@ pub fn heuristic(state: &mut State) -> i32 {
 
         // !Getting alignment value!
     }
-    println!(
-        "alignment first value = {:?} alignment value = {:?}",
-        alignment_value, alignment_value as i32
-    );
-    println!("free_space value = {:?}", free_space * FREE_SPACE_RATIO);
 
     value += alignment_value as i32 + free_space * FREE_SPACE_RATIO;
 
@@ -66,21 +61,12 @@ pub fn heuristic(state: &mut State) -> i32 {
             return global_var::HEURISTIC_MAX_VALUE;
         } else {
             value += stone_captured as i32 * CAPTURE_RATIO;
-            println!(
-                "white_capture_value = {:?}",
-                stone_captured as i32 * CAPTURE_RATIO
-            );
         }
     } else {
         state.black_captured_stone += stone_captured;
         if state.black_captured_stone >= 10 {
             return global_var::HEURISTIC_MAX_VALUE;
         } else {
-            println!(
-                "black_capture_value = {:?}",
-                stone_captured as i32 * CAPTURE_RATIO
-            );
-
             value += stone_captured as i32 * CAPTURE_RATIO;
         }
     }

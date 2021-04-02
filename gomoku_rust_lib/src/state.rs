@@ -1,6 +1,8 @@
+use crate::bitboards::Bitboards;
 use crate::check::check_alignment_for_given_pos;
 use crate::check::check_is_in_table;
 use crate::heuristic::heuristic;
+
 #[path = "search_space.rs"]
 mod search_space;
 // use crate::state::search_space::get_box;
@@ -8,6 +10,7 @@ use crate::state::search_space::get_search_box;
 
 pub struct State {
     pub board: Vec<Vec<i8>>,
+    pub bitboards: Bitboards,
     pub available_move: Vec<State>,
     pub current_player: i8,
     pub white_captured_stone: i8,
@@ -16,18 +19,22 @@ pub struct State {
     pub win_state: i32,
     pub win_move: Vec<((isize, isize), i8)>,
     pub current_move: (isize, isize),
+    pub bit_current_move_pos: i16,
 }
 
 pub fn create_new_state(
     board: &mut Vec<Vec<i8>>,
+    bitboards: &mut Bitboards,
     player: i8,
     current_move: (isize, isize),
+    bit_current_move_pos: i16,
     white_captured_stone: i8,
     black_captured_stone: i8,
     win_move: Vec<((isize, isize), i8)>,
 ) -> State {
     let mut new_state = State {
         board: board.to_vec(),
+        bitboards: bitboards.clone(),
         current_player: player,
         white_captured_stone: white_captured_stone,
         black_captured_stone: black_captured_stone,
@@ -36,6 +43,7 @@ pub fn create_new_state(
         win_move: win_move,
         win_state: 0,
         current_move: current_move,
+        bit_current_move_pos: bit_current_move_pos,
     };
     if new_state.win_move.len() > 0 {
         for winmove in 0..new_state.win_move.len() {
@@ -53,6 +61,7 @@ pub fn create_new_state(
 
 pub fn create_child(state: &mut State) -> Vec<State> {
     let mut copy_board: Vec<Vec<i8>>;
+    let mut copy_bitboards: Bitboards;
     let mut copy_win_pos: Vec<((isize, isize), i8)>;
     let mut childs_list: Vec<State>;
     let index_box: Vec<(usize, usize)> = get_search_box(state);
@@ -62,11 +71,16 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         let x = index_box[pos].0;
         let y = index_box[pos].1;
         copy_board = state.board.clone();
+        copy_bitboards = state.bitboards.clone();
         copy_win_pos = state.win_move.clone();
+        let bit_current_move_pos: i16 = (x * 19 + y) as i16;
+
         let mut child = create_new_state(
             &mut copy_board,
+            &mut copy_bitboards,
             -state.current_player,
             (x as isize, y as isize),
+            bit_current_move_pos,
             state.white_captured_stone,
             state.black_captured_stone,
             copy_win_pos,

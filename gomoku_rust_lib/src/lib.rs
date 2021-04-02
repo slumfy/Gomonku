@@ -5,8 +5,9 @@ use std::collections::HashMap;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
-mod bitboard;
+mod bitboards;
 mod check;
+mod check_bits;
 mod global_var;
 mod heuristic;
 mod negamax;
@@ -45,11 +46,15 @@ fn ai_move(
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
     let mut mutboard: Vec<Vec<i8>> = board;
+    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
+    let bit_current_move_pos: i16 = (x * 19 + y) as i16;
     let ai_move: ((isize, isize), i32);
     let mut state: state::State = state::create_new_state(
         &mut mutboard,
+        &mut bitboards,
         player,
         (x, y),
+        bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
         wining_position,
@@ -94,16 +99,21 @@ fn check_move_is_a_fiverow(
     wining_position: Vec<((isize, isize), i8)>,
 ) -> PyResult<bool> {
     let mut mutboard: Vec<Vec<i8>> = board;
+    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
+    let bit_current_move_pos: i16 = (x * 19 + y) as i16;
+
     let state: state::State = state::create_new_state(
         &mut mutboard,
+        &mut bitboards,
         player,
         (x, y),
+        bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
         wining_position,
@@ -131,16 +141,22 @@ fn place_stone(
     println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
     let mut mutboard: Vec<Vec<i8>> = board;
+    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
+
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
+    let bit_current_move_pos: i16 = (x * 19 + y) as i16;
+
     let mut state: state::State = state::create_new_state(
         &mut mutboard,
+        &mut bitboards,
         player,
         (x, y),
+        bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
         wining_position,
@@ -166,8 +182,7 @@ fn place_stone(
     } else {
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-    let bitboard = bitboard::create_bitboard_from_vec(&state.board);
-    bitboard::create_vec_from_bitboard(&bitboard);
+    bitboards::create_vec_from_bitboards(&bitboards);
     Ok(dict.to_object(py))
 }
 
@@ -180,8 +195,17 @@ fn get_rust_box(
     wining_position: Vec<((isize, isize), i8)>,
 ) -> PyResult<Vec<(usize, usize)>> {
     let mut mutboard: Vec<Vec<i8>> = board;
-    let mut state: state::State =
-        state::create_new_state(&mut mutboard, player, (x, y), 0, 0, wining_position);
+    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
+    let mut state: state::State = state::create_new_state(
+        &mut mutboard,
+        &mut bitboards,
+        player,
+        (x, y),
+        0,
+        0,
+        0,
+        wining_position,
+    );
     Ok(search_space::get_search_box(&mut state))
 }
 
