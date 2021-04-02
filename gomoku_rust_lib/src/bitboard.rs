@@ -8,17 +8,16 @@ pub fn create_bitboard_from_vec(board: &Vec<Vec<i8>>) -> Bitboard {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
     };
-    for x in 0..19 {
+    for x in 0..19 { 
         for y in 0..19 {
             let real_pos = (x * 19 + y) % 64;
             let bit_pos = 63 - real_pos;
             let bitboard_index = (x * 19 + y) / 64;
+			let mask = 1 << bit_pos;
             if board[x][y] == 1 {
-                let mask = 1 << bit_pos;
                 new_bitboard.white_board[bitboard_index] =
                     new_bitboard.white_board[bitboard_index] | mask;
             } else if board[x][y] == -1 {
-                let mask = 1 << bit_pos;
                 new_bitboard.black_board[bitboard_index] =
                     new_bitboard.black_board[bitboard_index] | mask;
             }

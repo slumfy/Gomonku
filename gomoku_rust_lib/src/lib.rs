@@ -166,8 +166,6 @@ fn place_stone(
     } else {
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-    let bitboard = bitboard::create_bitboard_from_vec(&state.board);
-    bitboard::create_vec_from_bitboard(&bitboard);
     Ok(dict.to_object(py))
 }
 
@@ -180,9 +178,15 @@ fn get_rust_box(
     wining_position: Vec<((isize, isize), i8)>,
 ) -> PyResult<Vec<(usize, usize)>> {
     let mut mutboard: Vec<Vec<i8>> = board;
-    let mut state: state::State =
+	let mut state: state::State =
         state::create_new_state(&mut mutboard, player, (x, y), 0, 0, wining_position);
-    Ok(search_space::get_search_box(&mut state))
+	let bitboard = bitboard::create_bitboard_from_vec(&state.board);
+    // bitboard::create_vec_from_bitboard(&bitboard);
+	let search_bitbox = search_space::get_search_box_bitboard(bitboard);
+	println!("bitbox: {:?}", search_bitbox);
+	let search_box = search_space::unwrap_bitlist(search_bitbox);
+	println!("searchbox: {:?}", search_box);
+    Ok(search_box)
 }
 
 #[pyfunction]
