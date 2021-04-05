@@ -15,6 +15,7 @@ mod search_space;
 mod state;
 mod tests;
 mod utils;
+mod bitpattern;
 use check::checking_move;
 use check::checking_move_biggest_alignment_and_stone_captured;
 
@@ -182,6 +183,8 @@ fn place_stone(
     } else {
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
+	bitboards::apply_bitmove(&mut bitboards, (x * 19 + y) as usize, player);
+	bitpattern::patern_finder(&bitboards, (x * 19 + y) as usize);
     bitboards::create_vec_from_bitboards(&bitboards);
     Ok(dict.to_object(py))
 }
@@ -207,9 +210,9 @@ fn get_rust_box(
         wining_position,
     );
     let search_bitbox = search_space::get_search_box_bitboard(bitboards);
-    println!("bitbox: {:?}", search_bitbox);
+    // println!("bitbox: {:?}", search_bitbox);
     let search_box = search_space::unwrap_bitlist(search_bitbox);
-    println!("searchbox: {:?}", search_box);
+    // println!("searchbox: {:?}", search_box);
     Ok(search_box)
 }
 

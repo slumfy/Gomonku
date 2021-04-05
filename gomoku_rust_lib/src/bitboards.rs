@@ -1,7 +1,7 @@
 #[derive(Copy, Clone)]
 pub struct Bitboards {
-    pub white_board: [i64; 6],
-    pub black_board: [i64; 6],
+    pub white_board: [u64; 6],
+    pub black_board: [u64; 6],
 }
 
 pub fn create_bitboards_from_vec(board: &Vec<Vec<i8>>) -> Bitboards {
@@ -46,4 +46,19 @@ pub fn create_vec_from_bitboards(bitboards: &Bitboards) -> Vec<Vec<i8>> {
         }
     }
     return board;
+}
+
+pub fn apply_bitmove(bitboards: &mut Bitboards, pos:usize, player: i8) {
+	let real_pos = pos % 64;
+	let bit_pos = 63 - real_pos;
+	let bitboards_index = pos / 64;
+	let mask = 1 << bit_pos;
+	if player == 1 {
+		bitboards.white_board[bitboards_index] =
+                    bitboards.white_board[bitboards_index] | mask;
+	}
+	else {
+		bitboards.black_board[bitboards_index] =
+                    bitboards.black_board[bitboards_index] | mask;
+	}
 }

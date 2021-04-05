@@ -7,7 +7,7 @@ pub fn check_is_in_board(pos: i16) -> bool {
     return true;
 }
 
-pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[i64; 6]) -> i8 {
+pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[u64; 6]) -> i8 {
     if !check_is_in_board(pos) {
         return -2;
     }
