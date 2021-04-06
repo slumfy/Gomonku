@@ -78,14 +78,17 @@ fn create_row(bitboard: &[u64; 6], pos: usize) -> u64 {
         0xE000000000000000,
     ];
     let row_idx = pos / 19;
-    let int_idx = pos / 64;
+    let int_idx = (row_idx * 19) / 64;
+    // println!("rowidx {}, intidx {}", row_idx, int_idx);
     let shift = (row_idx * 19) % 64;
     let mut row: u64;
     if (row_idx == 3 || row_idx == 6 || row_idx == 10 || row_idx == 13 || row_idx == 16) {
         row = (((bitboard[int_idx] & mask[row_idx]) << shift)
             | ((bitboard[int_idx + 1] & mask[19 + int_idx]) >> (64 - shift)));
+            // println!("generated mixed row: {:064b}", row);
     } else {
         row = (bitboard[int_idx] & mask[row_idx]) << shift;
+        // println!("generated row: {:064b}", row);
     }
     return row >> 45;
 }
