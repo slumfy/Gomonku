@@ -6,6 +6,7 @@ use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
 mod bitboards;
+mod bitpattern;
 mod check;
 mod check_bits;
 mod global_var;
@@ -15,7 +16,6 @@ mod search_space;
 mod state;
 mod tests;
 mod utils;
-mod bitpattern;
 use check::checking_move;
 use check::checking_move_biggest_alignment_and_stone_captured;
 
@@ -181,10 +181,11 @@ fn place_stone(
             dict.set_item("wining_position", &state.current_move)?;
         }
     } else {
+        println!("Wrong move status = {:?}", board_check["is_wrong_move"]);
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-	bitboards::apply_bitmove(&mut bitboards, (x * 19 + y) as usize, player);
-	bitpattern::pattern_dispatcher(&bitboards, (x * 19 + y) as usize, player);
+    bitboards::apply_bitmove(&mut bitboards, (x * 19 + y) as usize, player);
+    bitpattern::pattern_dispatcher(&bitboards, (x * 19 + y) as usize, player);
     bitboards::create_vec_from_bitboards(&bitboards);
     Ok(dict.to_object(py))
 }

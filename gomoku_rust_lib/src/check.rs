@@ -184,10 +184,8 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     }
     let player: i8 = state.current_player;
 
-    for axe in axes {
-        if check_move_is_in_capturing_position_in_axe(&axe, player) {
-            return -3;
-        }
+    if bits_check_move_is_in_capturing_position(state.bit_current_move_pos, state) {
+        return -3;
     }
     if check_move_is_double_triple(&axes, player) == true {
         return -4;
@@ -198,10 +196,6 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
 #[allow(dead_code)]
 pub fn checking_move(state: &State) -> HashMap<String, i8> {
     let mut board_check: HashMap<String, i8> = HashMap::new();
-    println!("LAAAA");
-    if bits_check_move_is_in_capturing_position(state.bit_current_move_pos, state) {
-        println!("IS IN CAPTURING POSITION WITH BIT CHECK !!!!!!! YEAHHH");
-    }
     let axes = create_axes_from_stone_position(
         state,
         state.current_move.0,
