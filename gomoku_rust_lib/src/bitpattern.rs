@@ -12,8 +12,8 @@ static PATTERN: [(u8, usize, &str); 12] = [
     (0x78, 6, "open four"),             // open four .XXXX...
     (0x68, 6, "open split three"),      // open split three .X.XX...
     (0x58, 6, "open split three rev"),  // open split three rev .XX.X...
-    (0x70, 5, "open three"),
-]; // open three .XXX....
+    (0x70, 5, "open three"),			// open three .XXX....
+]; 
 
 pub fn pattern_dispatcher(bitboards: &Bitboards, pos: usize, player: i8) {
     if player == 1 {
@@ -78,14 +78,17 @@ fn create_row(bitboard: &[u64; 6], pos: usize) -> u64 {
         0xE000000000000000,
     ];
     let row_idx = pos / 19;
-    let int_idx = pos / 64;
+    let int_idx = (row_idx * 19) / 64;
+    // println!("rowidx {}, intidx {}", row_idx, int_idx);
     let shift = (row_idx * 19) % 64;
     let mut row: u64;
     if (row_idx == 3 || row_idx == 6 || row_idx == 10 || row_idx == 13 || row_idx == 16) {
         row = (((bitboard[int_idx] & mask[row_idx]) << shift)
             | ((bitboard[int_idx + 1] & mask[19 + int_idx]) >> (64 - shift)));
+            // println!("generated mixed row: {:064b}", row);
     } else {
         row = (bitboard[int_idx] & mask[row_idx]) << shift;
+        // println!("generated row: {:064b}", row);
     }
     return row >> 45;
 }
