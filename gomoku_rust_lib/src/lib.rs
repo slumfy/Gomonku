@@ -184,7 +184,7 @@ fn place_stone(
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
 	bitboards::apply_bitmove(&mut bitboards, (x * 19 + y) as usize, player);
-	bitpattern::patern_finder(&bitboards, (x * 19 + y) as usize);
+	bitpattern::pattern_dispatcher(&bitboards, (x * 19 + y) as usize, player);
     bitboards::create_vec_from_bitboards(&bitboards);
     Ok(dict.to_object(py))
 }
