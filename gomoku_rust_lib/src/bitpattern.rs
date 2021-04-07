@@ -124,7 +124,7 @@ fn create_row(bitboard: &[u64; 6], pos: usize) -> u64 {
     if (row_idx == 3 || row_idx == 6 || row_idx == 10 || row_idx == 13 || row_idx == 16) {
         row = (((bitboard[int_idx] & mask[row_idx]) << shift)
             | ((bitboard[int_idx + 1] & mask[19 + int_idx]) >> (64 - shift)));
-            // println!("generated mixed row: {:064b}", row);
+        // println!("generated mixed row: {:064b}", row);
     } else {
         row = (bitboard[int_idx] & mask[row_idx]) << shift;
         // println!("generated row: {:064b}", row);

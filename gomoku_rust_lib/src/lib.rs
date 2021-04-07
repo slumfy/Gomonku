@@ -16,6 +16,7 @@ mod search_space;
 mod state;
 mod tests;
 mod utils;
+use bitboards::create_bits_axes_from_pos;
 use check::checking_move;
 use check::checking_move_biggest_alignment_and_stone_captured;
 
@@ -108,7 +109,6 @@ fn check_move_is_a_fiverow(
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
     let bit_current_move_pos: i16 = (x * 19 + y) as i16;
-
     let state: state::State = state::create_new_state(
         &mut mutboard,
         &mut bitboards,
@@ -162,6 +162,8 @@ fn place_stone(
         black_captured_stone,
         wining_position,
     );
+    create_bits_axes_from_pos(state.bit_current_move_pos, &state);
+
     let board_check: HashMap<String, i8> = checking_move(&state);
     if board_check["is_wrong_move"] == 0 {
         apply_state_move(&mut state, board_check["stone_captured"]);

@@ -1,7 +1,107 @@
+use crate::check_bits::get_bits_in_bitboard_from_pos;
+use crate::check_bits::get_line_from_pos;
+use crate::state::State;
+
 #[derive(Copy, Clone)]
 pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
+}
+
+pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) {
+    fn check_is_on_axe(
+        axe_increment_value: i16,
+        move_pos: i16,
+        i: i16,
+        direction_sign: i16,
+    ) -> bool {
+        if axe_increment_value == 1 {
+            if get_line_from_pos(move_pos + axe_increment_value * i * direction_sign)
+                != get_line_from_pos(move_pos)
+            {
+                return false;
+            }
+        } else {
+            if get_line_from_pos(move_pos + axe_increment_value * i * direction_sign)
+                != get_line_from_pos(move_pos) + i * direction_sign
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    let mut bits_axes_array: [[u16; 4]; 2] = [[0, 0, 0, 0], [0, 0, 0, 0]];
+    let mut ret;
+    let mut index = 0;
+    let move_index = 8;
+    for axe_increment_value in vec![20, 19, 18, 1] {
+        if state.current_player == 1 {
+            bits_axes_array[0][index] = 1 << move_index;
+        } else {
+            bits_axes_array[1][index] = 1 << move_index;
+        }
+        for i in 1..5 {
+            // Getting stone from white board
+            // Getting left part
+            if bits_axes_array[0][index] & (1 << 15) == 0 {
+                ret = get_bits_in_bitboard_from_pos(
+                    move_pos - axe_increment_value * i,
+                    &state.bitboards.white_board,
+                );
+                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, -1) {
+                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1 << 15;
+                } else if ret == 1 {
+                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1 << move_index + i;
+                }
+            }
+            // Getting right part
+            if bits_axes_array[0][index] & 1 == 0 {
+                ret = get_bits_in_bitboard_from_pos(
+                    move_pos + axe_increment_value * i,
+                    &state.bitboards.white_board,
+                );
+                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, 1) {
+                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1;
+                } else if ret == 1 {
+                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1 << move_index - i;
+                }
+            }
+
+            // Getting stone from black board
+            // Getting left part
+            if (bits_axes_array[1][index] & (1 << 15)) == 0 {
+                ret = get_bits_in_bitboard_from_pos(
+                    move_pos - axe_increment_value * i,
+                    &state.bitboards.black_board,
+                );
+                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, -1) {
+                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1 << 15;
+                } else if ret == 1 {
+                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1 << move_index + i;
+                }
+            }
+            // Getting right part
+            if bits_axes_array[1][index] & 1 == 0 {
+                ret = get_bits_in_bitboard_from_pos(
+                    move_pos + axe_increment_value * i,
+                    &state.bitboards.black_board,
+                );
+                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, 1) {
+                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1;
+                } else if ret == 1 {
+                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1 << move_index - i;
+                }
+            }
+        }
+
+        println!("axes value = {:?}", axe_increment_value);
+        println!("bits_axes_array white here = {:?}", bits_axes_array[0]);
+        println!("");
+        println!("bits_axes_array black here = {:?}", bits_axes_array[1]);
+
+        index += 1;
+    }
 }
 
 pub fn create_bitboards_from_vec(board: &Vec<Vec<i8>>) -> Bitboards {
@@ -48,17 +148,14 @@ pub fn create_vec_from_bitboards(bitboards: &Bitboards) -> Vec<Vec<i8>> {
     return board;
 }
 
-pub fn apply_bitmove(bitboards: &mut Bitboards, pos:usize, player: i8) {
-	let real_pos = pos % 64;
-	let bit_pos = 63 - real_pos;
-	let bitboards_index = pos / 64;
-	let mask = 1 << bit_pos;
-	if player == 1 {
-		bitboards.white_board[bitboards_index] =
-                    bitboards.white_board[bitboards_index] | mask;
-	}
-	else {
-		bitboards.black_board[bitboards_index] =
-                    bitboards.black_board[bitboards_index] | mask;
-	}
+pub fn apply_bitmove(bitboards: &mut Bitboards, pos: usize, player: i8) {
+    let real_pos = pos % 64;
+    let bit_pos = 63 - real_pos;
+    let bitboards_index = pos / 64;
+    let mask = 1 << bit_pos;
+    if player == 1 {
+        bitboards.white_board[bitboards_index] = bitboards.white_board[bitboards_index] | mask;
+    } else {
+        bitboards.black_board[bitboards_index] = bitboards.black_board[bitboards_index] | mask;
+    }
 }
