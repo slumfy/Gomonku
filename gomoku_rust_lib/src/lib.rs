@@ -162,7 +162,6 @@ fn place_stone(
         black_captured_stone,
         wining_position,
     );
-    create_bits_axes_from_pos(state.bit_current_move_pos, &state);
 
     let board_check: HashMap<String, i8> = checking_move(&state);
     if board_check["is_wrong_move"] == 0 {
@@ -187,7 +186,8 @@ fn place_stone(
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
     bitboards::apply_bitmove(&mut bitboards, (x * 19 + y) as usize, player);
-    bitpattern::pattern_dispatcher(&bitboards, (x * 19 + y) as usize, player);
+	let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
+    bitpattern::pattern_axes_dispatcher(&axes, (x * 19 + y) as usize, player);
     bitboards::create_vec_from_bitboards(&bitboards);
     Ok(dict.to_object(py))
 }

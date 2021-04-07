@@ -25,6 +25,77 @@ static BLOCKER: [(u8, usize); 5] = [
 	(0xA0, 3), // X.X.....
 ];
 
+pub fn pattern_axes_dispatcher(axes: &[[u16; 4]; 2], pos: usize, player: i8) {
+    if player == 1 {
+        println!("white player pattern in row:");
+        pattern_axes_finder(&axes[0], &axes[1], pos);
+    } else if player == -1 {
+        println!("black player pattern in row:");
+        pattern_axes_finder(&axes[1], &axes[0], pos);
+    }
+}
+
+fn print_axe_value(axe:usize){
+	if axe == 0 { println!("DIAGONALE UPLEFT:")}
+	else if axe == 1 { println!("COLONE:")}
+	else if axe == 2 { println!("DIAGONALE UPRIGHT:")}
+	else { println!("LIGNE:")}
+}
+
+fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
+    let y = pos % 19;
+	println!("y= {}",y);
+	for axe in 0..axes.len() {
+		print_axe_value(axe);
+		let mut player_axe = axes[axe];
+		let mut blocker_axe = blocker_axes[axe];
+		let mut found_pattern: (&str, usize) = ("",0);
+		for l in (0..10).rev() {
+			let mut player_shifted = player_axe >> l;
+			let mut blocker_shifted = blocker_axe >> l;
+			let player_casted = player_shifted as u8;
+			let blocker_casted = blocker_shifted as u8;
+			let mut is_bloked: usize = 0;
+			for p in 0..PATTERN.len() {
+				if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
+					// println!("player casted: {:08b}", player_casted);
+					for b in 0..BLOCKER.len() {
+						if BLOCKER[b].1 == PATTERN[p].1 {
+							// println!("blocker  cast: {:08b}", blocker_casted);
+							// println!("blocked checked: {:08b}", blocker_casted);
+							// println!("pattern checked: {:08b}", BLOCKER[b].0);
+							let mut blocker_checker: u8 = (blocker_casted & BLOCKER[b].0);
+							// println!("BLOCKER CHECKER: {:08b}", blocker_checker);
+							// println!("l {} length {}", l , PATTERN[p].1);
+							if blocker_checker == BLOCKER[b].0 {
+								is_bloked = 2;
+							}
+							else if blocker_checker != 0 {
+								is_bloked = 1;
+								if l <= PATTERN[p].1 || l == 18 {is_bloked += 1;}
+							}
+							else if l <= PATTERN[p].1 || l == 18 {
+								is_bloked = 1;
+								if blocker_checker != 0 {is_bloked += 1;}
+							}
+							else {
+								is_bloked = 0;
+							}
+						}
+					}
+					if is_bloked < 2 {
+						found_pattern = (PATTERN[p].2.clone(), is_bloked);
+						println!("{} found {} blocker", PATTERN[p].2, is_bloked);
+						break ;
+					}
+				}
+				if found_pattern.0 != "" { break ;}
+			}
+		}
+		println!("PATTERN FOUND {} BLOCKER FOUND {}", found_pattern.0, found_pattern.1);
+	}
+}
+
 pub fn pattern_dispatcher(bitboards: &Bitboards, pos: usize, player: i8) {
     if player == 1 {
         println!("white player pattern in row:");
