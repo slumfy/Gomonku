@@ -12,27 +12,27 @@ static PATTERN: [(u8, usize, &str); 12] = [
     (0x78, 6, "open four"),             // open four .XXXX...
     (0x68, 6, "open split three"),      // open split three .X.XX...
     (0x58, 6, "open split three rev"),  // open split three rev .XX.X...
-    (0x70, 5, "open three"),			// open three .XXX....
-]; 
+    (0x70, 5, "open three"),            // open three .XXX....
+];
 
 pub fn pattern_dispatcher(bitboards: &Bitboards, pos: usize, player: i8) {
     if player == 1 {
-        println!("white player pattern in row:");
+        // println!("white player pattern in row:");
         pattern_finder(&bitboards.white_board, pos);
     } else if player == -1 {
-        println!("black player pattern in row:");
+        // println!("black player pattern in row:");
         pattern_finder(&bitboards.black_board, pos);
     }
 }
 
 fn pattern_finder(bitboard: &[u64; 6], pos: usize) {
-    println!("pos: {}", pos);
-    println!("x idx: {}", pos / 19);
-    println!("y idx: {}", pos % 19);
-    println!("int idx: {}", pos / 64);
+    // println!("pos: {}", pos);
+    // println!("x idx: {}", pos / 19);
+    // println!("y idx: {}", pos % 19);
+    // println!("int idx: {}", pos / 64);
     let y = pos % 19;
     let mut int_to_check = create_row(bitboard, pos);
-    println!("int checked: {:064b}", int_to_check);
+    // println!("int checked: {:064b}", int_to_check);
     int_to_check <<= 5;
     for l in 0..19 {
         let mut int_shifted = int_to_check >> l;
@@ -44,7 +44,7 @@ fn pattern_finder(bitboard: &[u64; 6], pos: usize) {
             // println!("partern checked: {:08b}", PATTERN[p].0);
             // println!("& bit operator: {:08b}", (casted_int & PATTERN[p].0));
             if (casted_int & PATTERN[p].0) == PATTERN[p].0 {
-                println!("{} found", PATTERN[p].2);
+                // println!("{} found", PATTERN[p].2);
             }
         }
     }
@@ -85,7 +85,7 @@ fn create_row(bitboard: &[u64; 6], pos: usize) -> u64 {
     if (row_idx == 3 || row_idx == 6 || row_idx == 10 || row_idx == 13 || row_idx == 16) {
         row = (((bitboard[int_idx] & mask[row_idx]) << shift)
             | ((bitboard[int_idx + 1] & mask[19 + int_idx]) >> (64 - shift)));
-            // println!("generated mixed row: {:064b}", row);
+        // println!("generated mixed row: {:064b}", row);
     } else {
         row = (bitboard[int_idx] & mask[row_idx]) << shift;
         // println!("generated row: {:064b}", row);

@@ -1,14 +1,18 @@
 use crate::state::State;
 
-pub fn check_is_in_board(pos: i16) -> bool {
+pub fn check_pos_is_in_board(pos: i16) -> bool {
     if pos < 0 || pos > 360 {
         return false;
     }
     return true;
 }
 
+pub fn get_line_from_pos(pos: i16) -> i16 {
+    return pos / 19;
+}
+
 pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[u64; 6]) -> i8 {
-    if !check_is_in_board(pos) {
+    if !check_pos_is_in_board(pos) {
         return -2;
     }
     let real_pos = pos % 64;
