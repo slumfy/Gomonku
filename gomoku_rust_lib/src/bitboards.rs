@@ -31,8 +31,43 @@ pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) -> [[u16; 4]; 2] 
         return true;
     }
 
+    fn set_bit_in_axe_from_bitboard(
+        bits_axes_array: &mut [[u16; 4]; 2],
+        bits_axes_array_index: usize,
+        bitboard: &[u64; 6],
+        index: usize,
+        move_pos: i16,
+        axe_increment_value: i16,
+        i: i16,
+        move_index: i16,
+    ) {
+        let mut ret;
+
+        // Getting left part
+        if bits_axes_array[bits_axes_array_index][index] & (1 << 15) == 0 {
+            ret = get_bits_in_bitboard_from_pos(move_pos - axe_increment_value * i, bitboard);
+            if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, -1) {
+                bits_axes_array[bits_axes_array_index][index] =
+                    bits_axes_array[bits_axes_array_index][index] | 1 << 15;
+            } else if ret == 1 {
+                bits_axes_array[bits_axes_array_index][index] =
+                    bits_axes_array[bits_axes_array_index][index] | 1 << move_index + i;
+            }
+        }
+        // Getting right part
+        if bits_axes_array[bits_axes_array_index][index] & 1 == 0 {
+            ret = get_bits_in_bitboard_from_pos(move_pos + axe_increment_value * i, bitboard);
+            if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, 1) {
+                bits_axes_array[bits_axes_array_index][index] =
+                    bits_axes_array[bits_axes_array_index][index] | 1;
+            } else if ret == 1 {
+                bits_axes_array[bits_axes_array_index][index] =
+                    bits_axes_array[bits_axes_array_index][index] | 1 << move_index - i;
+            }
+        }
+    }
+
     let mut bits_axes_array: [[u16; 4]; 2] = [[0, 0, 0, 0], [0, 0, 0, 0]];
-    let mut ret;
     let mut index = 0;
     let move_index = 8;
     for axe_increment_value in vec![20, 19, 18, 1] {
@@ -43,56 +78,28 @@ pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) -> [[u16; 4]; 2] 
         }
         for i in 1..5 {
             // Getting stone from white board
-            // Getting left part
-            if bits_axes_array[0][index] & (1 << 15) == 0 {
-                ret = get_bits_in_bitboard_from_pos(
-                    move_pos - axe_increment_value * i,
-                    &state.bitboards.white_board,
-                );
-                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, -1) {
-                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1 << 15;
-                } else if ret == 1 {
-                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1 << move_index + i;
-                }
-            }
-            // Getting right part
-            if bits_axes_array[0][index] & 1 == 0 {
-                ret = get_bits_in_bitboard_from_pos(
-                    move_pos + axe_increment_value * i,
-                    &state.bitboards.white_board,
-                );
-                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, 1) {
-                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1;
-                } else if ret == 1 {
-                    bits_axes_array[0][index] = bits_axes_array[0][index] | 1 << move_index - i;
-                }
-            }
+            set_bit_in_axe_from_bitboard(
+                &mut bits_axes_array,
+                0,
+                &state.bitboards.white_board,
+                index,
+                move_pos,
+                axe_increment_value,
+                i,
+                move_index,
+            );
 
             // Getting stone from black board
-            // Getting left part
-            if (bits_axes_array[1][index] & (1 << 15)) == 0 {
-                ret = get_bits_in_bitboard_from_pos(
-                    move_pos - axe_increment_value * i,
-                    &state.bitboards.black_board,
-                );
-                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, -1) {
-                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1 << 15;
-                } else if ret == 1 {
-                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1 << move_index + i;
-                }
-            }
-            // Getting right part
-            if bits_axes_array[1][index] & 1 == 0 {
-                ret = get_bits_in_bitboard_from_pos(
-                    move_pos + axe_increment_value * i,
-                    &state.bitboards.black_board,
-                );
-                if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, 1) {
-                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1;
-                } else if ret == 1 {
-                    bits_axes_array[1][index] = bits_axes_array[1][index] | 1 << move_index - i;
-                }
-            }
+            set_bit_in_axe_from_bitboard(
+                &mut bits_axes_array,
+                1,
+                &state.bitboards.black_board,
+                index,
+                move_pos,
+                axe_increment_value,
+                i,
+                move_index,
+            );
         }
 
         println!("axes value = {:?}", axe_increment_value);
