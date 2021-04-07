@@ -8,7 +8,7 @@ pub struct Bitboards {
     pub black_board: [u64; 6],
 }
 
-pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) {
+pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) -> [[u16; 4]; 2] {
     fn check_is_on_axe(
         axe_increment_value: i16,
         move_pos: i16,
@@ -102,6 +102,7 @@ pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) {
 
         index += 1;
     }
+    return bits_axes_array;
 }
 
 pub fn create_bitboards_from_vec(board: &Vec<Vec<i8>>) -> Bitboards {
