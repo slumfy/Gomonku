@@ -36,12 +36,12 @@ pub fn pattern_axes_dispatcher(axes: &[[u16; 4]; 2], pos: usize, player: i8) {
     if player == 1 {
         println!("white player pattern in row:");
         check_capture(&axes[0], &axes[1], pos);
-        check_flank(&axes[0], &axes[1], pos);
+        check_flank(&axes[0], &axes[1]);
         pattern_axes_finder(&axes[0], &axes[1], pos);
     } else if player == -1 {
         println!("black player pattern in row:");
         check_capture(&axes[1], &axes[0], pos);
-        check_flank(&axes[1], &axes[0], pos);
+        check_flank(&axes[1], &axes[0]);
         pattern_axes_finder(&axes[1], &axes[0], pos);
     }
 }
@@ -56,9 +56,9 @@ fn check_capture(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
         println!("block  axe: {:016b}", blocker_axe);
         let shift: [usize; 2] = [0, 3];
         for s in shift.iter() {
-            let mut player_shifted = player_axe >> s;
+            let player_shifted = player_axe >> s;
             println!("player shifted: {:016b} l= {}", player_shifted, s);
-            let mut blocker_shifted = blocker_axe >> s;
+            let blocker_shifted = blocker_axe >> s;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
@@ -74,7 +74,7 @@ fn check_capture(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
     }
 }
 
-fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
+fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) {
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
@@ -84,8 +84,8 @@ fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
         println!("block  axe: {:016b}", blocker_axe);
         let shift: [usize; 2] = [1, 2];
         for s in shift.iter() {
-            let mut player_shifted = player_axe >> s;
-            let mut blocker_shifted = blocker_axe >> s;
+            let player_shifted = player_axe >> s;
+            let blocker_shifted = blocker_axe >> s;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
