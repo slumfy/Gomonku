@@ -155,14 +155,34 @@ pub fn create_vec_from_bitboards(bitboards: &Bitboards) -> Vec<Vec<i8>> {
     return board;
 }
 
-pub fn apply_bitmove(bitboards: &mut Bitboards, pos: usize, player: i8) {
+pub fn apply_bit(bitboards: &mut Bitboards, pos: usize, player: i8) {
     let real_pos = pos % 64;
     let bit_pos = 63 - real_pos;
     let bitboards_index = pos / 64;
     let mask = 1 << bit_pos;
     if player == 1 {
-        bitboards.white_board[bitboards_index] = bitboards.white_board[bitboards_index] | mask;
+        bitboards.white_board[bitboards_index] |= mask;
     } else {
-        bitboards.black_board[bitboards_index] = bitboards.black_board[bitboards_index] | mask;
+        bitboards.black_board[bitboards_index] |= mask;
     }
+}
+
+pub fn remove_bit(bitboards: &mut Bitboards, pos: usize, player: i8){
+    let real_pos = pos % 64;
+    let bit_pos = 63 - real_pos;
+    let bitboards_index = pos / 64;
+    let mask = !(1 << bit_pos);
+    if player == 1 {
+        bitboards.white_board[bitboards_index] &= mask;
+    } else {
+        bitboards.black_board[bitboards_index] &= mask;
+    }
+}
+
+pub fn print_bitboards(bitboards: &Bitboards){
+    for x in 0..6 {
+        println!("white_board[{}]: {:064b}", x, bitboards.white_board[x]);
+        println!("black_board[{}]: {:064b}", x, bitboards.black_board[x]);
+    }
+    println!();
 }

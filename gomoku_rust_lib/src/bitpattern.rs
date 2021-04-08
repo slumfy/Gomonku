@@ -1,4 +1,6 @@
 use crate::bitboards::Bitboards;
+use crate::bitboards::remove_bit;
+use crate::print_bitboards;
 use crate::global_var::AXE_MOUVEMENT_VALUE;
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, &str); 8] = [
@@ -32,21 +34,22 @@ static BLOCKER: [(u8, usize); 5] = [
     (0xA0, 3), // X.X.....
 ];
 
-pub fn pattern_axes_dispatcher(axes: &[[u16; 4]; 2], pos: usize, player: i8) {
+pub fn pattern_axes_dispatcher(bitboards: &mut Bitboards, axes: &[[u16; 4]; 2], pos: usize, player: i8) {
     if player == 1 {
         println!("white player pattern in row:");
-        check_capture(&axes[0], &axes[1], pos);
+        // check and apply capture
+        check_capture(bitboards, &axes[0], &axes[1], pos, player);
         check_flank(&axes[0], &axes[1]);
         pattern_axes_finder(&axes[0], &axes[1], pos);
     } else if player == -1 {
         println!("black player pattern in row:");
-        check_capture(&axes[1], &axes[0], pos);
+        check_capture(bitboards, &axes[1], &axes[0], pos, player);
         check_flank(&axes[1], &axes[0]);
         pattern_axes_finder(&axes[1], &axes[0], pos);
     }
 }
 
-fn check_capture(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
+fn check_capture(bitboards: &mut Bitboards, axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize, player: i8) {
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
@@ -68,9 +71,20 @@ fn check_capture(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
                         "axe: {}, direction {}, pos {}",
                         AXE_MOUVEMENT_VALUE[axe], s, pos
                     );
+                    if *s == 3 { apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], -1, pos, player); }
+                    else { apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], 1, pos, player); }
                 }
+                print_bitboards(bitboards);
             }
         }
+    }
+}
+
+fn apply_capture(bitboards: &mut Bitboards, axe: usize, s: isize, pos: usize, player: i8){
+    let opponent = -player;
+    for n in 1..3 {
+        if s == -1 { remove_bit(bitboards, pos - (n * axe), opponent); }
+        else { remove_bit(bitboards, pos + (n * axe), opponent);}
     }
 }
 

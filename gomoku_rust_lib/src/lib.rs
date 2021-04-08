@@ -17,6 +17,7 @@ mod state;
 mod tests;
 mod utils;
 use bitboards::create_bits_axes_from_pos;
+use bitboards::print_bitboards;
 use check::checking_move;
 use check::checking_move_biggest_alignment_and_stone_captured;
 
@@ -166,7 +167,7 @@ fn place_stone(
     let board_check: HashMap<String, i8> = checking_move(&state);
     if board_check["is_wrong_move"] == 0 {
         apply_state_move(&mut state, board_check["stone_captured"]);
-        dict.set_item("board", &state.board)?;
+        // dict.set_item("board", &state.board)?;
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_check["stone_captured"])?;
         if player == 1 {
@@ -185,10 +186,10 @@ fn place_stone(
         println!("Wrong move status = {:?}", board_check["is_wrong_move"]);
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-    bitboards::apply_bitmove(&mut bitboards, (x * 19 + y) as usize, player);
-	let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
-    bitpattern::pattern_axes_dispatcher(&axes, (x * 19 + y) as usize, player);
-    bitboards::create_vec_from_bitboards(&bitboards);
+    bitboards::apply_bit(&mut bitboards, (x * 19 + y) as usize, player);
+    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
+    bitpattern::pattern_axes_dispatcher(&mut bitboards, &axes, (x * 19 + y) as usize, player);
+    dict.set_item("board", bitboards::create_vec_from_bitboards(&bitboards))?;
     Ok(dict.to_object(py))
 }
 
