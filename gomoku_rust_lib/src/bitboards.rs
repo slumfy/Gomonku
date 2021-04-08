@@ -7,28 +7,28 @@ pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
 }
-
-pub fn check_is_on_axe(
-	axe_mouvement_value: i16,
-	move_pos: i16,
-	i: i16,
-	direction_sign: i16,
-) -> bool {
-	if axe_mouvement_value == 1 {
-		if get_line_from_pos(move_pos + axe_mouvement_value * i * direction_sign)
-			!= get_line_from_pos(move_pos)
-		{
-			return false;
-		}
-	} else {
-		if get_line_from_pos(move_pos + axe_mouvement_value * i * direction_sign)
-			!= get_line_from_pos(move_pos) + i * direction_sign
-		{
-			return false;
-		}
-	}
-	return true;
-}
+pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) -> [[u16; 4]; 2] {
+    fn check_is_on_axe(
+        axe_increment_value: i16,
+        move_pos: i16,
+        i: i16,
+        direction_sign: i16,
+    ) -> bool {
+        if axe_increment_value == 1 {
+            if get_line_from_pos(move_pos + axe_increment_value * i * direction_sign)
+                != get_line_from_pos(move_pos)
+            {
+                return false;
+            }
+        } else {
+            if get_line_from_pos(move_pos + axe_increment_value * i * direction_sign)
+                != get_line_from_pos(move_pos) + i * direction_sign
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     fn set_bit_in_axe_from_bitboard(
         bits_axes_array: &mut [[u16; 4]; 2],
