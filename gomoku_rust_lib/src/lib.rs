@@ -143,7 +143,6 @@ fn place_stone(
     println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
     let mut mutboard: Vec<Vec<i8>> = board;
-    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
 
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -153,6 +152,7 @@ fn place_stone(
     }
     let bit_current_move_pos: i16 = (x * 19 + y) as i16;
 
+	let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard); // BITBOARDS CREATION
     let mut state: state::State = state::create_new_state(
         &mut mutboard,
         &mut bitboards,
@@ -163,6 +163,13 @@ fn place_stone(
         black_captured_stone,
         wining_position,
     );
+
+	// BITBOARD SECTION
+	bitboards::apply_bit(&mut bitboards, (x * 19 + y) as usize, player);
+	let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
+	bitpattern::pattern_axes_dispatcher(&mut bitboards, &axes, (x * 19 + y) as usize, player);
+	let vecboard = bitboards::create_vec_from_bitboards(&bitboards);
+	// BITBOARD SECTION END
 
     let board_check: HashMap<String, i8> = checking_move(&state);
     if board_check["is_wrong_move"] == 0 {
@@ -186,10 +193,7 @@ fn place_stone(
         println!("Wrong move status = {:?}", board_check["is_wrong_move"]);
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-    bitboards::apply_bit(&mut bitboards, (x * 19 + y) as usize, player);
-    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
-    bitpattern::pattern_axes_dispatcher(&mut bitboards, &axes, (x * 19 + y) as usize, player);
-    dict.set_item("board", bitboards::create_vec_from_bitboards(&bitboards))?;
+    dict.set_item("board", vecboard)?;
     Ok(dict.to_object(py))
 }
 

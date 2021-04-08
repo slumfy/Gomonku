@@ -184,9 +184,9 @@ pub fn check_is_wrong_move(state: &State, axes: &Vec<Vec<i8>>) -> i8 {
     }
     let player: i8 = state.current_player;
 
-    if bits_check_move_is_in_capturing_position(state.bit_current_move_pos, state) {
-        return -3;
-    }
+    // if bits_check_move_is_in_capturing_position(state.bit_current_move_pos, state) {
+    //     return -3;
+    // }
     if check_move_is_double_triple(&axes, player) == true {
         return -4;
     }
@@ -207,7 +207,7 @@ pub fn checking_move(state: &State) -> HashMap<String, i8> {
 
     board_check.insert(
         String::from("is_wrong_move"),
-        0,// check_is_wrong_move(state, &axes),
+        check_is_wrong_move(state, &axes),
     );
     if board_check["is_wrong_move"] == 0 {
         for axe in &axes {

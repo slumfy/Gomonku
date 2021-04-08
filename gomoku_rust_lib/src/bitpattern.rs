@@ -233,3 +233,12 @@ fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
         );
     }
 }
+
+// TO DO
+// fn check_unblocable_five(bitboards: &mut Bitboards , pos: usize, axe: usize, player: i8) -> bool {
+// 	for n in 0..5 {
+// 		if bitboards.player.pos[n * direction] == flanked
+// 			return false;
+// 	}
+// 	return true;
+// }
