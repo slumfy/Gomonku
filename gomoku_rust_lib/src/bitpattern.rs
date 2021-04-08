@@ -13,11 +13,16 @@ static PATTERN: [(u8, usize, &str); 8] = [
     // (0xB0, 5, "close split three"),     // close split three X.XX....
     // (0xD0, 5, "close split three rev"), // close split three rev XX.X....
     // (0xE0, 4, "close three"),           // close three XXX.....
-    (0x78, 6, "open four"),             // open four .XXXX...
-    (0x68, 6, "open split three"),      // open split three .X.XX...
-    (0x58, 6, "open split three rev"),  // open split three rev .XX.X...
-    (0x70, 5, "open three"),			// open three .XXX....
+    (0x78, 6, "open four"),            	// open four .XXXX...
+    (0x68, 6, "open split three"),     	// open split three .X.XX...
+    (0x58, 6, "open split three rev"), 	// open split three rev .XX.X...
+    (0x70, 5, "open three"),			// open three  .XXX....
 ];
+
+static CAPTURE_PATTERN: [(u8, usize, &str); 2] = [
+	(0x90, 5,"capturing pair"),			// eat pair	  X..X....	
+	(0x60, 4,"open double")			// open double .XX.....
+	];
 
 static BLOCKER: [(u8, usize); 5] = [
 	(0x82, 7), // X.....X.
@@ -30,21 +35,79 @@ static BLOCKER: [(u8, usize); 5] = [
 pub fn pattern_axes_dispatcher(axes: &[[u16; 4]; 2], pos: usize, player: i8) {
     if player == 1 {
         println!("white player pattern in row:");
+		check_capture(&axes[0], &axes[1],pos);
+		check_flank(&axes[0], &axes[1],pos);
         pattern_axes_finder(&axes[0], &axes[1], pos);
     } else if player == -1 {
         println!("black player pattern in row:");
+		check_capture(&axes[1], &axes[0], pos);
+		check_flank(&axes[1], &axes[0],pos);
         pattern_axes_finder(&axes[1], &axes[0], pos);
     }
 }
 
-fn print_axe_value(axe:usize){
+fn check_capture(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
+	for axe in 0..axes.len() {
+		let mut player_axe = axes[axe];
+		let mut blocker_axe = blocker_axes[axe];
+		player_axe >>= 1;
+		blocker_axe >>= 1;
+		println!("player axe: {:016b}", player_axe);
+		println!("block  axe: {:016b}", blocker_axe);
+		let shift : [usize; 2] = [0,3];
+		for s in shift.iter() {
+			let mut player_shifted = player_axe >> s;
+			println!("player shifted: {:016b} l= {}", player_shifted, s);
+			let mut blocker_shifted = blocker_axe >> s;
+			let player_casted = player_shifted as u8;
+			let blocker_casted = blocker_shifted as u8;
+			if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
+				if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
+					println!("captured");
+					println!("axe: {}, direction {}, pos {}",AXE_MOUVEMENT_VALUE[axe],s, pos);
+				}
+			}
+		}
+	}
+}
+
+fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
+	for axe in 0..axes.len() {
+		let mut player_axe = axes[axe];
+		let mut blocker_axe = blocker_axes[axe];
+		player_axe >>= 1;
+		blocker_axe >>= 1;
+		println!("player axe: {:016b}", player_axe);
+		println!("block  axe: {:016b}", blocker_axe);
+		let shift : [usize; 2] = [1,2];
+		for s in shift.iter() {
+			let mut player_shifted = player_axe >> s;
+			let mut blocker_shifted = blocker_axe >> s;
+			let player_casted = player_shifted as u8;
+			let blocker_casted = blocker_shifted as u8;
+			if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
+				if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
+					println!("blocked");
+				}
+				else if (blocker_casted & CAPTURE_PATTERN[0].0) !=0 {
+					println!("flank");
+				}
+				else {
+					println!("free");
+				}
+			}
+		}
+	}
+}
+
+fn print_axe_value(axe:usize) {
 	if axe == 0 { println!("DIAGONALE UPLEFT:")}
 	else if axe == 1 { println!("COLONE:")}
 	else if axe == 2 { println!("DIAGONALE UPRIGHT:")}
 	else { println!("LIGNE:")}
 }
 
-pub fn check_in_map(
+fn check_in_map(
 	axe_mouvement_value: i16,
 	pattern_pos: i16,
 	offset: i16,
@@ -140,110 +203,3 @@ fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
 		println!("PATTERN FOUND {} BLOCKER FOUND {}", found_pattern.0, found_pattern.1);
 	}
 }
-
-// pub fn pattern_dispatcher(bitboards: &Bitboards, pos: usize, player: i8) {
-//     if player == 1 {
-//         println!("white player pattern in row:");
-//         pattern_finder(&bitboards.white_board, &bitboards.black_board, pos);
-//     } else if player == -1 {
-//         println!("black player pattern in row:");
-//         pattern_finder(&bitboards.black_board, &bitboards.white_board, pos);
-//     }
-// }
-
-// fn pattern_finder(bitboard: &[u64; 6], blocker: &[u64; 6], pos: usize) {
-//     let y = pos % 19;
-//     let mut player_row = create_row(bitboard, pos);
-// 	let mut blocker_row = create_row(blocker, pos);
-//     println!("player checked: {:064b}", player_row);
-// 	println!("blocker  check: {:064b}", blocker_row);
-//     player_row <<= 7;
-// 	blocker_row <<= 7;
-// 	let mut found_pattern: (&str, usize) = ("",0);
-//     for l in (0..19).rev() {
-//         let mut player_shifted = player_row >> l;
-// 		let mut blocker_shifted = blocker_row >> l;
-//         let player_casted = player_shifted as u8;
-// 		let blocker_casted = blocker_shifted as u8;
-// 		let mut is_bloked: usize = 0;
-//         for p in 0..PATTERN.len() {
-//             if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
-// 				// println!("player casted: {:08b}", player_casted);
-// 				for b in 0..BLOCKER.len() {
-// 					if BLOCKER[b].1 == PATTERN[p].1 {
-// 						// println!("blocker  cast: {:08b}", blocker_casted);
-// 						// println!("blocked checked: {:08b}", blocker_casted);
-//            				// println!("pattern checked: {:08b}", BLOCKER[b].0);
-// 						let mut blocker_checker: u8 = (blocker_casted & BLOCKER[b].0);
-// 						// println!("BLOCKER CHECKER: {:08b}", blocker_checker);
-// 						// println!("l {} length {}", l , PATTERN[p].1);
-// 						if blocker_checker == BLOCKER[b].0 {
-// 							is_bloked = 2;
-// 						}
-// 						else if blocker_checker != 0 {
-// 							is_bloked = 1;
-// 							if l <= PATTERN[p].1 || l == 18 {is_bloked += 1;}
-// 						}
-// 						else if l <= PATTERN[p].1 || l == 18 {
-// 							is_bloked = 1;
-// 							if blocker_checker != 0 {is_bloked += 1;}
-// 						}
-// 						else {
-// 							is_bloked = 0;
-// 						}
-// 					}
-// 				}
-// 				if is_bloked < 2 {
-// 					found_pattern = (PATTERN[p].2.clone(), is_bloked);
-//                 	println!("{} found {} blocker", PATTERN[p].2, is_bloked);
-// 					break ;
-// 				}
-//             }
-// 			if found_pattern.0 != "" { break ;}
-//         }
-//     }
-// 	println!("PATTERN FOUND {} BLOCKER FOUND {}", found_pattern.0, found_pattern.1);
-// }
-
-// fn create_row(bitboard: &[u64; 6], pos: usize) -> u64 {
-//     let mask: [u64; 24] = [
-//         0xFFFFE00000000000,
-//         0x1FFFFC000000,
-//         0x3FFFF80,
-//         0x7F,
-//         0xFFFFE00000000,
-//         0x1FFFFC000,
-//         0x3FFF,
-//         0x7FFFF0000000000,
-//         0xFFFFE00000,
-//         0x1FFFFC,
-//         0x3,
-//         0x7FFFF0000000,
-//         0xFFFFE00,
-//         0x1FF,
-//         0x3FFFF800000000,
-//         0x7FFFF0000,
-//         0xFFFF,
-//         0x1FFFFC0000000000,
-//         0x3FFFF800000,
-//         0xFFF0000000000000,
-//         0xF800000000000000,
-//         0xFFFF800000000000,
-//         0xFFC0000000000000,
-//         0xE000000000000000,
-//     ];
-//     let row_idx = pos / 19;
-//     let int_idx = (row_idx * 19) / 64;
-//     // println!("rowidx {}, intidx {}", row_idx, int_idx);
-//     let shift = (row_idx * 19) % 64;
-//     let mut row: u64;
-//     if (row_idx == 3 || row_idx == 6 || row_idx == 10 || row_idx == 13 || row_idx == 16) {
-//         row = (((bitboard[int_idx] & mask[row_idx]) << shift)
-//             | ((bitboard[int_idx + 1] & mask[19 + int_idx]) >> (64 - shift)));
-//         // println!("generated mixed row: {:064b}", row);
-//     } else {
-//         row = (bitboard[int_idx] & mask[row_idx]) << shift;
-//         // println!("generated row: {:064b}", row);
-//     }
-//     return row >> 45;
-// }

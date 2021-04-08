@@ -207,7 +207,7 @@ pub fn checking_move(state: &State) -> HashMap<String, i8> {
 
     board_check.insert(
         String::from("is_wrong_move"),
-        check_is_wrong_move(state, &axes),
+        0,// check_is_wrong_move(state, &axes),
     );
     if board_check["is_wrong_move"] == 0 {
         for axe in &axes {
