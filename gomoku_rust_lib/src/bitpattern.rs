@@ -1,5 +1,4 @@
 use crate::bitboards::Bitboards;
-use crate::bitboards::check_is_on_axe;
 use crate::global_var::AXE_MOUVEMENT_VALUE;
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, &str); 8] = [
