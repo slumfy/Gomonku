@@ -44,6 +44,7 @@ pub fn pattern_axes_dispatcher(
     player: i8,
 ) -> HashMap<String, i8> {
     let mut pattern_return_infos: HashMap<String, i8> = HashMap::new();
+	let mut axe_pattern: [(usize, usize); 4] = [(0,0),(0,0),(0,0),(0,0)];
     if player == 1 {
         println!("white player pattern in row:");
         // check and apply capture
@@ -52,7 +53,7 @@ pub fn pattern_axes_dispatcher(
             check_and_apply_capture(bitboards, &axes[0], &axes[1], pos, player),
         );
         check_flank(&axes[0], &axes[1]);
-        pattern_axes_finder(&axes[0], &axes[1], pos);
+        axe_pattern = pattern_axes_finder(&axes[0], &axes[1], pos);
     } else if player == -1 {
         println!("black player pattern in row:");
         pattern_return_infos.insert(
@@ -60,8 +61,9 @@ pub fn pattern_axes_dispatcher(
             check_and_apply_capture(bitboards, &axes[1], &axes[0], pos, player),
         );
         check_flank(&axes[1], &axes[0]);
-        pattern_axes_finder(&axes[1], &axes[0], pos);
+        axe_pattern = pattern_axes_finder(&axes[1], &axes[0], pos);
     }
+	println!("pattern on axe {:?}", axe_pattern);
     return pattern_return_infos;
 }
 
@@ -202,69 +204,71 @@ fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> bool
     return true;
 }
 
-fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
-    let y = pos % 19;
-    println!("y= {}", y);
+fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) -> [(usize, usize); 4] {
+	let mut return_pattern: [(usize, usize); 4] = [(0,0),(0,0),(0,0),(0,0)];
+	let mut is_blocked: usize = 0;
     for axe in 0..axes.len() {
         print_axe_value(axe);
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
-        let mut found_pattern: usize = PATTERN.len();
+        let mut found_pattern: (usize,usize) = (PATTERN.len(),0);
         player_axe >>= 1;
         blocker_axe >>= 1;
-        println!("player axe: {:016b}", player_axe);
         for l in 0..6 {
-            let mut player_shifted = player_axe >> l;
-            println!("player shifted: {:016b} l= {}", player_shifted, l);
+            let player_shifted = player_axe >> l;
             let blocker_shifted = blocker_axe >> l;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
-            let mut is_bloked: usize = 0;
+            is_blocked = 0;
             for p in 0..PATTERN.len() {
                 if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
-                    // println!("player casted: {:08b}", player_casted);
                     for b in 0..BLOCKER.len() {
                         if BLOCKER[b].1 == PATTERN[p].1 {
-                            // println!("blocker  cast: {:08b}", blocker_casted);
-                            // println!("blocked checked: {:08b}", blocker_casted);
-                            // println!("pattern checked: {:08b}", BLOCKER[b].0);
                             let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
-                            // println!("BLOCKER CHECKER: {:08b}", blocker_checker);
 							 println!("pattern {}", PATTERN[p].3);
-							if PATTERN[p].2 != 0 && check_one_bit_in_pattern(&blocker_casted,PATTERN[p].2) == true {
-								is_bloked = 2;
-							}
-                            else if blocker_checker == BLOCKER[b].0 {
-                                is_bloked = 2;
-                            } else if blocker_checker != 0 {
-                                is_bloked = 1;
-                                if check_border(pos, l, axe, PATTERN[p].1) == false {
-                                    is_bloked += 1
-                                }
-                            } else if check_border(pos, l, axe, PATTERN[p].1) == false {
-                                is_bloked = 1;
-                                if blocker_checker != 0 {
-                                    is_bloked += 1
-                                }
-                            } else {
-                                is_bloked = 0;
-                            }
+							 is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
                         }
                     }
-                    if is_bloked < 2 && p < found_pattern {
-                        found_pattern = p;
-                        println!("{} found {} blocker", PATTERN[p].3, is_bloked);
+                    if is_blocked < 2 && p < found_pattern.0 {
+                        found_pattern.0 = p;
+						found_pattern.1 = is_blocked;
+                        println!("{} found {} blocker", PATTERN[p].3, is_blocked);
                         break;
                     }
                 }
             }
         }
-		if found_pattern < PATTERN.len() {
+		if found_pattern.0 < PATTERN.len() {
+			return_pattern[axe] = found_pattern;
         println!(
             "PATTERN FOUND {}",
-            PATTERN[found_pattern].3, 
+            PATTERN[found_pattern.0].3, 
         );}
     }
+	return return_pattern;
+}
+
+fn check_blocker(blocker_checker: u8, blocker_casted: u8, pos: usize, b: usize, p: usize, l: usize, axe: usize) -> usize {
+	let mut is_blocked: usize = 0;
+	if PATTERN[p].2 != 0 && check_one_bit_in_pattern(&blocker_casted,PATTERN[p].2) == true {
+		is_blocked = 2;
+	}
+	else if blocker_checker == BLOCKER[b].0 {
+		is_blocked = 2;
+	} else if blocker_checker != 0 {
+		is_blocked = 1;
+		if check_border(pos, l, axe, PATTERN[p].1) == false {
+			is_blocked += 1
+		}
+	} else if check_border(pos, l, axe, PATTERN[p].1) == false {
+		is_blocked = 1;
+		if blocker_checker != 0 {
+			is_blocked += 1
+		}
+	} else {
+		is_blocked = 0;
+	}
+	return is_blocked;
 }
 
 fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
