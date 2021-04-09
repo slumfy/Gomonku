@@ -1,7 +1,10 @@
+use std::collections::HashMap;
+
 use crate::bitboards::remove_bit;
 use crate::bitboards::Bitboards;
 use crate::global_var::AXE_MOUVEMENT_VALUE;
 use crate::print_bitboards;
+
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, &str); 8] = [
     (0xF8, 6, "five"),         // five XXXXX...
@@ -39,28 +42,37 @@ pub fn pattern_axes_dispatcher(
     axes: &[[u16; 4]; 2],
     pos: usize,
     player: i8,
-) {
+) -> HashMap<String, i8> {
+    let mut pattern_return_infos: HashMap<String, i8> = HashMap::new();
     if player == 1 {
         println!("white player pattern in row:");
         // check and apply capture
-        check_capture(bitboards, &axes[0], &axes[1], pos, player);
+        pattern_return_infos.insert(
+            String::from("stone_captured"),
+            check_and_apply_capture(bitboards, &axes[0], &axes[1], pos, player),
+        );
         check_flank(&axes[0], &axes[1]);
         pattern_axes_finder(&axes[0], &axes[1], pos);
     } else if player == -1 {
         println!("black player pattern in row:");
-        check_capture(bitboards, &axes[1], &axes[0], pos, player);
+        pattern_return_infos.insert(
+            String::from("stone_captured"),
+            check_and_apply_capture(bitboards, &axes[1], &axes[0], pos, player),
+        );
         check_flank(&axes[1], &axes[0]);
         pattern_axes_finder(&axes[1], &axes[0], pos);
     }
+    return pattern_return_infos;
 }
 
-fn check_capture(
+fn check_and_apply_capture(
     bitboards: &mut Bitboards,
     axes: &[u16; 4],
     blocker_axes: &[u16; 4],
     pos: usize,
     player: i8,
-) {
+) -> i8 {
+    let mut stone_captured: i8 = 0;
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
@@ -83,8 +95,10 @@ fn check_capture(
                         AXE_MOUVEMENT_VALUE[axe], s, pos
                     );
                     if *s == 3 {
+                        stone_captured += 2;
                         apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], -1, pos, player);
                     } else {
+                        stone_captured += 2;
                         apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], 1, pos, player);
                     }
                 }
@@ -92,6 +106,7 @@ fn check_capture(
             }
         }
     }
+    return stone_captured;
 }
 
 fn apply_capture(bitboards: &mut Bitboards, axe: usize, s: isize, pos: usize, player: i8) {
