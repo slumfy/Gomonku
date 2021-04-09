@@ -31,8 +31,8 @@ static ALPHABET: [char; 26] = [
 fn ai_move(
     board: Vec<Vec<i8>>,
     player: i8,
-    x: isize,
-    y: isize,
+    x: usize,
+    y: usize,
     turn: isize,
     wining_position: Vec<(usize, i8)>,
 ) -> PyResult<((isize, isize), i32)> {
@@ -44,7 +44,7 @@ fn ai_move(
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
-    let bit_current_move_pos: usize = (x * 19 + y) as usize;
+    let bit_current_move_pos: usize = x * 19 + y;
     let ai_move: (usize, i32);
     let mut state: state::State = state::create_new_state(
         &mut bitboards,
@@ -133,8 +133,8 @@ fn check_move_is_a_fiverow() -> PyResult<bool> {
 fn place_stone(
     mut board: Vec<Vec<i8>>,
     player: i8,
-    x: isize,
-    y: isize,
+    x: usize,
+    y: usize,
     wining_position: Vec<(usize, i8)>,
 ) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
@@ -149,7 +149,7 @@ fn place_stone(
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
-    let bit_current_move_pos: usize = (x * 19 + y) as usize;
+    let bit_current_move_pos: usize = x * 19 + y;
 
     let mut bitboards = bitboards::create_bitboards_from_vec(&board); // BITBOARDS CREATION
     let mut state: state::State = state::create_new_state(

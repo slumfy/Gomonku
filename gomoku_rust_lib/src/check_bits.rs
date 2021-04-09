@@ -7,13 +7,6 @@ use crate::bitpattern::pattern_axes_dispatcher;
 use crate::global_var;
 use crate::state::State;
 
-pub fn check_pos_is_in_board(pos: usize) -> bool {
-    if pos < global_var::BOARD_MIN_LIMITS || pos > global_var::BOARD_MAX_LIMITS {
-        return false;
-    }
-    return true;
-}
-
 pub fn get_line_from_pos(pos: usize) -> usize {
     return pos / 19;
 }
@@ -39,10 +32,7 @@ fn check_overlapping_stone(pos: usize, bitboards: &Bitboards) -> bool {
     return true;
 }
 
-fn check_is_wrong_move(state: &State) -> i8 {
-    if !check_pos_is_in_board(state.bit_current_move_pos) {
-        return global_var::NOT_IN_BOARD_MOVE;
-    }
+pub fn check_is_wrong_move(state: &State) -> i8 {
     if !check_overlapping_stone(state.bit_current_move_pos, &state.bitboards) {
         return global_var::OVERLAPPING_STONE_MOVE;
     }
@@ -52,26 +42,31 @@ fn check_is_wrong_move(state: &State) -> i8 {
 pub fn checking_and_apply_bits_move(state: &mut State) -> HashMap<String, i8> {
     let mut bitboard_check: HashMap<String, i8> = HashMap::new();
     let pattern_return_infos: HashMap<String, i8>;
-    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards, state.current_player);
     bitboard_check.insert(String::from("is_wrong_move"), check_is_wrong_move(state));
-    apply_bit(
-        &mut state.bitboards,
-        state.bit_current_move_pos as usize,
-        state.current_player,
-    );
-    pattern_return_infos = pattern_axes_dispatcher(
-        &mut state.bitboards,
-        &axes,
-        state.bit_current_move_pos as usize,
-        state.current_player,
-    );
-	if pattern_return_infos["double_triple"] == 1 {
-		*bitboard_check.get_mut("is_wrong_move").unwrap() = -1;
-	}
-    bitboard_check.insert(String::from("biggest_alignment"), 1);
-    bitboard_check.insert(
-        String::from("stone_captured"),
-        pattern_return_infos["stone_captured"],
-    );
-    return bitboard_check;
+    if bitboard_check["is_wrong_move"] != 0 {
+        return bitboard_check;
+    } else {
+        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards, state.current_player);
+
+        apply_bit(
+            &mut state.bitboards,
+            state.bit_current_move_pos as usize,
+            state.current_player,
+        );
+        pattern_return_infos = pattern_axes_dispatcher(
+            &mut state.bitboards,
+            &axes,
+            state.bit_current_move_pos as usize,
+            state.current_player,
+        );
+        if pattern_return_infos["double_triple"] == 1 {
+            *bitboard_check.get_mut("is_wrong_move").unwrap() = -1;
+        }
+        bitboard_check.insert(String::from("biggest_alignment"), 1);
+        bitboard_check.insert(
+            String::from("stone_captured"),
+            pattern_return_infos["stone_captured"],
+        );
+        return bitboard_check;
+    }
 }
