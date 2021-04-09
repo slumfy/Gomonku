@@ -23,5 +23,5 @@ pub static BOARD_MAX_LIMITS: usize = 360;
 
 // Move validation check
 pub static VALID_MOVE: i8 = 0;
-pub static NOT_IN_BOARD_MOVE: i8 = -1;
+pub static OUT_OF_BOARD_MOVE: i8 = -1;
 pub static OVERLAPPING_STONE_MOVE: i8 = -2;

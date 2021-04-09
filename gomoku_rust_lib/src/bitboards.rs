@@ -1,5 +1,6 @@
 use crate::check_bits::get_bits_in_bitboard_from_pos;
 use crate::check_bits::get_line_from_pos;
+use crate::global_var;
 use crate::state::State;
 
 #[derive(Copy, Clone)]
@@ -14,7 +15,11 @@ pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2
         i: usize,
         direction_sign: i16,
     ) -> bool {
-        if axe_increment_value == 1 {
+        if (move_pos as isize + axe_increment_value as isize * i as isize * direction_sign as isize)
+            < 0
+        {
+            return false;
+        } else if axe_increment_value == 1 {
             if get_line_from_pos(
                 (move_pos as isize
                     + axe_increment_value as isize * i as isize * direction_sign as isize)
@@ -51,8 +56,17 @@ pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2
 
         // Getting left part
         if bits_axes_array[bits_axes_array_index][index] & (1 << 15) == 0 {
-            ret = get_bits_in_bitboard_from_pos(move_pos - axe_increment_value * i, bitboard);
-            if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, -1) {
+            if (move_pos as isize - axe_increment_value as isize * i as isize)
+                < (global_var::BOARD_MIN_LIMITS as isize)
+                || move_pos - axe_increment_value * i > global_var::BOARD_MAX_LIMITS
+            {
+                ret = global_var::OUT_OF_BOARD_MOVE;
+            } else {
+                ret = get_bits_in_bitboard_from_pos(move_pos - axe_increment_value * i, bitboard);
+            }
+            if ret == global_var::OUT_OF_BOARD_MOVE
+                || !check_is_on_axe(axe_increment_value, move_pos, i, -1)
+            {
                 bits_axes_array[bits_axes_array_index][index] =
                     bits_axes_array[bits_axes_array_index][index] | 1 << 15;
             } else if ret == 1 {
@@ -62,8 +76,17 @@ pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2
         }
         // Getting right part
         if bits_axes_array[bits_axes_array_index][index] & 1 == 0 {
-            ret = get_bits_in_bitboard_from_pos(move_pos + axe_increment_value * i, bitboard);
-            if ret == -2 || !check_is_on_axe(axe_increment_value, move_pos, i, 1) {
+            if (move_pos as isize - axe_increment_value as isize * i as isize)
+                < (global_var::BOARD_MIN_LIMITS as isize)
+                || move_pos + axe_increment_value * i > global_var::BOARD_MAX_LIMITS
+            {
+                ret = global_var::OUT_OF_BOARD_MOVE;
+            } else {
+                ret = get_bits_in_bitboard_from_pos(move_pos + axe_increment_value * i, bitboard);
+            }
+            if ret == global_var::OUT_OF_BOARD_MOVE
+                || !check_is_on_axe(axe_increment_value, move_pos, i, 1)
+            {
                 bits_axes_array[bits_axes_array_index][index] =
                     bits_axes_array[bits_axes_array_index][index] | 1;
             } else if ret == 1 {
