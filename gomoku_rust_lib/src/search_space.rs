@@ -1,6 +1,7 @@
 use crate::bitboards::Bitboards;
 use crate::state::State;
 
+#[allow(dead_code)]
 pub fn get_search_box(state: &mut State) -> Vec<(usize, usize)> {
     let mut box_position = vec![];
     for x in 0..19 {
@@ -14,6 +15,7 @@ pub fn get_search_box(state: &mut State) -> Vec<(usize, usize)> {
     return box_position;
 }
 
+#[allow(dead_code)]
 fn create_box_for_pos(box_position: &mut Vec<(usize, usize)>, x: usize, y: usize) {
     let box_size = 2;
     let xmin = if x < box_size { 0 } else { x - box_size };
@@ -30,6 +32,7 @@ fn create_box_for_pos(box_position: &mut Vec<(usize, usize)>, x: usize, y: usize
     }
 }
 
+#[allow(dead_code)]
 fn check_is_in_pos_list(box_position: &mut Vec<(usize, usize)>, x: usize, y: usize) -> bool {
     let len = box_position.len();
     for pos in 0..len {
@@ -40,6 +43,7 @@ fn check_is_in_pos_list(box_position: &mut Vec<(usize, usize)>, x: usize, y: usi
     return false;
 }
 
+#[allow(dead_code)]
 pub fn get_search_box_bitboard(bitboard: Bitboards) -> Vec<usize> {
     let mut box_position: Vec<usize> = vec![];
     for x in 0..19 {
@@ -49,9 +53,9 @@ pub fn get_search_box_bitboard(bitboard: Bitboards) -> Vec<usize> {
             let bitboard_index = (x * 19 + y) / 64;
             let mask = 1 << bit_pos;
             if bitboard.white_board[bitboard_index] & mask != 0 {
-                create_box_for_bitpos((x * 19 + y), &mut box_position);
+                create_box_for_bitpos(x * 19 + y, &mut box_position);
             } else if bitboard.black_board[bitboard_index] & mask != 0 {
-                create_box_for_bitpos((x * 19 + y), &mut box_position);
+                create_box_for_bitpos(x * 19 + y, &mut box_position);
             }
             // println!("pos_box : {:?}",box_position);
         }
@@ -59,6 +63,7 @@ pub fn get_search_box_bitboard(bitboard: Bitboards) -> Vec<usize> {
     return box_position;
 }
 
+#[allow(dead_code)]
 fn create_box_for_bitpos(bitpos: usize, box_position: &mut Vec<usize>) {
     let box_size = 2;
     let y = bitpos % 19;
@@ -69,8 +74,8 @@ fn create_box_for_bitpos(bitpos: usize, box_position: &mut Vec<usize>) {
     let ymax = if y + box_size >= 18 { 18 } else { y + box_size };
     for idx in xmin..xmax + 1 {
         for idy in ymin..ymax + 1 {
-            if check_is_in_bitpos_list(box_position, (idx * 19 + idy)) == false {
-                box_position.push((idx * 19 + idy));
+            if check_is_in_bitpos_list(box_position, idx * 19 + idy) == false {
+                box_position.push(idx * 19 + idy);
             }
         }
     }
@@ -86,6 +91,7 @@ fn check_is_in_bitpos_list(box_position: &mut Vec<usize>, bitpos: usize) -> bool
     return false;
 }
 
+#[allow(dead_code)]
 pub fn unwrap_bitlist(box_position: Vec<usize>) -> Vec<(usize, usize)> {
     let len = box_position.len();
     let mut unwrap = vec![];

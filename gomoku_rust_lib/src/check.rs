@@ -1,4 +1,3 @@
-use crate::check_bits::bits_check_move_is_in_capturing_position;
 use crate::state::State;
 use crate::utils::create_axes_from_stone_position;
 use std::cmp::max;

@@ -152,7 +152,7 @@ fn place_stone(
     }
     let bit_current_move_pos: i16 = (x * 19 + y) as i16;
 
-	let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard); // BITBOARDS CREATION
+    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard); // BITBOARDS CREATION
     let mut state: state::State = state::create_new_state(
         &mut mutboard,
         &mut bitboards,
@@ -164,12 +164,12 @@ fn place_stone(
         wining_position,
     );
 
-	// BITBOARD SECTION
-	bitboards::apply_bit(&mut bitboards, (x * 19 + y) as usize, player);
-	let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
-	bitpattern::pattern_axes_dispatcher(&mut bitboards, &axes, (x * 19 + y) as usize, player);
-	let vecboard = bitboards::create_vec_from_bitboards(&bitboards);
-	// BITBOARD SECTION END
+    // BITBOARD SECTION
+    bitboards::apply_bit(&mut bitboards, (x * 19 + y) as usize, player);
+    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
+    bitpattern::pattern_axes_dispatcher(&mut bitboards, &axes, (x * 19 + y) as usize, player);
+    let vecboard = bitboards::create_vec_from_bitboards(&bitboards);
+    // BITBOARD SECTION END
 
     let board_check: HashMap<String, i8> = checking_move(&state);
     if board_check["is_wrong_move"] == 0 {
@@ -198,25 +198,9 @@ fn place_stone(
 }
 
 #[pyfunction]
-fn get_rust_box(
-    board: Vec<Vec<i8>>,
-    player: i8,
-    x: isize,
-    y: isize,
-    wining_position: Vec<((isize, isize), i8)>,
-) -> PyResult<Vec<(usize, usize)>> {
-    let mut mutboard: Vec<Vec<i8>> = board;
-    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
-    let mut state: state::State = state::create_new_state(
-        &mut mutboard,
-        &mut bitboards,
-        player,
-        (x, y),
-        0,
-        0,
-        0,
-        wining_position,
-    );
+fn get_rust_box(board: Vec<Vec<i8>>) -> PyResult<Vec<(usize, usize)>> {
+    let mutboard: Vec<Vec<i8>> = board;
+    let bitboards = bitboards::create_bitboards_from_vec(&mutboard);
     let search_bitbox = search_space::get_search_box_bitboard(bitboards);
     // println!("bitbox: {:?}", search_bitbox);
     let search_box = search_space::unwrap_bitlist(search_bitbox);

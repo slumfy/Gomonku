@@ -45,6 +45,7 @@ pub fn return_move(state: &mut State, heuristic: i32) -> ((isize, isize), i32) {
     );
 }
 
+#[allow(dead_code)]
 pub fn return_second_move(state: &State /*, turn: isize*/) -> ((isize, isize), i32) {
     let mut pos: (isize, isize) = state.current_move;
     if pos.0 / 9 == 0 && pos.0 % 9 != 0 {
