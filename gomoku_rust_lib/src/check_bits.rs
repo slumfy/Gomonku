@@ -1,3 +1,6 @@
+use std::collections::HashMap;
+
+use crate::bitboards::Bitboards;
 use crate::state::State;
 
 pub fn check_pos_is_in_board(pos: i16) -> bool {
@@ -24,6 +27,33 @@ pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[u64; 6]) -> i8 {
     } else {
         return 0;
     }
+}
+
+fn check_is_empty_on_bitboards(pos: i16, bitboards: &Bitboards) -> bool {
+    if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
+        || get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
+    {
+        return false;
+    }
+    return true;
+}
+
+fn check_is_wrong_move(state: &State) -> i8 {
+    if !check_pos_is_in_board(state.bit_current_move_pos) {
+        return -1;
+    }
+    if !check_is_empty_on_bitboards(state.bit_current_move_pos, &state.bitboards) {
+        return -2;
+    }
+    return 0;
+}
+
+pub fn checking_bits_move(state: &State) -> HashMap<String, i8> {
+    let mut bitboard_check: HashMap<String, i8> = HashMap::new();
+
+    bitboard_check.insert(String::from("is_wrong_move"), check_is_wrong_move(state));
+
+    return bitboard_check;
 }
 
 #[allow(dead_code)]

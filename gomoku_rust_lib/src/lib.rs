@@ -18,8 +18,8 @@ mod tests;
 mod utils;
 use bitboards::create_bits_axes_from_pos;
 use bitboards::print_bitboards;
-use check::checking_move;
 use check::checking_move_biggest_alignment_and_stone_captured;
+use check_bits::checking_bits_move;
 
 use crate::tests::__pyo3_get_function_test_double_triple;
 use crate::tests::__pyo3_get_function_test_get_pydict;
@@ -171,10 +171,9 @@ fn place_stone(
     let vecboard = bitboards::create_vec_from_bitboards(&bitboards);
     // BITBOARD SECTION END
 
-    let board_check: HashMap<String, i8> = checking_move(&state);
+    let board_check: HashMap<String, i8> = checking_bits_move(&state);
     if board_check["is_wrong_move"] == 0 {
         apply_state_move(&mut state, board_check["stone_captured"]);
-        // dict.set_item("board", &state.board)?;
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_check["stone_captured"])?;
         if player == 1 {
