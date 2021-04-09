@@ -1,14 +1,13 @@
 use crate::check_bits::get_bits_in_bitboard_from_pos;
 use crate::check_bits::get_line_from_pos;
 use crate::global_var;
-use crate::state::State;
 
 #[derive(Copy, Clone)]
 pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
 }
-pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2] {
+pub fn create_bits_axes_from_pos(move_pos: usize, bitboards: &Bitboards, player: i8) -> [[u16; 4]; 2] {
     fn check_is_on_axe(
         axe_increment_value: usize,
         move_pos: usize,
@@ -100,7 +99,7 @@ pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2
     let mut index = 0;
     let move_index = 8;
     for axe_increment_value in vec![20, 19, 18, 1] {
-        if state.current_player == 1 {
+        if player == 1 {
             bits_axes_array[0][index] = 1 << move_index;
         } else {
             bits_axes_array[1][index] = 1 << move_index;
@@ -110,7 +109,7 @@ pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2
             set_bit_in_axe_from_bitboard(
                 &mut bits_axes_array,
                 0,
-                &state.bitboards.white_board,
+                &bitboards.white_board,
                 index,
                 move_pos,
                 axe_increment_value,
@@ -122,7 +121,7 @@ pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2
             set_bit_in_axe_from_bitboard(
                 &mut bits_axes_array,
                 1,
-                &state.bitboards.black_board,
+                &bitboards.black_board,
                 index,
                 move_pos,
                 axe_increment_value,

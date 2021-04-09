@@ -46,7 +46,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> HashMap<String, i8> {
     if bitboard_check["is_wrong_move"] != 0 {
         return bitboard_check;
     } else {
-        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
+        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards, state.current_player);
 
         apply_bit(
             &mut state.bitboards,

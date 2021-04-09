@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 
+use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::remove_bit;
 use crate::bitboards::Bitboards;
 use crate::global_var;
@@ -53,7 +54,7 @@ pub fn pattern_axes_dispatcher(
             check_and_apply_capture(bitboards, &axes[0], &axes[1], pos, player),
         );
         check_flank(&axes[0], &axes[1]);
-        axe_pattern = pattern_axes_finder(&axes[0], &axes[1], pos);
+        axe_pattern = pattern_axes_finder(bitboards,&axes[0], &axes[1], pos, player);
     } else if player == global_var::PLAYER_BLACK_NB {
         println!("black player pattern in row:");
         pattern_return_infos.insert(
@@ -61,7 +62,7 @@ pub fn pattern_axes_dispatcher(
             check_and_apply_capture(bitboards, &axes[1], &axes[0], pos, player),
         );
         check_flank(&axes[1], &axes[0]);
-        axe_pattern = pattern_axes_finder(&axes[1], &axes[0], pos);
+        axe_pattern = pattern_axes_finder(bitboards, &axes[1], &axes[0], pos, player);
     }
 	pattern_return_infos.insert(
 		String::from("double_triple"), check_double_triple(axe_pattern));
@@ -150,7 +151,8 @@ fn apply_capture(bitboards: &mut Bitboards, axe: usize, s: isize, pos: usize, pl
     }
 }
 
-fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) {
+fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> usize {
+	let mut flank_value = 0;
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
@@ -165,16 +167,19 @@ fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) {
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
+                if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 && flank_value != 1 {
                     println!("blocked");
+					flank_value = 2;
                 } else if (blocker_casted & CAPTURE_PATTERN[0].0) != 0 {
                     println!("flank");
+					flank_value = 1;
                 } else {
                     println!("free");
                 }
             }
         }
     }
+	return flank_value;
 }
 
 fn print_axe_value(axe: usize) {
@@ -233,9 +238,11 @@ fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> bool
 }
 
 fn pattern_axes_finder(
+	bitboards: &mut Bitboards,
     axes: &[u16; 4],
     blocker_axes: &[u16; 4],
     pos: usize,
+	player: i8
 ) -> [(usize, usize); 4] {
     let mut return_pattern: [(usize, usize); 4] = [(0, 0), (0, 0), (0, 0), (0, 0)];
     let mut is_blocked: usize;
@@ -254,6 +261,11 @@ fn pattern_axes_finder(
             is_blocked = 0;
             for p in 0..PATTERN.len() {
                 if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
+					if p == 0 {
+						if check_is_unblockable_five(bitboards, pos - l, axe, player) == true {
+							return [(0, 5), (0, 5), (0, 5), (0, 5)];
+						}
+					}
                     for b in 0..BLOCKER.len() {
                         if BLOCKER[b].1 == PATTERN[p].1 {
                             let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
@@ -324,11 +336,15 @@ fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
     }
 }
 
-// TO DO
-// fn check_unblocable_five(bitboards: &mut Bitboards , pos: usize, axe: usize, player: i8) -> bool {
-// 	for n in 0..5 {
-// 		if bitboards.player.pos[n * direction] == flanked
-// 			return false;
-// 	}
-// 	return true;
-// }
+fn check_is_unblockable_five(bitboards: &mut Bitboards,pos : usize, axe: usize, player: i8) -> bool {
+	for n in 0..5 {
+		let check_pos = pos + n * global_var::AXE_MOUVEMENT_VALUE[axe];
+		let axes = create_bits_axes_from_pos(check_pos,bitboards,player);
+		let order :(usize,usize) = if player == 1 {(0,1)} else {(1,0)};
+		if check_flank(&axes[order.0],&axes[order.1]) == 1 {
+			return false;
+		}
+		
+	}
+	return true;
+}
