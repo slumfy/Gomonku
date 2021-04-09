@@ -129,7 +129,7 @@ fn ai_move(
 
 #[pyfunction]
 fn check_move_is_a_fiverow() -> PyResult<bool> {
-    Ok(true)
+    Ok(false)
 }
 
 #[pyfunction]
