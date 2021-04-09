@@ -1,3 +1,4 @@
+// Search algorithm global vars
 pub static DEEP: i32 = 1;
 
 // Capturing stone count
