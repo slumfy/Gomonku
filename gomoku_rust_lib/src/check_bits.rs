@@ -52,7 +52,7 @@ fn check_is_wrong_move(state: &State) -> i8 {
 pub fn checking_and_apply_bits_move(state: &mut State) -> HashMap<String, i8> {
     let mut bitboard_check: HashMap<String, i8> = HashMap::new();
     let pattern_return_infos: HashMap<String, i8>;
-    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
+    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards, state.current_player);
     bitboard_check.insert(String::from("is_wrong_move"), check_is_wrong_move(state));
     apply_bit(
         &mut state.bitboards,
