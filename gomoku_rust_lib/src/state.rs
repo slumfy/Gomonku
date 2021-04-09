@@ -116,7 +116,7 @@ fn capture_position_routine(
         && board[(x + 1 * xsign) as usize][(y + 1 * ysign) as usize] != player
         && board[(x + 1 * xsign) as usize][(y + 1 * ysign) as usize] != 0
     {
-		if check_is_in_table(x, y, xsign, ysign, 2) == 0
+        if check_is_in_table(x, y, xsign, ysign, 2) == 0
             && board[(x + 2 * xsign) as usize][(y + 2 * ysign) as usize] != 0
         {
             if check_is_in_table(x, y, xsign, ysign, 3) == 0

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::bitboards::remove_bit;
 use crate::bitboards::Bitboards;
-use crate::global_var::AXE_MOUVEMENT_VALUE;
+use crate::global_var;
 use crate::print_bitboards;
 
 // patern need to sort by order of check
@@ -45,7 +45,7 @@ pub fn pattern_axes_dispatcher(
 ) -> HashMap<String, i8> {
     let mut pattern_return_infos: HashMap<String, i8> = HashMap::new();
     let mut axe_pattern: [(usize, usize); 4] = [(0, 0), (0, 0), (0, 0), (0, 0)];
-    if player == 1 {
+    if player == global_var::PLAYER_WHITE_NB {
         println!("white player pattern in row:");
         // check and apply capture
         pattern_return_infos.insert(
@@ -54,7 +54,7 @@ pub fn pattern_axes_dispatcher(
         );
         check_flank(&axes[0], &axes[1]);
         axe_pattern = pattern_axes_finder(&axes[0], &axes[1], pos);
-    } else if player == -1 {
+    } else if player == global_var::PLAYER_BLACK_NB {
         println!("black player pattern in row:");
         pattern_return_infos.insert(
             String::from("stone_captured"),
@@ -107,14 +107,28 @@ fn check_and_apply_capture(
                     println!("captured");
                     println!(
                         "axe: {}, direction {}, pos {}",
-                        AXE_MOUVEMENT_VALUE[axe], s, pos
+                        global_var::AXE_MOUVEMENT_VALUE[axe],
+                        s,
+                        pos
                     );
                     if *s == 3 {
                         stone_captured += 2;
-                        apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], -1, pos, player);
+                        apply_capture(
+                            bitboards,
+                            global_var::AXE_MOUVEMENT_VALUE[axe],
+                            -1,
+                            pos,
+                            player,
+                        );
                     } else {
                         stone_captured += 2;
-                        apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], 1, pos, player);
+                        apply_capture(
+                            bitboards,
+                            global_var::AXE_MOUVEMENT_VALUE[axe],
+                            1,
+                            pos,
+                            player,
+                        );
                     }
                 }
                 print_bitboards(bitboards);
@@ -206,7 +220,7 @@ fn check_in_map(
 }
 
 fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> bool {
-    let axe_mouvement_value: i16 = AXE_MOUVEMENT_VALUE[axe] as i16;
+    let axe_mouvement_value: i16 = global_var::AXE_MOUVEMENT_VALUE[axe] as i16;
     let pattern_pos: i16 = pos as i16 - l as i16 * axe_mouvement_value;
     if check_in_map(axe_mouvement_value, pattern_pos, 1, -1) == false {
         return false;

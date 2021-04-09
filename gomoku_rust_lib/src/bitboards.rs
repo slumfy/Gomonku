@@ -167,7 +167,7 @@ pub fn apply_bit(bitboards: &mut Bitboards, pos: usize, player: i8) {
     }
 }
 
-pub fn remove_bit(bitboards: &mut Bitboards, pos: usize, player: i8){
+pub fn remove_bit(bitboards: &mut Bitboards, pos: usize, player: i8) {
     let real_pos = pos % 64;
     let bit_pos = 63 - real_pos;
     let bitboards_index = pos / 64;
@@ -179,7 +179,7 @@ pub fn remove_bit(bitboards: &mut Bitboards, pos: usize, player: i8){
     }
 }
 
-pub fn print_bitboards(bitboards: &Bitboards){
+pub fn print_bitboards(bitboards: &Bitboards) {
     for x in 0..6 {
         println!("white_board[{}]: {:064b}", x, bitboards.white_board[x]);
         println!("black_board[{}]: {:064b}", x, bitboards.black_board[x]);

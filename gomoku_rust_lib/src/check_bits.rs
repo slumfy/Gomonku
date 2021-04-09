@@ -1,13 +1,14 @@
 use std::collections::HashMap;
 
-use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::apply_bit;
+use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::Bitboards;
 use crate::bitpattern::pattern_axes_dispatcher;
+use crate::global_var;
 use crate::state::State;
 
 pub fn check_pos_is_in_board(pos: i16) -> bool {
-    if pos < 0 || pos > 360 {
+    if pos < global_var::BOARD_MIN_LIMITS || pos > global_var::BOARD_MAX_LIMITS {
         return false;
     }
     return true;
@@ -40,12 +41,12 @@ fn check_overlapping_stone(pos: i16, bitboards: &Bitboards) -> bool {
 
 fn check_is_wrong_move(state: &State) -> i8 {
     if !check_pos_is_in_board(state.bit_current_move_pos) {
-        return -1;
+        return global_var::NOT_IN_BOARD_MOVE;
     }
     if !check_overlapping_stone(state.bit_current_move_pos, &state.bitboards) {
-        return -2;
+        return global_var::OVERLAPPING_STONE_MOVE;
     }
-    return 0;
+    return global_var::VALID_MOVE;
 }
 
 pub fn checking_and_apply_bits_move(state: &mut State) -> HashMap<String, i8> {
@@ -53,7 +54,11 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> HashMap<String, i8> {
     let pattern_return_infos: HashMap<String, i8>;
     let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state);
     bitboard_check.insert(String::from("is_wrong_move"), check_is_wrong_move(state));
-	apply_bit(&mut state.bitboards, state.bit_current_move_pos as usize, state.current_player);
+    apply_bit(
+        &mut state.bitboards,
+        state.bit_current_move_pos as usize,
+        state.current_player,
+    );
     pattern_return_infos = pattern_axes_dispatcher(
         &mut state.bitboards,
         &axes,

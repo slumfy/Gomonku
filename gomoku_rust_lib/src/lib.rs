@@ -16,7 +16,6 @@ mod search_space;
 mod state;
 mod tests;
 mod utils;
-use bitboards::create_bits_axes_from_pos;
 use bitboards::print_bitboards;
 use check::checking_move_biggest_alignment_and_stone_captured;
 use check_bits::checking_and_apply_bits_move;
@@ -165,11 +164,11 @@ fn place_stone(
     );
 
     let board_check: HashMap<String, i8> = checking_and_apply_bits_move(&mut state);
-    if board_check["is_wrong_move"] == 0 {
+    if board_check["is_wrong_move"] == global_var::VALID_MOVE {
         apply_state_move(&mut state, board_check["stone_captured"]);
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_check["stone_captured"])?;
-        if player == 1 {
+        if player == global_var::PLAYER_WHITE_NB {
             unsafe {
                 global_var::WHITE_CAPTURED_STONE += board_check["stone_captured"];
             }
@@ -185,7 +184,7 @@ fn place_stone(
         println!("Wrong move status = {:?}", board_check["is_wrong_move"]);
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-	let vecboard = bitboards::create_vec_from_bitboards(&state.bitboards);
+    let vecboard = bitboards::create_vec_from_bitboards(&state.bitboards);
     dict.set_item("board", vecboard)?;
     Ok(dict.to_object(py))
 }
