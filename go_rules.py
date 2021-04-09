@@ -77,7 +77,7 @@ class GoRules:
 
     def print_search_box(self, player, x, y, turn):
         opponant = -player.nb
-        box = gomoku_rust.get_rust_box(self.board, opponant, x, y, self.wining_position)
+        box = gomoku_rust.get_rust_box(self.board)
         return box
 
     def print_game_status(self):
