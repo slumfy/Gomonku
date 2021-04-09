@@ -28,7 +28,7 @@ pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[u64; 6]) -> i8 {
     }
 }
 
-fn is_no_stone_on_bitboard_pos(pos: i16, bitboards: &Bitboards) -> bool {
+fn check_overlapping_stone(pos: i16, bitboards: &Bitboards) -> bool {
     if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
         || get_bits_in_bitboard_from_pos(pos, &bitboards.black_board) != 0
     {
@@ -41,7 +41,7 @@ fn check_is_wrong_move(state: &State) -> i8 {
     if !check_pos_is_in_board(state.bit_current_move_pos) {
         return -1;
     }
-    if !is_no_stone_on_bitboard_pos(state.bit_current_move_pos, &state.bitboards) {
+    if !check_overlapping_stone(state.bit_current_move_pos, &state.bitboards) {
         return -2;
     }
     return 0;
