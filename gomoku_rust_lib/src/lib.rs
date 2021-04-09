@@ -7,7 +7,6 @@ use std::time::Instant;
 
 mod bitboards;
 mod bitpattern;
-mod check;
 mod check_bits;
 mod global_var;
 mod heuristic;
@@ -15,12 +14,9 @@ mod negamax;
 mod search_space;
 mod state;
 mod tests;
-mod utils;
 use bitboards::print_bitboards;
-use check::checking_move_biggest_alignment_and_stone_captured;
 use check_bits::checking_and_apply_bits_move;
 
-use crate::tests::__pyo3_get_function_test_double_triple;
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
@@ -38,7 +34,7 @@ fn ai_move(
     x: isize,
     y: isize,
     turn: isize,
-    wining_position: Vec<((isize, isize), i8)>,
+    wining_position: Vec<(usize, i8)>,
 ) -> PyResult<((isize, isize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
@@ -49,13 +45,11 @@ fn ai_move(
     }
     let mut mutboard: Vec<Vec<i8>> = board;
     let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
-    let bit_current_move_pos: i16 = (x * 19 + y) as i16;
-    let ai_move: ((isize, isize), i32);
+    let bit_current_move_pos: usize = (x * 19 + y) as usize;
+    let ai_move: (usize, i32);
     let mut state: state::State = state::create_new_state(
-        &mut mutboard,
         &mut bitboards,
         player,
-        (x, y),
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
@@ -63,7 +57,7 @@ fn ai_move(
     );
     let start = Instant::now();
     if turn == 0 {
-        ai_move = ((9, 9), 0);
+        ai_move = (180, 0);
     } else {
         let value = negamax::negamax(
             &mut state,
@@ -75,9 +69,12 @@ fn ai_move(
         ai_move = negamax::return_move(&mut state, value);
     }
     let end = Instant::now();
+    let ai_x_move = (ai_move.0 / 19) as isize;
+    let ai_y_move = (ai_move.0 % 19) as isize;
+
     println!(
         "previous_move: {:?} heuristic {}",
-        state.current_move, state.heuristic
+        state.bit_current_move_pos, state.heuristic
     );
     println!("time to process {:?}", end.duration_since(start));
     println!(
@@ -86,10 +83,10 @@ fn ai_move(
     );
     println!(
         "negamax in board {:?}:{} turn {}",
-        ai_move.0 .0, ALPHABET[ai_move.0 .1 as usize], turn
+        ai_x_move, ALPHABET[ai_y_move as usize], turn
     );
     println!("negamax {:?}", ai_move);
-    Ok(ai_move)
+    Ok(((ai_x_move, ai_y_move), ai_move.1))
 }
 
 // TODO : see if function still usefull and reimplement it with bitboard
@@ -139,7 +136,7 @@ fn place_stone(
     player: i8,
     x: isize,
     y: isize,
-    wining_position: Vec<((isize, isize), i8)>,
+    wining_position: Vec<(usize, i8)>,
 ) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
@@ -155,14 +152,12 @@ fn place_stone(
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
-    let bit_current_move_pos: i16 = (x * 19 + y) as i16;
+    let bit_current_move_pos: usize = (x * 19 + y) as usize;
 
     let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard); // BITBOARDS CREATION
     let mut state: state::State = state::create_new_state(
-        &mut mutboard,
         &mut bitboards,
         player,
-        (x, y),
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
@@ -171,7 +166,7 @@ fn place_stone(
 
     let board_check: HashMap<String, i8> = checking_and_apply_bits_move(&mut state);
     if board_check["is_wrong_move"] == global_var::VALID_MOVE {
-        apply_state_move(&mut state, board_check["stone_captured"]);
+        apply_state_move(&mut state);
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_check["stone_captured"])?;
         if player == global_var::PLAYER_WHITE_NB {
@@ -184,7 +179,13 @@ fn place_stone(
             }
         }
         if board_check["biggest_alignment"] >= 5 {
-            dict.set_item("wining_position", &state.current_move)?;
+            dict.set_item(
+                "wining_position",
+                (
+                    &state.bit_current_move_pos / 19,
+                    &state.bit_current_move_pos % 19,
+                ),
+            )?;
         }
     } else {
         println!("Wrong move status = {:?}", board_check["is_wrong_move"]);
@@ -199,7 +200,7 @@ fn place_stone(
 fn get_rust_box(board: Vec<Vec<i8>>) -> PyResult<Vec<(usize, usize)>> {
     let mutboard: Vec<Vec<i8>> = board;
     let bitboards = bitboards::create_bitboards_from_vec(&mutboard);
-    let search_bitbox = search_space::get_search_box_bitboard(bitboards);
+    let search_bitbox = search_space::get_search_box_bitboard(&bitboards);
     // println!("bitbox: {:?}", search_bitbox);
     let search_box = search_space::unwrap_bitlist(search_bitbox);
     // println!("searchbox: {:?}", search_box);
@@ -220,7 +221,6 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(test_returning_dict_to_python, m)?)?;
     m.add_function(wrap_pyfunction!(test_updating_from_other_function, m)?)?;
     m.add_function(wrap_pyfunction!(test_get_pydict, m)?)?;
-    m.add_function(wrap_pyfunction!(test_double_triple, m)?)?;
     Ok(())
 }
 

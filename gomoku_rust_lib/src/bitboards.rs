@@ -7,22 +7,29 @@ pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
 }
-pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) -> [[u16; 4]; 2] {
+pub fn create_bits_axes_from_pos(move_pos: usize, state: &State) -> [[u16; 4]; 2] {
     fn check_is_on_axe(
-        axe_increment_value: i16,
-        move_pos: i16,
-        i: i16,
+        axe_increment_value: usize,
+        move_pos: usize,
+        i: usize,
         direction_sign: i16,
     ) -> bool {
         if axe_increment_value == 1 {
-            if get_line_from_pos(move_pos + axe_increment_value * i * direction_sign)
-                != get_line_from_pos(move_pos)
+            if get_line_from_pos(
+                (move_pos as isize
+                    + axe_increment_value as isize * i as isize * direction_sign as isize)
+                    as usize,
+            ) != get_line_from_pos(move_pos)
             {
                 return false;
             }
         } else {
-            if get_line_from_pos(move_pos + axe_increment_value * i * direction_sign)
-                != get_line_from_pos(move_pos) + i * direction_sign
+            if get_line_from_pos(
+                (move_pos as isize
+                    + axe_increment_value as isize * i as isize * direction_sign as isize)
+                    as usize,
+            ) != (get_line_from_pos(move_pos) as isize + i as isize * direction_sign as isize)
+                as usize
             {
                 return false;
             }
@@ -35,10 +42,10 @@ pub fn create_bits_axes_from_pos(move_pos: i16, state: &State) -> [[u16; 4]; 2] 
         bits_axes_array_index: usize,
         bitboard: &[u64; 6],
         index: usize,
-        move_pos: i16,
-        axe_increment_value: i16,
-        i: i16,
-        move_index: i16,
+        move_pos: usize,
+        axe_increment_value: usize,
+        i: usize,
+        move_index: usize,
     ) {
         let mut ret;
 

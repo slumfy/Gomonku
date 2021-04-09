@@ -7,18 +7,18 @@ use crate::bitpattern::pattern_axes_dispatcher;
 use crate::global_var;
 use crate::state::State;
 
-pub fn check_pos_is_in_board(pos: i16) -> bool {
+pub fn check_pos_is_in_board(pos: usize) -> bool {
     if pos < global_var::BOARD_MIN_LIMITS || pos > global_var::BOARD_MAX_LIMITS {
         return false;
     }
     return true;
 }
 
-pub fn get_line_from_pos(pos: i16) -> i16 {
+pub fn get_line_from_pos(pos: usize) -> usize {
     return pos / 19;
 }
 
-pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[u64; 6]) -> i8 {
+pub fn get_bits_in_bitboard_from_pos(pos: usize, bitboard: &[u64; 6]) -> i8 {
     let real_pos = pos % 64;
     let bit_pos = 63 - real_pos;
     let bitboard_index = pos / 64;
@@ -30,7 +30,7 @@ pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[u64; 6]) -> i8 {
     }
 }
 
-fn check_overlapping_stone(pos: i16, bitboards: &Bitboards) -> bool {
+fn check_overlapping_stone(pos: usize, bitboards: &Bitboards) -> bool {
     if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
         || get_bits_in_bitboard_from_pos(pos, &bitboards.black_board) != 0
     {
