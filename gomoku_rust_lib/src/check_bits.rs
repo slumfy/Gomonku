@@ -30,7 +30,7 @@ pub fn get_bits_in_bitboard_from_pos(pos: i16, bitboard: &[u64; 6]) -> i8 {
 
 fn is_no_stone_on_bitboard_pos(pos: i16, bitboards: &Bitboards) -> bool {
     if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
-        || get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
+        || get_bits_in_bitboard_from_pos(pos, &bitboards.black_board) != 0
     {
         return false;
     }
