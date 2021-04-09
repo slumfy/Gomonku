@@ -1,7 +1,7 @@
-use crate::bitboards::Bitboards;
 use crate::bitboards::remove_bit;
-use crate::print_bitboards;
+use crate::bitboards::Bitboards;
 use crate::global_var::AXE_MOUVEMENT_VALUE;
+use crate::print_bitboards;
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, &str); 8] = [
     (0xF8, 6, "five"),         // five XXXXX...
@@ -34,7 +34,12 @@ static BLOCKER: [(u8, usize); 5] = [
     (0xA0, 3), // X.X.....
 ];
 
-pub fn pattern_axes_dispatcher(bitboards: &mut Bitboards, axes: &[[u16; 4]; 2], pos: usize, player: i8) {
+pub fn pattern_axes_dispatcher(
+    bitboards: &mut Bitboards,
+    axes: &[[u16; 4]; 2],
+    pos: usize,
+    player: i8,
+) {
     if player == 1 {
         println!("white player pattern in row:");
         // check and apply capture
@@ -49,7 +54,13 @@ pub fn pattern_axes_dispatcher(bitboards: &mut Bitboards, axes: &[[u16; 4]; 2], 
     }
 }
 
-fn check_capture(bitboards: &mut Bitboards, axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize, player: i8) {
+fn check_capture(
+    bitboards: &mut Bitboards,
+    axes: &[u16; 4],
+    blocker_axes: &[u16; 4],
+    pos: usize,
+    player: i8,
+) {
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
@@ -71,8 +82,11 @@ fn check_capture(bitboards: &mut Bitboards, axes: &[u16; 4], blocker_axes: &[u16
                         "axe: {}, direction {}, pos {}",
                         AXE_MOUVEMENT_VALUE[axe], s, pos
                     );
-                    if *s == 3 { apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], -1, pos, player); }
-                    else { apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], 1, pos, player); }
+                    if *s == 3 {
+                        apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], -1, pos, player);
+                    } else {
+                        apply_capture(bitboards, AXE_MOUVEMENT_VALUE[axe], 1, pos, player);
+                    }
                 }
                 print_bitboards(bitboards);
             }
@@ -80,11 +94,14 @@ fn check_capture(bitboards: &mut Bitboards, axes: &[u16; 4], blocker_axes: &[u16
     }
 }
 
-fn apply_capture(bitboards: &mut Bitboards, axe: usize, s: isize, pos: usize, player: i8){
+fn apply_capture(bitboards: &mut Bitboards, axe: usize, s: isize, pos: usize, player: i8) {
     let opponent = -player;
     for n in 1..3 {
-        if s == -1 { remove_bit(bitboards, pos - (n * axe), opponent); }
-        else { remove_bit(bitboards, pos + (n * axe), opponent);}
+        if s == -1 {
+            remove_bit(bitboards, pos - (n * axe), opponent);
+        } else {
+            remove_bit(bitboards, pos + (n * axe), opponent);
+        }
     }
 }
 
@@ -133,7 +150,7 @@ fn check_in_map(
     offset: i16,
     direction_sign: i16,
 ) -> bool {
-    let calcul = (pattern_pos + axe_mouvement_value * offset * direction_sign);
+    let calcul = pattern_pos + axe_mouvement_value * offset * direction_sign;
     if calcul < 0 {
         return false;
     }
@@ -182,9 +199,9 @@ fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
         blocker_axe >>= 1;
         println!("player axe: {:016b}", player_axe);
         for l in 0..4 {
-            let mut player_shifted = player_axe >> l;
+            let player_shifted = player_axe >> l;
             println!("player shifted: {:016b} l= {}", player_shifted, l);
-            let mut blocker_shifted = blocker_axe >> l;
+            let blocker_shifted = blocker_axe >> l;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             let mut is_bloked: usize = 0;
@@ -196,7 +213,7 @@ fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
                             // println!("blocker  cast: {:08b}", blocker_casted);
                             // println!("blocked checked: {:08b}", blocker_casted);
                             // println!("pattern checked: {:08b}", BLOCKER[b].0);
-                            let mut blocker_checker: u8 = (blocker_casted & BLOCKER[b].0);
+                            let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
                             // println!("BLOCKER CHECKER: {:08b}", blocker_checker);
                             // println!("l {} length {}", l , PATTERN[p].1);
                             if blocker_checker == BLOCKER[b].0 {
