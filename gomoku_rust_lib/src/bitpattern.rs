@@ -6,11 +6,11 @@ use crate::global_var::AXE_MOUVEMENT_VALUE;
 use crate::print_bitboards;
 
 // patern need to sort by order of check
-static PATTERN: [(u8, usize, &str); 8] = [
-    (0xF8, 6, "five"),         // five XXXXX...
-    (0x74, 7, "split four 3"), // split four 3 .XXX.X..
-    (0x6C, 7, "split four 2"), // split four 2 .XX.XX..
-    (0x5C, 7, "split four 1"), // split four 1 .X.XXX..
+static PATTERN: [(u8, usize, usize ,&str); 8] = [
+    (0xF8, 6, 0, "five"),         // five XXXXX...
+    (0x74, 7, 4, "split four 3"), // split four 3 .XXX.X..
+    (0x6C, 7, 3, "split four 2"), // split four 2 .XX.XX..
+    (0x5C, 7, 2, "split four 1"), // split four 1 .X.XXX..
     // (0xE8, 7, "close split four 3"),    // close split four 3 XXX.X...
     // (0xD8, 7, "close split four 2"),    // close split four 2 XX.XX...
     // (0xB8, 7, "close split four 1"),    // close split four 1 X.XXX...
@@ -18,15 +18,15 @@ static PATTERN: [(u8, usize, &str); 8] = [
     // (0xB0, 5, "close split three"),     // close split three X.XX....
     // (0xD0, 5, "close split three rev"), // close split three rev XX.X....
     // (0xE0, 4, "close three"),           // close three XXX.....
-    (0x78, 6, "open four"),            // open four .XXXX...
-    (0x68, 6, "open split three"),     // open split three .X.XX...
-    (0x58, 6, "open split three rev"), // open split three rev .XX.X...
-    (0x70, 5, "open three"),           // open three  .XXX....
+    (0x78, 6, 0, "open four"),            // open four .XXXX...
+    (0x58, 6, 2, "open split three"),     // open split three .X.XX...
+    (0x68, 6, 3, "open split three rev"), // open split three rev .XX.X...
+    (0x70, 5, 0, "open three")           // open three  .XXX....
 ];
 
 static CAPTURE_PATTERN: [(u8, usize, &str); 2] = [
-    (0x90, 5, "capturing pair"), // eat pair	  X..X....
-    (0x60, 4, "open double"),    // open double .XX.....
+    (0x90, 5, "capturing pair"), // capturing pair	X..X....
+    (0x60, 4, "open double"),    // open double 	.XX.....
 ];
 
 static BLOCKER: [(u8, usize); 5] = [
@@ -209,12 +209,12 @@ fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
         print_axe_value(axe);
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
-        let mut found_pattern: (&str, usize) = ("", 0);
+        let mut found_pattern: usize = PATTERN.len();
         player_axe >>= 1;
         blocker_axe >>= 1;
         println!("player axe: {:016b}", player_axe);
-        for l in 0..4 {
-            let player_shifted = player_axe >> l;
+        for l in 0..6 {
+            let mut player_shifted = player_axe >> l;
             println!("player shifted: {:016b} l= {}", player_shifted, l);
             let blocker_shifted = blocker_axe >> l;
             let player_casted = player_shifted as u8;
@@ -230,8 +230,11 @@ fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
                             // println!("pattern checked: {:08b}", BLOCKER[b].0);
                             let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
                             // println!("BLOCKER CHECKER: {:08b}", blocker_checker);
-                            // println!("l {} length {}", l , PATTERN[p].1);
-                            if blocker_checker == BLOCKER[b].0 {
+							 println!("pattern {}", PATTERN[p].3);
+							if PATTERN[p].2 != 0 && check_one_bit_in_pattern(&blocker_casted,PATTERN[p].2) == true {
+								is_bloked = 2;
+							}
+                            else if blocker_checker == BLOCKER[b].0 {
                                 is_bloked = 2;
                             } else if blocker_checker != 0 {
                                 is_bloked = 1;
@@ -248,24 +251,33 @@ fn pattern_axes_finder(axes: &[u16; 4], blocker_axes: &[u16; 4], pos: usize) {
                             }
                         }
                     }
-                    if is_bloked < 2 {
-                        found_pattern = (PATTERN[p].2.clone(), is_bloked);
-                        println!("{} found {} blocker", PATTERN[p].2, is_bloked);
+                    if is_bloked < 2 && p < found_pattern {
+                        found_pattern = p;
+                        println!("{} found {} blocker", PATTERN[p].3, is_bloked);
                         break;
                     }
                 }
-                if found_pattern.0 != "" {
-                    break;
-                }
             }
         }
+		if found_pattern < PATTERN.len() {
         println!(
-            "PATTERN FOUND {} BLOCKER FOUND {}",
-            found_pattern.0, found_pattern.1
-        );
+            "PATTERN FOUND {}",
+            PATTERN[found_pattern].3, 
+        );}
     }
 }
 
+fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
+	let checked_pos = 8 - length;
+	// let mask : u8 = 1 << checked_pos;
+	let mask : u8 = 0x80 >> length;
+	println!("mask {:08b} legnth {} , checkpos {}", mask, length, checked_pos);
+	if pattern & mask != 0 {
+        return true;
+    } else {
+        return false;
+    }
+}
 // TO DO
 // fn check_unblocable_five(bitboards: &mut Bitboards , pos: usize, axe: usize, player: i8) -> bool {
 // 	for n in 0..5 {
