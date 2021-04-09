@@ -63,8 +63,21 @@ pub fn pattern_axes_dispatcher(
         check_flank(&axes[1], &axes[0]);
         axe_pattern = pattern_axes_finder(&axes[1], &axes[0], pos);
     }
+	println!("double triple {}", check_double_triple(axe_pattern));
 	println!("pattern on axe {:?}", axe_pattern);
     return pattern_return_infos;
+}
+
+fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
+	let mut count = 0; 
+	for axe in 0..axe_pattern.len() {
+		if axe_pattern[axe].1 == 0 {
+			if axe_pattern[axe].0 == 7 || axe_pattern[axe].0 == 6 {
+				count += 1;
+			}
+		}
+	}
+	return if count >= 2 {false} else {true};
 }
 
 fn check_and_apply_capture(
