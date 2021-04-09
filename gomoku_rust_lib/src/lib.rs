@@ -52,7 +52,6 @@ fn ai_move(
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
-        wining_position,
     );
     let start = Instant::now();
     if turn == 0 {
@@ -158,7 +157,6 @@ fn place_stone(
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
-        wining_position,
     );
 
     let board_check: HashMap<String, i8> = checking_and_apply_bits_move(&mut state);
