@@ -92,39 +92,45 @@ fn ai_move(
     Ok(ai_move)
 }
 
+// TODO : see if function still usefull and reimplement it with bitboard
+// #[pyfunction]
+// fn check_move_is_a_fiverow(
+//     board: Vec<Vec<i8>>,
+//     player: i8,
+//     x: isize,
+//     y: isize,
+//     wining_position: Vec<((isize, isize), i8)>,
+// ) -> PyResult<bool> {
+//     let mut mutboard: Vec<Vec<i8>> = board;
+//     let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
+//     let white_captured_stone: i8;
+//     let black_captured_stone: i8;
+//     unsafe {
+//         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
+//         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
+//     }
+//     let bit_current_move_pos: i16 = (x * 19 + y) as i16;
+//     let state: state::State = state::create_new_state(
+//         &mut mutboard,
+//         &mut bitboards,
+//         player,
+//         (x, y),
+//         bit_current_move_pos,
+//         white_captured_stone,
+//         black_captured_stone,
+//         wining_position,
+//     );
+//     let alignement = checking_move_biggest_alignment_and_stone_captured(&state);
+//     if alignement["biggest_alignment"] >= 5 {
+//         Ok(true)
+//     } else {
+//         Ok(false)
+//     }
+// }
+
 #[pyfunction]
-fn check_move_is_a_fiverow(
-    board: Vec<Vec<i8>>,
-    player: i8,
-    x: isize,
-    y: isize,
-    wining_position: Vec<((isize, isize), i8)>,
-) -> PyResult<bool> {
-    let mut mutboard: Vec<Vec<i8>> = board;
-    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
-    let white_captured_stone: i8;
-    let black_captured_stone: i8;
-    unsafe {
-        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
-        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
-    }
-    let bit_current_move_pos: i16 = (x * 19 + y) as i16;
-    let state: state::State = state::create_new_state(
-        &mut mutboard,
-        &mut bitboards,
-        player,
-        (x, y),
-        bit_current_move_pos,
-        white_captured_stone,
-        black_captured_stone,
-        wining_position,
-    );
-    let alignement = checking_move_biggest_alignment_and_stone_captured(&state);
-    if alignement["biggest_alignment"] >= 5 {
-        Ok(true)
-    } else {
-        Ok(false)
-    }
+fn check_move_is_a_fiverow() -> PyResult<bool> {
+    Ok(true)
 }
 
 #[pyfunction]

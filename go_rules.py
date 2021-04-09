@@ -52,16 +52,7 @@ class GoRules:
                 if pl != player:
                     if pl.wining_position:
                         for position in pl.wining_position:
-                            if (
-                                gomoku_rust.check_move_is_a_fiverow(
-                                    self.board,
-                                    pl.nb,
-                                    position[0],
-                                    position[1],
-                                    self.wining_position,
-                                )
-                                == True
-                            ):
+                            if gomoku_rust.check_move_is_a_fiverow() == True:
                                 return pl.nb
                             else:
                                 pl.wining_position.remove(position)
