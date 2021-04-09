@@ -17,7 +17,6 @@ mod state;
 mod tests;
 mod utils;
 use bitboards::print_bitboards;
-use check::checking_move_biggest_alignment_and_stone_captured;
 use check_bits::checking_and_apply_bits_move;
 
 use crate::tests::__pyo3_get_function_test_double_triple;

@@ -63,12 +63,13 @@ pub fn pattern_axes_dispatcher(
         check_flank(&axes[1], &axes[0]);
         axe_pattern = pattern_axes_finder(&axes[1], &axes[0], pos);
     }
-    println!("double triple {}", check_double_triple(axe_pattern));
+	pattern_return_infos.insert(
+		String::from("double_triple"), check_double_triple(axe_pattern));
     println!("pattern on axe {:?}", axe_pattern);
     return pattern_return_infos;
 }
 
-fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
+fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> i8 {
     let mut count = 0;
     for axe in 0..axe_pattern.len() {
         if axe_pattern[axe].1 == 0 {
@@ -77,7 +78,7 @@ fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
             }
         }
     }
-    return if count >= 2 { false } else { true };
+    return if count >= 2 { 1 } else { 0 };
 }
 
 fn check_and_apply_capture(
@@ -322,6 +323,7 @@ fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
         return false;
     }
 }
+
 // TO DO
 // fn check_unblocable_five(bitboards: &mut Bitboards , pos: usize, axe: usize, player: i8) -> bool {
 // 	for n in 0..5 {

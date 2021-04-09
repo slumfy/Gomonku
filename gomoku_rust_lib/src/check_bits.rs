@@ -65,6 +65,9 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> HashMap<String, i8> {
         state.bit_current_move_pos as usize,
         state.current_player,
     );
+	if pattern_return_infos["double_triple"] == 1 {
+		*bitboard_check.get_mut("is_wrong_move").unwrap() = -1;
+	}
     bitboard_check.insert(String::from("biggest_alignment"), 1);
     bitboard_check.insert(
         String::from("stone_captured"),
