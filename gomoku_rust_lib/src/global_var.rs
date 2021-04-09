@@ -18,8 +18,8 @@ pub static AXE_MOUVEMENT_VALUE: [usize; 4] = [20, 19, 18, 1];
 
 // BOARD VAR
 
-pub static BOARD_MIN_LIMITS: i16 = 0;
-pub static BOARD_MAX_LIMITS: i16 = 360;
+pub static BOARD_MIN_LIMITS: usize = 0;
+pub static BOARD_MAX_LIMITS: usize = 360;
 
 // Move validation check
 pub static VALID_MOVE: i8 = 0;
