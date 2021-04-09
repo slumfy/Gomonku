@@ -43,8 +43,7 @@ fn ai_move(
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
-    let mut mutboard: Vec<Vec<i8>> = board;
-    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
+    let mut bitboards = bitboards::create_bitboards_from_vec(&board);
     let bit_current_move_pos: usize = (x * 19 + y) as usize;
     let ai_move: (usize, i32);
     let mut state: state::State = state::create_new_state(
@@ -86,7 +85,7 @@ fn ai_move(
         ai_x_move, ALPHABET[ai_y_move as usize], turn
     );
     println!("negamax {:?}", ai_move);
-    Ok(((ai_x_move, ai_y_move), ai_move.1))
+    Ok(((ai_y_move, ai_x_move), ai_move.1))
 }
 
 // TODO : see if function still usefull and reimplement it with bitboard
@@ -132,7 +131,7 @@ fn check_move_is_a_fiverow() -> PyResult<bool> {
 
 #[pyfunction]
 fn place_stone(
-    board: Vec<Vec<i8>>,
+    mut board: Vec<Vec<i8>>,
     player: i8,
     x: isize,
     y: isize,
@@ -144,8 +143,6 @@ fn place_stone(
 
     println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
-    let mut mutboard: Vec<Vec<i8>> = board;
-
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     unsafe {
@@ -154,7 +151,7 @@ fn place_stone(
     }
     let bit_current_move_pos: usize = (x * 19 + y) as usize;
 
-    let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard); // BITBOARDS CREATION
+    let mut bitboards = bitboards::create_bitboards_from_vec(&board); // BITBOARDS CREATION
     let mut state: state::State = state::create_new_state(
         &mut bitboards,
         player,
@@ -191,8 +188,8 @@ fn place_stone(
         println!("Wrong move status = {:?}", board_check["is_wrong_move"]);
         dict.set_item("game_status", board_check["is_wrong_move"])?;
     }
-    let vecboard = bitboards::create_vec_from_bitboards(&state.bitboards);
-    dict.set_item("board", vecboard)?;
+    board = bitboards::create_vec_from_bitboards(&state.bitboards);
+    dict.set_item("board", board)?;
     Ok(dict.to_object(py))
 }
 

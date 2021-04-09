@@ -1,7 +1,6 @@
 use crate::bitboards::Bitboards;
 use crate::heuristic::heuristic;
 
-#[path = "search_space.rs"]
 use crate::search_space::get_search_box_bitboard;
 
 pub struct State {
@@ -77,8 +76,8 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     return childs_list;
 }
 
-pub fn apply_state_move(state: &mut State) {}
+pub fn apply_state_move(_state: &mut State) {}
 
-pub fn state_is_terminated(state: &mut State) -> bool {
+pub fn state_is_terminated(_state: &mut State) -> bool {
     return false;
 }
