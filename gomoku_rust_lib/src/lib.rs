@@ -20,7 +20,6 @@ use check_bits::checking_and_apply_bits_move;
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
-use state::apply_state_move;
 
 static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -35,7 +34,7 @@ fn ai_move(
     y: usize,
     turn: isize,
     wining_position: Vec<(usize, i8)>,
-) -> PyResult<((isize, isize), i32)> {
+) -> PyResult<((usize, usize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -67,8 +66,8 @@ fn ai_move(
         ai_move = negamax::return_move(&mut state, value);
     }
     let end = Instant::now();
-    let ai_x_move = (ai_move.0 / 19) as isize;
-    let ai_y_move = (ai_move.0 % 19) as isize;
+    let ai_x_move = (ai_move.0 / 19) as usize;
+    let ai_y_move = (ai_move.0 % 19) as usize;
 
     println!(
         "previous_move: {:?} heuristic {}",
@@ -84,7 +83,7 @@ fn ai_move(
         ai_x_move, ALPHABET[ai_y_move as usize], turn
     );
     println!("negamax {:?}", ai_move);
-    Ok(((ai_y_move, ai_x_move), ai_move.1))
+    Ok(((ai_x_move, ai_y_move), ai_move.1))
 }
 
 // TODO : see if function still usefull and reimplement it with bitboard
@@ -161,7 +160,6 @@ fn place_stone(
 
     let board_check: HashMap<String, i8> = checking_and_apply_bits_move(&mut state);
     if board_check["is_wrong_move"] == global_var::VALID_MOVE {
-        apply_state_move(&mut state);
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_check["stone_captured"])?;
         if player == global_var::PLAYER_WHITE_NB {

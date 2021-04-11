@@ -31,7 +31,6 @@ pub fn create_new_state(
         win_state: 0,
         bit_current_move_pos: bit_current_move_pos,
     };
-    new_state.heuristic = heuristic(&mut new_state);
     return new_state;
 }
 
@@ -52,15 +51,14 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.white_captured_stone,
             state.black_captured_stone,
         );
-        if child.heuristic > -1000 {
-            apply_state_move(&mut child);
+		child.heuristic = heuristic(&mut child);
+        if child.heuristic >= 0 {
             childs_list.push(child);
         }
     }
     return childs_list;
 }
 
-pub fn apply_state_move(_state: &mut State) {}
 
 pub fn state_is_terminated(_state: &mut State) -> bool {
     return false;

@@ -47,7 +47,7 @@ pub fn pattern_axes_dispatcher(
     let mut pattern_return_infos: HashMap<String, i8> = HashMap::new();
     let mut axe_pattern: [(usize, usize); 4] = [(0, 0), (0, 0), (0, 0), (0, 0)];
     if player == global_var::PLAYER_WHITE_NB {
-        println!("white player pattern in row:");
+        // println!("white player pattern in row:");
         // check and apply capture
         pattern_return_infos.insert(
             String::from("stone_captured"),
@@ -56,7 +56,7 @@ pub fn pattern_axes_dispatcher(
         check_flank(&axes[0], &axes[1]);
         axe_pattern = pattern_axes_finder(bitboards,&axes[0], &axes[1], pos, player);
     } else if player == global_var::PLAYER_BLACK_NB {
-        println!("black player pattern in row:");
+        // println!("black player pattern in row:");
         pattern_return_infos.insert(
             String::from("stone_captured"),
             check_and_apply_capture(bitboards, &axes[1], &axes[0], pos, player),
@@ -66,7 +66,7 @@ pub fn pattern_axes_dispatcher(
     }
 	pattern_return_infos.insert(
 		String::from("double_triple"), check_double_triple(axe_pattern));
-    println!("pattern on axe {:?}", axe_pattern);
+    // println!("pattern on axe {:?}", axe_pattern);
     return pattern_return_infos;
 }
 
@@ -95,24 +95,24 @@ fn check_and_apply_capture(
         let mut blocker_axe = blocker_axes[axe];
         player_axe >>= 1;
         blocker_axe >>= 1;
-        println!("player axe: {:016b}", player_axe);
-        println!("block  axe: {:016b}", blocker_axe);
+        // println!("player axe: {:016b}", player_axe);
+        // println!("block  axe: {:016b}", blocker_axe);
         let shift: [usize; 2] = [0, 3];
         for s in shift.iter() {
             let player_shifted = player_axe >> s;
-            println!("player shifted: {:016b} l= {}", player_shifted, s);
+            // println!("player shifted: {:016b} l= {}", player_shifted, s);
             let blocker_shifted = blocker_axe >> s;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
                 if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                    println!("captured");
-                    println!(
-                        "axe: {}, direction {}, pos {}",
-                        global_var::AXE_MOUVEMENT_VALUE[axe],
-                        s,
-                        pos
-                    );
+                    // println!("captured");
+                    // println!(
+                    //     "axe: {}, direction {}, pos {}",
+                    //     global_var::AXE_MOUVEMENT_VALUE[axe],
+                    //     s,
+                    //     pos
+                    // );
                     if *s == 3 {
                         stone_captured += 2;
                         apply_capture(
@@ -133,7 +133,7 @@ fn check_and_apply_capture(
                         );
                     }
                 }
-                print_bitboards(bitboards);
+                // print_bitboards(bitboards);
             }
         }
     }
@@ -158,8 +158,8 @@ fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> usize {
         let mut blocker_axe = blocker_axes[axe];
         player_axe >>= 1;
         blocker_axe >>= 1;
-        println!("player axe: {:016b}", player_axe);
-        println!("block  axe: {:016b}", blocker_axe);
+        // println!("player axe: {:016b}", player_axe);
+        // println!("block  axe: {:016b}", blocker_axe);
         let shift: [usize; 2] = [1, 2];
         for s in shift.iter() {
             let player_shifted = player_axe >> s;
@@ -168,13 +168,13 @@ fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> usize {
             let blocker_casted = blocker_shifted as u8;
             if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
                 if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 && flank_value != 1 {
-                    println!("blocked");
+                    // println!("blocked");
 					flank_value = 2;
                 } else if (blocker_casted & CAPTURE_PATTERN[0].0) != 0 {
-                    println!("flank");
+                    // println!("flank");
 					flank_value = 1;
                 } else {
-                    println!("free");
+                    // println!("free");
                 }
             }
         }
@@ -212,12 +212,12 @@ fn check_in_map(
             return false;
         }
     } else {
-        println!("checkpos {} pos {}", calcul, pattern_pos);
-        println!(
-            "line check {} diff {}",
-            line_checked,
-            line + offset * direction_sign
-        );
+        // println!("checkpos {} pos {}", calcul, pattern_pos);
+        // println!(
+        //     "line check {} diff {}",
+        //     line_checked,
+        //     line + offset * direction_sign
+        // );
         if line_checked != line + offset * direction_sign {
             return false;
         }
@@ -247,7 +247,7 @@ fn pattern_axes_finder(
     let mut return_pattern: [(usize, usize); 4] = [(0, 0), (0, 0), (0, 0), (0, 0)];
     let mut is_blocked: usize;
     for axe in 0..axes.len() {
-        print_axe_value(axe);
+        // print_axe_value(axe);
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
         let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
@@ -325,10 +325,10 @@ fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
     let checked_pos = 8 - length;
     // let mask : u8 = 1 << checked_pos;
     let mask: u8 = 0x80 >> length;
-    println!(
-        "mask {:08b} legnth {} , checkpos {}",
-        mask, length, checked_pos
-    );
+    // println!(
+    //     "mask {:08b} legnth {} , checkpos {}",
+    //     mask, length, checked_pos
+    // );
     if pattern & mask != 0 {
         return true;
     } else {

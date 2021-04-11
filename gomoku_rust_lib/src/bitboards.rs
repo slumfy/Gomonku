@@ -130,10 +130,10 @@ pub fn create_bits_axes_from_pos(move_pos: usize, bitboards: &Bitboards, player:
             );
         }
 
-        println!("axes value = {:?}", axe_increment_value);
-        println!("bits_axes_array white here = {:?}", bits_axes_array[0]);
-        println!("");
-        println!("bits_axes_array black here = {:?}", bits_axes_array[1]);
+        // println!("axes value = {:?}", axe_increment_value);
+        // println!("bits_axes_array white here = {:?}", bits_axes_array[0]);
+        // println!("");
+        // println!("bits_axes_array black here = {:?}", bits_axes_array[1]);
 
         index += 1;
     }
