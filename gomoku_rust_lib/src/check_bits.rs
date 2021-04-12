@@ -4,6 +4,7 @@ use crate::bitboards::Bitboards;
 use crate::bitpattern::pattern_axes_dispatcher;
 use crate::global_var;
 use crate::heuristic::BoardStateInfo;
+use crate::print::print_axes;
 use crate::state::State;
 
 pub fn get_line_from_pos(pos: usize) -> usize {
@@ -55,6 +56,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             &state.bitboards,
             state.current_player,
         );
+        print_axes(&axes);
         apply_bit(
             &mut state.bitboards,
             state.bit_current_move_pos as usize,

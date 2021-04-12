@@ -264,7 +264,7 @@ fn pattern_axes_finder(
         let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
         player_axe >>= 1;
         blocker_axe >>= 1;
-		println!("player axe: {:016b}", player_axe);
+        // println!("player axe: {:016b}", player_axe);
         for l in 0..6 {
             let player_shifted = player_axe >> l;
             let blocker_shifted = blocker_axe >> l;
@@ -274,7 +274,7 @@ fn pattern_axes_finder(
             for p in 0..PATTERN.len() {
                 if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
                     if p == 0 {
-						println!("FIVE");
+                        // println!("FIVE");
                         if check_is_unblockable_five(bitboards, pos - l, axe, player) == true {
                             return [(0, 5), (0, 5), (0, 5), (0, 5)];
                         } else {

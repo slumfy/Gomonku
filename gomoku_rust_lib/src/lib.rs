@@ -10,6 +10,7 @@ mod check_bits;
 mod global_var;
 mod heuristic;
 mod negamax;
+mod print;
 mod search_space;
 mod state;
 mod tests;
@@ -159,7 +160,7 @@ fn place_stone(
         if board_check.is_winning.1 != 0 {
             dict.set_item("wining_position", board_check.is_winning)?;
         }
-        println!("winstate =>> {:?}", board_check.is_winning);
+        // println!("winstate =>> {:?}", board_check.is_winning);
     } else {
         println!("Wrong move status = {:?}", board_check.is_wrong_move);
         dict.set_item("game_status", board_check.is_wrong_move)?;
