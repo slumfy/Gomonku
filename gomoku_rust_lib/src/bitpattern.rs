@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::remove_bit;
 use crate::bitboards::Bitboards;
@@ -39,7 +37,7 @@ pub fn pattern_axes_dispatcher(
     pos: usize,
     player: i8,
 ) {
-    let mut axe_pattern: [(usize, usize); 4] = [(0, 0), (0, 0), (0, 0), (0, 0)];
+    let axe_pattern: [(usize, usize); 4];
     if player == global_var::PLAYER_WHITE_NB {
         // println!("white player pattern in row:");
         // check and apply capture

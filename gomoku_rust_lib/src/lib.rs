@@ -97,7 +97,7 @@ fn check_move_is_still_winning(
     board: Vec<Vec<i8>>,
     wining_position: (usize, i8),
 ) -> PyResult<bool> {
-    let mut bitboards = bitboards::create_bitboards_from_vec(&board);
+    let bitboards = bitboards::create_bitboards_from_vec(&board);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     unsafe {
@@ -157,7 +157,7 @@ fn place_stone(
             }
         }
         if board_check.is_winning.1 != 0 {
-            dict.set_item("wining_position", (board_check.is_winning))?;
+            dict.set_item("wining_position", board_check.is_winning)?;
         }
         println!("winstate =>> {:?}", board_check.is_winning);
     } else {

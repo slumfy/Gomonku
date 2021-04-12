@@ -21,7 +21,7 @@ pub fn create_new_state(
     white_captured_stone: i8,
     black_captured_stone: i8,
 ) -> State {
-    let mut new_state = State {
+    let new_state = State {
         bitboards: bitboards.clone(),
         current_player: player,
         white_captured_stone: white_captured_stone,
@@ -52,7 +52,9 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.black_captured_stone,
         );
         child.heuristic = heuristic(&mut child);
-		if child.heuristic > 0 {println!("childheur {}" ,child.heuristic);}
+        if child.heuristic > 0 {
+            println!("childheur {}", child.heuristic);
+        }
         if child.heuristic >= 0 {
             childs_list.push(child);
         }
