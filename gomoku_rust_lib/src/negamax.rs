@@ -82,8 +82,8 @@ pub fn print_heuristic_table(state: &State) {
         "xmax: {}, xmin: {}, ymax: {},ymin: {}",
         xmax, xmin, ymax, ymin
     );
-    for x in xmin..xmax {
-        for y in ymin..ymax {
+    for x in 0..19 {
+        for y in 0..19 {
             for idx in 0..len {
                 if (state.available_move[idx].bit_current_move_pos)/19 == x
                     && (state.available_move[idx].bit_current_move_pos)%19 == y
@@ -93,7 +93,7 @@ pub fn print_heuristic_table(state: &State) {
                 }
             }
             if trigger == 0 {
-                line.push(-5);
+                line.push(-1111);
             } else {
                 trigger = 0;
             }
@@ -103,7 +103,7 @@ pub fn print_heuristic_table(state: &State) {
     }
     println!("heuristic table:");
     for x in 0..table.len() {
-        println!("{:?}", table[x]);
+        println!("{:5?}", table[x]);
     }
 }
 

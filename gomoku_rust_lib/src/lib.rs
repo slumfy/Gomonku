@@ -14,6 +14,7 @@ mod negamax;
 mod search_space;
 mod state;
 mod tests;
+use heuristic::Board_state_info;
 use bitboards::print_bitboards;
 use check_bits::checking_and_apply_bits_move;
 
@@ -158,31 +159,31 @@ fn place_stone(
         black_captured_stone,
     );
 
-    let board_check: HashMap<String, i8> = checking_and_apply_bits_move(&mut state);
-    if board_check["is_wrong_move"] == global_var::VALID_MOVE {
+    let board_check: Board_state_info= checking_and_apply_bits_move(&mut state);
+    if board_check.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
-        dict.set_item("stone_captured", board_check["stone_captured"])?;
+        dict.set_item("stone_captured", board_check.stone_captured)?;
         if player == global_var::PLAYER_WHITE_NB {
             unsafe {
-                global_var::WHITE_CAPTURED_STONE += board_check["stone_captured"];
+                global_var::WHITE_CAPTURED_STONE += board_check.stone_captured;
             }
         } else {
             unsafe {
-                global_var::BLACK_CAPTURED_STONE += board_check["stone_captured"];
+                global_var::BLACK_CAPTURED_STONE += board_check.stone_captured;
             }
         }
-        if board_check["biggest_alignment"] >= 5 {
-            dict.set_item(
-                "wining_position",
-                (
-                    &state.bit_current_move_pos / 19,
-                    &state.bit_current_move_pos % 19,
-                ),
-            )?;
-        }
+        // if board_check["biggest_alignment"] >= 5 {
+        //     dict.set_item(
+        //         "wining_position",
+        //         (
+        //             &state.bit_current_move_pos / 19,
+        //             &state.bit_current_move_pos % 19,
+        //         ),
+        //     )?;
+        // }
     } else {
-        println!("Wrong move status = {:?}", board_check["is_wrong_move"]);
-        dict.set_item("game_status", board_check["is_wrong_move"])?;
+        println!("Wrong move status = {:?}", board_check.is_wrong_move);
+        dict.set_item("game_status", board_check.is_wrong_move)?;
     }
     board = bitboards::create_vec_from_bitboards(&state.bitboards);
     dict.set_item("board", board)?;

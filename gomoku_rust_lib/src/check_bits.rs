@@ -6,6 +6,7 @@ use crate::bitboards::Bitboards;
 use crate::bitpattern::pattern_axes_dispatcher;
 use crate::global_var;
 use crate::state::State;
+use crate::heuristic::Board_state_info;
 
 pub fn get_line_from_pos(pos: usize) -> usize {
     return pos / 19;
@@ -39,38 +40,35 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
     return global_var::VALID_MOVE;
 }
 
-pub fn checking_and_apply_bits_move(state: &mut State) -> HashMap<String, i8> {
-    let mut bitboard_check: HashMap<String, i8> = HashMap::new();
-    let pattern_return_infos: HashMap<String, i8>;
-    bitboard_check.insert(String::from("is_wrong_move"), check_is_wrong_move(state));
-    if bitboard_check["is_wrong_move"] != global_var::VALID_MOVE {
-        return bitboard_check;
+pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
+    let mut bitboard_info = Board_state_info {
+		is_wrong_move : 0,
+		stone_captured : 0,
+		flank : 0,
+		pattern_value: 0,
+		is_winning: 0
+	};
+	bitboard_info.is_wrong_move = check_is_wrong_move(state);
+    if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
+        return bitboard_info;
     } else {
         let axes = create_bits_axes_from_pos(
             state.bit_current_move_pos,
             &state.bitboards,
             state.current_player,
         );
-
         apply_bit(
             &mut state.bitboards,
             state.bit_current_move_pos as usize,
             state.current_player,
         );
-        pattern_return_infos = pattern_axes_dispatcher(
+        pattern_axes_dispatcher(
+			&mut bitboard_info,
             &mut state.bitboards,
             &axes,
             state.bit_current_move_pos as usize,
             state.current_player,
         );
-        if pattern_return_infos["double_triple"] == 1 {
-            *bitboard_check.get_mut("is_wrong_move").unwrap() = -1;
-        }
-        bitboard_check.insert(String::from("biggest_alignment"), 1);
-        bitboard_check.insert(
-            String::from("stone_captured"),
-            pattern_return_infos["stone_captured"],
-        );
-        return bitboard_check;
+        return bitboard_info;
     }
 }

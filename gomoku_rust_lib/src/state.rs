@@ -60,6 +60,12 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 }
 
 
-pub fn state_is_terminated(_state: &mut State) -> bool {
+pub fn state_is_terminated(state: &mut State) -> bool {
+	if state.white_captured_stone >= 10||state.black_captured_stone >= 10 {
+		return true;
+	}
+	if state.heuristic == 100000 {
+		return true;
+	}
     return false;
 }
