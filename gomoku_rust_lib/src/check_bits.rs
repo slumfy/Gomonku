@@ -40,7 +40,6 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
 
 pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
     let mut bitboard_info = Board_state_info {
-<<<<<<< HEAD
 		is_wrong_move : 0,
 		stone_captured : 0,
 		flank : 0,
@@ -48,15 +47,6 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
 		is_winning: 362
 	};
 	bitboard_info.is_wrong_move = check_is_wrong_move(state);
-=======
-        is_wrong_move: 0,
-        stone_captured: 0,
-        flank: 0,
-        pattern_value: 0,
-        is_winning: 0,
-    };
-    bitboard_info.is_wrong_move = check_is_wrong_move(state);
->>>>>>> 9bf855299f221c43b4b4277c0262239966c82349
     if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
         return bitboard_info;
     } else {
