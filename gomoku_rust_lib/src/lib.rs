@@ -14,10 +14,10 @@ mod negamax;
 mod search_space;
 mod state;
 mod tests;
-use bitboards::print_bitboards;
-use check_bits::checking_and_apply_bits_move;
 use crate::bitpattern::check_pos_still_win;
 use crate::heuristic::Board_state_info;
+use bitboards::print_bitboards;
+use check_bits::checking_and_apply_bits_move;
 
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
@@ -35,7 +35,7 @@ fn ai_move(
     x: usize,
     y: usize,
     turn: isize,
-    wining_position: (usize,i8),
+    wining_position: (usize, i8),
 ) -> PyResult<((usize, usize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
@@ -91,7 +91,7 @@ fn ai_move(
 #[pyfunction]
 fn check_move_is_still_winning(
     board: Vec<Vec<i8>>,
-    wining_position: (usize,i8),
+    wining_position: (usize, i8),
 ) -> PyResult<bool> {
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
     let white_captured_stone: i8;
@@ -100,7 +100,7 @@ fn check_move_is_still_winning(
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
     }
-    let still_winning = check_pos_still_win(bitboards,wining_position.0,wining_position.1);
+    let still_winning = check_pos_still_win(bitboards, wining_position.0, wining_position.1);
     if still_winning == true {
         Ok(true)
     } else {
@@ -114,7 +114,7 @@ fn place_stone(
     player: i8,
     x: usize,
     y: usize,
-    wining_position: (usize,i8),
+    wining_position: (usize, i8),
 ) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
@@ -152,13 +152,8 @@ fn place_stone(
                 global_var::BLACK_CAPTURED_STONE += board_check.stone_captured;
             }
         }
-        if board_check.is_winning.1 != 0  {
-            dict.set_item(
-                "wining_position",
-                (
-                    board_check.is_winning
-                ),
-            )?;
+        if board_check.is_winning.1 != 0 {
+            dict.set_item("wining_position", (board_check.is_winning))?;
         }
 		println!("winstate =>> {:?}", board_check.is_winning);
     } else {
