@@ -371,7 +371,7 @@ fn check_is_unblockable_five(
 }
 
 //TODO
-fn check_free_Development() {}
+fn check_free_development() {}
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
     println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
