@@ -1,12 +1,10 @@
-use std::collections::HashMap;
-
 use crate::bitboards::apply_bit;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::Bitboards;
 use crate::bitpattern::pattern_axes_dispatcher;
 use crate::global_var;
-use crate::state::State;
 use crate::heuristic::Board_state_info;
+use crate::state::State;
 
 pub fn get_line_from_pos(pos: usize) -> usize {
     return pos / 19;
@@ -42,6 +40,7 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
 
 pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
     let mut bitboard_info = Board_state_info {
+<<<<<<< HEAD
 		is_wrong_move : 0,
 		stone_captured : 0,
 		flank : 0,
@@ -49,6 +48,15 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
 		is_winning: 362
 	};
 	bitboard_info.is_wrong_move = check_is_wrong_move(state);
+=======
+        is_wrong_move: 0,
+        stone_captured: 0,
+        flank: 0,
+        pattern_value: 0,
+        is_winning: 0,
+    };
+    bitboard_info.is_wrong_move = check_is_wrong_move(state);
+>>>>>>> 9bf855299f221c43b4b4277c0262239966c82349
     if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
         return bitboard_info;
     } else {
@@ -63,7 +71,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
             state.current_player,
         );
         pattern_axes_dispatcher(
-			&mut bitboard_info,
+            &mut bitboard_info,
             &mut state.bitboards,
             &axes,
             state.bit_current_move_pos as usize,

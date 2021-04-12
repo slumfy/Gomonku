@@ -14,10 +14,13 @@ mod negamax;
 mod search_space;
 mod state;
 mod tests;
-use heuristic::Board_state_info;
 use bitboards::print_bitboards;
 use check_bits::checking_and_apply_bits_move;
+<<<<<<< HEAD
 use crate::bitpattern::check_pos_still_win;
+=======
+use heuristic::Board_state_info;
+>>>>>>> 9bf855299f221c43b4b4277c0262239966c82349
 
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
@@ -139,7 +142,7 @@ fn place_stone(
         black_captured_stone,
     );
 
-    let board_check: Board_state_info= checking_and_apply_bits_move(&mut state);
+    let board_check: Board_state_info = checking_and_apply_bits_move(&mut state);
     if board_check.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_check.stone_captured)?;
