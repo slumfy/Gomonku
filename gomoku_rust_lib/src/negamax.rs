@@ -39,9 +39,9 @@ pub fn return_move(state: &mut State, heuristic: i32) -> (usize, i32) {
     print_heuristic_table(state);
     // println!("heuristic of returned move : {:?}", heuristic);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
-	// for x in 0..state.available_move.len() {
-	// 	println!("child nb {}, child heuristic {}", x,state.available_move[x].heuristic);
-	// }
+	for x in 0..state.available_move.len() {
+		println!("child nb {}, child heuristic {}", x,state.available_move[x].heuristic);
+	}
     // println!(
     //     "ret move x = {} y = {}, ret heuristic {}",
     //     (state.available_move[0].bit_current_move_pos) / 19,
