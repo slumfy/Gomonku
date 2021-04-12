@@ -70,7 +70,7 @@ class GoRules:
             if p.nb == opponant:
                 if p.wining_position[1] != 0:
                     winpos = p.wining_position
-                print("AI WINPOS",winpos)
+                    print("AI WINPOS",winpos)
         move = gomoku_rust.ai_move(self.board, opponant, x, y, turn, winpos)
         print("AI: ", move)
 

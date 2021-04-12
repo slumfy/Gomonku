@@ -1,5 +1,5 @@
 // Search algorithm global vars
-pub static DEEP: i32 = 2;
+pub static DEEP: i32 = 3;
 
 // Capturing stone count
 pub static mut WHITE_CAPTURED_STONE: i8 = 0;
