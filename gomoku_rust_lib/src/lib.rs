@@ -160,6 +160,7 @@ fn place_stone(
                 ),
             )?;
         }
+		println!("winstate =>> {:?}", board_check.is_winning);
     } else {
         println!("Wrong move status = {:?}", board_check.is_wrong_move);
         dict.set_item("game_status", board_check.is_wrong_move)?;
