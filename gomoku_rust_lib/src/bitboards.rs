@@ -61,7 +61,8 @@ pub fn create_bits_axes_from_pos(
         if bits_axes_array[bits_axes_array_index][index] & (1 << 15) == 0 {
             if (move_pos as isize - axe_increment_value as isize * i as isize)
                 < (global_var::BOARD_MIN_LIMITS as isize)
-                || move_pos - axe_increment_value * i > global_var::BOARD_MAX_LIMITS
+                || move_pos as isize - axe_increment_value as isize * i as isize
+                    > global_var::BOARD_MAX_LIMITS as isize
             {
                 ret = global_var::OUT_OF_BOARD_MOVE;
             } else {
@@ -70,16 +71,14 @@ pub fn create_bits_axes_from_pos(
             if ret == global_var::OUT_OF_BOARD_MOVE
                 || !check_is_on_axe(axe_increment_value, move_pos, i, -1)
             {
-                bits_axes_array[bits_axes_array_index][index] =
-                    bits_axes_array[bits_axes_array_index][index] | 1 << 15;
+                bits_axes_array[bits_axes_array_index][index] |= 1 << 15;
             } else if ret == 1 {
-                bits_axes_array[bits_axes_array_index][index] =
-                    bits_axes_array[bits_axes_array_index][index] | 1 << move_index + i;
+                bits_axes_array[bits_axes_array_index][index] |= 1 << (move_index + i);
             }
         }
         // Getting right part
         if bits_axes_array[bits_axes_array_index][index] & 1 == 0 {
-            if (move_pos as isize - axe_increment_value as isize * i as isize)
+            if (move_pos as isize + axe_increment_value as isize * i as isize)
                 < (global_var::BOARD_MIN_LIMITS as isize)
                 || move_pos + axe_increment_value * i > global_var::BOARD_MAX_LIMITS
             {
@@ -90,11 +89,9 @@ pub fn create_bits_axes_from_pos(
             if ret == global_var::OUT_OF_BOARD_MOVE
                 || !check_is_on_axe(axe_increment_value, move_pos, i, 1)
             {
-                bits_axes_array[bits_axes_array_index][index] =
-                    bits_axes_array[bits_axes_array_index][index] | 1;
+                bits_axes_array[bits_axes_array_index][index] |= 1;
             } else if ret == 1 {
-                bits_axes_array[bits_axes_array_index][index] =
-                    bits_axes_array[bits_axes_array_index][index] | 1 << move_index - i;
+                bits_axes_array[bits_axes_array_index][index] |= 1 << (move_index - i);
             }
         }
     }
@@ -102,8 +99,8 @@ pub fn create_bits_axes_from_pos(
     let mut bits_axes_array: [[u16; 4]; 2] = [[0, 0, 0, 0], [0, 0, 0, 0]];
     let mut index = 0;
     let move_index = 8;
-    for axe_increment_value in vec![20, 19, 18, 1] {
-        if player == 1 {
+    for axe_increment_value in global_var::AXE_MOUVEMENT_VALUE.iter() {
+        if player == global_var::PLAYER_WHITE_NB {
             bits_axes_array[0][index] = 1 << move_index;
         } else {
             bits_axes_array[1][index] = 1 << move_index;
@@ -116,7 +113,7 @@ pub fn create_bits_axes_from_pos(
                 &bitboards.white_board,
                 index,
                 move_pos,
-                axe_increment_value,
+                *axe_increment_value,
                 i,
                 move_index,
             );
@@ -128,17 +125,11 @@ pub fn create_bits_axes_from_pos(
                 &bitboards.black_board,
                 index,
                 move_pos,
-                axe_increment_value,
+                *axe_increment_value,
                 i,
                 move_index,
             );
         }
-
-        // println!("axes value = {:?}", axe_increment_value);
-        // println!("bits_axes_array white here = {:?}", bits_axes_array[0]);
-        // println!("");
-        // println!("bits_axes_array black here = {:?}", bits_axes_array[1]);
-
         index += 1;
     }
     return bits_axes_array;
