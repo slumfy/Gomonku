@@ -16,9 +16,14 @@ from global_var import (
 
 class PyGameGo:
     def __init__(
-        self, sound_status: bool = False, test_mode: bool = False, search_box_status: bool = False
+        self,
+        sound_status: bool = False,
+        test_mode: bool = False,
+        search_box_status: bool = False,
+        display_ai_time: bool = False,
     ):
         self.test_mode = test_mode
+        self.display_ai_time = display_ai_time
 
         self.logger = logger_factory("PyGameGo")
         self.turn = 0
@@ -168,7 +173,7 @@ class PyGameGo:
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                AI_move = go_rules.AI_move(self.player, x, y, self.turn)
+                AI_move = go_rules.AI_move(self.player, x, y, self.turn, self.display_ai_time)
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)

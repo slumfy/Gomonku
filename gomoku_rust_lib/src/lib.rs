@@ -36,6 +36,7 @@ fn ai_move(
     y: usize,
     turn: isize,
     wining_position: (usize, i8),
+    display_ai_time: bool,
 ) -> PyResult<((usize, usize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
@@ -54,7 +55,8 @@ fn ai_move(
         white_captured_stone,
         black_captured_stone,
     );
-    let start = Instant::now();
+    let start_time = Instant::now();
+
     if turn == 0 {
         ai_move = (180, 0);
     } else {
@@ -67,7 +69,11 @@ fn ai_move(
         );
         ai_move = negamax::return_move(&mut state, value);
     }
-    let end = Instant::now();
+    if display_ai_time {
+        let end_time = Instant::now();
+        println!("time to process {:?}", end_time.duration_since(start_time));
+    }
+
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
 
@@ -75,7 +81,6 @@ fn ai_move(
         "previous_move: {:?} heuristic {}",
         state.bit_current_move_pos, state.heuristic
     );
-    println!("time to process {:?}", end.duration_since(start));
     println!(
         "white eat: {:?} black eat: {:?}",
         white_captured_stone, black_captured_stone
@@ -155,7 +160,7 @@ fn place_stone(
         if board_check.is_winning.1 != 0 {
             dict.set_item("wining_position", (board_check.is_winning))?;
         }
-		println!("winstate =>> {:?}", board_check.is_winning);
+        println!("winstate =>> {:?}", board_check.is_winning);
     } else {
         println!("Wrong move status = {:?}", board_check.is_wrong_move);
         dict.set_item("game_status", board_check.is_wrong_move)?;

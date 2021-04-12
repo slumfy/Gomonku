@@ -17,13 +17,22 @@ def main(argv=None):
         action="store_false",
     )
     parser.add_argument(
+        "--display_ai_time",
+        help="Disable or enable the time it takes to the AI to do a move.",
+        action="store_true",
+    )
+    parser.add_argument(
         "--with_search_box",
         help="Disable or enable Search box.",
         action="store_true",
     )
     args = parser.parse_args(argv)
     go_rules = GoRules(ai_helper=args.no_ai_helper)
-    game = PyGameGo(sound_status=not args.no_sound, search_box_status= args.with_search_box)
+    game = PyGameGo(
+        sound_status=not args.no_sound,
+        search_box_status=args.with_search_box,
+        display_ai_time=args.display_ai_time,
+    )
     game.menu(go_rules=go_rules)
 
 
