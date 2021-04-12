@@ -93,7 +93,7 @@ pub fn print_heuristic_table(state: &State) {
                 }
             }
             if trigger == 0 {
-                line.push(-1111);
+                line.push(1111);
             } else {
                 trigger = 0;
             }

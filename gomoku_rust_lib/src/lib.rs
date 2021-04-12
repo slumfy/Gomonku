@@ -17,6 +17,7 @@ mod tests;
 use heuristic::Board_state_info;
 use bitboards::print_bitboards;
 use check_bits::checking_and_apply_bits_move;
+use crate::bitpattern::check_pos_still_win;
 
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
@@ -34,7 +35,7 @@ fn ai_move(
     x: usize,
     y: usize,
     turn: isize,
-    wining_position: Vec<(usize, i8)>,
+    wining_position: isize,
 ) -> PyResult<((usize, usize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
@@ -87,45 +88,24 @@ fn ai_move(
     Ok(((ai_x_move, ai_y_move), ai_move.1))
 }
 
-// TODO : see if function still usefull and reimplement it with bitboard
-// #[pyfunction]
-// fn check_move_is_a_fiverow(
-//     board: Vec<Vec<i8>>,
-//     player: i8,
-//     x: isize,
-//     y: isize,
-//     wining_position: Vec<((isize, isize), i8)>,
-// ) -> PyResult<bool> {
-//     let mut mutboard: Vec<Vec<i8>> = board;
-//     let mut bitboards = bitboards::create_bitboards_from_vec(&mutboard);
-//     let white_captured_stone: i8;
-//     let black_captured_stone: i8;
-//     unsafe {
-//         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
-//         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
-//     }
-//     let bit_current_move_pos: i16 = (x * 19 + y) as i16;
-//     let state: state::State = state::create_new_state(
-//         &mut mutboard,
-//         &mut bitboards,
-//         player,
-//         (x, y),
-//         bit_current_move_pos,
-//         white_captured_stone,
-//         black_captured_stone,
-//         wining_position,
-//     );
-//     let alignement = checking_move_biggest_alignment_and_stone_captured(&state);
-//     if alignement["biggest_alignment"] >= 5 {
-//         Ok(true)
-//     } else {
-//         Ok(false)
-//     }
-// }
-
 #[pyfunction]
-fn check_move_is_a_fiverow() -> PyResult<bool> {
-    Ok(false)
+fn check_move_is_still_winning(
+    board: Vec<Vec<i8>>,
+    wining_position: isize,
+) -> PyResult<bool> {
+    let mut bitboards = bitboards::create_bitboards_from_vec(&board);
+    let white_captured_stone: i8;
+    let black_captured_stone: i8;
+    unsafe {
+        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
+        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
+    }
+    let still_winning = check_pos_still_win(bitboards,wining_position);
+    if still_winning == true {
+        Ok(true)
+    } else {
+        Ok(false)
+    }
 }
 
 #[pyfunction]
@@ -134,7 +114,7 @@ fn place_stone(
     player: i8,
     x: usize,
     y: usize,
-    wining_position: Vec<(usize, i8)>,
+    wining_position: isize,
 ) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
@@ -172,15 +152,15 @@ fn place_stone(
                 global_var::BLACK_CAPTURED_STONE += board_check.stone_captured;
             }
         }
-        // if board_check["biggest_alignment"] >= 5 {
-        //     dict.set_item(
-        //         "wining_position",
-        //         (
-        //             &state.bit_current_move_pos / 19,
-        //             &state.bit_current_move_pos % 19,
-        //         ),
-        //     )?;
-        // }
+        if board_check.is_winning != 362 {
+			let winpos = board_check.is_winning;
+            dict.set_item(
+                "wining_position",
+                (
+                    winpos
+                ),
+            )?;
+        }
     } else {
         println!("Wrong move status = {:?}", board_check.is_wrong_move);
         dict.set_item("game_status", board_check.is_wrong_move)?;
@@ -224,7 +204,7 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(place_stone, m)?)?;
     m.add_function(wrap_pyfunction!(get_rust_box, m)?)?;
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
-    m.add_function(wrap_pyfunction!(check_move_is_a_fiverow, m)?)?;
+    m.add_function(wrap_pyfunction!(check_move_is_still_winning, m)?)?;
     m.add_function(wrap_pyfunction!(reset_game, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
