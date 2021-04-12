@@ -4,10 +4,11 @@ use crate::bitboards::Bitboards;
 use crate::global_var;
 use crate::heuristic::BoardStateInfo;
 use crate::print_bitboards;
+use crate::print::print_axes;
 
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, usize, i32, &str); 8] = [
-    (0xF8, 6, 0, 1000, "five"),               // five XXXXX...
+    (0xF8, 6, 0, 2000, "five"),               // five XXXXX...
     (0x74, 7, 4, 80, "split four 3"),         // split four 3 .XXX.X..
     (0x6C, 7, 3, 60, "split four 2"),         // split four 2 .XX.XX..
     (0x5C, 7, 2, 80, "split four 1"),         // split four 1 .X.XXX..
@@ -76,7 +77,7 @@ fn return_pattern_value(
             pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
         }
     }
-    board_state_info.pattern_value = pat_value;
+    board_state_info.pattern_value += pat_value;
 }
 
 fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> i8 {
@@ -264,7 +265,6 @@ fn pattern_axes_finder(
         let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
         player_axe >>= 1;
         blocker_axe >>= 1;
-        // println!("player axe: {:016b}", player_axe);
         for l in 0..6 {
             let player_shifted = player_axe >> l;
             let blocker_shifted = blocker_axe >> l;
@@ -278,7 +278,7 @@ fn pattern_axes_finder(
                         if check_is_unblockable_five(bitboards, pos - l, axe, player) == true {
                             return [(0, 5), (0, 5), (0, 5), (0, 5)];
                         } else {
-                            found_pattern.0 = p;
+                            found_pattern.0 = 0;
                             found_pattern.1 = 0;
                             break;
                         }
@@ -302,7 +302,7 @@ fn pattern_axes_finder(
         }
         if found_pattern.0 < PATTERN.len() {
             return_pattern[axe] = found_pattern;
-            println!("PATTERN FOUND {}", PATTERN[found_pattern.0].4,);
+            // println!("PATTERN FOUND {}", PATTERN[found_pattern.0].4,);
         }
     }
     return return_pattern;
@@ -374,7 +374,7 @@ fn check_is_unblockable_five(
 fn check_free_development() {}
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
-    println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
+    // println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
     let two_players_axes = create_bits_axes_from_pos(pos, &bitboards, player);
     let player_axes = if player == 1 {
         two_players_axes[0]

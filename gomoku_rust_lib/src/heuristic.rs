@@ -3,7 +3,7 @@ use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
 use crate::global_var;
 use crate::state::State;
-
+#[derive(Debug)]
 pub struct BoardStateInfo {
     pub is_wrong_move: i8,
     pub stone_captured: i8,
@@ -33,7 +33,7 @@ pub fn heuristic(state: &mut State) -> i32 {
     if board_state_info.is_wrong_move != global_var::VALID_MOVE {
         value = -1000;
     } else {
-        value = board_state_info.pattern_value as i32;
+        value += board_state_info.pattern_value as i32;
     }
     return value;
 }

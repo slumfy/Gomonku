@@ -15,7 +15,7 @@ pub fn get_bits_in_bitboard_from_pos(pos: usize, bitboard: &[u64; 6]) -> i8 {
     let real_pos = pos % 64;
     let bit_pos = 63 - real_pos;
     let bitboard_index = pos / 64;
-    let mask = 1 << bit_pos;
+    let mask : u64 = 1 << bit_pos;
     if bitboard[bitboard_index as usize] & mask != 0 {
         return 1;
     } else {
@@ -47,6 +47,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         pattern_value: 0,
         is_winning: (0, 0),
     };
+	
     bitboard_info.is_wrong_move = check_is_wrong_move(state);
     if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
         return bitboard_info;
@@ -56,7 +57,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             &state.bitboards,
             state.current_player,
         );
-        print_axes(&axes);
+        // print_axes(&axes);
         apply_bit(
             &mut state.bitboards,
             state.bit_current_move_pos as usize,
