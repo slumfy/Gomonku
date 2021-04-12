@@ -7,7 +7,11 @@ pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
 }
-pub fn create_bits_axes_from_pos(move_pos: usize, bitboards: &Bitboards, player: i8) -> [[u16; 4]; 2] {
+pub fn create_bits_axes_from_pos(
+    move_pos: usize,
+    bitboards: &Bitboards,
+    player: i8,
+) -> [[u16; 4]; 2] {
     fn check_is_on_axe(
         axe_increment_value: usize,
         move_pos: usize,

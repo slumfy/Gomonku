@@ -9,10 +9,10 @@ use crate::print_bitboards;
 
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, usize, i32, &str); 8] = [
-    (0xF8, 6, 0, 100, "five"),          	  // five XXXXX...
-    (0x74, 7, 4, 80, "split four 3"), 		  // split four 3 .XXX.X..
-    (0x6C, 7, 3, 60, "split four 2"), 		  // split four 2 .XX.XX..
-    (0x5C, 7, 2, 80, "split four 1"), 		  // split four 1 .X.XXX..
+    (0xF8, 6, 0, 100, "five"),                // five XXXXX...
+    (0x74, 7, 4, 80, "split four 3"),         // split four 3 .XXX.X..
+    (0x6C, 7, 3, 60, "split four 2"),         // split four 2 .XX.XX..
+    (0x5C, 7, 2, 80, "split four 1"),         // split four 1 .X.XXX..
     (0x78, 6, 0, 70, "open four"),            // open four .XXXX...
     (0x58, 6, 2, 30, "open split three"),     // open split three .X.XX...
     (0x68, 6, 3, 30, "open split three rev"), // open split three rev .XX.X...
@@ -46,28 +46,39 @@ pub fn pattern_axes_dispatcher(
         board_state_info.stone_captured =
             check_and_apply_capture(bitboards, &axes[0], &axes[1], pos, player);
         board_state_info.flank = check_flank(&axes[0], &axes[1]);
-		axe_pattern = pattern_axes_finder(bitboards,&axes[0], &axes[1], pos, player);
-		return_pattern_value(board_state_info, axe_pattern, pos, player);
+        axe_pattern = pattern_axes_finder(bitboards, &axes[0], &axes[1], pos, player);
+        return_pattern_value(board_state_info, axe_pattern, pos, player);
     } else if player == global_var::PLAYER_BLACK_NB {
         // println!("black player pattern in row:");
         board_state_info.stone_captured =
             check_and_apply_capture(bitboards, &axes[1], &axes[0], pos, player);
         board_state_info.flank = check_flank(&axes[1], &axes[0]);
-		axe_pattern = pattern_axes_finder(bitboards,&axes[1], &axes[0], pos, player);
-		return_pattern_value(board_state_info, axe_pattern, pos, player);
+        axe_pattern = pattern_axes_finder(bitboards, &axes[1], &axes[0], pos, player);
+        return_pattern_value(board_state_info, axe_pattern, pos, player);
     }
 }
 
-fn return_pattern_value(board_state_info: &mut Board_state_info, axe_pattern: [(usize, usize); 4], pos: usize, player: i8) {
-	// println!("pattern on axe {:?}", axe_pattern);
-	let mut pat_value: i32 = 0;
-	for pat in 0..axe_pattern.len() {
-		if axe_pattern[pat].0 == 0 && axe_pattern[pat].1 != 3 { board_state_info.is_winning = (pos, player);}
-			if axe_pattern[pat].1 == 5 { board_state_info.pattern_value = 100000; }
-			else if axe_pattern[pat].1 == 1 {pat_value += PATTERN[axe_pattern[pat].0].3;}
-			else if axe_pattern[pat].1 == 0 {pat_value += PATTERN[axe_pattern[pat].0].3 * 10;}
-	}
-	board_state_info.pattern_value = pat_value;
+fn return_pattern_value(
+    board_state_info: &mut Board_state_info,
+    axe_pattern: [(usize, usize); 4],
+    pos: usize,
+    player: i8,
+) {
+    // println!("pattern on axe {:?}", axe_pattern);
+    let mut pat_value: i32 = 0;
+    for pat in 0..axe_pattern.len() {
+        if axe_pattern[pat].0 == 0 && axe_pattern[pat].1 != 3 {
+            board_state_info.is_winning = (pos, player);
+        }
+        if axe_pattern[pat].1 == 5 {
+            board_state_info.pattern_value = 100000;
+        } else if axe_pattern[pat].1 == 1 {
+            pat_value += PATTERN[axe_pattern[pat].0].3;
+        } else if axe_pattern[pat].1 == 0 {
+            pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
+        }
+    }
+    board_state_info.pattern_value = pat_value;
 }
 
 fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> i8 {
@@ -263,16 +274,15 @@ fn pattern_axes_finder(
             is_blocked = 0;
             for p in 0..PATTERN.len() {
                 if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
-					if p == 0 {
-						if check_is_unblockable_five(bitboards, pos - l, axe, player) == true {
-							return [(0, 5), (0, 5), (0, 5), (0, 5)];
-						}
-						else {
-							found_pattern.0 = p;
-							found_pattern.1 = 0;
-							break;
-						}
-					}
+                    if p == 0 {
+                        if check_is_unblockable_five(bitboards, pos - l, axe, player) == true {
+                            return [(0, 5), (0, 5), (0, 5), (0, 5)];
+                        } else {
+                            found_pattern.0 = p;
+                            found_pattern.1 = 0;
+                            break;
+                        }
+                    }
                     for b in 0..BLOCKER.len() {
                         if BLOCKER[b].1 == PATTERN[p].1 {
                             let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
@@ -364,20 +374,24 @@ fn check_is_unblockable_five(
 fn check_free_Development() {}
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
-	println!("pos: {}, x: {} , y: {}", pos, pos/19, pos%19);
-	let two_players_axes = create_bits_axes_from_pos(pos, &bitboards, player);
-	let player_axes = if player == 1 {two_players_axes[0]} else {two_players_axes[1]};
-	for axe in 0..player_axes.len() {
-        let mut  player_axe = player_axes[axe];
-		player_axe >>= 1;
+    println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
+    let two_players_axes = create_bits_axes_from_pos(pos, &bitboards, player);
+    let player_axes = if player == 1 {
+        two_players_axes[0]
+    } else {
+        two_players_axes[1]
+    };
+    for axe in 0..player_axes.len() {
+        let mut player_axe = player_axes[axe];
+        player_axe >>= 1;
         for l in 0..6 {
             let player_shifted = player_axe >> l;
             let player_casted = player_shifted as u8;
-			//println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
-                if (player_casted & PATTERN[0].0) == PATTERN[0].0 {
-					return true;
-				}
-			}
-		}
-	return false;
+            //println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
+            if (player_casted & PATTERN[0].0) == PATTERN[0].0 {
+                return true;
+            }
+        }
+    }
+    return false;
 }

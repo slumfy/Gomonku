@@ -10,7 +10,7 @@ pub struct State {
     pub white_captured_stone: i8,
     pub black_captured_stone: i8,
     pub heuristic: i32,
-    pub win_state: (usize,i8),
+    pub win_state: (usize, i8),
     pub bit_current_move_pos: usize,
 }
 
@@ -28,7 +28,7 @@ pub fn create_new_state(
         black_captured_stone: black_captured_stone,
         available_move: vec![],
         heuristic: 0,
-        win_state: (0,0),
+        win_state: (0, 0),
         bit_current_move_pos: bit_current_move_pos,
     };
     return new_state;
@@ -51,7 +51,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.white_captured_stone,
             state.black_captured_stone,
         );
-		child.heuristic = heuristic(&mut child);
+        child.heuristic = heuristic(&mut child);
         if child.heuristic >= 0 {
             childs_list.push(child);
         }
@@ -59,13 +59,12 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     return childs_list;
 }
 
-
 pub fn state_is_terminated(state: &mut State) -> bool {
-	if state.white_captured_stone >= 10||state.black_captured_stone >= 10 {
-		return true;
-	}
-	if state.heuristic == 100000 {
-		return true;
-	}
+    if state.white_captured_stone >= 10 || state.black_captured_stone >= 10 {
+        return true;
+    }
+    if state.heuristic == 100000 {
+        return true;
+    }
     return false;
 }
