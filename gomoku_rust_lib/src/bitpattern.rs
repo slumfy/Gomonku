@@ -4,12 +4,12 @@ use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::remove_bit;
 use crate::bitboards::Bitboards;
 use crate::global_var;
-use crate::heuristic::Board_state_info;
+use crate::heuristic::BoardStateInfo;
 use crate::print_bitboards;
 
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, usize, i32, &str); 8] = [
-    (0xF8, 6, 0, 1000, "five"),                // five XXXXX...
+    (0xF8, 6, 0, 1000, "five"),               // five XXXXX...
     (0x74, 7, 4, 80, "split four 3"),         // split four 3 .XXX.X..
     (0x6C, 7, 3, 60, "split four 2"),         // split four 2 .XX.XX..
     (0x5C, 7, 2, 80, "split four 1"),         // split four 1 .X.XXX..
@@ -33,7 +33,7 @@ static BLOCKER: [(u8, usize); 5] = [
 ];
 
 pub fn pattern_axes_dispatcher(
-    board_state_info: &mut Board_state_info,
+    board_state_info: &mut BoardStateInfo,
     bitboards: &mut Bitboards,
     axes: &[[u16; 4]; 2],
     pos: usize,
@@ -59,7 +59,7 @@ pub fn pattern_axes_dispatcher(
 }
 
 fn return_pattern_value(
-    board_state_info: &mut Board_state_info,
+    board_state_info: &mut BoardStateInfo,
     axe_pattern: [(usize, usize); 4],
     pos: usize,
     player: i8,

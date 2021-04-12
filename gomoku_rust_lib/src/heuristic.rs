@@ -3,9 +3,8 @@ use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
 use crate::global_var;
 use crate::state::State;
-use crate::HashMap;
 
-pub struct Board_state_info {
+pub struct BoardStateInfo {
     pub is_wrong_move: i8,
     pub stone_captured: i8,
     pub flank: i8,
@@ -15,7 +14,7 @@ pub struct Board_state_info {
 
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;
-    let board_check: Board_state_info = checking_and_apply_bits_move(state);
+    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
             if state.current_player == state.win_state.1 {
@@ -28,13 +27,13 @@ pub fn heuristic(state: &mut State) -> i32 {
             state.win_state = (0, 0);
         }
     }
-    if board_check.is_winning.1 != 0 {
-        state.win_state = board_check.is_winning;
+    if board_state_info.is_winning.1 != 0 {
+        state.win_state = board_state_info.is_winning;
     }
-    if board_check.is_wrong_move != global_var::VALID_MOVE {
+    if board_state_info.is_wrong_move != global_var::VALID_MOVE {
         value = -1000;
     } else {
-        value = board_check.pattern_value as i32;
+        value = board_state_info.pattern_value as i32;
     }
     return value;
 }

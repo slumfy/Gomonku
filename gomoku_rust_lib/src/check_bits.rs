@@ -3,7 +3,7 @@ use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::Bitboards;
 use crate::bitpattern::pattern_axes_dispatcher;
 use crate::global_var;
-use crate::heuristic::Board_state_info;
+use crate::heuristic::BoardStateInfo;
 use crate::state::State;
 
 pub fn get_line_from_pos(pos: usize) -> usize {
@@ -38,8 +38,8 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
     return global_var::VALID_MOVE;
 }
 
-pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
-    let mut bitboard_info = Board_state_info {
+pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
+    let mut bitboard_info = BoardStateInfo {
         is_wrong_move: 0,
         stone_captured: 0,
         flank: 0,

@@ -1,6 +1,5 @@
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
-use std::collections::HashMap;
 
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
@@ -15,7 +14,7 @@ mod search_space;
 mod state;
 mod tests;
 use crate::bitpattern::check_pos_still_win;
-use crate::heuristic::Board_state_info;
+use crate::heuristic::BoardStateInfo;
 use bitboards::print_bitboards;
 use check_bits::checking_and_apply_bits_move;
 
@@ -144,7 +143,7 @@ fn place_stone(
         black_captured_stone,
     );
 
-    let board_check: Board_state_info = checking_and_apply_bits_move(&mut state);
+    let board_check: BoardStateInfo = checking_and_apply_bits_move(&mut state);
     if board_check.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_check.stone_captured)?;
