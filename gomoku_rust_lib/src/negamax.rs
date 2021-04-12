@@ -39,7 +39,12 @@ pub fn return_move(state: &mut State, heuristic: i32) -> (usize, i32) {
     print_heuristic_table(state);
     println!("heuristic of returned move : {:?}", heuristic);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
-	println!("ret move x = {} y = {}, ret heuristic {}",(state.available_move[0].bit_current_move_pos)/19,(state.available_move[0].bit_current_move_pos)%19,state.available_move[0].heuristic);
+    println!(
+        "ret move x = {} y = {}, ret heuristic {}",
+        (state.available_move[0].bit_current_move_pos) / 19,
+        (state.available_move[0].bit_current_move_pos) % 19,
+        state.available_move[0].heuristic
+    );
     return (
         (state.available_move[0].bit_current_move_pos),
         state.available_move[0].heuristic,
@@ -73,10 +78,10 @@ pub fn print_heuristic_table(state: &State) {
     let mut trigger = 0;
     for idx in 0..len {
         // println!("x {} y {}", state.available_move[idx].current_move.0, state.available_move[idx].current_move.1);
-        xmax = std::cmp::max((state.available_move[idx].bit_current_move_pos)/19, xmax);
-        xmin = std::cmp::min(xmin, (state.available_move[idx].bit_current_move_pos)/19);
-        ymax = std::cmp::max(ymax, (state.available_move[idx].bit_current_move_pos)%19);
-        ymin = std::cmp::min(ymin, (state.available_move[idx].bit_current_move_pos)%19);
+        xmax = std::cmp::max((state.available_move[idx].bit_current_move_pos) / 19, xmax);
+        xmin = std::cmp::min(xmin, (state.available_move[idx].bit_current_move_pos) / 19);
+        ymax = std::cmp::max(ymax, (state.available_move[idx].bit_current_move_pos) % 19);
+        ymin = std::cmp::min(ymin, (state.available_move[idx].bit_current_move_pos) % 19);
     }
     println!(
         "xmax: {}, xmin: {}, ymax: {},ymin: {}",
@@ -85,8 +90,8 @@ pub fn print_heuristic_table(state: &State) {
     for x in 0..19 {
         for y in 0..19 {
             for idx in 0..len {
-                if (state.available_move[idx].bit_current_move_pos)/19 == x
-                    && (state.available_move[idx].bit_current_move_pos)%19 == y
+                if (state.available_move[idx].bit_current_move_pos) / 19 == x
+                    && (state.available_move[idx].bit_current_move_pos) % 19 == y
                 {
                     line.push(state.available_move[idx].heuristic);
                     trigger = 1;
