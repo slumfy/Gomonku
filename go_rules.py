@@ -31,10 +31,10 @@ class GoRules:
 
     def place_stone(self, player, x, y):
         opponant = -player.nb
-        winpos = 362
+        winpos = (0,0)
         for p in self.player_list:
             if p.nb == opponant:
-                if p.wining_position != 362:
+                if p.wining_position[1] != 0:
                     winpos = p.wining_position
         Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y, winpos)
         # print(Rust_res)
@@ -54,20 +54,21 @@ class GoRules:
                         p.wining_position = Rust_res["wining_position"]
             for pl in self.player_list:
                 if pl != player:
-                    if pl.wining_position != 362:
+                    if pl.wining_position[1] != 0:
                         if gomoku_rust.check_move_is_still_winning(self.board, pl.wining_position) == True:
                             print("true")
                             return pl.nb
                         else:
-                            pl.wining_position = 362
+                            pl.wining_position = (0,0)
             return 0
 
     def AI_move(self, player, x, y, turn):
         print(player, x, y)
-        winpos = 362
+        winpos = (0,0)
         opponant = -player.nb
         for p in self.player_list:
-                if p.wining_position != 362:
+            if p.nb == opponant:
+                if p.wining_position[1] != 0:
                     winpos = p.wining_position
                 print("AI WINPOS",winpos)
         move = gomoku_rust.ai_move(self.board, opponant, x, y, turn, winpos)

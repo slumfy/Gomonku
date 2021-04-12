@@ -44,7 +44,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> Board_state_info {
 		stone_captured : 0,
 		flank : 0,
 		pattern_value: 0,
-		is_winning: 362
+		is_winning: (0,0)
 	};
 	bitboard_info.is_wrong_move = check_is_wrong_move(state);
     if bitboard_info.is_wrong_move != global_var::VALID_MOVE {

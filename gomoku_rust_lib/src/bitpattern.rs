@@ -62,7 +62,7 @@ fn return_pattern_value(board_state_info: &mut Board_state_info, axe_pattern: [(
 	// println!("pattern on axe {:?}", axe_pattern);
 	let mut pat_value: i32 = 0;
 	for pat in 0..axe_pattern.len() {
-		if axe_pattern[pat].0 == 0 && axe_pattern[pat].1 != 3 { board_state_info.is_winning = pos as isize * player as isize;}
+		if axe_pattern[pat].0 == 0 && axe_pattern[pat].1 != 3 { board_state_info.is_winning = (pos, player);}
 			if axe_pattern[pat].1 == 5 { board_state_info.pattern_value = 100000; }
 			else if axe_pattern[pat].1 == 1 {pat_value += PATTERN[axe_pattern[pat].0].3;}
 			else if axe_pattern[pat].1 == 0 {pat_value += PATTERN[axe_pattern[pat].0].3 * 10;}
@@ -363,13 +363,10 @@ fn check_is_unblockable_five(
 //TODO
 fn check_free_Development() {}
 
-pub fn check_pos_still_win(bitboards: Bitboards, pos: isize) -> bool {
+pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
 	println!("pos: {}, x: {} , y: {}", pos, pos/19, pos%19);
-	let player = if pos < 0 {-1} else {1};
-	let real_pos: usize =  if pos < 0 {(-pos) as usize} else {pos as usize};
-	let two_players_axes = create_bits_axes_from_pos(real_pos, &bitboards, player);
+	let two_players_axes = create_bits_axes_from_pos(pos, &bitboards, player);
 	let player_axes = if player == 1 {two_players_axes[0]} else {two_players_axes[1]};
-	// for x in 0..player_axes.len() {println!("player axe : {:016b}", player_axes[x]);}
 	for axe in 0..player_axes.len() {
         let mut  player_axe = player_axes[axe];
 		player_axe >>= 1;

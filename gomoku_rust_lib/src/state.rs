@@ -10,7 +10,7 @@ pub struct State {
     pub white_captured_stone: i8,
     pub black_captured_stone: i8,
     pub heuristic: i32,
-    pub win_state: isize,
+    pub win_state: (usize,i8),
     pub bit_current_move_pos: usize,
 }
 
@@ -28,7 +28,7 @@ pub fn create_new_state(
         black_captured_stone: black_captured_stone,
         available_move: vec![],
         heuristic: 0,
-        win_state: 362,
+        win_state: (0,0),
         bit_current_move_pos: bit_current_move_pos,
     };
     return new_state;
