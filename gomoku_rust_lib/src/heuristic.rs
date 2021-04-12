@@ -34,7 +34,7 @@ pub fn heuristic(state: &mut State) -> i32 {
     if board_check.is_wrong_move != global_var::VALID_MOVE {
         value = -1000;
     } else {
-        value == board_check.pattern_value as i32;
+        value = board_check.pattern_value as i32;
     }
     return value;
 }
