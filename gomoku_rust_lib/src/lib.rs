@@ -4,17 +4,20 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
+mod bit_operations;
 mod bitboards;
 mod bitpattern;
 mod check_bits;
 mod global_var;
 mod heuristic;
 mod negamax;
+mod patterns;
 mod print;
 mod search_space;
 mod state;
 mod tests;
-use crate::bitpattern::check_pos_still_win;
+use crate::check_bits::__pyo3_get_function_check_move_is_still_winning;
+use crate::check_bits::check_pos_still_win;
 use crate::heuristic::BoardStateInfo;
 use check_bits::checking_and_apply_bits_move;
 
@@ -126,20 +129,6 @@ fn ai_move(
     );
     println!("negamax {:?}", ai_move);
     Ok(((ai_x_move, ai_y_move), ai_move.1))
-}
-
-#[pyfunction]
-fn check_move_is_still_winning(
-    board: Vec<Vec<i8>>,
-    wining_position: (usize, i8),
-) -> PyResult<bool> {
-    let bitboards = bitboards::create_bitboards_from_vec(&board);
-    let still_winning = check_pos_still_win(bitboards, wining_position.0, wining_position.1);
-    if still_winning == true {
-        Ok(true)
-    } else {
-        Ok(false)
-    }
 }
 
 #[pyfunction]

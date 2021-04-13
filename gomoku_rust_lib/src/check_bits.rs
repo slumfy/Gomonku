@@ -1,26 +1,18 @@
-use crate::bitboards::apply_bit;
+use crate::bit_operations::apply_bit;
+use crate::bit_operations::apply_capture;
+use crate::bitboards::create_bitboards_from_vec;
 use crate::bitboards::create_bits_axes_from_pos;
+use crate::bitboards::get_bits_in_bitboard_from_pos;
 use crate::bitboards::Bitboards;
 use crate::bitpattern::pattern_axes_dispatcher;
 use crate::global_var;
 use crate::heuristic::BoardStateInfo;
+use crate::patterns::BLOCKER;
+use crate::patterns::CAPTURE_PATTERN;
+use crate::patterns::PATTERN;
 use crate::state::State;
-
-pub fn get_line_from_pos(pos: usize) -> usize {
-    return pos / 19;
-}
-
-pub fn get_bits_in_bitboard_from_pos(pos: usize, bitboard: &[u64; 6]) -> i8 {
-    let real_pos = pos % 64;
-    let bit_pos = 63 - real_pos;
-    let bitboard_index = pos / 64;
-    let mask: u64 = 1 << bit_pos;
-    if bitboard[bitboard_index as usize] & mask != 0 {
-        return 1;
-    } else {
-        return 0;
-    }
-}
+use pyo3::prelude::*;
+use pyo3::types::PyDict;
 
 fn check_overlapping_stone(pos: usize, bitboards: &Bitboards) -> bool {
     if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
@@ -70,5 +62,253 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.current_player,
         );
         return bitboard_info;
+    }
+}
+
+fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> i8 {
+    let mut count = 0;
+    for axe in 0..axe_pattern.len() {
+        if axe_pattern[axe].1 == 0 {
+            if axe_pattern[axe].0 == 7 || axe_pattern[axe].0 == 6 {
+                count += 1;
+            }
+        }
+    }
+    return if count >= 2 { 1 } else { 0 };
+}
+
+pub fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> i8 {
+    let mut flank_value = 0;
+    for axe in 0..axes.len() {
+        let mut player_axe = axes[axe];
+        let mut blocker_axe = blocker_axes[axe];
+        player_axe >>= 1;
+        blocker_axe >>= 1;
+        // println!("player axe: {:016b}", player_axe);
+        // println!("block  axe: {:016b}", blocker_axe);
+        let shift: [usize; 2] = [1, 2];
+        for s in shift.iter() {
+            let player_shifted = player_axe >> s;
+            let blocker_shifted = blocker_axe >> s;
+            let player_casted = player_shifted as u8;
+            let blocker_casted = blocker_shifted as u8;
+            if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
+                if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0
+                    && flank_value != 1
+                {
+                    // println!("blocked");
+                    flank_value = 2;
+                } else if (blocker_casted & CAPTURE_PATTERN[0].0) != 0 {
+                    // println!("flank");
+                    flank_value = 1;
+                } else {
+                    // println!("free");
+                }
+            }
+        }
+    }
+    return flank_value;
+}
+
+fn check_in_map(
+    axe_mouvement_value: i16,
+    pattern_pos: i16,
+    offset: i16,
+    direction_sign: i16,
+) -> bool {
+    let calcul = pattern_pos + axe_mouvement_value * offset * direction_sign;
+    if calcul < 0 {
+        return false;
+    }
+    let line_checked = calcul / 19;
+    let line = pattern_pos / 19;
+    //ligne
+    if axe_mouvement_value == 1 {
+        if line_checked != line {
+            return false;
+        }
+    } else {
+        // println!("checkpos {} pos {}", calcul, pattern_pos);
+        // println!(
+        //     "line check {} diff {}",
+        //     line_checked,
+        //     line + offset * direction_sign
+        // );
+        if line_checked != line + offset * direction_sign {
+            return false;
+        }
+    }
+    return true;
+}
+
+fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> bool {
+    let axe_mouvement_value: i16 = global_var::AXE_MOUVEMENT_VALUE[axe] as i16;
+    let pattern_pos: i16 = pos as i16 - l as i16 * axe_mouvement_value;
+    if check_in_map(axe_mouvement_value, pattern_pos, 1, -1) == false {
+        return false;
+    }
+    if check_in_map(axe_mouvement_value, pattern_pos, pattern_length as i16, 1) == false {
+        return false;
+    }
+    return true;
+}
+
+pub fn check_blocker(
+    blocker_checker: u8,
+    blocker_casted: u8,
+    pos: usize,
+    b: usize,
+    p: usize,
+    l: usize,
+    axe: usize,
+) -> usize {
+    let mut is_blocked: usize;
+    if PATTERN[p].2 != 0 && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true {
+        is_blocked = 2;
+    } else if blocker_checker == BLOCKER[b].0 {
+        is_blocked = 2;
+    } else if blocker_checker != 0 {
+        is_blocked = 1;
+        if check_border(pos, l, axe, PATTERN[p].1) == false {
+            is_blocked += 1
+        }
+    } else if check_border(pos, l, axe, PATTERN[p].1) == false {
+        is_blocked = 1;
+        if blocker_checker != 0 {
+            is_blocked += 1
+        }
+    } else {
+        is_blocked = 0;
+    }
+    return is_blocked;
+}
+
+fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
+    let checked_pos = 8 - length;
+    // let mask : u8 = 1 << checked_pos;
+    let mask: u8 = 0x80 >> length;
+    // println!(
+    //     "mask {:08b} legnth {} , checkpos {}",
+    //     mask, length, checked_pos
+    // );
+    if pattern & mask != 0 {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+pub fn check_is_unblockable_five(
+    bitboards: &mut Bitboards,
+    pos: usize,
+    axe: usize,
+    player: i8,
+) -> bool {
+    for n in 0..5 {
+        let check_pos = pos + n * global_var::AXE_MOUVEMENT_VALUE[axe];
+        let axes = create_bits_axes_from_pos(check_pos, bitboards, player);
+        let order: (usize, usize) = if player == 1 { (0, 1) } else { (1, 0) };
+        if check_flank(&axes[order.0], &axes[order.1]) == 1 {
+            return false;
+        }
+    }
+    return true;
+}
+
+//TODO
+fn check_free_development() {}
+
+pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
+    // println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
+    let two_players_axes = create_bits_axes_from_pos(pos, &bitboards, player);
+    let player_axes = if player == 1 {
+        two_players_axes[0]
+    } else {
+        two_players_axes[1]
+    };
+    for axe in 0..player_axes.len() {
+        let mut player_axe = player_axes[axe];
+        player_axe >>= 1;
+        for l in 0..6 {
+            let player_shifted = player_axe >> l;
+            let player_casted = player_shifted as u8;
+            //println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
+            if (player_casted & PATTERN[0].0) == PATTERN[0].0 {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+pub fn check_and_apply_capture(
+    bitboards: &mut Bitboards,
+    axes: &[u16; 4],
+    blocker_axes: &[u16; 4],
+    pos: usize,
+    player: i8,
+) -> i8 {
+    let mut stone_captured: i8 = 0;
+    for axe in 0..axes.len() {
+        let mut player_axe = axes[axe];
+        let mut blocker_axe = blocker_axes[axe];
+        player_axe >>= 1;
+        blocker_axe >>= 1;
+        // println!("player axe: {:016b}", player_axe);
+        // println!("block  axe: {:016b}", blocker_axe);
+        let shift: [usize; 2] = [0, 3];
+        for s in shift.iter() {
+            let player_shifted = player_axe >> s;
+            // println!("player shifted: {:016b} l= {}", player_shifted, s);
+            let blocker_shifted = blocker_axe >> s;
+            let player_casted = player_shifted as u8;
+            let blocker_casted = blocker_shifted as u8;
+            if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
+                if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
+                    // println!("captured");
+                    // println!(
+                    //     "axe: {}, direction {}, pos {}",
+                    //     global_var::AXE_MOUVEMENT_VALUE[axe],
+                    //     s,
+                    //     pos
+                    // );
+                    if *s == 3 {
+                        stone_captured += 2;
+                        apply_capture(
+                            bitboards,
+                            global_var::AXE_MOUVEMENT_VALUE[axe],
+                            -1,
+                            pos,
+                            player,
+                        );
+                    } else {
+                        stone_captured += 2;
+                        apply_capture(
+                            bitboards,
+                            global_var::AXE_MOUVEMENT_VALUE[axe],
+                            1,
+                            pos,
+                            player,
+                        );
+                    }
+                }
+                // print_bitboards(bitboards);
+            }
+        }
+    }
+    return stone_captured;
+}
+
+#[pyfunction]
+fn check_move_is_still_winning(
+    board: Vec<Vec<i8>>,
+    wining_position: (usize, i8),
+) -> PyResult<bool> {
+    let bitboards = create_bitboards_from_vec(&board);
+    let still_winning = check_pos_still_win(bitboards, wining_position.0, wining_position.1);
+    if still_winning == true {
+        Ok(true)
+    } else {
+        Ok(false)
     }
 }

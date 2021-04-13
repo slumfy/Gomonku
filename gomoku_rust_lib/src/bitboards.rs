@@ -1,5 +1,3 @@
-use crate::check_bits::get_bits_in_bitboard_from_pos;
-use crate::check_bits::get_line_from_pos;
 use crate::global_var;
 
 #[derive(Copy, Clone, Hash)]
@@ -180,34 +178,18 @@ pub fn create_vec_from_bitboards(bitboards: &Bitboards) -> Vec<Vec<i8>> {
     return board;
 }
 
-pub fn apply_bit(bitboards: &mut Bitboards, pos: usize, player: i8) {
-    let real_pos = pos % 64;
-    let bit_pos = 63 - real_pos;
-    let bitboards_index = pos / 64;
-    let mask = 1 << bit_pos;
-    if player == 1 {
-        bitboards.white_board[bitboards_index] |= mask;
-    } else {
-        bitboards.black_board[bitboards_index] |= mask;
-    }
+pub fn get_line_from_pos(pos: usize) -> usize {
+    return pos / 19;
 }
 
-pub fn remove_bit(bitboards: &mut Bitboards, pos: usize, player: i8) {
+pub fn get_bits_in_bitboard_from_pos(pos: usize, bitboard: &[u64; 6]) -> i8 {
     let real_pos = pos % 64;
     let bit_pos = 63 - real_pos;
-    let bitboards_index = pos / 64;
-    let mask = !(1 << bit_pos);
-    if player == 1 {
-        bitboards.white_board[bitboards_index] &= mask;
+    let bitboard_index = pos / 64;
+    let mask: u64 = 1 << bit_pos;
+    if bitboard[bitboard_index as usize] & mask != 0 {
+        return 1;
     } else {
-        bitboards.black_board[bitboards_index] &= mask;
+        return 0;
     }
-}
-
-pub fn print_bitboards(bitboards: &Bitboards) {
-    for x in 0..6 {
-        println!("white_board[{}]: {:064b}", x, bitboards.white_board[x]);
-        println!("black_board[{}]: {:064b}", x, bitboards.black_board[x]);
-    }
-    println!();
 }
