@@ -1,7 +1,7 @@
 //! Methods to check moves and bits.
 
-use crate::bit_operations::apply_bit;
-use crate::bit_operations::apply_capture;
+use crate::bitboard_operations::apply_bit;
+use crate::bitboard_operations::apply_capture;
 use crate::bitboards::create_bitboards_from_vec;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::get_bits_in_bitboard_from_pos;

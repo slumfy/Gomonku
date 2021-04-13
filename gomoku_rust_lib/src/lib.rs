@@ -7,7 +7,7 @@ use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
 mod algorithms;
-mod bit_operations;
+mod bitboard_operations;
 mod bitboards;
 mod bitpattern;
 mod check_move;
