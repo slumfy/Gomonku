@@ -162,3 +162,6 @@ pub fn print_heuristic_table(state: &State) {
         println!("{:5?}", table[x]);
     }
 }
+
+fn transposition_table_push() {}
+fn transposition_table_search() {}
