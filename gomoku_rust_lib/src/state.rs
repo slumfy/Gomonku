@@ -1,3 +1,5 @@
+//! ##This current crate possess the state struct and methods to creat state!
+
 use crate::bitboards::Bitboards;
 use crate::heuristic::heuristic;
 

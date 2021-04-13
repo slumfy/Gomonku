@@ -1,3 +1,5 @@
+//! Crate specialy used for printing solutions.
+
 use crate::bitboards::Bitboards;
 use crate::state::State;
 

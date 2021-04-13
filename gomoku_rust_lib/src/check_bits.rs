@@ -1,3 +1,5 @@
+//! Methods to check moves and bits.
+
 use crate::bit_operations::apply_bit;
 use crate::bit_operations::apply_capture;
 use crate::bitboards::create_bitboards_from_vec;
@@ -310,4 +312,14 @@ fn check_move_is_still_winning(
     } else {
         Ok(false)
     }
+}
+
+pub fn check_is_in_bitpos_list(box_position: &mut Vec<usize>, bitpos: usize) -> bool {
+    let len = box_position.len();
+    for pos in 0..len {
+        if box_position[pos] == bitpos {
+            return true;
+        }
+    }
+    return false;
 }

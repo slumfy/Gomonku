@@ -1,3 +1,5 @@
+//! Crate for static pattern use by bitpattern.
+
 // patern need to sort by order of check
 pub static PATTERN: [(u8, usize, usize, i32, &str); 8] = [
     (0xF8, 6, 0, 2000, "five"),               // five XXXXX...

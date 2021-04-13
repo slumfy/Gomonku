@@ -1,3 +1,5 @@
+//! Rust module use by pytest
+
 extern crate pyo3;
 
 use pyo3::prelude::*;

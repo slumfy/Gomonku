@@ -1,3 +1,5 @@
+//! Four algorithms use by the AI.
+
 use crate::global_var;
 use crate::print::print_heuristic_table;
 use crate::state::create_child;

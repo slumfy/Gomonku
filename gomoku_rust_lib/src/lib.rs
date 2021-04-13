@@ -1,3 +1,5 @@
+//! Lib for rust, bridge between python and rust, using pyo3 module.
+
 use pyo3::prelude::*;
 use pyo3::types::PyDict;
 
@@ -10,7 +12,7 @@ mod bitpattern;
 mod check_bits;
 mod global_var;
 mod heuristic;
-mod negamax;
+mod algorithms;
 mod patterns;
 mod print;
 mod search_space;
@@ -69,7 +71,7 @@ fn ai_move(
         }
         if search_algorithm == "negamax" {
             println!("using negamax");
-            negamax::negamax(
+            algorithms::negamax(
                 &mut state,
                 global_var::DEPTH,
                 global_var::HEURISTIC_MIN_VALUE,
@@ -78,7 +80,7 @@ fn ai_move(
             );
         } else if search_algorithm == "negamax_with_transpotable" {
             println!("using negamax_with_transpotable");
-            negamax::negamax_with_transpotable(
+            algorithms::negamax_with_transpotable(
                 &mut state,
                 global_var::DEPTH,
                 global_var::HEURISTIC_MIN_VALUE,
@@ -87,7 +89,7 @@ fn ai_move(
             );
         } else if search_algorithm == "negascout" {
             println!("using negascout");
-            negamax::negascout(
+            algorithms::negascout(
                 &mut state,
                 global_var::DEPTH,
                 global_var::HEURISTIC_MIN_VALUE,
@@ -96,7 +98,7 @@ fn ai_move(
             );
         } else if search_algorithm == "negascout_with_transpotable" {
             println!("using negascout_with_transpotable");
-            negamax::negascout_with_transpotable(
+            algorithms::negascout_with_transpotable(
                 &mut state,
                 global_var::DEPTH,
                 global_var::HEURISTIC_MIN_VALUE,
@@ -105,7 +107,7 @@ fn ai_move(
             );
         }
 
-        ai_move = negamax::return_move(&mut state);
+        ai_move = algorithms::return_move(&mut state);
     }
     if display_ai_time {
         let end_time = Instant::now();

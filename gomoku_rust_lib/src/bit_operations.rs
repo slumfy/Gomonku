@@ -1,3 +1,5 @@
+//! Methods to update stone on bitboard.
+
 use crate::bitboards::Bitboards;
 
 pub fn apply_capture(bitboards: &mut Bitboards, axe: usize, s: isize, pos: usize, player: i8) {

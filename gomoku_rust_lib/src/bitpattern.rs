@@ -1,3 +1,5 @@
+//! Methods to iter throught bit axes and finds patterns.
+
 use crate::bitboards::Bitboards;
 use crate::check_bits::check_and_apply_capture;
 use crate::check_bits::check_blocker;

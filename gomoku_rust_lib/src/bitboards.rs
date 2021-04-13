@@ -1,3 +1,5 @@
+//! Methods to create bitboards from vec and axes from pos.
+
 use crate::global_var;
 
 #[derive(Copy, Clone, Hash)]

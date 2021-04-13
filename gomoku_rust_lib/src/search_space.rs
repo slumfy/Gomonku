@@ -1,4 +1,7 @@
+//! Creation of boxes where the AI search solutions.
+
 use crate::bitboards::Bitboards;
+use crate::check_bits::check_is_in_bitpos_list;
 
 #[allow(dead_code)]
 pub fn get_search_box_bitboard(bitboard: &Bitboards) -> Vec<usize> {
@@ -36,16 +39,6 @@ fn create_box_for_bitpos(bitpos: usize, box_position: &mut Vec<usize>) {
             }
         }
     }
-}
-
-fn check_is_in_bitpos_list(box_position: &mut Vec<usize>, bitpos: usize) -> bool {
-    let len = box_position.len();
-    for pos in 0..len {
-        if box_position[pos] == bitpos {
-            return true;
-        }
-    }
-    return false;
 }
 
 #[allow(dead_code)]
