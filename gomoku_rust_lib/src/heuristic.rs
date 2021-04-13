@@ -1,4 +1,3 @@
-use crate::check_bits::check_is_wrong_move;
 use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
 use crate::global_var;

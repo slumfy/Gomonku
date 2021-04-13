@@ -3,8 +3,6 @@ use crate::bitboards::remove_bit;
 use crate::bitboards::Bitboards;
 use crate::global_var;
 use crate::heuristic::BoardStateInfo;
-use crate::print_bitboards;
-use crate::print::print_axes;
 
 // patern need to sort by order of check
 static PATTERN: [(u8, usize, usize, i32, &str); 8] = [

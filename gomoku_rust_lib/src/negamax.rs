@@ -4,9 +4,8 @@ use crate::state::state_is_terminated;
 use crate::state::State;
 use std::cmp::Reverse;
 
-
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
-	update_max_depth(depth);
+    update_max_depth(depth);
     if depth != 0 {
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
@@ -38,21 +37,23 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
 }
 
 fn update_max_depth(depth: i32) {
-	unsafe {
-		if global_var::DEPTH - depth > global_var::MAX_DEPTH_REACH {
-			global_var::MAX_DEPTH_REACH = global_var::DEPTH - depth;
-		}
-	}
+    unsafe {
+        if global_var::DEPTH - depth > global_var::MAX_DEPTH_REACH {
+            global_var::MAX_DEPTH_REACH = global_var::DEPTH - depth;
+        }
+    }
 }
 
 pub fn return_move(state: &mut State, heuristic: i32) -> (usize, i32) {
     print_heuristic_table(state);
-	unsafe{println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);}
+    unsafe {
+        println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
+    }
     // println!("heuristic of returned move : {:?}", heuristic);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
-	// for x in 0..state.available_move.len() {
-	// 	println!("child nb {}, child heuristic {}", x,state.available_move[x].heuristic);
-	// }
+    // for x in 0..state.available_move.len() {
+    // 	println!("child nb {}, child heuristic {}", x,state.available_move[x].heuristic);
+    // }
     // println!(
     //     "ret move x = {} y = {}, ret heuristic {}",
     //     (state.available_move[0].bit_current_move_pos) / 19,

@@ -60,7 +60,9 @@ fn ai_move(
     if turn == 0 {
         ai_move = (180, 0);
     } else {
-		unsafe{global_var::MAX_DEPTH_REACH = 0;}
+        unsafe {
+            global_var::MAX_DEPTH_REACH = 0;
+        }
         let value = negamax::negamax(
             &mut state,
             global_var::DEPTH,
