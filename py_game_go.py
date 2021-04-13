@@ -15,8 +15,15 @@ from global_var import (
 
 
 class PyGameGo:
-    def __init__(self, sound_status: bool = False, test_mode: bool = False, search_box_status: bool = False):
+    def __init__(
+        self,
+        sound_status: bool = False,
+        test_mode: bool = False,
+        search_box_status: bool = False,
+        display_ai_time: bool = False,
+    ):
         self.test_mode = test_mode
+        self.display_ai_time = display_ai_time
 
         self.logger = logger_factory("PyGameGo")
         self.turn = 0
@@ -156,7 +163,7 @@ class PyGameGo:
         self.screen.blit(self.return_on, (0, 0))
         pygame.display.flip()
 
-        x,y = 0,0
+        x, y = 0, 0
         self.board_screen_blit(go_rules, 33, 62)
 
         while 1:
@@ -166,7 +173,7 @@ class PyGameGo:
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                AI_move = go_rules.AI_move(self.player, x, y, self.turn)
+                AI_move = go_rules.AI_move(self.player, x, y, self.turn, self.display_ai_time)
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
@@ -200,7 +207,6 @@ class PyGameGo:
                             self.play_piece(go_rules, stone_status, win_status, x, y)
                             self.turn += 1
 
-
     def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
             self.print_illegal_move()
@@ -228,8 +234,13 @@ class PyGameGo:
 
     def mouse_pos_to_piece_pos(self, pos, space, offset):
         var = int((pos - offset) / space)
+        if var >= 19:
+            return 18
+        elif var < 0:
+            return 0
+
         mod = int((pos - offset) % space)
-        if mod > space / 2 and var < 18:
+        if mod > space / 2 and pos > 65 and var < 18:
             var += 1
         return var
 
@@ -277,12 +288,12 @@ class PyGameGo:
         space, offset = 33, 62
         box = go_rules.print_search_box(self.player, x, y, self.turn)
         for pos in box:
-                if go_rules.board[pos[0]][pos[1]] == 0:
-                     self.screen.blit(
-                        self.grey_stone_resize,
-                        (
-                            pos[1] * space + offset - STONE_SIZE[0] / 2,
-                            pos[0] * space + offset - STONE_SIZE[1] / 2,
-                        ),
-                    )
+            if go_rules.board[pos[0]][pos[1]] == 0:
+                self.screen.blit(
+                    self.grey_stone_resize,
+                    (
+                        pos[1] * space + offset - STONE_SIZE[0] / 2,
+                        pos[0] * space + offset - STONE_SIZE[1] / 2,
+                    ),
+                )
         # print(box)

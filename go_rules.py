@@ -20,7 +20,6 @@ class GoRules:
     player_list = []
     ai_helper: bool = False
     ai_versus = 0
-    wining_position = []
 
     def __init__(self, ai_helper: bool = False):
         self.ai_helper = ai_helper
@@ -31,53 +30,58 @@ class GoRules:
         self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.HUMAN.value, "Black"))
 
     def place_stone(self, player, x, y):
-        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y, self.wining_position)
+        opponant = -player.nb
+        winpos = (0, 0)
+        for p in self.player_list:
+            if p.nb == opponant:
+                if p.wining_position[1] != 0:
+                    winpos = p.wining_position
+        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y, winpos)
         # print(Rust_res)
         if Rust_res["game_status"] != 0:
             return -2
         else:
             self.board = Rust_res["board"]
-            player.eat_piece += Rust_res["stone_captured"]
+            player.capture_piece += Rust_res["stone_captured"]
             # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
             # if self.ai_helper:
             #     gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
-            if player.eat_piece >= 10:
+            if player.capture_piece >= 10:
                 return player.nb
             if "wining_position" in Rust_res.keys():
                 for p in self.player_list:
                     if p.nb == player.nb:
-                        p.wining_position.append([x, y])
-                self.wining_position.append(((x, y), player.nb))
+                        p.wining_position = Rust_res["wining_position"]
             for pl in self.player_list:
                 if pl != player:
-                    if pl.wining_position:
-                        for position in pl.wining_position:
-                            if (
-                                gomoku_rust.check_move_is_a_fiverow(
-                                    self.board,
-                                    pl.nb,
-                                    position[0],
-                                    position[1],
-                                    self.wining_position,
-                                )
-                                == True
-                            ):
-                                return pl.nb
-                            else:
-                                pl.wining_position.remove(position)
+                    if pl.wining_position[1] != 0:
+                        if (
+                            gomoku_rust.check_move_is_still_winning(self.board, pl.wining_position)
+                            == True
+                        ):
+                            print("true")
+                            return pl.nb
+                        else:
+                            pl.wining_position = (0, 0)
             return 0
 
-    def AI_move(self, player, x, y, turn):
+    def AI_move(self, player, x, y, turn, display_ai_time: bool):
         print(player, x, y)
+        winpos = (0, 0)
         opponant = -player.nb
-        move = gomoku_rust.ai_move(self.board, opponant, x, y, turn, self.wining_position)
+        for p in self.player_list:
+            if p.nb == opponant:
+                if p.wining_position[1] != 0:
+                    winpos = p.wining_position
+                    print("AI WINPOS", winpos)
+        move = gomoku_rust.ai_move(self.board, opponant, x, y, turn, winpos, display_ai_time)
         print("AI: ", move)
 
         return move
 
     def print_search_box(self, player, x, y, turn):
         opponant = -player.nb
-        box = gomoku_rust.get_rust_box(self.board, opponant, x, y, self.wining_position)
+        box = gomoku_rust.get_rust_box(self.board)
         return box
 
     def print_game_status(self):
