@@ -5,6 +5,7 @@ use crate::heuristic::heuristic;
 
 use crate::search_space::get_search_box_bitboard;
 
+/// State struct corresponding to an instant board value for a given player.
 pub struct State {
     pub bitboards: Bitboards,
     pub available_move: Vec<State>,
