@@ -42,7 +42,10 @@ fn ai_move(
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     // let opponent = -player;
+<<<<<<< HEAD
 	let copywin: Vec<((isize, isize), i8)> = wining_position.clone();
+=======
+>>>>>>> 1a741d1 (status)
 	let copywin_negascout: Vec<((isize, isize), i8)> = wining_position.clone();
 	let copywin_nega_tt: Vec<((isize, isize), i8)> = wining_position.clone();
 	let copywin_scout_tt: Vec<((isize, isize), i8)> = wining_position.clone();
@@ -73,6 +76,7 @@ fn ai_move(
             &mut state, global_var::DEEP, global_var::HEURISTIC_MIN_VALUE, global_var::HEURISTIC_MAX_VALUE, player);
 		let negend = Instant::now();
 		println!("time to process negamax {:?}", negend.duration_since(negstart));
+<<<<<<< HEAD
 		let mut negttstate: state::State =
         state::create_new_state(&mut mutboard, player, (x, y), white_captured_stone, black_captured_stone, copywin_nega_tt);
 		let negstart = Instant::now();
@@ -99,6 +103,27 @@ fn ai_move(
     if display_ai_time {
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+=======
+		let mut negstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_nega_tt);
+		let negstart = Instant::now();
+		let value = negamax::negamax_with_tt(&mut negstate, 3, -1000, 1000, player);
+		let negend = Instant::now();
+		println!("time to process negamax_with_tt {:?}", negend.duration_since(negstart));
+		let mut negttstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_negascout);
+		let negstart = Instant::now();
+		let value = negamax::negascout(&mut negttstate, 3, -1000, 1000, player);
+		let negend = Instant::now();
+		println!("time to process negascout {:?}", negend.duration_since(negstart));
+		let mut scouttstate: state::State =
+        state::create_new_state(&mut mutboard, player, (x, y), eat_player, copywin_scout_tt);
+		let negstart = Instant::now();
+		let value = negamax::negascout_with_tt(&mut scouttstate, 3, -1000, 1000, player);
+		let negend = Instant::now();
+		println!("time to process negascout_with_tt {:?}", negend.duration_since(negstart));
+        ai_move = negamax::return_move(&mut state);
+>>>>>>> 1a741d1 (status)
     }
 
     let ai_x_move = (ai_move.0 / 19) as usize;

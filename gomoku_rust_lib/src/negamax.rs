@@ -6,6 +6,9 @@ use crate::state::state_is_terminated;
 use crate::state::State;
 use std::cmp::Reverse;
 
+static mut TRANSPOTABLENEGA: Vec<Transpotablenode> = vec![];
+static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![];
+
 
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
 	update_max_depth(depth);
@@ -82,6 +85,43 @@ pub fn negamax_with_tt(mut state: &mut State, depth: i32, mut alpha: i32, beta: 
     return value;
 }
 
+pub fn negamax_with_tt(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
+    let tt_search : (bool,i32,i32);
+	unsafe {tt_search = transposition_table_search(state, &TRANSPOTABLENEGA)};
+	if tt_search.0 == true && tt_search.1 >= depth {
+		return tt_search.2;
+	}
+	if depth != 0 {
+        state.available_move = create_child(&mut state);
+        state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+    }
+    // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
+    if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
+        return state.heuristic * color as i32;
+    }
+    let mut value: i32 = -1000;
+    let len = state.available_move.len();
+    for child in 0..len {
+        let negamax = -negamax(
+            &mut state.available_move[child],
+            depth - 1,
+            -beta,
+            -alpha,
+            -color,
+        );
+        value = std::cmp::max(value, negamax);
+        alpha = std::cmp::max(alpha, value);
+        if alpha >= beta {
+            // println!("pruning");
+            break;
+        }
+    }
+	unsafe {transposition_table_push(state, depth,&mut TRANSPOTABLENEGA);}
+    // // println!("alpha {}  beta {}", alpha, beta);
+    state.heuristic = value;
+    return value;
+}
+
 pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
     if depth != 0 && state.available_move.len() == 0 {
         state.available_move = create_child(&mut state);
@@ -93,51 +133,6 @@ pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, c
         return state.heuristic * color as i32;
     }
     let mut value: i32;
-<<<<<<< HEAD
-=======
-    let len = state.available_move.len();
-    for child in 0..len {
-		if child == 0 {
-			value = -negascout(
-				&mut state.available_move[child],
-				depth - 1,
-				-beta,
-				-alpha,
-				-color,
-			);
-		}
-		else {
-			value = -negascout(
-				&mut state.available_move[child],
-				depth - 1,
-				-alpha -1,
-				-alpha,
-				-color,
-			);	
-		
-		if alpha < value && value < beta {
-        value = -negascout(
-            &mut state.available_move[child],
-            depth - 1,
-            -beta,
-            -value,
-            -color,
-        );
-	}
-	}
-        alpha = std::cmp::max(alpha, value);
-        if alpha >= beta {
-            // println!("pruning");
-            break;
-        }
-    }
-    // // println!("alpha {}  beta {}", alpha, beta);
-    state.heuristic = alpha;
-    return alpha;
-}
-
-pub fn return_move(state: &mut State, heuristic: i32) -> ((isize, isize), i32) {
->>>>>>> 2f42988 (rebase from main)
     let len = state.available_move.len();
     for child in 0..len {
 		if child == 0 {
@@ -237,7 +232,66 @@ pub fn negascout_with_tt(mut state: &mut State, depth: i32, mut alpha: i32, beta
     return alpha;
 }
 
-print_heuristic_table(state);
+pub fn negascout_with_tt(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
+    let tt_search : (bool,i32,i32);
+	unsafe {tt_search = transposition_table_search(state, &TRANSPOTABLESCOUT)};
+	if tt_search.0 == true && tt_search.1 >= depth {
+		return tt_search.2;
+	}
+	if depth != 0 && state.available_move.len() == 0 {
+        state.available_move = create_child(&mut state);
+        state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+    }
+    // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
+    if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
+        state.heuristic = state.heuristic * color as i32;
+        return state.heuristic * color as i32;
+    }
+    let mut value: i32;
+    let len = state.available_move.len();
+    for child in 0..len {
+		if child == 0 {
+			value = -negascout(
+				&mut state.available_move[child],
+				depth - 1,
+				-beta,
+				-alpha,
+				-color,
+			);
+		}
+		else {
+			value = -negascout(
+				&mut state.available_move[child],
+				depth - 1,
+				-alpha -1,
+				-alpha,
+				-color,
+			);	
+		
+		if alpha < value && value < beta {
+        value = -negascout(
+            &mut state.available_move[child],
+            depth - 1,
+            -beta,
+            -value,
+            -color,
+        );
+	}
+	}
+        alpha = std::cmp::max(alpha, value);
+        if alpha >= beta {
+            // println!("pruning");
+            break;
+        }
+    }
+	unsafe {transposition_table_push(state, depth,&mut TRANSPOTABLESCOUT);}
+    // // println!("alpha {}  beta {}", alpha, beta);
+    state.heuristic = alpha;
+    return alpha;
+}
+
+pub fn return_move(state: &mut State) -> ((isize, isize), i32) {
+	print_heuristic_table(state);
 	unsafe{println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);}
     // println!("heuristic of returned move : {:?}", heuristic);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
@@ -255,6 +309,7 @@ print_heuristic_table(state);
         state.available_move[0].heuristic,
     );
 }
+
 
 pub fn print_heuristic_table(state: &State) {
     let len = state.available_move.len();
@@ -301,7 +356,6 @@ pub fn print_heuristic_table(state: &State) {
     }
 }
 
-fn transposition_table_push() {}
 struct Transpotablenode {
 	hash : u64,
 	depth: i32,
@@ -332,5 +386,3 @@ unsafe fn transposition_table_search(state: &State, transpo_table: &Vec<Transpot
 	}
 	return(false, 0, 0);
 }
-=======
-fn transposition_table_search() {}
