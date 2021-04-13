@@ -54,7 +54,6 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.black_captured_stone,
         );
         child.heuristic = heuristic(&mut child);
-        if child.heuristic > 0 {}
         if child.heuristic >= 0 {
             childs_list.push(child);
         }
