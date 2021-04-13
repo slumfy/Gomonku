@@ -1,5 +1,3 @@
-use crate::bit_operations::remove_bit;
-use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::Bitboards;
 use crate::check_bits::check_and_apply_capture;
 use crate::check_bits::check_blocker;

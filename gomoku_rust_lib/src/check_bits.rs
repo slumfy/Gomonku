@@ -12,7 +12,6 @@ use crate::patterns::CAPTURE_PATTERN;
 use crate::patterns::PATTERN;
 use crate::state::State;
 use pyo3::prelude::*;
-use pyo3::types::PyDict;
 
 fn check_overlapping_stone(pos: usize, bitboards: &Bitboards) -> bool {
     if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0
