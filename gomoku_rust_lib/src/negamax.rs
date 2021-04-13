@@ -256,7 +256,6 @@ pub fn print_heuristic_table(state: &State) {
     }
 }
 
-<<<<<<< HEAD
 fn transposition_table_push() {}
 fn transposition_table_search() {}
 =======
@@ -265,7 +264,6 @@ struct Transpotablenode {
 	depth: i32,
 	value: i32
 }
-
 
 fn transposition_table_push(state: &State, depth: i32, transpo_table:&mut Vec<Transpotablenode>) {
 	let mut hash = DefaultHasher::new();
@@ -291,4 +289,3 @@ unsafe fn transposition_table_search(state: &State, transpo_table: &Vec<Transpot
 	}
 	return(false, 0, 0);
 }
->>>>>>> 565b4de (status)
