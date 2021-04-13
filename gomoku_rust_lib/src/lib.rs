@@ -16,7 +16,6 @@ mod state;
 mod tests;
 use crate::bitpattern::check_pos_still_win;
 use crate::heuristic::BoardStateInfo;
-use bitboards::print_bitboards;
 use check_bits::checking_and_apply_bits_move;
 
 use crate::tests::__pyo3_get_function_test_get_pydict;
@@ -42,6 +41,9 @@ fn ai_move(
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
+    // let opponent = -player;
+
+    let eat_player: (i8, i8);
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
@@ -64,9 +66,8 @@ fn ai_move(
         unsafe {
             global_var::MAX_DEPTH_REACH = 0;
         }
-        let value;
         if search_algorithm == "negamax" {
-            value = negamax::negamax(
+            negamax::negamax(
                 &mut state,
                 global_var::DEPTH,
                 global_var::HEURISTIC_MIN_VALUE,
@@ -75,10 +76,9 @@ fn ai_move(
             );
         } else {
             println!("Algo not implemented yet");
-            value = 0;
         }
 
-        ai_move = negamax::return_move(&mut state, value);
+        ai_move = negamax::return_move(&mut state);
     }
     if display_ai_time {
         let end_time = Instant::now();
