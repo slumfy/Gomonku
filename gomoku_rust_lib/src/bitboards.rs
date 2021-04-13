@@ -2,7 +2,7 @@ use crate::check_bits::get_bits_in_bitboard_from_pos;
 use crate::check_bits::get_line_from_pos;
 use crate::global_var;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Hash)]
 pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
