@@ -38,8 +38,6 @@ fn create_box_for_bitpos(bitpos: usize, box_position: &mut Vec<usize>) {
     }
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 fn check_is_in_bitpos_list(box_position: &mut Vec<usize>, bitpos: usize) -> bool {
     let len = box_position.len();
     for pos in 0..len {
@@ -48,32 +46,6 @@ fn check_is_in_bitpos_list(box_position: &mut Vec<usize>, bitpos: usize) -> bool
         }
     }
     return false;
-=======
-	let box_size = 2;
-	let xmin = if x < box_size { 0 } else { x - box_size};
-	let xmax = if  x + box_size >= 18 { 18 } else { x + box_size};
-	let ymin = if  y < box_size { 0 } else { y - box_size};
-	let ymax = if  y + box_size >= 18 { 18 } else { y + box_size};
-	// println!("xmin: {} xmax: {} ymin: {} ymax: {}",xmin,xmax,ymin,ymax);
-	for idx in xmin..xmax + 1 {
-		for idy in ymin..ymax + 1 {
-			if check_is_in_pos_list(box_position, idx, idy) == false {
-				box_position.push((idx, idy));
-=======
-	let offset = 2;
-	let xmin = if x < offset { 0 } else { x - offset};
-	let xmax = if  x + offset + 1 > 19 { x + 1 } else { x + offset + 1};
-	let ymin = if  y < offset { 0 } else { y - offset};
-	let ymax = if  y + offset + 1 > 19 { y + 1 } else { y + offset + 1};
-	for idx in xmin..xmax {
-		for idy in ymin..ymax{
-			if check_is_in_pos_list(box_position,idx,idy) == false {
-				box_position.push((idx,idy));
->>>>>>> abcddd9 (fix)
-			}
-		}
-	}
->>>>>>> 2f42988 (rebase from main)
 }
 
 
