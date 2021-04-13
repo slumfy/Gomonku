@@ -65,6 +65,7 @@ fn ai_move(
             global_var::MAX_DEPTH_REACH = 0;
         }
         if search_algorithm == "negamax" {
+            println!("using negamax");
             negamax::negamax(
                 &mut state,
                 global_var::DEPTH,
@@ -72,8 +73,33 @@ fn ai_move(
                 global_var::HEURISTIC_MAX_VALUE,
                 player,
             );
-        } else {
-            println!("Algo not implemented yet");
+        } else if search_algorithm == "negamax_with_transpotable" {
+            println!("using negamax_with_transpotable");
+            negamax::negamax_with_transpotable(
+                &mut state,
+                global_var::DEPTH,
+                global_var::HEURISTIC_MIN_VALUE,
+                global_var::HEURISTIC_MAX_VALUE,
+                player,
+            );
+        } else if search_algorithm == "negascout" {
+            println!("using negascout");
+            negamax::negascout(
+                &mut state,
+                global_var::DEPTH,
+                global_var::HEURISTIC_MIN_VALUE,
+                global_var::HEURISTIC_MAX_VALUE,
+                player,
+            );
+        } else if search_algorithm == "negascout_with_transpotable" {
+            println!("using negascout_with_transpotable");
+            negamax::negascout_with_transpotable(
+                &mut state,
+                global_var::DEPTH,
+                global_var::HEURISTIC_MIN_VALUE,
+                global_var::HEURISTIC_MAX_VALUE,
+                player,
+            );
         }
 
         ai_move = negamax::return_move(&mut state);

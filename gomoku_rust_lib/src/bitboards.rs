@@ -7,6 +7,7 @@ pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
 }
+
 pub fn create_bits_axes_from_pos(
     move_pos: usize,
     bitboards: &Bitboards,

@@ -30,9 +30,9 @@ def main(argv=None):
         "--search_algorithm",
         help="""
     - negamax
-    - negamax-transpo-table
+    - negamax_with_transpotable
     - negascout
-    - negascout-transpo-table""",
+    - negascout_with_transpotable""",
         default="negamax",
     )
     args = parser.parse_args(argv)

@@ -49,7 +49,7 @@ fn update_max_depth(depth: i32) {
     }
 }
 
-pub fn negamax_with_tt(
+pub fn negamax_with_transpotable(
     mut state: &mut State,
     depth: i32,
     mut alpha: i32,
@@ -145,7 +145,7 @@ pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, c
     return alpha;
 }
 
-pub fn negascout_with_tt(
+pub fn negascout_with_transpotable(
     mut state: &mut State,
     depth: i32,
     mut alpha: i32,
