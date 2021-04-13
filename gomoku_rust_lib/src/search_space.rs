@@ -38,7 +38,6 @@ fn create_box_for_bitpos(bitpos: usize, box_position: &mut Vec<usize>) {
     }
 }
 
-<<<<<<< HEAD
 fn check_is_in_bitpos_list(box_position: &mut Vec<usize>, bitpos: usize) -> bool {
     let len = box_position.len();
     for pos in 0..len {
@@ -48,6 +47,7 @@ fn check_is_in_bitpos_list(box_position: &mut Vec<usize>, bitpos: usize) -> bool
     }
     return false;
 }
+
 
 #[allow(dead_code)]
 pub fn unwrap_bitlist(box_position: Vec<usize>) -> Vec<(usize, usize)> {

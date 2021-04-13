@@ -45,7 +45,60 @@ fn update_max_depth(depth: i32) {
 	}
 }
 
-pub fn return_move(state: &mut State, heuristic: i32) -> (usize, i32) {
+pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
+    if depth != 0 && state.available_move.len() == 0 {
+        state.available_move = create_child(&mut state);
+        state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+    }
+    // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
+    if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
+        state.heuristic = state.heuristic * color as i32;
+        return state.heuristic * color as i32;
+    }
+    let mut value: i32;
+    let len = state.available_move.len();
+    for child in 0..len {
+		if child == 0 {
+			value = -negascout(
+				&mut state.available_move[child],
+				depth - 1,
+				-beta,
+				-alpha,
+				-color,
+			);
+		}
+		else {
+			value = -negascout(
+				&mut state.available_move[child],
+				depth - 1,
+				-alpha -1,
+				-alpha,
+				-color,
+			);	
+		
+		if alpha < value && value < beta {
+        value = -negascout(
+            &mut state.available_move[child],
+            depth - 1,
+            -beta,
+            -value,
+            -color,
+        );
+	}
+	}
+        alpha = std::cmp::max(alpha, value);
+        if alpha >= beta {
+            // println!("pruning");
+            break;
+        }
+    }
+    // // println!("alpha {}  beta {}", alpha, beta);
+    state.heuristic = alpha;
+    return alpha;
+}
+
+pub fn return_move(state: &mut State, heuristic: i32) -> ((isize, isize), i32) {
+    let len = state.available_move.len();
     print_heuristic_table(state);
 	unsafe{println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);}
     // println!("heuristic of returned move : {:?}", heuristic);
