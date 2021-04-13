@@ -22,7 +22,7 @@ pub fn get_search_box_bitboard(bitboard: &Bitboards) -> Vec<usize> {
 
 #[allow(dead_code)]
 fn create_box_for_bitpos(bitpos: usize, box_position: &mut Vec<usize>) {
-    let box_size = 2;
+    let box_size = 1;
     let y = bitpos % 19;
     let x = bitpos / 19;
     let xmin = if x < box_size { 0 } else { x - box_size };
