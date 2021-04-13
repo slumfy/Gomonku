@@ -37,6 +37,7 @@ fn ai_move(
     turn: isize,
     wining_position: (usize, i8),
     display_ai_time: bool,
+    search_algorithm: String,
 ) -> PyResult<((usize, usize), i32)> {
     println!("player {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
@@ -63,13 +64,20 @@ fn ai_move(
         unsafe {
             global_var::MAX_DEPTH_REACH = 0;
         }
-        let value = negamax::negamax(
-            &mut state,
-            global_var::DEPTH,
-            global_var::HEURISTIC_MIN_VALUE,
-            global_var::HEURISTIC_MAX_VALUE,
-            player,
-        );
+        let value;
+        if search_algorithm == "negamax" {
+            value = negamax::negamax(
+                &mut state,
+                global_var::DEPTH,
+                global_var::HEURISTIC_MIN_VALUE,
+                global_var::HEURISTIC_MAX_VALUE,
+                player,
+            );
+        } else {
+            println!("Algo not implemented yet");
+            value = 0;
+        }
+
         ai_move = negamax::return_move(&mut state, value);
     }
     if display_ai_time {
