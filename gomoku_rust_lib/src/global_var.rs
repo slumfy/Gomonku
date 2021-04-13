@@ -1,9 +1,13 @@
+<<<<<<< HEAD
 // Search algorithm global vars
 pub static DEPTH: i32 = 3;
 // depth reach with negamax
 pub static mut MAX_DEPTH_REACH : i32 = 0;
 
 // Capturing stone count
+=======
+pub static DEEP: i32 = 3;
+>>>>>>> f0b4973 (rebase of main)
 pub static mut WHITE_CAPTURED_STONE: i8 = 0;
 pub static mut BLACK_CAPTURED_STONE: i8 = 0;
 
