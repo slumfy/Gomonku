@@ -34,7 +34,6 @@ fn ai_move(
     x: usize,
     y: usize,
     turn: isize,
-    wining_position: (usize, i8),
     display_ai_time: bool,
     search_algorithm: String,
 ) -> PyResult<((usize, usize), i32)> {
@@ -43,7 +42,6 @@ fn ai_move(
     let black_captured_stone: i8;
     // let opponent = -player;
 
-    let eat_player: (i8, i8);
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
@@ -110,12 +108,6 @@ fn check_move_is_still_winning(
     wining_position: (usize, i8),
 ) -> PyResult<bool> {
     let bitboards = bitboards::create_bitboards_from_vec(&board);
-    let white_captured_stone: i8;
-    let black_captured_stone: i8;
-    unsafe {
-        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
-        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
-    }
     let still_winning = check_pos_still_win(bitboards, wining_position.0, wining_position.1);
     if still_winning == true {
         Ok(true)
@@ -125,13 +117,7 @@ fn check_move_is_still_winning(
 }
 
 #[pyfunction]
-fn place_stone(
-    mut board: Vec<Vec<i8>>,
-    player: i8,
-    x: usize,
-    y: usize,
-    wining_position: (usize, i8),
-) -> PyResult<PyObject> {
+fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);

@@ -36,7 +36,7 @@ class GoRules:
             if p.nb == opponant:
                 if p.wining_position[1] != 0:
                     winpos = p.wining_position
-        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y, winpos)
+        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
         # print(Rust_res)
         if Rust_res["game_status"] != 0:
             return -2
@@ -75,7 +75,7 @@ class GoRules:
                     winpos = p.wining_position
                     print("AI WINPOS", winpos)
         move = gomoku_rust.ai_move(
-            self.board, opponant, x, y, turn, winpos, display_ai_time, search_algorithm
+            self.board, opponant, x, y, turn, display_ai_time, search_algorithm
         )
         print("AI: ", move)
 
