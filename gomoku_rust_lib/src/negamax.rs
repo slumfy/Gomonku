@@ -93,6 +93,51 @@ pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, c
         return state.heuristic * color as i32;
     }
     let mut value: i32;
+<<<<<<< HEAD
+=======
+    let len = state.available_move.len();
+    for child in 0..len {
+		if child == 0 {
+			value = -negascout(
+				&mut state.available_move[child],
+				depth - 1,
+				-beta,
+				-alpha,
+				-color,
+			);
+		}
+		else {
+			value = -negascout(
+				&mut state.available_move[child],
+				depth - 1,
+				-alpha -1,
+				-alpha,
+				-color,
+			);	
+		
+		if alpha < value && value < beta {
+        value = -negascout(
+            &mut state.available_move[child],
+            depth - 1,
+            -beta,
+            -value,
+            -color,
+        );
+	}
+	}
+        alpha = std::cmp::max(alpha, value);
+        if alpha >= beta {
+            // println!("pruning");
+            break;
+        }
+    }
+    // // println!("alpha {}  beta {}", alpha, beta);
+    state.heuristic = alpha;
+    return alpha;
+}
+
+pub fn return_move(state: &mut State, heuristic: i32) -> ((isize, isize), i32) {
+>>>>>>> 2f42988 (rebase from main)
     let len = state.available_move.len();
     for child in 0..len {
 		if child == 0 {

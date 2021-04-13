@@ -47,6 +47,7 @@ fn ai_move(
 	let copywin_nega_tt: Vec<((isize, isize), i8)> = wining_position.clone();
 	let copywin_scout_tt: Vec<((isize, isize), i8)> = wining_position.clone();
 
+    let eat_player: (i8, i8);
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
@@ -109,7 +110,7 @@ fn ai_move(
     );
     println!(
         "white eat: {:?} black eat: {:?}",
-        white_captured_stone, black_captured_stone
+        eat_player.0, eat_player.1
     );
     println!(
         "negamax in board {:?}:{} turn {}",
