@@ -16,9 +16,13 @@ use crate::state::State;
 use pyo3::prelude::*;
 
 pub fn check_stone_color(pos: usize, bitboards: &Bitboards) -> i8 {
-    if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0 {return 1;}
-	else if get_bits_in_bitboard_from_pos(pos, &bitboards.black_board) != 0 {return -1;}
-    else {return 0;}
+    if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0 {
+        return 1;
+    } else if get_bits_in_bitboard_from_pos(pos, &bitboards.black_board) != 0 {
+        return -1;
+    } else {
+        return 0;
+    }
 }
 
 fn check_overlapping_stone(pos: usize, bitboards: &Bitboards) -> bool {
@@ -72,7 +76,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     }
 }
 
-pub fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> i8 {
+pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
     let mut count = 0;
     for axe in 0..axe_pattern.len() {
         if axe_pattern[axe].1 == 0 {
@@ -81,7 +85,7 @@ pub fn check_double_triple(axe_pattern: [(usize, usize); 4]) -> i8 {
             }
         }
     }
-    return if count >= 2 { 1 } else { 0 };
+    return if count >= 2 { true } else { false };
 }
 
 pub fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> i8 {

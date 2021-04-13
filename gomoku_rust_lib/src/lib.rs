@@ -6,22 +6,22 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
+mod algorithms;
 mod bit_operations;
 mod bitboards;
 mod bitpattern;
-mod check_bits;
+mod check_move;
 mod global_var;
 mod heuristic;
-mod algorithms;
 mod patterns;
 mod print;
 mod search_space;
 mod state;
 mod tests;
-use crate::check_bits::__pyo3_get_function_check_move_is_still_winning;
-use crate::check_bits::check_pos_still_win;
-use crate::heuristic::BoardStateInfo;
-use check_bits::checking_and_apply_bits_move;
+use check_move::__pyo3_get_function_check_move_is_still_winning;
+use check_move::check_pos_still_win;
+use check_move::checking_and_apply_bits_move;
+use heuristic::BoardStateInfo;
 
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
