@@ -2,6 +2,8 @@
 
 use crate::bitboards::Bitboards;
 use crate::state::State;
+use crate::search_space::get_search_box_bitboard;
+use crate::check_bits::check_stone_color;
 
 pub fn print_axes(axes: &[[u16; 4]; 2]) {
     println!("white axes : ");
@@ -29,36 +31,43 @@ pub fn print_axes(axes: &[[u16; 4]; 2]) {
 
 pub fn print_heuristic_table(state: &State) {
     let len = state.available_move.len();
-    let mut table: Vec<Vec<i32>> = vec![];
-    let mut line: Vec<i32> = vec![];
+    let mut table: Vec<Vec<String>> = vec![];
+    let mut line: Vec<String> = vec![];
     let mut xmax = 0;
     let mut xmin = 18;
     let mut ymax = 0;
     let mut ymin = 18;
     let mut trigger = 0;
-    for idx in 0..len {
-        // println!("x {} y {}", state.available_move[idx].current_move.0, state.available_move[idx].current_move.1);
-        xmax = std::cmp::max((state.available_move[idx].bit_current_move_pos) / 19, xmax);
-        xmin = std::cmp::min(xmin, (state.available_move[idx].bit_current_move_pos) / 19);
-        ymax = std::cmp::max(ymax, (state.available_move[idx].bit_current_move_pos) % 19);
-        ymin = std::cmp::min(ymin, (state.available_move[idx].bit_current_move_pos) % 19);
-    }
-    println!(
-        "xmax: {}, xmin: {}, ymax: {},ymin: {}",
-        xmax, xmin, ymax, ymin
-    );
+	let box_list = get_search_box_bitboard(&state.bitboards);
+
     for x in 0..19 {
         for y in 0..19 {
             for idx in 0..len {
                 if (state.available_move[idx].bit_current_move_pos) / 19 == x
                     && (state.available_move[idx].bit_current_move_pos) % 19 == y
                 {
-                    line.push(state.available_move[idx].heuristic);
+                    line.push(state.available_move[idx].heuristic.to_string());
                     trigger = 1;
                 }
             }
+			if trigger == 0 {
+				for b in 0..box_list.len() {
+					let pos = x * 19 + y;
+					if pos == box_list[b] {
+						let color = check_stone_color(pos, &state.bitboards);
+						if color == 1 {
+							line.push("*".to_string());
+						}
+						else if color == -1 {
+							line.push("°".to_string());
+						}
+						else {line.push("/".to_string());}
+						trigger = 1;
+					}
+				}
+			}
             if trigger == 0 {
-                line.push(1111);
+                line.push("----".to_string());
             } else {
                 trigger = 0;
             }
@@ -68,7 +77,10 @@ pub fn print_heuristic_table(state: &State) {
     }
     println!("heuristic table:");
     for x in 0..table.len() {
-        println!("{:5?}", table[x]);
+		for y in 0..table.len() {
+			print!("{:5}", table[x][y]);
+		}
+		println!("");
     }
 }
 

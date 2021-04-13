@@ -36,5 +36,9 @@ pub fn heuristic(state: &mut State) -> i32 {
     } else {
         value += board_state_info.pattern_value as i32;
     }
+	if board_state_info.flank == 1 {
+		value -= 50;
+	}
+	value += board_state_info.stone_captured as i32 * 100;
     return value;
 }
