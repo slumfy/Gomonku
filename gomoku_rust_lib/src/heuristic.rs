@@ -16,16 +16,14 @@ pub struct BoardStateInfo {
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
-	if board_state_info.is_wrong_move != global_var::VALID_MOVE {
-		state.is_playable = board_state_info.is_wrong_move;
-		return value;
+    if board_state_info.is_wrong_move != global_var::VALID_MOVE {
+        state.is_playable = board_state_info.is_wrong_move;
+        return value;
     }
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
             if state.current_player == state.win_state.1 {
-                value = 100000;
-            } else {
-                value = 100000;
+                value = global_var::HEURISTIC_MAX_VALUE;
             }
             return value;
         } else {
@@ -35,10 +33,10 @@ pub fn heuristic(state: &mut State) -> i32 {
     if board_state_info.is_winning.1 != 0 {
         state.win_state = board_state_info.is_winning;
     }
-	value += board_state_info.pattern_value as i32;
-	if board_state_info.flank == 1 {
-		value -= 50;
-	}
-	value += board_state_info.stone_captured as i32 * 100;
+    value += board_state_info.pattern_value as i32;
+    if board_state_info.flank == 1 {
+        value -= 50;
+    }
+    value += board_state_info.stone_captured as i32 * 100;
     return value;
 }

@@ -14,8 +14,8 @@ pub static PLAYER_WHITE_NB: i8 = 1;
 pub static PLAYER_BLACK_NB: i8 = -1;
 
 // Heuristic global var
-pub static HEURISTIC_MAX_VALUE: i32 = 1000;
-pub static HEURISTIC_MIN_VALUE: i32 = -1000;
+pub static HEURISTIC_MAX_VALUE: i32 = i32::MAX;
+pub static HEURISTIC_MIN_VALUE: i32 = i32::MIN;
 
 // Axes global var
 pub static AXE_MOUVEMENT_VALUE: [usize; 4] = [20, 19, 18, 1];
