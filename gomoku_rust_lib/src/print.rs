@@ -2,6 +2,7 @@
 
 use crate::bitboards::Bitboards;
 use crate::check_move::check_stone_color;
+use crate::global_var;
 use crate::search_space::get_search_box_bitboard;
 use crate::state::State;
 
@@ -33,10 +34,6 @@ pub fn print_heuristic_table(state: &State) {
     let len = state.available_move.len();
     let mut table: Vec<Vec<String>> = vec![];
     let mut line: Vec<String> = vec![];
-    let mut xmax = 0;
-    let mut xmin = 18;
-    let mut ymax = 0;
-    let mut ymin = 18;
     let mut trigger = 0;
     let box_list = get_search_box_bitboard(&state.bitboards);
 
@@ -46,7 +43,14 @@ pub fn print_heuristic_table(state: &State) {
                 if (state.available_move[idx].bit_current_move_pos) / 19 == x
                     && (state.available_move[idx].bit_current_move_pos) % 19 == y
                 {
-                    line.push(state.available_move[idx].heuristic.to_string());
+                    if state.available_move[idx].heuristic == global_var::HEURISTIC_MAX_VALUE {
+                        line.push("MAX".to_string());
+                    } else if state.available_move[idx].heuristic == global_var::HEURISTIC_MIN_VALUE
+                    {
+                        line.push("MIN".to_string());
+                    } else {
+                        line.push(state.available_move[idx].heuristic.to_string());
+                    }
                     trigger = 1;
                 }
             }
@@ -55,9 +59,9 @@ pub fn print_heuristic_table(state: &State) {
                     let pos = x * 19 + y;
                     if pos == box_list[b] {
                         let color = check_stone_color(pos, &state.bitboards);
-                        if color == 1 {
+                        if color == global_var::PLAYER_WHITE_NB {
                             line.push("*".to_string());
-                        } else if color == -1 {
+                        } else if color == global_var::PLAYER_BLACK_NB {
                             line.push("°".to_string());
                         } else {
                             line.push("/".to_string());
