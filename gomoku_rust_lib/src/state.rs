@@ -13,6 +13,7 @@ pub struct State {
     pub white_captured_stone: i8,
     pub black_captured_stone: i8,
     pub heuristic: i32,
+	pub is_playable : i8,
     pub win_state: (usize, i8),
     pub bit_current_move_pos: usize,
 }
@@ -32,6 +33,7 @@ pub fn create_new_state(
         black_captured_stone: black_captured_stone,
         available_move: vec![],
         heuristic: 0,
+		is_playable : 0,
         win_state: win_state,
         bit_current_move_pos: bit_current_move_pos,
     };
@@ -57,7 +59,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.win_state,
         );
         child.heuristic = heuristic(&mut child);
-        if child.heuristic >= 0 {
+        if child.is_playable == 0 {
             childs_list.push(child);
         }
     }
