@@ -50,7 +50,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         flank: (0, 0),
         pattern_value: 0,
         is_winning: (0, 0),
-		nb_move_to_win: 5,
+        nb_move_to_win: 5,
     };
 
     bitboard_info.is_wrong_move = check_is_wrong_move(state);
@@ -92,12 +92,13 @@ pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
 }
 
 pub fn check_is_capturable(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> bool {
+    let mut capturable = false;
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
         player_axe >>= 1;
         blocker_axe >>= 1;
-        let shift: [usize; 3] = [0, 1, 2];
+        let shift: [usize; 4] = [0, 1, 2, 4];
         for s in shift.iter() {
             let player_shifted = player_axe >> s;
             let blocker_shifted = blocker_axe >> s;
@@ -107,13 +108,18 @@ pub fn check_is_capturable(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> bool {
                 if blocker_casted & CAPTURE_PATTERN[0].0 != 0
                     && blocker_casted & CAPTURE_PATTERN[0].0 != CAPTURE_PATTERN[0].0
                 {
-                    println!("pattern is capturable.");
-                    return true;
+                    capturable = true;
                 }
             }
+            if player_casted & PATTERN[5].0 == PATTERN[5].0 {
+                capturable = false;
+            }
+        }
+        if capturable {
+            return capturable;
         }
     }
-    return false;
+    return capturable;
 }
 
 pub fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> (i8, i8) {

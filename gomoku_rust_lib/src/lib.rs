@@ -178,7 +178,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         if board_state_info.is_winning.1 != 0 {
             dict.set_item("wining_position", board_state_info.is_winning)?;
         }
-        // println!("winstate =>> {:?}", board_state_info.is_winning);
+        println!("winstate =>> {:?}", board_state_info.is_winning);
     } else {
         println!("Wrong move status = {:?}", board_state_info.is_wrong_move);
         dict.set_item("game_status", board_state_info.is_wrong_move)?;
