@@ -4,6 +4,7 @@ use crate::bitboards::Bitboards;
 use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
 use crate::check_move::check_flank;
+use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
 use crate::global_var;
@@ -24,7 +25,8 @@ pub fn pattern_axes_dispatcher(
         // check and apply capture
         board_state_info.stone_captured =
             check_and_apply_capture(bitboards, &axes[0], &axes[1], pos, player);
-        board_state_info.flank = check_flank(&axes[0], &axes[1]);
+        board_state_info.capturable = check_is_capturable(&axes[0], &axes[1]);
+        board_state_info.capturing = check_is_capturable(&axes[1], &axes[0]);
         axe_pattern = pattern_axes_finder(bitboards, &axes[0], &axes[1], pos, player);
         return_pattern_value(board_state_info, axe_pattern[0], pos, player);
         // return_blocker_value(board_state_info, axe_pattern[1], pos, player);
@@ -35,7 +37,8 @@ pub fn pattern_axes_dispatcher(
         // println!("black player pattern in row:");
         board_state_info.stone_captured =
             check_and_apply_capture(bitboards, &axes[1], &axes[0], pos, player);
-        board_state_info.flank = check_flank(&axes[1], &axes[0]);
+        board_state_info.capturable = check_is_capturable(&axes[0], &axes[1]);
+        board_state_info.capturing = check_is_capturable(&axes[1], &axes[0]);
         axe_pattern = pattern_axes_finder(bitboards, &axes[1], &axes[0], pos, player);
         return_pattern_value(board_state_info, axe_pattern[0], pos, player);
         // return_blocker_value(board_state_info, axe_pattern[1], pos, player);
@@ -110,7 +113,7 @@ fn pattern_axes_finder(
         let mut blocker_axe = blocker_axes[axe_index];
         player_axe >>= 1;
         blocker_axe >>= 1;
-		let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
+        let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
         for l in 0..6 {
             let player_shifted = player_axe >> l;
             let blocker_shifted = blocker_axe >> l;

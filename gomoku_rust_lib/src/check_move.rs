@@ -47,7 +47,8 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     let mut bitboard_info = BoardStateInfo {
         is_wrong_move: 0,
         stone_captured: 0,
-        flank: (0, 0),
+        capturable: false,
+        capturing: false,
         pattern_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
