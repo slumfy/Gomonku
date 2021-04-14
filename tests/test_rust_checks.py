@@ -11,5 +11,5 @@ except ImportError:
     import gomoku_rust
 
 
-def test_double_triple_check_rust():
-    gomoku_rust.gomoku_tests.test_double_triple()
+def test_check_rust():
+    gomoku_rust.gomoku_tests.test_check_is_unblockable_five()

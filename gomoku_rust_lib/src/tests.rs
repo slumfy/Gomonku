@@ -2,6 +2,10 @@
 
 extern crate pyo3;
 
+use crate::bitboard_operations::apply_bit;
+use crate::bitboards::Bitboards;
+use crate::global_var;
+use crate::print::print_board_from_bitboard;
 use pyo3::prelude::*;
 use pyo3::types::*;
 use std::collections::HashMap;
@@ -73,143 +77,205 @@ pub fn test_get_pydict(py_obj: HashMap<String, i32>) {
     );
 }
 
-// #[pyfunction]
-// pub fn test_double_triple() {
-//     let player = 1;
-//     let current_move = player;
-//     let mut axes: Vec<Vec<i8>> = vec![];
-//     // test no double triple, empty map
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+use crate::check_move::check_is_unblockable_five;
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+#[pyfunction]
+pub fn test_check_is_unblockable_five() {
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+    let mut pos = 0;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
 
-//     // test in same axe not double triple
-//     axes = vec![];
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     axes.push(vec![0, 0, 1, 1, current_move, 1, 0, 1, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    // Can capture in colone first pos
+    let mut pos = 19;
+    apply_bit(&mut bitboards, 0, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     // test not double triple
-//     axes = vec![];
-//     axes.push(vec![0, 1, 1, 0, current_move, 1, 1, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    // Can capture in colone second pos
+    let mut pos = 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, 1, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     // test in two different axes double triple
-//     axes = vec![];
-//     axes.push(vec![0, 0, 1, 1, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    // Can capture in colone third pos
+    let mut pos = 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, 2, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), true);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     // test in two different axes double triple
-//     axes = vec![];
-//     axes.push(vec![0, 1, 0, 1, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    // Can capture in colone fourth pos
+    let mut pos = 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, 3, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), true);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
+    // Can capture in colone last pos
+    let mut pos = 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, 4, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
 
-//     // test in two different axes double triple
-//     axes = vec![];
-//     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 1, 0, 1, current_move, 0, 0, 0, 0]);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), true);
+    let mut pos = 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), true);
 
-//     // test in more than two different axes double triple
-//     axes = vec![];
-//     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, 0, 0]);
-//     axes.push(vec![0, 0, 1, 1, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 1, 0, 1, current_move, 0, 0, 0, 0]);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), true);
+    // Can capture in diagonal
+    let mut pos = 20;
+    apply_bit(&mut bitboards, 0, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 20, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 20, 3, 1), false);
 
-//     // test is not double triple
-//     axes = vec![];
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 1, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 1, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+    let mut pos = 20;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 20, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 20, 3, 1), true);
 
-//     // test is not double triple
-//     axes = vec![];
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+    // Try diagonal alignment
+    let mut pos = 180;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    pos += 20;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
 
-//     // test is not double triple
-//     axes = vec![];
-//     axes.push(vec![1, 0, 0, 0, current_move, 0, 0, 0, 1]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 0, 0, 1]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 0, 0, 0]);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
 
-//     // test is not double triple because blocked
-//     axes = vec![];
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, -1, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 3, 1), true);
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+    // Can capture in colone
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
 
-//     // test is double triple
-//     axes = vec![];
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, 0, -1]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    let mut pos = 180;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
+    apply_bit(&mut bitboards, pos - 19, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    pos += 20;
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), true);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
 
-//     // test is not double triple because more than 3
-//     axes = vec![];
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, 1, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
 
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    print_board_from_bitboard(&bitboards);
 
-//     // test is not double triple because more than 3
-//     axes = vec![];
-//     axes.push(vec![0, 0, 0, 1, current_move, 1, 1, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
-
-//     // test is not double triple because blocked
-//     axes = vec![];
-//     axes.push(vec![0, 0, 0, 0, current_move, 1, 1, -1, -1]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 1, 1, 0, current_move, 0, 0, 0, 0]);
-//     axes.push(vec![0, 0, 0, 0, current_move, 0, 0, 0, 0]);
-
-//     assert_eq!(check_move_is_double_triple(&axes, player), false);
-// }
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), false);
+}

@@ -1,33 +1,39 @@
 //! Crate specialy used for printing solutions.
 
+use crate::bitboards::create_vec_from_bitboards;
 use crate::bitboards::Bitboards;
 use crate::check_move::check_stone_color;
 use crate::global_var;
 use crate::search_space::get_search_box_bitboard;
 use crate::state::State;
 
-pub fn print_axes(axes: &[[u16; 4]; 2]) {
-    println!("white axes : ");
-    println!();
-    println!("|----------------|");
-    for axe in &axes[0] {
-        print!("|");
-        print!("{:016b}", axe);
-        print!("|");
+pub fn print_axes(axes: &[[u16; 4]; 2], player_color: i8) {
+    if player_color != global_var::PLAYER_BLACK_NB {
+        println!("white axes : ");
+        println!();
+        println!("|----------------|");
+        for axe in &axes[0] {
+            print!("|");
+            print!("{:016b}", axe);
+            print!("|");
+            println!();
+        }
+        println!("|----------------|");
         println!();
     }
-    println!("|----------------|");
-    println!();
-    println!("black axes : ");
-    println!();
-    println!("|----------------|");
-    for axe in &axes[1] {
-        print!("|");
-        print!("{:016b}", axe);
-        print!("|");
+
+    if player_color != global_var::PLAYER_WHITE_NB {
+        println!("black axes : ");
         println!();
+        println!("|----------------|");
+        for axe in &axes[1] {
+            print!("|");
+            print!("{:016b}", axe);
+            print!("|");
+            println!();
+        }
+        println!("|----------------|");
     }
-    println!("|----------------|");
 }
 
 pub fn print_heuristic_table(state: &State) {
@@ -100,10 +106,27 @@ pub fn print_axe_value(axe: usize) {
     }
 }
 
-pub fn print_bitboards(bitboards: &Bitboards) {
-    for x in 0..6 {
-        println!("white_board[{}]: {:064b}", x, bitboards.white_board[x]);
-        println!("black_board[{}]: {:064b}", x, bitboards.black_board[x]);
-    }
+pub fn print_bitboards(bitboards: &Bitboards, player_color: i8) {
     println!();
+    if player_color != global_var::PLAYER_BLACK_NB {
+        for x in 0..6 {
+            println!("white_board[{}]: {:064b}", x, bitboards.white_board[x]);
+        }
+        println!();
+    }
+
+    if player_color != global_var::PLAYER_BLACK_NB {
+        for x in 0..6 {
+            println!("black_board[{}]: {:064b}", x, bitboards.black_board[x]);
+        }
+        println!();
+    }
+}
+
+pub fn print_board_from_bitboard(bitboards: &Bitboards) {
+    let board = create_vec_from_bitboards(bitboards);
+    println!();
+    for board_box in board {
+        println!("{:?}", board_box);
+    }
 }
