@@ -1,7 +1,7 @@
 //! Global variables used in rust.
 
 // Search algorithm global vars
-pub static DEPTH: i32 = 3;
+pub static DEPTH: i32 = 1;
 // depth reach with negamax
 pub static mut MAX_DEPTH_REACH: i32 = 0;
 
