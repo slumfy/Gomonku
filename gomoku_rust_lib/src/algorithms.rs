@@ -72,7 +72,7 @@ pub fn negamax_with_transpotable(
     if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
         return state.heuristic * color as i32;
     }
-    let mut value: i32 = -1000;
+    let mut value: i32 = global_var::HEURISTIC_MIN_VALUE;
     let len = state.available_move.len();
     for child in 0..len {
         let negamax = -negamax(
