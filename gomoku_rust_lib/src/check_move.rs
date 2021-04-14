@@ -14,6 +14,7 @@ use crate::patterns::CAPTURE_PATTERN;
 use crate::patterns::PATTERN;
 use crate::state::State;
 use pyo3::prelude::*;
+use crate::print::print_axe_value;
 
 pub fn check_stone_color(pos: usize, bitboards: &Bitboards) -> i8 {
     if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0 {
@@ -45,7 +46,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     let mut bitboard_info = BoardStateInfo {
         is_wrong_move: 0,
         stone_captured: 0,
-        flank: 0,
+        flank: (0,0),
         pattern_value: 0,
         is_winning: (0, 0),
     };
@@ -88,30 +89,43 @@ pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
     return if count >= 2 { true } else { false };
 }
 
-pub fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> i8 {
-    let mut flank_value = 0;
+pub fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> (i8,i8) {
+    let mut flank_value = (0,0);
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
         player_axe >>= 1;
         blocker_axe >>= 1;
-        // println!("player axe: {:016b}", player_axe);
-        // println!("block  axe: {:016b}", blocker_axe);
-        let shift: [usize; 2] = [1, 2];
+        let shift: [usize; 3] = [0, 1, 2];
         for s in shift.iter() {
             let player_shifted = player_axe >> s;
             let blocker_shifted = blocker_axe >> s;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
+			// println!("player axe: {:016b}", player_casted);
+			// println!("block  axe: {:016b}", blocker_casted);
             if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
                 if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0
-                    && flank_value != 1
+                    && flank_value.0 != 1
                 {
                     // println!("blocked");
-                    flank_value = 2;
+                    flank_value.0 = 2;
                 } else if (blocker_casted & CAPTURE_PATTERN[0].0) != 0 {
                     // println!("flank");
-                    flank_value = 1;
+                    flank_value.0 = 1;
+                } else {
+                    // println!("free");
+                }
+            }
+			if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
+                if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0
+                    && flank_value.1 != 1
+                {
+                    // println!("blocked");
+                    flank_value.1 = 2;
+                } else if (player_casted & CAPTURE_PATTERN[0].0) != 0 {
+                    // println!("flank");
+                    flank_value.1 = 1;
                 } else {
                     // println!("free");
                 }
@@ -218,8 +232,8 @@ pub fn check_is_unblockable_five(
     for n in 0..5 {
         let check_pos = pos + n * global_var::AXE_MOUVEMENT_VALUE[axe];
         let axes = create_bits_axes_from_pos(check_pos, bitboards, player);
-        let order: (usize, usize) = if player == 1 { (0, 1) } else { (1, 0) };
-        if check_flank(&axes[order.0], &axes[order.1]) == 1 {
+        let order: (usize, usize) = if player == 1 { (0, 1) } else { (1, 0)};
+        if check_flank(&axes[order.0], &axes[order.1]).0 == 1 {
             return false;
         }
     }

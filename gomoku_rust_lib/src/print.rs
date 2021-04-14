@@ -88,7 +88,7 @@ pub fn print_heuristic_table(state: &State) {
     }
 }
 
-fn print_axe_value(axe: usize) {
+pub fn print_axe_value(axe: usize) {
     if axe == 0 {
         println!("DIAGONALE UPLEFT:")
     } else if axe == 1 {
