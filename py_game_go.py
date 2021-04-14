@@ -141,7 +141,7 @@ class PyGameGo:
         self.print_font(
             32,
             "Turn :  "
-            + str(self.turn + 1)
+            + str(self.turn)
             + "  "
             + self.player.color
             + "  previous move: "
@@ -155,7 +155,7 @@ class PyGameGo:
         self.print_font(
             32,
             "Turn :  "
-            + str(self.turn + 1)
+            + str(self.turn)
             + "  "
             + self.player.color
             + "  previous move: "
@@ -188,7 +188,6 @@ class PyGameGo:
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
-                self.turn += 1
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -216,7 +215,6 @@ class PyGameGo:
                             y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                             stone_status = go_rules.place_stone(self.player, x, y)
                             self.play_piece(go_rules, stone_status, win_status, x, y)
-                            self.turn += 1
 
     def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
@@ -228,6 +226,7 @@ class PyGameGo:
                 self.player = go_rules.player_list[1]
             elif self.player.nb == PLAYER_BLACK_NB:
                 self.player = go_rules.player_list[0]
+            self.turn += 1
             self.print_player_move(x=x, y=y)
         else:
             win_status = stone_status
