@@ -51,7 +51,7 @@ fn return_pattern_value(
     pos: usize,
     player: i8,
 ) {
-    // println!("pattern on axe {:?}", axe_pattern);
+    println!("pattern on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
@@ -107,22 +107,22 @@ fn pattern_axes_finder(
         // print_axe_value(axe);
         let mut player_axe = axes[axe_index];
         let mut blocker_axe = blocker_axes[axe_index];
-        let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
         player_axe >>= 1;
         blocker_axe >>= 1;
+		let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
         for l in 0..6 {
             let player_shifted = player_axe >> l;
             let blocker_shifted = blocker_axe >> l;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             is_blocked = 0;
-            find_patter(
+            find_pattern(
                 &mut return_pattern,
                 player_casted,
                 blocker_casted,
                 bitboards,
                 is_blocked,
-                found_pattern,
+                &mut found_pattern,
                 axe_index,
                 pos,
                 player,
@@ -134,7 +134,7 @@ fn pattern_axes_finder(
                 blocker_casted,
                 bitboards,
                 is_blocked,
-                found_pattern,
+                &mut found_pattern,
                 axe_index,
                 pos,
                 player,
@@ -148,13 +148,13 @@ fn pattern_axes_finder(
     return [return_pattern, return_blocker];
 }
 
-fn find_patter(
+fn find_pattern(
     return_pattern: &mut [(usize, usize); 4],
     player_casted: u8,
     blocker_casted: u8,
     bitboards: &mut Bitboards,
     mut is_blocked: usize,
-    mut found_pattern: (usize, usize),
+    found_pattern: &mut (usize, usize),
     axe: usize,
     pos: usize,
     player: i8,
@@ -163,7 +163,6 @@ fn find_patter(
     for p in 0..PATTERN.len() {
         if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
             if p == 0 {
-                // println!("FIVE");
                 if check_is_unblockable_five(bitboards, pos - l, axe, player) == true {
                     *return_pattern = [(0, 5), (0, 5), (0, 5), (0, 5)];
                     break;
@@ -189,8 +188,8 @@ fn find_patter(
         }
     }
     if found_pattern.0 < PATTERN.len() {
-        return_pattern[axe] = found_pattern;
-        // println!("PATTERN FOUND {}", PATTERN[found_pattern.0].4,);
+        return_pattern[axe] = *found_pattern;
+        // println!("PATTERN FOUND {}", PATTERN[found_pattern.0].4);
     }
 }
 
@@ -200,7 +199,7 @@ fn find_blocker(
     blocker_casted: u8,
     bitboards: &mut Bitboards,
     mut is_blocked: usize,
-    mut found_pattern: (usize, usize),
+    found_pattern: &mut (usize, usize),
     axe: usize,
     pos: usize,
     player: i8,
@@ -224,6 +223,6 @@ fn find_blocker(
         }
     }
     if found_pattern.0 < PATTERN.len() {
-        return_blocker[axe] = found_pattern;
+        return_blocker[axe] = *found_pattern;
     }
 }
