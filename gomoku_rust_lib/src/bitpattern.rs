@@ -21,8 +21,6 @@ pub fn pattern_axes_dispatcher(
 ) {
     let axe_pattern: [[(usize, usize); 4]; 2];
     if player == global_var::PLAYER_WHITE_NB {
-        // println!("white player pattern in row:");
-        // check and apply capture
         board_state_info.stone_captured =
             check_and_apply_capture(bitboards, &axes[0], &axes[1], pos, player);
         board_state_info.capturable = check_is_capturable(&axes[0], &axes[1]);
@@ -34,11 +32,10 @@ pub fn pattern_axes_dispatcher(
             board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
         }
     } else if player == global_var::PLAYER_BLACK_NB {
-        // println!("black player pattern in row:");
         board_state_info.stone_captured =
             check_and_apply_capture(bitboards, &axes[1], &axes[0], pos, player);
-        board_state_info.capturable = check_is_capturable(&axes[0], &axes[1]);
-        board_state_info.capturing = check_is_capturable(&axes[1], &axes[0]);
+        board_state_info.capturable = check_is_capturable(&axes[1], &axes[0]);
+        board_state_info.capturing = check_is_capturable(&axes[0], &axes[1]);
         axe_pattern = pattern_axes_finder(bitboards, &axes[1], &axes[0], pos, player);
         return_pattern_value(board_state_info, axe_pattern[0], pos, player);
         // return_blocker_value(board_state_info, axe_pattern[1], pos, player);
