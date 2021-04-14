@@ -49,6 +49,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         flank: (0,0),
         pattern_value: 0,
         is_winning: (0, 0),
+		nb_move_to_win: 5,
     };
 
     bitboard_info.is_wrong_move = check_is_wrong_move(state);
