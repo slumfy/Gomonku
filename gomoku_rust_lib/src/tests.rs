@@ -113,6 +113,7 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    print_board_from_bitboard(&bitboards);
     assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
@@ -275,7 +276,59 @@ pub fn test_check_is_unblockable_five() {
     pos += 20;
 
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    print_board_from_bitboard(&bitboards);
 
     assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), false);
+
+    // Cannot capture in colone because there is already a black stone
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
+
+    let mut pos = 180;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
+    apply_bit(&mut bitboards, pos - 19, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 38, global_var::PLAYER_BLACK_NB);
+    pos += 20;
+
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
+
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 20;
+
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), true);
+
+    // Cannot capture in line because bigger than 2 whites stone
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
+
+    let mut pos = 180;
+    let mut black_pos = pos - 1;
+    apply_bit(&mut bitboards, black_pos, global_var::PLAYER_BLACK_NB);
+    black_pos += 19;
+    apply_bit(&mut bitboards, black_pos, global_var::PLAYER_BLACK_NB);
+    black_pos += 19;
+    apply_bit(&mut bitboards, black_pos, global_var::PLAYER_BLACK_NB);
+    black_pos += 19;
+    apply_bit(&mut bitboards, black_pos, global_var::PLAYER_BLACK_NB);
+    black_pos += 19;
+    apply_bit(&mut bitboards, black_pos, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos += 1;
+
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), true);
 }

@@ -60,6 +60,7 @@ fn return_pattern_value(
             move_to_win = PATTERN[axe_pattern[pat].0].5;
         }
         if axe_pattern[pat].0 == 0 && axe_pattern[pat].1 != 3 {
+            println!("ASSIGNING IS WINNING !");
             board_state_info.is_winning = (pos, player);
         }
         if axe_pattern[pat].1 == 5 {
