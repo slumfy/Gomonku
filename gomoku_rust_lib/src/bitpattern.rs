@@ -1,11 +1,11 @@
 //! Methods to iter throught bit axes and finds patterns.
 
 use crate::bitboards::Bitboards;
-use crate::check_bits::check_and_apply_capture;
-use crate::check_bits::check_blocker;
-use crate::check_bits::check_flank;
-use crate::check_bits::check_is_unblockable_five;
-use crate::check_bits::check_double_triple;
+use crate::check_move::check_and_apply_capture;
+use crate::check_move::check_blocker;
+use crate::check_move::check_flank;
+use crate::check_move::check_is_double_triple;
+use crate::check_move::check_is_unblockable_five;
 use crate::global_var;
 use crate::heuristic::BoardStateInfo;
 use crate::patterns::BLOCKER;
@@ -27,9 +27,9 @@ pub fn pattern_axes_dispatcher(
         board_state_info.flank = check_flank(&axes[0], &axes[1]);
         axe_pattern = pattern_axes_finder(bitboards, &axes[0], &axes[1], pos, player);
         return_pattern_value(board_state_info, axe_pattern, pos, player);
-		if check_double_triple(axe_pattern) == 1 {
-			board_state_info.is_wrong_move = -3;
-		}
+        if check_is_double_triple(axe_pattern) {
+            board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
+        }
     } else if player == global_var::PLAYER_BLACK_NB {
         // println!("black player pattern in row:");
         board_state_info.stone_captured =
@@ -37,11 +37,10 @@ pub fn pattern_axes_dispatcher(
         board_state_info.flank = check_flank(&axes[1], &axes[0]);
         axe_pattern = pattern_axes_finder(bitboards, &axes[1], &axes[0], pos, player);
         return_pattern_value(board_state_info, axe_pattern, pos, player);
-		if check_double_triple(axe_pattern) == 1 {
-			board_state_info.is_wrong_move = -3;
-		}
+        if check_is_double_triple(axe_pattern) {
+            board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
+        }
     }
-	
 }
 
 fn return_pattern_value(

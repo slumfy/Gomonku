@@ -6,22 +6,22 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
-mod bit_operations;
+mod algorithms;
+mod bitboard_operations;
 mod bitboards;
 mod bitpattern;
-mod check_bits;
+mod check_move;
 mod global_var;
 mod heuristic;
-mod algorithms;
 mod patterns;
 mod print;
 mod search_space;
 mod state;
 mod tests;
-use crate::check_bits::__pyo3_get_function_check_move_is_still_winning;
-use crate::check_bits::check_pos_still_win;
-use crate::heuristic::BoardStateInfo;
-use check_bits::checking_and_apply_bits_move;
+use check_move::__pyo3_get_function_check_move_is_still_winning;
+use check_move::check_pos_still_win;
+use check_move::checking_and_apply_bits_move;
+use heuristic::BoardStateInfo;
 
 use crate::tests::__pyo3_get_function_test_get_pydict;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
@@ -161,26 +161,26 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
 		(0,0)
     );
 
-    let board_check: BoardStateInfo = checking_and_apply_bits_move(&mut state);
-    if board_check.is_wrong_move == global_var::VALID_MOVE {
+    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
+    if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
-        dict.set_item("stone_captured", board_check.stone_captured)?;
+        dict.set_item("stone_captured", board_state_info.stone_captured)?;
         if player == global_var::PLAYER_WHITE_NB {
             unsafe {
-                global_var::WHITE_CAPTURED_STONE += board_check.stone_captured;
+                global_var::WHITE_CAPTURED_STONE += board_state_info.stone_captured;
             }
         } else {
             unsafe {
-                global_var::BLACK_CAPTURED_STONE += board_check.stone_captured;
+                global_var::BLACK_CAPTURED_STONE += board_state_info.stone_captured;
             }
         }
-        if board_check.is_winning.1 != 0 {
-            dict.set_item("wining_position", board_check.is_winning)?;
+        if board_state_info.is_winning.1 != 0 {
+            dict.set_item("wining_position", board_state_info.is_winning)?;
         }
-        // println!("winstate =>> {:?}", board_check.is_winning);
+        // println!("winstate =>> {:?}", board_state_info.is_winning);
     } else {
-        println!("Wrong move status = {:?}", board_check.is_wrong_move);
-        dict.set_item("game_status", board_check.is_wrong_move)?;
+        println!("Wrong move status = {:?}", board_state_info.is_wrong_move);
+        dict.set_item("game_status", board_state_info.is_wrong_move)?;
     }
     board = bitboards::create_vec_from_bitboards(&state.bitboards);
     dict.set_item("board", board)?;

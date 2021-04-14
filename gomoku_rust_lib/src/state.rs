@@ -5,6 +5,7 @@ use crate::heuristic::heuristic;
 
 use crate::search_space::get_search_box_bitboard;
 
+/// State struct corresponding to an instant board value for a given player.
 pub struct State {
     pub bitboards: Bitboards,
     pub available_move: Vec<State>,
@@ -56,7 +57,6 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 			state.win_state
         );
         child.heuristic = heuristic(&mut child);
-        if child.heuristic > 0 {}
         if child.heuristic >= 0 {
             childs_list.push(child);
         }
