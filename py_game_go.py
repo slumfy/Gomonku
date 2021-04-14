@@ -140,7 +140,12 @@ class PyGameGo:
     def print_illegal_move(self):
         self.print_font(
             32,
-            "Player Turn: " + self.player.color + "  previous move: " + "Illegal move",
+            "Turn :  "
+            + str(self.turn + 1)
+            + "  "
+            + self.player.color
+            + "  previous move: "
+            + "Illegal move",
             64,
             32,
             "Black",
@@ -149,7 +154,9 @@ class PyGameGo:
     def print_player_move(self, x: int, y: int):
         self.print_font(
             32,
-            "Player Turn: "
+            "Turn :  "
+            + str(self.turn + 1)
+            + "  "
             + self.player.color
             + "  previous move: "
             + BOARD_NOTATION[0][x]
