@@ -70,12 +70,11 @@ class GoRules:
         winpos = (0, 0)
         opponant = -player.nb
         for p in self.player_list:
-            if p.nb == opponant:
                 if p.wining_position[1] != 0:
                     winpos = p.wining_position
                     print("AI WINPOS", winpos)
         move = gomoku_rust.ai_move(
-            self.board, opponant, x, y, turn, display_ai_time, search_algorithm
+            self.board, player.nb, x, y, turn, winpos, display_ai_time, search_algorithm
         )
         print("AI: ", move)
 

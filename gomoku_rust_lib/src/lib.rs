@@ -39,10 +39,11 @@ fn ai_move(
     x: usize,
     y: usize,
     turn: isize,
+	wining_position: (usize, i8),
     display_ai_time: bool,
     search_algorithm: String,
 ) -> PyResult<((usize, usize), i32)> {
-    println!("player {:?} x {:?} y {:?}", player, x, y);
+    println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
     // let opponent = -player;
@@ -56,10 +57,11 @@ fn ai_move(
     let ai_move: (usize, i32);
     let mut state: state::State = state::create_new_state(
         &mut bitboards,
-        player,
+        -player,
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
+		wining_position
     );
     let start_time = Instant::now();
 
@@ -156,6 +158,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
+		(0,0)
     );
 
     let board_check: BoardStateInfo = checking_and_apply_bits_move(&mut state);
