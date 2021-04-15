@@ -1,9 +1,11 @@
 //! Heuristic of our AI.
 
+use crate::check_move::check_free_development;
 use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
 use crate::global_var;
 use crate::state::State;
+
 #[derive(Debug)]
 pub struct BoardStateInfo {
     pub is_wrong_move: i8,
@@ -30,6 +32,7 @@ pub fn heuristic(state: &mut State) -> i32 {
         return value;
     }
     value += assign_capturing_pos_value_to_state(&board_state_info);
+    value += check_free_development(state);
     value += assign_capture_value_to_state(state, &board_state_info);
     return value;
 }
@@ -84,21 +87,21 @@ fn assign_capturing_pos_value_to_state(board_state_info: &BoardStateInfo) -> i32
 }
 fn assign_capture_value_to_state(state: &mut State, board_state_info: &BoardStateInfo) -> i32 {
     let mut value: i32 = 0;
-    let mut eat_count: i8 = 0;
+    let capture_count: i8;
     if state.current_player == 1 {
         state.white_captured_stone += board_state_info.stone_captured;
     } else {
         state.black_captured_stone += board_state_info.stone_captured;
     }
     if state.current_player == 1 {
-        eat_count = state.white_captured_stone;
+        capture_count = state.white_captured_stone;
     } else {
-        eat_count = state.black_captured_stone;
+        capture_count = state.black_captured_stone;
     }
-    if eat_count >= 10 {
+    if capture_count >= 10 {
         value += global_var::HEURISTIC_MAX_VALUE;
     } else {
-        value += board_state_info.stone_captured as i32 * eat_count as i32 * 50;
+        value += board_state_info.stone_captured as i32 * capture_count as i32 * 50;
     }
     return value;
 }

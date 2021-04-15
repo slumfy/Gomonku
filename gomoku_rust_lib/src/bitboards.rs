@@ -8,44 +8,43 @@ pub struct Bitboards {
     pub black_board: [u64; 6],
 }
 
+pub fn check_is_on_axe(
+    axe_increment_value: usize,
+    move_pos: usize,
+    i: usize,
+    direction_sign: i16,
+) -> bool {
+    if (move_pos as isize + axe_increment_value as isize * i as isize * direction_sign as isize) < 0
+    {
+        return false;
+    } else if axe_increment_value == 1 {
+        if get_line_from_pos(
+            (move_pos as isize
+                + axe_increment_value as isize * i as isize * direction_sign as isize)
+                as usize,
+        ) != get_line_from_pos(move_pos)
+        {
+            return false;
+        }
+    } else {
+        if get_line_from_pos(
+            (move_pos as isize
+                + axe_increment_value as isize * i as isize * direction_sign as isize)
+                as usize,
+        ) != (get_line_from_pos(move_pos) as isize + i as isize * direction_sign as isize)
+            as usize
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 pub fn create_bits_axes_from_pos(
     move_pos: usize,
     bitboards: &Bitboards,
     player: i8,
 ) -> [[u16; 4]; 2] {
-    fn check_is_on_axe(
-        axe_increment_value: usize,
-        move_pos: usize,
-        i: usize,
-        direction_sign: i16,
-    ) -> bool {
-        if (move_pos as isize + axe_increment_value as isize * i as isize * direction_sign as isize)
-            < 0
-        {
-            return false;
-        } else if axe_increment_value == 1 {
-            if get_line_from_pos(
-                (move_pos as isize
-                    + axe_increment_value as isize * i as isize * direction_sign as isize)
-                    as usize,
-            ) != get_line_from_pos(move_pos)
-            {
-                return false;
-            }
-        } else {
-            if get_line_from_pos(
-                (move_pos as isize
-                    + axe_increment_value as isize * i as isize * direction_sign as isize)
-                    as usize,
-            ) != (get_line_from_pos(move_pos) as isize + i as isize * direction_sign as isize)
-                as usize
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     fn set_bit_in_axe_from_bitboard(
         bits_axes_array: &mut [[u16; 4]; 2],
         bits_axes_array_index: usize,
