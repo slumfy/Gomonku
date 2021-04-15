@@ -251,6 +251,11 @@ class PyGameGo:
             )
         else:
             win_status = stone_status
+            self.print_player_move(x=x, y=y)
+            self.print_capture_count(
+                white_capture_count=go_rules.player_list[0].capture_piece,
+                black_capture_count=go_rules.player_list[1].capture_piece,
+            )
         self.board_screen_blit(go_rules, 33, 62)
         if self.search_box_status == True:
             self.print_box(go_rules, self.player, x, y, self.turn)

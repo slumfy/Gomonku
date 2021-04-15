@@ -75,7 +75,7 @@ fn ai_move(
         unsafe {
             global_var::MAX_DEPTH_REACH = 0;
         }
-        if search_algorithm == "negamax" {
+        if search_algorithm == "negamax" { 
             println!("using negamax");
             algorithms::negamax(
                 &mut state,
