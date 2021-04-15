@@ -74,7 +74,8 @@ fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStat
         value = global_var::HEURISTIC_MAX_VALUE;
         return value;
     }
-    value += board_state_info.pattern_value as i32;
+	value += board_state_info.blocker_value;
+    value += board_state_info.pattern_value;
     return value;
 }
 
