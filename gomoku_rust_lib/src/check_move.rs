@@ -226,15 +226,14 @@ pub fn check_free_development(state: &State) -> i32 {
         &state.bitboards,
         state.current_player,
     );
-    let player_axes = if state.current_player == global_var::PLAYER_WHITE_NB {
-        two_players_axes[0]
+    let player_axes;
+    let opponent_axes;
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        player_axes = two_players_axes[0];
+        opponent_axes = two_players_axes[1];
     } else {
-        two_players_axes[1]
-    };
-    let opponent_axes = if state.current_player == global_var::PLAYER_WHITE_NB {
-        two_players_axes[1]
-    } else {
-        two_players_axes[0]
+        player_axes = two_players_axes[1];
+        opponent_axes = two_players_axes[0];
     };
     for axe in 0..player_axes.len() {
         // Checking if there is a board blocker in axes
