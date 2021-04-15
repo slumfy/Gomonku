@@ -135,18 +135,13 @@ fn check_in_map(
     }
     let line_checked = calcul / 19;
     let line = pattern_pos / 19;
-    //ligne
+
+    // Ligne
     if axe_mouvement_value == 1 {
         if line_checked != line {
             return false;
         }
     } else {
-        // println!("checkpos {} pos {}", calcul, pattern_pos);
-        // println!(
-        //     "line check {} diff {}",
-        //     line_checked,
-        //     line + offset * direction_sign
-        // );
         if line_checked != line + offset * direction_sign {
             return false;
         }
@@ -197,13 +192,7 @@ pub fn check_blocker(
 }
 
 fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
-    let checked_pos = 8 - length;
-    // let mask : u8 = 1 << checked_pos;
     let mask: u8 = 0x80 >> length;
-    // println!(
-    //     "mask {:08b} legnth {} , checkpos {}",
-    //     mask, length, checked_pos
-    // );
     if pattern & mask != 0 {
         return true;
     } else {
@@ -268,24 +257,14 @@ pub fn check_and_apply_capture(
         let mut blocker_axe = blocker_axes[axe];
         player_axe >>= 1;
         blocker_axe >>= 1;
-        // println!("player axe: {:016b}", player_axe);
-        // println!("block  axe: {:016b}", blocker_axe);
         let shift: [usize; 2] = [0, 3];
         for s in shift.iter() {
             let player_shifted = player_axe >> s;
-            // println!("player shifted: {:016b} l= {}", player_shifted, s);
             let blocker_shifted = blocker_axe >> s;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
                 if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                    // println!("captured");
-                    // println!(
-                    //     "axe: {}, direction {}, pos {}",
-                    //     global_var::AXE_MOUVEMENT_VALUE[axe],
-                    //     s,
-                    //     pos
-                    // );
                     if *s == 3 {
                         stone_captured += 2;
                         apply_capture(
@@ -306,7 +285,6 @@ pub fn check_and_apply_capture(
                         );
                     }
                 }
-                // print_bitboards(bitboards);
             }
         }
     }
