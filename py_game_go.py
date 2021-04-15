@@ -1,5 +1,6 @@
 import sys
 import pygame
+import math
 
 from go_rules import GoRules
 from player import Player
@@ -28,7 +29,7 @@ class PyGameGo:
         self.search_algorithm = search_algorithm
 
         self.logger = logger_factory("PyGameGo")
-        self.turn = 0
+        self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
             pygame.init()
@@ -128,7 +129,7 @@ class PyGameGo:
                         self.update_sound_status(not self.sound_status)
 
     def win(self, go_rules: GoRules):
-        self.turn = 0
+        self.moves_count = 0
         while 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -141,7 +142,7 @@ class PyGameGo:
         self.print_font(
             32,
             "Turn :  "
-            + str(self.turn)
+            + str(math.floor((self.moves_count + 1) / 2))
             + "  "
             + self.player.color
             + "  previous move: "
@@ -155,7 +156,7 @@ class PyGameGo:
         self.print_font(
             32,
             "Turn :  "
-            + str(self.turn)
+            + str(math.floor((self.moves_count + 1) / 2))
             + "  "
             + self.player.color
             + "  previous move: "
@@ -200,7 +201,7 @@ class PyGameGo:
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
                 AI_move = go_rules.AI_move(
-                    self.player, x, y, self.turn, self.display_ai_time, self.search_algorithm
+                    self.player, x, y, self.moves_count, self.display_ai_time, self.search_algorithm
                 )
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
@@ -243,7 +244,7 @@ class PyGameGo:
                 self.player = go_rules.player_list[1]
             elif self.player.nb == PLAYER_BLACK_NB:
                 self.player = go_rules.player_list[0]
-            self.turn += 1
+            self.moves_count += 1
             self.print_player_move(x=x, y=y)
             self.print_capture_count(
                 white_capture_count=go_rules.player_list[0].capture_piece,
@@ -258,7 +259,7 @@ class PyGameGo:
             )
         self.board_screen_blit(go_rules, 33, 62)
         if self.search_box_status == True:
-            self.print_box(go_rules, self.player, x, y, self.turn)
+            self.print_box(go_rules, self.player, x, y, self.moves_count)
         if win_status != 0:
             for pl in go_rules.player_list:
                 if pl.nb == win_status:
@@ -313,7 +314,7 @@ class PyGameGo:
 
     def reset_button(self, go_rules):
         go_rules.reset_game()
-        self.turn = 0
+        self.moves_count = 0
         self.player = go_rules.player_list[0]
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
@@ -322,7 +323,7 @@ class PyGameGo:
 
     def print_box(self, go_rules, player, x, y, turn):
         space, offset = 33, 62
-        box = go_rules.print_search_box(self.player, x, y, self.turn)
+        box = go_rules.print_search_box(self.player, x, y, self.moves_count)
         for pos in box:
             if go_rules.board[pos[0]][pos[1]] == 0:
                 self.screen.blit(
