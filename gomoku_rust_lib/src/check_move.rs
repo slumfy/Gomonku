@@ -2,6 +2,7 @@
 
 use crate::bitboard_operations::apply_bit;
 use crate::bitboard_operations::apply_capture;
+use crate::bitboards::check_is_on_axe;
 use crate::bitboards::create_bitboards_from_vec;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::get_bits_in_bitboard_from_pos;
@@ -218,13 +219,85 @@ pub fn check_is_unblockable_five(
     return true;
 }
 
-//TODO
-fn check_free_development() {}
+pub fn check_free_development(state: &State) -> i32 {
+    let mut development_value: i32 = 0;
+    let two_players_axes = create_bits_axes_from_pos(
+        state.bit_current_move_pos,
+        &state.bitboards,
+        state.current_player,
+    );
+    let player_axes;
+    let opponent_axes;
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        player_axes = two_players_axes[0];
+        opponent_axes = two_players_axes[1];
+    } else {
+        player_axes = two_players_axes[1];
+        opponent_axes = two_players_axes[0];
+    };
+    for axe in 0..player_axes.len() {
+        // Checking if there is a board blocker in axes
+        for i in 1..5 {
+            let decount_value: i32 = 5 - i;
+            if !check_is_on_axe(
+                global_var::AXE_MOUVEMENT_VALUE[axe],
+                state.bit_current_move_pos,
+                i as usize,
+                1,
+            ) {
+                development_value -= decount_value;
+            }
+            if !check_is_on_axe(
+                global_var::AXE_MOUVEMENT_VALUE[axe],
+                state.bit_current_move_pos,
+                i as usize,
+                -1,
+            ) {
+                development_value -= decount_value;
+            }
+        }
+        let player_axe = player_axes[axe];
+        let opponent_axe = opponent_axes[axe];
+        let mut l = 9;
+        while l < 13 {
+            let player_shifted = player_axe >> l;
+            let player_casted = player_shifted as u8;
+            let opponent_shifted = opponent_axe >> l;
+            let opponent_casted = opponent_shifted as u8;
+            if opponent_casted & 1 == 1 {
+                break;
+            } else if player_casted & 1 == 0 {
+                development_value += 1;
+            } else if player_casted & 1 == 1 {
+                development_value += 2;
+            }
+            l += 1;
+        }
+        let mut l = 7;
+        while l > 3 {
+            let player_shifted = player_axe >> l;
+            let player_casted = player_shifted as u8;
+            let opponent_shifted = opponent_axe >> l;
+            let opponent_casted = opponent_shifted as u8;
+            if opponent_casted & 1 == 1 {
+                break;
+            } else if player_casted & 1 == 0 {
+                development_value += 1;
+            } else if player_casted & 1 == 1 {
+                development_value += 2;
+            }
+            l -= 1;
+        }
+    }
+    // println!("development value = {:?}", development_value);
+    // println!("development value divided = {:?}", development_value / 2);
+    return development_value / 2;
+}
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
     // println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
     let two_players_axes = create_bits_axes_from_pos(pos, &bitboards, player);
-    let player_axes = if player == 1 {
+    let player_axes = if player == global_var::PLAYER_WHITE_NB {
         two_players_axes[0]
     } else {
         two_players_axes[1]
