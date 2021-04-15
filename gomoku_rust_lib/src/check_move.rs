@@ -51,6 +51,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         capturable: false,
         capturing: false,
         pattern_value: 0,
+		blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
     };
@@ -88,6 +89,7 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         capturable: false,
         capturing: false,
         pattern_value: 0,
+		blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
     };
@@ -104,7 +106,6 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
             state.current_player,
         );
         return bitboard_info;
-    }
 }
 
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {

@@ -13,6 +13,7 @@ pub struct BoardStateInfo {
     pub capturable: bool,
     pub capturing: bool,
     pub pattern_value: i32,
+	pub blocker_value: i32,
     pub is_winning: (usize, i8),
     pub nb_move_to_win: i8,
 }
@@ -27,7 +28,7 @@ pub fn heuristic(state: &mut State) -> i32 {
     if value == global_var::HEURISTIC_MAX_VALUE || value == global_var::HEURISTIC_MIN_VALUE {
         return value;
     }
-    value += assign_pattern_value_to_state(&board_state_info);
+    value += assign_pattern_value_to_state(state, &board_state_info);
     if value == global_var::HEURISTIC_MAX_VALUE {
         return value;
     }
@@ -65,8 +66,10 @@ fn is_in_winning_pos(state: &mut State, board_state_info: &BoardStateInfo) -> i3
     return value;
 }
 
-fn assign_pattern_value_to_state(board_state_info: &BoardStateInfo) -> i32 {
+fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStateInfo) -> i32 {
     let mut value: i32 = 0;
+	if state.current_player == 1 {state.white_move_to_win = board_state_info.nb_move_to_win;}
+	else {state.black_move_to_win = board_state_info.nb_move_to_win;}
     if board_state_info.pattern_value == global_var::HEURISTIC_MAX_VALUE {
         value = global_var::HEURISTIC_MAX_VALUE;
         return value;

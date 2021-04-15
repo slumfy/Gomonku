@@ -40,7 +40,7 @@ fn computing_move(
     board_state_info.capturing = check_is_capturable(opponent_axe, player_axe);
     axe_pattern = pattern_axes_finder(bitboards, player_axe, opponent_axe, pos, player);
     return_pattern_value(board_state_info, axe_pattern[0], pos, player);
-    // return_blocker_value(board_state_info, axe_pattern[1], pos, player);
+    return_blocker_value(board_state_info, axe_pattern[1], pos, player);
     if check_is_double_triple(axe_pattern[0]) {
         board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
     }
@@ -56,7 +56,7 @@ fn return_pattern_value(
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
-        if PATTERN[axe_pattern[pat].0].5 < move_to_win && axe_pattern[pat].1 == 0 {
+        if PATTERN[axe_pattern[pat].0].5 < move_to_win && axe_pattern[pat].1 != 2 && axe_pattern[pat].1 != 3{
             // println!("MOVE WIN NB {}", PATTERN[axe_pattern[pat].0].5);
             move_to_win = PATTERN[axe_pattern[pat].0].5;
         }
@@ -91,7 +91,7 @@ fn return_blocker_value(
             pat_value += PATTERN[axe_pattern[pat].0].3;
         }
     }
-    board_state_info.pattern_value += pat_value;
+    board_state_info.blocker_value += pat_value;
 }
 
 fn pattern_axes_finder(
@@ -131,8 +131,8 @@ fn pattern_axes_finder(
             );
             find_blocker(
                 &mut return_blocker,
+				blocker_casted,
                 player_casted,
-                blocker_casted,
                 bitboards,
                 is_blocked,
                 &mut found_pattern,
@@ -218,7 +218,7 @@ fn find_blocker(
             if is_blocked > 0 && p < found_pattern.0 {
                 found_pattern.0 = p;
                 found_pattern.1 = is_blocked;
-                // println!("{} found {} blocker", PATTERN[p].4, is_blocked);
+                println!("{} found {} blocker", PATTERN[p].4, is_blocked);
                 break;
             }
         }
