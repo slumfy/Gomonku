@@ -238,7 +238,7 @@ pub fn check_free_development(state: &State) -> i32 {
     for axe in 0..player_axes.len() {
         // Checking if there is a board blocker in axes
         for i in 1..5 {
-            let decount_value: i32 = 4 - i;
+            let decount_value: i32 = 5 - i;
             if !check_is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe],
                 state.bit_current_move_pos,
@@ -259,7 +259,7 @@ pub fn check_free_development(state: &State) -> i32 {
         let player_axe = player_axes[axe];
         let opponent_axe = opponent_axes[axe];
         let mut l = 9;
-        while l < 14 {
+        while l < 13 {
             let player_shifted = player_axe >> l;
             let player_casted = player_shifted as u8;
             let opponent_shifted = opponent_axe >> l;
@@ -274,7 +274,7 @@ pub fn check_free_development(state: &State) -> i32 {
             l += 1;
         }
         let mut l = 7;
-        while l > 2 {
+        while l > 3 {
             let player_shifted = player_axe >> l;
             let player_casted = player_shifted as u8;
             let opponent_shifted = opponent_axe >> l;
