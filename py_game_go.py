@@ -166,6 +166,19 @@ class PyGameGo:
             "Black",
         )
 
+    def print_capture_count(self, white_capture_count: int, black_capture_count: int):
+        self.print_font(
+            32,
+            "White capture count :  "
+            + str(white_capture_count)
+            + "  "
+            + "Black capture count :   "
+            + str(black_capture_count),
+            64,
+            660,
+            "Black",
+        )
+
     def playing(self, go_rules: GoRules):
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
@@ -228,6 +241,10 @@ class PyGameGo:
                 self.player = go_rules.player_list[0]
             self.turn += 1
             self.print_player_move(x=x, y=y)
+            self.print_capture_count(
+                white_capture_count=go_rules.player_list[0].capture_piece,
+                black_capture_count=go_rules.player_list[1].capture_piece,
+            )
         else:
             win_status = stone_status
         self.board_screen_blit(go_rules, 33, 62)
@@ -306,4 +323,3 @@ class PyGameGo:
                         pos[0] * space + offset - STONE_SIZE[1] / 2,
                     ),
                 )
-        # print(box)

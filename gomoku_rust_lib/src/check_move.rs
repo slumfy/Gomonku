@@ -149,52 +149,6 @@ pub fn check_is_capturable(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> bool {
     return capturable;
 }
 
-pub fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> (i8, i8) {
-    let mut flank_value = (0, 0);
-    for axe in 0..axes.len() {
-        let mut player_axe = axes[axe];
-        let mut blocker_axe = blocker_axes[axe];
-        player_axe >>= 1;
-        blocker_axe >>= 1;
-        let shift: [usize; 3] = [0, 1, 2];
-        for s in shift.iter() {
-            let player_shifted = player_axe >> s;
-            let blocker_shifted = blocker_axe >> s;
-            let player_casted = player_shifted as u8;
-            let blocker_casted = blocker_shifted as u8;
-            // println!("player axe: {:016b}", player_casted);
-            // println!("block  axe: {:016b}", blocker_casted);
-            if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0
-                    && flank_value.0 != 1
-                {
-                    // println!("blocked");
-                    flank_value.0 = 2;
-                } else if (blocker_casted & CAPTURE_PATTERN[0].0) != 0 {
-                    // println!("flank");
-                    flank_value.0 = 1;
-                } else {
-                    // println!("free");
-                }
-            }
-            if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0
-                    && flank_value.1 != 1
-                {
-                    // println!("blocked");
-                    flank_value.1 = 2;
-                } else if (player_casted & CAPTURE_PATTERN[0].0) != 0 {
-                    // println!("flank");
-                    flank_value.1 = 1;
-                } else {
-                    // println!("free");
-                }
-            }
-        }
-    }
-    return flank_value;
-}
-
 fn check_in_map(
     axe_mouvement_value: i16,
     pattern_pos: i16,
@@ -207,18 +161,13 @@ fn check_in_map(
     }
     let line_checked = calcul / 19;
     let line = pattern_pos / 19;
-    //ligne
+
+    // Ligne
     if axe_mouvement_value == 1 {
         if line_checked != line {
             return false;
         }
     } else {
-        // println!("checkpos {} pos {}", calcul, pattern_pos);
-        // println!(
-        //     "line check {} diff {}",
-        //     line_checked,
-        //     line + offset * direction_sign
-        // );
         if line_checked != line + offset * direction_sign {
             return false;
         }
@@ -269,13 +218,7 @@ pub fn check_blocker(
 }
 
 fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
-    let checked_pos = 8 - length;
-    // let mask : u8 = 1 << checked_pos;
     let mask: u8 = 0x80 >> length;
-    // println!(
-    //     "mask {:08b} legnth {} , checkpos {}",
-    //     mask, length, checked_pos
-    // );
     if pattern & mask != 0 {
         return true;
     } else {
@@ -340,24 +283,14 @@ pub fn check_and_apply_capture(
         let mut blocker_axe = blocker_axes[axe];
         player_axe >>= 1;
         blocker_axe >>= 1;
-        // println!("player axe: {:016b}", player_axe);
-        // println!("block  axe: {:016b}", blocker_axe);
         let shift: [usize; 2] = [0, 3];
         for s in shift.iter() {
             let player_shifted = player_axe >> s;
-            // println!("player shifted: {:016b} l= {}", player_shifted, s);
             let blocker_shifted = blocker_axe >> s;
             let player_casted = player_shifted as u8;
             let blocker_casted = blocker_shifted as u8;
             if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
                 if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                    // println!("captured");
-                    // println!(
-                    //     "axe: {}, direction {}, pos {}",
-                    //     global_var::AXE_MOUVEMENT_VALUE[axe],
-                    //     s,
-                    //     pos
-                    // );
                     if *s == 3 {
                         stone_captured += 2;
                         apply_capture(
@@ -378,7 +311,6 @@ pub fn check_and_apply_capture(
                         );
                     }
                 }
-                // print_bitboards(bitboards);
             }
         }
     }
