@@ -22,8 +22,8 @@ pub struct BoardStateInfo {
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
-    if is_playable_move(state, &board_state_info) == false {
-        return value;
+    if !is_playable_move(state, &board_state_info) {
+        return global_var::HEURISTIC_MIN_VALUE;
     }
     value = is_in_winning_pos(state, &board_state_info);
     if value == global_var::HEURISTIC_MAX_VALUE || value == global_var::HEURISTIC_MIN_VALUE {

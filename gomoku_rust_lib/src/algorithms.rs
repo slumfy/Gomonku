@@ -14,32 +14,30 @@ static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![];
 
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
     update_max_depth(depth);
+    if depth == 0 || state_is_terminated(state) == true {
+        return state.heuristic * color as i32;
+    }
     if depth != 0 {
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
-    // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.bit_current_move_pos, state.current_player, state.heuristic, depth);
-    if depth == 0 || state_is_terminated(state) == true {
-        return state.heuristic * color as i32;
-    }
+
     let mut value: i32 = global_var::HEURISTIC_MIN_VALUE;
     let len = state.available_move.len();
     for child in 0..len {
-        let negamax = -negamax(
+        let negamax_value = -negamax(
             &mut state.available_move[child],
             depth - 1,
             -beta,
             -alpha,
             -color,
         );
-        value = std::cmp::max(value, negamax);
+        value = std::cmp::max(value, negamax_value);
         alpha = std::cmp::max(alpha, value);
         if alpha >= beta {
-            // println!("pruning");
             break;
         }
     }
-    // // println!("alpha {}  beta {}", alpha, beta);
     state.heuristic = value;
     return value;
 }
