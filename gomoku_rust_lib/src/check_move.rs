@@ -51,7 +51,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         capturable: false,
         capturing: false,
         pattern_value: 0,
-		blocker_value: 0,
+        blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
     };
@@ -78,38 +78,44 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.bit_current_move_pos as usize,
             state.current_player,
         );
-		if state.current_player == 1 {state.white_move_to_win = bitboard_info.nb_move_to_win;}
-		else {state.black_move_to_win = bitboard_info.nb_move_to_win;}
+        if state.current_player == 1 {
+            state.white_move_to_win = bitboard_info.nb_move_to_win;
+        } else {
+            state.black_move_to_win = bitboard_info.nb_move_to_win;
+        }
         return bitboard_info;
     }
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {
-	let mut bitboard_info = BoardStateInfo {
+    let mut bitboard_info = BoardStateInfo {
         is_wrong_move: 0,
         stone_captured: 0,
         capturable: false,
         capturing: false,
         pattern_value: 0,
-		blocker_value: 0,
+        blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
     };
-        let axes = create_bits_axes_from_pos(
-            state.bit_current_move_pos,
-            &state.bitboards,
-            state.current_player,
-        );
-        pattern_axes_dispatcher(
-            &mut bitboard_info,
-            &mut state.bitboards,
-            &axes,
-            state.bit_current_move_pos as usize,
-            state.current_player,
-        );
-		if state.current_player == 1 {state.white_move_to_win = bitboard_info.nb_move_to_win;}
-		else {state.black_move_to_win = bitboard_info.nb_move_to_win;}
-        return bitboard_info;
+    let axes = create_bits_axes_from_pos(
+        state.bit_current_move_pos,
+        &state.bitboards,
+        state.current_player,
+    );
+    pattern_axes_dispatcher(
+        &mut bitboard_info,
+        &mut state.bitboards,
+        &axes,
+        state.bit_current_move_pos as usize,
+        state.current_player,
+    );
+    if state.current_player == 1 {
+        state.white_move_to_win = bitboard_info.nb_move_to_win;
+    } else {
+        state.black_move_to_win = bitboard_info.nb_move_to_win;
+    }
+    return bitboard_info;
 }
 
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
@@ -322,7 +328,7 @@ pub fn check_free_development(state: &State) -> i32 {
     }
     // println!("development value = {:?}", development_value);
     // println!("development value divided = {:?}", development_value / 2);
-    return development_value / 2;
+    return development_value;
 }
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {

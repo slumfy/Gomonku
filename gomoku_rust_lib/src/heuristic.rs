@@ -4,6 +4,7 @@ use crate::check_move::check_free_development;
 use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
 use crate::global_var;
+use crate::heuristic_ratios;
 use crate::state::State;
 
 #[derive(Debug)]
@@ -13,7 +14,7 @@ pub struct BoardStateInfo {
     pub capturable: bool,
     pub capturing: bool,
     pub pattern_value: i32,
-	pub blocker_value: i32,
+    pub blocker_value: i32,
     pub is_winning: (usize, i8),
     pub nb_move_to_win: i8,
 }
@@ -33,7 +34,7 @@ pub fn heuristic(state: &mut State) -> i32 {
         return value;
     }
     value += assign_capturing_pos_value_to_state(&board_state_info);
-    value += check_free_development(state);
+    value += check_free_development(state) / heuristic_ratios::DEVELOPMENT_RATIO_DIVISER;
     value += assign_capture_value_to_state(state, &board_state_info);
     return value;
 }
@@ -72,18 +73,20 @@ fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStat
         value = global_var::HEURISTIC_MAX_VALUE;
         return value;
     }
-	let mut opponent_move_to_win: i8 = 0;
-	let mut pattern_multiplier: i32 = 1;
-	let mut blocker_multiplier: i32 = 1;
-	if state.current_player == 1 {opponent_move_to_win = state.black_move_to_win;}
-	else {opponent_move_to_win = state.white_move_to_win;}
-	if board_state_info.nb_move_to_win + 1 < opponent_move_to_win {
-		pattern_multiplier = 2;
-	}
-	else {
-		blocker_multiplier = 2;
-	}
-	value += board_state_info.blocker_value * blocker_multiplier;
+    let mut opponent_move_to_win: i8 = 0;
+    let mut pattern_multiplier: i32 = 1;
+    let mut blocker_multiplier: i32 = 1;
+    if state.current_player == 1 {
+        opponent_move_to_win = state.black_move_to_win;
+    } else {
+        opponent_move_to_win = state.white_move_to_win;
+    }
+    if board_state_info.nb_move_to_win + 1 < opponent_move_to_win {
+        pattern_multiplier = 2;
+    } else {
+        blocker_multiplier = 2;
+    }
+    value += board_state_info.blocker_value * blocker_multiplier;
     value += board_state_info.pattern_value * pattern_multiplier;
     return value;
 }

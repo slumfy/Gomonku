@@ -1,0 +1,1 @@
+pub static DEVELOPMENT_RATIO_DIVISER: i32 = 2;

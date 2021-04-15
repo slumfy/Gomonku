@@ -13,15 +13,16 @@ mod bitpattern;
 mod check_move;
 mod global_var;
 mod heuristic;
+mod heuristic_ratios;
 mod patterns;
 mod print;
 mod search_space;
 mod state;
 mod tests;
+use crate::check_move::get_move_info;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
-use crate::check_move::get_move_info;
 use heuristic::BoardStateInfo;
 
 use crate::tests::__pyo3_get_function_test_check_is_unblockable_five;
@@ -65,9 +66,9 @@ fn ai_move(
         black_captured_stone,
         wining_position,
     );
-	let state_info = get_move_info(&mut state);
-	println!("Bmove_to_win {}", state.black_move_to_win);
-	println!("Wmove_to_win {}", state.white_move_to_win);
+    let state_info = get_move_info(&mut state);
+    println!("Bmove_to_win {}", state.black_move_to_win);
+    println!("Wmove_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
 
     if turn == 0 {
@@ -76,7 +77,7 @@ fn ai_move(
         unsafe {
             global_var::MAX_DEPTH_REACH = 0;
         }
-        if search_algorithm == "negamax" { 
+        if search_algorithm == "negamax" {
             println!("using negamax");
             algorithms::negamax(
                 &mut state,
