@@ -80,6 +80,32 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     }
 }
 
+pub fn get_move_info(state: &mut State) -> BoardStateInfo {
+	let mut bitboard_info = BoardStateInfo {
+        is_wrong_move: 0,
+        stone_captured: 0,
+        capturable: false,
+        capturing: false,
+        pattern_value: 0,
+        is_winning: (0, 0),
+        nb_move_to_win: 5,
+    };
+        let axes = create_bits_axes_from_pos(
+            state.bit_current_move_pos,
+            &state.bitboards,
+            state.current_player,
+        );
+        pattern_axes_dispatcher(
+            &mut bitboard_info,
+            &mut state.bitboards,
+            &axes,
+            state.bit_current_move_pos as usize,
+            state.current_player,
+        );
+        return bitboard_info;
+    }
+}
+
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
     let mut count = 0;
     for axe in 0..axe_pattern.len() {
