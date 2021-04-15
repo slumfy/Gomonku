@@ -186,6 +186,10 @@ class PyGameGo:
         pygame.display.flip()
 
         x, y = 0, 0
+        self.print_capture_count(
+            white_capture_count=go_rules.player_list[0].capture_piece,
+            black_capture_count=go_rules.player_list[1].capture_piece,
+        )
         self.board_screen_blit(go_rules, 33, 62)
 
         while 1:
