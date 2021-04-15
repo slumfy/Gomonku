@@ -3,7 +3,6 @@
 use crate::bitboards::Bitboards;
 use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
-use crate::check_move::check_flank;
 use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
@@ -27,25 +26,25 @@ pub fn pattern_axes_dispatcher(
 }
 
 fn computing_move(
-	board_state_info: &mut BoardStateInfo,
-	player_axe: &[u16; 4],
-	opponent_axe: &[u16; 4],
+    board_state_info: &mut BoardStateInfo,
+    player_axe: &[u16; 4],
+    opponent_axe: &[u16; 4],
     bitboards: &mut Bitboards,
     pos: usize,
     player: i8,
 ) {
-	let axe_pattern: [[(usize, usize); 4]; 2];
-	board_state_info.stone_captured =
-	check_and_apply_capture(bitboards, player_axe, opponent_axe, pos, player);
-	board_state_info.capturable = check_is_capturable(player_axe, opponent_axe);
-	board_state_info.capturing = check_is_capturable(opponent_axe, player_axe);
-	axe_pattern = pattern_axes_finder(bitboards, player_axe, opponent_axe, pos, player);
-	return_pattern_value(board_state_info, axe_pattern[0], pos, player);
-	// return_blocker_value(board_state_info, axe_pattern[1], pos, player);
-	if check_is_double_triple(axe_pattern[0]) {
-		board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;}
+    let axe_pattern: [[(usize, usize); 4]; 2];
+    board_state_info.stone_captured =
+        check_and_apply_capture(bitboards, player_axe, opponent_axe, pos, player);
+    board_state_info.capturable = check_is_capturable(player_axe, opponent_axe);
+    board_state_info.capturing = check_is_capturable(opponent_axe, player_axe);
+    axe_pattern = pattern_axes_finder(bitboards, player_axe, opponent_axe, pos, player);
+    return_pattern_value(board_state_info, axe_pattern[0], pos, player);
+    // return_blocker_value(board_state_info, axe_pattern[1], pos, player);
+    if check_is_double_triple(axe_pattern[0]) {
+        board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
+    }
 }
-
 
 fn return_pattern_value(
     board_state_info: &mut BoardStateInfo,

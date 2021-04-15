@@ -123,52 +123,6 @@ pub fn check_is_capturable(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> bool {
     return capturable;
 }
 
-pub fn check_flank(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> (i8, i8) {
-    let mut flank_value = (0, 0);
-    for axe in 0..axes.len() {
-        let mut player_axe = axes[axe];
-        let mut blocker_axe = blocker_axes[axe];
-        player_axe >>= 1;
-        blocker_axe >>= 1;
-        let shift: [usize; 3] = [0, 1, 2];
-        for s in shift.iter() {
-            let player_shifted = player_axe >> s;
-            let blocker_shifted = blocker_axe >> s;
-            let player_casted = player_shifted as u8;
-            let blocker_casted = blocker_shifted as u8;
-            // println!("player axe: {:016b}", player_casted);
-            // println!("block  axe: {:016b}", blocker_casted);
-            if (player_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                if (blocker_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0
-                    && flank_value.0 != 1
-                {
-                    // println!("blocked");
-                    flank_value.0 = 2;
-                } else if (blocker_casted & CAPTURE_PATTERN[0].0) != 0 {
-                    // println!("flank");
-                    flank_value.0 = 1;
-                } else {
-                    // println!("free");
-                }
-            }
-            if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
-                if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0
-                    && flank_value.1 != 1
-                {
-                    // println!("blocked");
-                    flank_value.1 = 2;
-                } else if (player_casted & CAPTURE_PATTERN[0].0) != 0 {
-                    // println!("flank");
-                    flank_value.1 = 1;
-                } else {
-                    // println!("free");
-                }
-            }
-        }
-    }
-    return flank_value;
-}
-
 fn check_in_map(
     axe_mouvement_value: i16,
     pattern_pos: i16,
