@@ -86,9 +86,9 @@ fn return_blocker_value(
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
         if axe_pattern[pat].1 == 2 {
-            pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
+            pat_value += PATTERN[axe_pattern[pat].0].3 * 20;
         } else if axe_pattern[pat].1 == 1 {
-            pat_value += PATTERN[axe_pattern[pat].0].3;
+            pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
         }
     }
     board_state_info.blocker_value += pat_value;

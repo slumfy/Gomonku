@@ -78,6 +78,8 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.bit_current_move_pos as usize,
             state.current_player,
         );
+		if state.current_player == 1 {state.white_move_to_win = bitboard_info.nb_move_to_win;}
+		else {state.black_move_to_win = bitboard_info.nb_move_to_win;}
         return bitboard_info;
     }
 }
@@ -105,6 +107,8 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
             state.bit_current_move_pos as usize,
             state.current_player,
         );
+		if state.current_player == 1 {state.white_move_to_win = bitboard_info.nb_move_to_win;}
+		else {state.black_move_to_win = bitboard_info.nb_move_to_win;}
         return bitboard_info;
 }
 

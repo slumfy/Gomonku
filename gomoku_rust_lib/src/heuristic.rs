@@ -68,14 +68,23 @@ fn is_in_winning_pos(state: &mut State, board_state_info: &BoardStateInfo) -> i3
 
 fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStateInfo) -> i32 {
     let mut value: i32 = 0;
-	if state.current_player == 1 {state.white_move_to_win = board_state_info.nb_move_to_win;}
-	else {state.black_move_to_win = board_state_info.nb_move_to_win;}
     if board_state_info.pattern_value == global_var::HEURISTIC_MAX_VALUE {
         value = global_var::HEURISTIC_MAX_VALUE;
         return value;
     }
-	value += board_state_info.blocker_value;
-    value += board_state_info.pattern_value;
+	let mut opponent_move_to_win: i8 = 0;
+	let mut pattern_multiplier: i32 = 1;
+	let mut blocker_multiplier: i32 = 1;
+	if state.current_player == 1 {opponent_move_to_win = state.black_move_to_win;}
+	else {opponent_move_to_win = state.white_move_to_win;}
+	if board_state_info.nb_move_to_win + 1 < opponent_move_to_win {
+		pattern_multiplier = 2;
+	}
+	else {
+		blocker_multiplier = 2;
+	}
+	value += board_state_info.blocker_value * blocker_multiplier;
+    value += board_state_info.pattern_value * pattern_multiplier;
     return value;
 }
 

@@ -66,7 +66,8 @@ fn ai_move(
         wining_position,
     );
 	let state_info = get_move_info(&mut state);
-	println!("nb_movetowin {}", state_info.nb_move_to_win);
+	println!("Bmove_to_win {}", state.black_move_to_win);
+	println!("Wmove_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
 
     if turn == 0 {
