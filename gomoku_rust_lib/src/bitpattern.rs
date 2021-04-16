@@ -152,7 +152,7 @@ pub fn pattern_axes_finder(
             }
         }
     }
-	// println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+	println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
     return [return_pattern, return_blocker];
 }
 
@@ -197,7 +197,7 @@ fn find_pattern(
     }
     if found_pattern.0 < PATTERN.len() {
         return_pattern[axe] = *found_pattern;
-        // println!("PATTERN FOUND {} len {} l: {}", PATTERN[found_pattern.0].4,PATTERN[found_pattern.0].1 ,l);
+        println!("PATTERN FOUND {} len {} l: {}", PATTERN[found_pattern.0].4,PATTERN[found_pattern.0].1 ,l);
     }
 }
 
@@ -223,6 +223,7 @@ fn find_blocker(
                 }
             }
 			if is_blocked == 2 && PATTERN[p].2 != 0 && PATTERN[p].2 != l && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true {
+				println!("why");
 				is_blocked = 0;
 			} 
             if is_blocked > 0 && p < found_blocker.0 {
@@ -234,7 +235,7 @@ fn find_blocker(
         }
     }
     if found_blocker.0 < PATTERN.len() && l < PATTERN[found_blocker.0].1 {
-		// println!("BLOCKER FOUND {} len {} l: {}", PATTERN[found_blocker.0].4,PATTERN[found_blocker.0].1 ,l);
+		println!("BLOCKER FOUND {} value {:?} len {} l: {}", PATTERN[found_blocker.0].4,found_blocker,PATTERN[found_blocker.0].1 ,l);
         return_blocker[axe] = *found_blocker;
     }
 }
