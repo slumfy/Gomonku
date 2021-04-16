@@ -33,7 +33,8 @@ pub fn heuristic(state: &mut State) -> i32 {
     if value == global_var::HEURISTIC_MAX_VALUE {
         return value;
     }
-    value += assign_capturing_pos_value_to_state(&board_state_info);
+    value += assign_capturing_pos_value_to_state(&board_state_info)
+        * heuristic_ratios::CAPTURING_POS_RATIO_MULTIPLIER;
     value += check_free_development(state) / heuristic_ratios::DEVELOPMENT_RATIO_DIVISER;
     value += assign_capture_value_to_state(state, &board_state_info);
     return value;
@@ -73,7 +74,7 @@ fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStat
         value = global_var::HEURISTIC_MAX_VALUE;
         return value;
     }
-    let mut opponent_move_to_win: i8 = 0;
+    let mut opponent_move_to_win: i8;
     let mut pattern_multiplier: i32 = 1;
     let mut blocker_multiplier: i32 = 1;
     if state.current_player == 1 {
@@ -94,10 +95,10 @@ fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStat
 fn assign_capturing_pos_value_to_state(board_state_info: &BoardStateInfo) -> i32 {
     let mut value: i32 = 0;
     if board_state_info.capturable {
-        value -= 100;
+        value -= 1;
     }
     if board_state_info.capturing {
-        value += 100;
+        value += 1;
     }
     return value;
 }
