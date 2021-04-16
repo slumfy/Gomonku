@@ -66,13 +66,12 @@ class GoRules:
             return 0
 
     def AI_move(self, player, x, y, turn, display_ai_time: bool, search_algorithm: str):
-        print(player, x, y)
+        print("player nb = ", player.nb, "x = ", x, "y = ", y)
         winpos = (0, 0)
-        opponant = -player.nb
         for p in self.player_list:
-                if p.wining_position[1] != 0:
-                    winpos = p.wining_position
-                    print("AI WINPOS", winpos)
+            if p.wining_position[1] != 0:
+                winpos = p.wining_position
+                print("AI WINPOS", winpos)
         move = gomoku_rust.ai_move(
             self.board, player.nb, x, y, turn, winpos, display_ai_time, search_algorithm
         )
@@ -81,7 +80,6 @@ class GoRules:
         return move
 
     def print_search_box(self, player, x, y, turn):
-        opponant = -player.nb
         box = gomoku_rust.get_rust_box(self.board)
         return box
 
