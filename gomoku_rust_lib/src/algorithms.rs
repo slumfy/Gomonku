@@ -21,7 +21,10 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
-
+	// println!("NEGAMAX player {}  color {} state: {}", state.current_player, color, state.bit_current_move_pos);
+	// for child in 0..state.available_move.len() {
+	// 	println!("child {} heuristic {} depth {}",child,state.available_move[child].heuristic,depth);
+	// }
     let mut value: i32 = global_var::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value = -negamax(

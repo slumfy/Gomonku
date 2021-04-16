@@ -229,7 +229,7 @@ pub fn check_blocker(
     return is_blocked;
 }
 
-fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
+pub fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
     let mask: u8 = 0x80 >> length;
     if pattern & mask != 0 {
         return true;

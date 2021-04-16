@@ -3,6 +3,7 @@
 use crate::bitboards::Bitboards;
 use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
+use crate::check_move::check_one_bit_in_pattern;
 use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
@@ -18,6 +19,7 @@ pub fn pattern_axes_dispatcher(
     pos: usize,
     player: i8,
 ) {
+	// println!("player axe dispatcher {} pos {}", player, pos);
     if player == global_var::PLAYER_WHITE_NB {
         computing_move(board_state_info, &axes[0], &axes[1], bitboards, pos, player);
     } else if player == global_var::PLAYER_BLACK_NB {
@@ -89,7 +91,7 @@ fn return_blocker_value(
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
         if axe_pattern[pat].1 == 2 {
-            pat_value += PATTERN[axe_pattern[pat].0].3 * 20;
+            pat_value += PATTERN[axe_pattern[pat].0].3 * 5;
         } else if axe_pattern[pat].1 == 1 {
             pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
         }
@@ -150,7 +152,7 @@ fn pattern_axes_finder(
             }
         }
     }
-	println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+	// println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
     return [return_pattern, return_blocker];
 }
 
@@ -195,7 +197,7 @@ fn find_pattern(
     }
     if found_pattern.0 < PATTERN.len() {
         return_pattern[axe] = *found_pattern;
-        println!("PATTERN FOUND {}", PATTERN[found_pattern.0].4);
+        // println!("PATTERN FOUND {} len {} l: {}", PATTERN[found_pattern.0].4,PATTERN[found_pattern.0].1 ,l);
     }
 }
 
@@ -220,22 +222,19 @@ fn find_blocker(
                     is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
                 }
             }
-<<<<<<< Updated upstream
-            if is_blocked > 0 && p < found_pattern.0 {
-                found_pattern.0 = p;
-                found_pattern.1 = is_blocked;
-=======
+			if is_blocked == 2 && PATTERN[p].2 != 0 && PATTERN[p].2 != l && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true {
+				is_blocked = 0;
+			} 
             if is_blocked > 0 && p < found_blocker.0 {
                 found_blocker.0 = p;
                 found_blocker.1 = is_blocked;
->>>>>>> Stashed changes
                 // println!("{} found {} blocker", PATTERN[p].4, is_blocked);
                 break;
             }
         }
     }
-    if found_blocker.0 < PATTERN.len() {
-		println!("BLOCKER FOUND {}", PATTERN[found_blocker.0].4);
+    if found_blocker.0 < PATTERN.len() && l < PATTERN[found_blocker.0].1 {
+		// println!("BLOCKER FOUND {} len {} l: {}", PATTERN[found_blocker.0].4,PATTERN[found_blocker.0].1 ,l);
         return_blocker[axe] = *found_blocker;
     }
 }
