@@ -49,7 +49,6 @@ fn ai_move(
     println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
-    // let opponent = -player;
 
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
@@ -60,15 +59,12 @@ fn ai_move(
     let ai_move: (usize, i32);
     let mut state: state::State = state::create_new_state(
         &mut bitboards,
-        -player,
+        player,
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
         wining_position,
     );
-    let state_info = get_move_info(&mut state);
-    println!("Bmove_to_win {}", state.black_move_to_win);
-    println!("Wmove_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
 
     if turn == 0 {
