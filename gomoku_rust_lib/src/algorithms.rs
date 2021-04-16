@@ -23,8 +23,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
     }
 
     let mut value: i32 = global_var::HEURISTIC_MIN_VALUE;
-    let len = state.available_move.len();
-    for child_index in 0..len {
+    for child_index in 0..state.available_move.len() {
         let negamax_value = -negamax(
             &mut state.available_move[child_index],
             depth - 1,
