@@ -2,7 +2,6 @@
 
 use crate::bitboard_operations::apply_bit;
 use crate::bitboard_operations::apply_capture;
-use crate::bitboards::check_is_on_axe;
 use crate::bitboards::create_bitboards_from_vec;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::get_bits_in_bitboard_from_pos;
@@ -16,6 +15,7 @@ use crate::patterns::PATTERN;
 use crate::print::print_axe_value;
 use crate::print::print_axes;
 use crate::state::State;
+use crate::utils::is_on_axe;
 use pyo3::prelude::*;
 
 pub fn check_stone_color(pos: usize, bitboards: &Bitboards) -> i8 {
@@ -272,25 +272,32 @@ pub fn check_free_development(state: &State) -> i32 {
         player_axes = two_players_axes[1];
         opponent_axes = two_players_axes[0];
     };
+    let mut has_been_decounted: bool;
     for axe in 0..player_axes.len() {
         // Checking if there is a board blocker in axes
+        has_been_decounted = false;
         for i in 1..5 {
-            let decount_value: i32 = 5 - i;
-            if !check_is_on_axe(
+            let decount_value: i32 = (5 - i) * 2;
+            if !is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe],
                 state.bit_current_move_pos,
                 i as usize,
                 1,
             ) {
                 development_value -= decount_value;
+                has_been_decounted = true;
             }
-            if !check_is_on_axe(
+            if !is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe],
                 state.bit_current_move_pos,
                 i as usize,
                 -1,
             ) {
                 development_value -= decount_value;
+                has_been_decounted = true;
+            }
+            if has_been_decounted {
+                break;
             }
         }
         let player_axe = player_axes[axe];
@@ -306,7 +313,7 @@ pub fn check_free_development(state: &State) -> i32 {
             } else if player_casted & 1 == 0 {
                 development_value += 1;
             } else if player_casted & 1 == 1 {
-                development_value += 2;
+                development_value += 5;
             }
             l += 1;
         }
@@ -321,13 +328,11 @@ pub fn check_free_development(state: &State) -> i32 {
             } else if player_casted & 1 == 0 {
                 development_value += 1;
             } else if player_casted & 1 == 1 {
-                development_value += 2;
+                development_value += 5;
             }
             l -= 1;
         }
     }
-    // println!("development value = {:?}", development_value);
-    // println!("development value divided = {:?}", development_value / 2);
     return development_value;
 }
 

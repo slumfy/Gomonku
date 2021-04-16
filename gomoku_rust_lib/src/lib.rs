@@ -16,19 +16,26 @@ mod heuristic;
 mod heuristic_ratios;
 mod patterns;
 mod print;
+mod pytests;
 mod search_space;
 mod state;
-mod tests;
+mod test_check_free_development;
+mod test_check_is_unblockable_five;
+mod test_is_on_axe;
+mod utils;
+
 use crate::check_move::get_move_info;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
 use heuristic::BoardStateInfo;
 
-use crate::tests::__pyo3_get_function_test_check_is_unblockable_five;
-use crate::tests::__pyo3_get_function_test_get_pydict;
-use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
-use crate::tests::__pyo3_get_function_test_updating_from_other_function;
+use crate::pytests::__pyo3_get_function_pytest_check_free_development;
+use crate::pytests::__pyo3_get_function_pytest_check_is_unblockable_five;
+use crate::pytests::__pyo3_get_function_pytest_get_pydict;
+use crate::pytests::__pyo3_get_function_pytest_is_on_axe;
+use crate::pytests::__pyo3_get_function_pytest_returning_dict_to_python;
+use crate::pytests::__pyo3_get_function_pytest_updating_from_other_function;
 
 static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -59,7 +66,7 @@ fn ai_move(
     let ai_move: (usize, i32);
     let mut state: state::State = state::create_new_state(
         &mut bitboards,
-        player,
+        -player,
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
@@ -211,10 +218,12 @@ fn reset_game() {
 /// A Python module implemented in Rust.
 #[pymodule]
 pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(test_returning_dict_to_python, m)?)?;
-    m.add_function(wrap_pyfunction!(test_updating_from_other_function, m)?)?;
-    m.add_function(wrap_pyfunction!(test_get_pydict, m)?)?;
-    m.add_function(wrap_pyfunction!(test_check_is_unblockable_five, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_returning_dict_to_python, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_updating_from_other_function, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_get_pydict, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_check_is_unblockable_five, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_check_free_development, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_is_on_axe, m)?)?;
     Ok(())
 }
 

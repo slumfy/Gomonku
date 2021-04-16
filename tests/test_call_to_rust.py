@@ -22,7 +22,7 @@ def test_call_returning_dict_to_python():
         "x": 0,
         "y": 0,
     }
-    output_dic = gomoku_rust.gomoku_tests.test_returning_dict_to_python(
+    output_dic = gomoku_rust.gomoku_tests.pytest_returning_dict_to_python(
         dic["map"], dic["player"], dic["x"], dic["y"]
     )
     assert output_dic["eated_piece"] == 10
@@ -40,7 +40,7 @@ def test_call_updating_map_from_other_function():
         "x": 0,
         "y": 0,
     }
-    output_dic = gomoku_rust.gomoku_tests.test_updating_from_other_function(
+    output_dic = gomoku_rust.gomoku_tests.pytest_updating_from_other_function(
         dic["map"], dic["player"], dic["x"], dic["y"]
     )
     map[0][0] = dic["player"]
@@ -57,4 +57,4 @@ def test_call_sending_dict_to_python():
         "x": 3,
         "y": 0,
     }
-    gomoku_rust.gomoku_tests.test_get_pydict(dic)
+    gomoku_rust.gomoku_tests.pytest_get_pydict(dic)
