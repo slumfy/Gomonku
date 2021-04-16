@@ -306,7 +306,7 @@ pub fn check_free_development(state: &State) -> i32 {
             } else if player_casted & 1 == 0 {
                 development_value += 1;
             } else if player_casted & 1 == 1 {
-                development_value += 2;
+                development_value += 5;
             }
             l += 1;
         }
@@ -321,7 +321,7 @@ pub fn check_free_development(state: &State) -> i32 {
             } else if player_casted & 1 == 0 {
                 development_value += 1;
             } else if player_casted & 1 == 1 {
-                development_value += 2;
+                development_value += 5;
             }
             l -= 1;
         }
