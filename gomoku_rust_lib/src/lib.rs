@@ -59,7 +59,7 @@ fn ai_move(
     let ai_move: (usize, i32);
     let mut state: state::State = state::create_new_state(
         &mut bitboards,
-        player,
+        -player,
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
