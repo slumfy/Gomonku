@@ -22,6 +22,7 @@ mod state;
 mod test_check_free_development;
 mod test_check_is_unblockable_five;
 mod test_is_on_axe;
+mod test_pattern_axes_finder;
 mod utils;
 
 use crate::check_move::get_move_info;
@@ -34,6 +35,7 @@ use crate::pytests::__pyo3_get_function_pytest_check_free_development;
 use crate::pytests::__pyo3_get_function_pytest_check_is_unblockable_five;
 use crate::pytests::__pyo3_get_function_pytest_get_pydict;
 use crate::pytests::__pyo3_get_function_pytest_is_on_axe;
+use crate::pytests::__pyo3_get_function_pytest_pattern_axes_finder;
 use crate::pytests::__pyo3_get_function_pytest_returning_dict_to_python;
 use crate::pytests::__pyo3_get_function_pytest_updating_from_other_function;
 
@@ -224,6 +226,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_check_is_unblockable_five, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_check_free_development, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_is_on_axe, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
     Ok(())
 }
 

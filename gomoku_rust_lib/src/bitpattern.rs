@@ -97,7 +97,7 @@ fn return_blocker_value(
     board_state_info.blocker_value += pat_value;
 }
 
-fn pattern_axes_finder(
+pub fn pattern_axes_finder(
     bitboards: &mut Bitboards,
     axes: &[u16; 4],
     blocker_axes: &[u16; 4],
