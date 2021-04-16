@@ -1,43 +1,12 @@
 //! Methods to create bitboards from vec and axes from pos.
 
+use crate::check_move::check_is_on_axe;
 use crate::global_var;
 
 #[derive(Copy, Clone, Hash)]
 pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
-}
-
-pub fn check_is_on_axe(
-    axe_increment_value: usize,
-    move_pos: usize,
-    i: usize,
-    direction_sign: i16,
-) -> bool {
-    if (move_pos as isize + axe_increment_value as isize * i as isize * direction_sign as isize) < 0
-    {
-        return false;
-    } else if axe_increment_value == 1 {
-        if get_line_from_pos(
-            (move_pos as isize
-                + axe_increment_value as isize * i as isize * direction_sign as isize)
-                as usize,
-        ) != get_line_from_pos(move_pos)
-        {
-            return false;
-        }
-    } else {
-        if get_line_from_pos(
-            (move_pos as isize
-                + axe_increment_value as isize * i as isize * direction_sign as isize)
-                as usize,
-        ) != (get_line_from_pos(move_pos) as isize + i as isize * direction_sign as isize)
-            as usize
-        {
-            return false;
-        }
-    }
-    return true;
 }
 
 pub fn create_bits_axes_from_pos(
@@ -177,10 +146,6 @@ pub fn create_vec_from_bitboards(bitboards: &Bitboards) -> Vec<Vec<i8>> {
         }
     }
     return board;
-}
-
-pub fn get_line_from_pos(pos: usize) -> usize {
-    return pos / 19;
 }
 
 pub fn get_bits_in_bitboard_from_pos(pos: usize, bitboard: &[u64; 6]) -> i8 {

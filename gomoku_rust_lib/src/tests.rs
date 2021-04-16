@@ -3,12 +3,305 @@
 extern crate pyo3;
 
 use crate::bitboard_operations::apply_bit;
+use crate::bitboard_operations::remove_bit;
 use crate::bitboards::Bitboards;
+use crate::check_move::check_free_development;
+use crate::check_move::check_is_on_axe;
+use crate::check_move::check_is_unblockable_five;
 use crate::global_var;
 use crate::print::print_board_from_bitboard;
+use crate::state::create_new_state;
+use crate::state::State;
 use pyo3::prelude::*;
 use pyo3::types::*;
 use std::collections::HashMap;
+
+#[pyfunction]
+pub fn test_check_is_on_axe() {
+    // Test line
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[3],
+            global_var::BOARD_MIN_LIMITS,
+            1,
+            1
+        ),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[3],
+            global_var::BOARD_MIN_LIMITS,
+            1,
+            -1
+        ),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[3],
+            global_var::BOARD_MAX_LIMITS,
+            1,
+            -1
+        ),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[3],
+            global_var::BOARD_MAX_LIMITS,
+            1,
+            1
+        ),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[3],
+            global_var::BOARD_MAX_LIMITS,
+            1,
+            -19
+        ),
+        false
+    );
+
+    // Test column
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 0, 1, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 0, 2, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 0, 3, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[1],
+            global_var::BOARD_MIN_LIMITS,
+            4,
+            1
+        ),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[1],
+            global_var::BOARD_MIN_LIMITS,
+            5,
+            1
+        ),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[1],
+            global_var::BOARD_MIN_LIMITS,
+            1,
+            -1
+        ),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 19, 1, -1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 19, 2, -1),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 19, 3, -1),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 19, 4, -1),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 19, 5, -1),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[1], 19, 6, -1),
+        false
+    );
+
+    // Test diagonal right - left
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[0],
+            global_var::BOARD_MIN_LIMITS,
+            1,
+            1
+        ),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[0],
+            global_var::BOARD_MIN_LIMITS,
+            2,
+            1
+        ),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[0],
+            global_var::BOARD_MIN_LIMITS,
+            1,
+            -1
+        ),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[0],
+            global_var::BOARD_MAX_LIMITS,
+            1,
+            1
+        ),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[0],
+            global_var::BOARD_MAX_LIMITS,
+            2,
+            1
+        ),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(
+            global_var::AXE_MOUVEMENT_VALUE[0],
+            global_var::BOARD_MAX_LIMITS,
+            3,
+            1
+        ),
+        false
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 1, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 2, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 3, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 4, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 5, 1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 1, -1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 2, -1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 3, -1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 4, -1),
+        true
+    );
+    assert_eq!(
+        check_is_on_axe(global_var::AXE_MOUVEMENT_VALUE[0], 180, 5, -1),
+        true
+    );
+}
+
+#[pyfunction]
+pub fn test_check_free_development() {
+    let mut development_value: i32 = 0;
+
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    // First try in the middle, should be 4 * nb_of_axes * 2 = 32
+    let mut bit_current_move_pos: usize = 180;
+    let mut state = create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        bit_current_move_pos,
+        0,
+        0,
+        (0, 0),
+    );
+    development_value = check_free_development(&state);
+    assert_eq!(development_value, 32);
+
+    // Try in the top right corner, should be 4 * 6 - (4 * 4 * 2) = -8
+    bit_current_move_pos = 0;
+    state = create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        bit_current_move_pos,
+        0,
+        0,
+        (0, 0),
+    );
+    development_value = check_free_development(&state);
+    assert_eq!(development_value, -8);
+
+    // Try in the top left corner, should be 4 * 6 - (4 * 4 * 2) = -8
+    bit_current_move_pos = 18;
+    state = create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        bit_current_move_pos,
+        0,
+        0,
+        (0, 0),
+    );
+    development_value = check_free_development(&state);
+    assert_eq!(development_value, -8);
+
+    // Try in the bottom left corner, should be 4 * 6 - (4 * 4 * 2) = -8
+    bit_current_move_pos = global_var::BOARD_MAX_LIMITS;
+    state = create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        bit_current_move_pos,
+        0,
+        0,
+        (0, 0),
+    );
+    development_value = check_free_development(&state);
+    assert_eq!(development_value, -8);
+
+    // Try in the bottom right corner, should be 4 * 6 - (4 * 4 * 2) = -8
+    bit_current_move_pos = 342;
+    state = create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        bit_current_move_pos,
+        0,
+        0,
+        (0, 0),
+    );
+    apply_bit(&mut bitboards, bit_current_move_pos, 1);
+    development_value = check_free_development(&state);
+    assert_eq!(development_value, -8);
+}
 
 #[pyfunction]
 pub fn test_returning_dict_to_python(
@@ -77,8 +370,6 @@ pub fn test_get_pydict(py_obj: HashMap<String, i32>) {
     );
 }
 
-use crate::check_move::check_is_unblockable_five;
-
 #[pyfunction]
 pub fn test_check_is_unblockable_five() {
     let mut bitboards: Bitboards = Bitboards {
@@ -113,7 +404,6 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    print_board_from_bitboard(&bitboards);
     assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
@@ -331,4 +621,42 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
 
     assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), true);
+
+    // Reverse check is unblockable five in two ways
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
+
+    let mut pos = 6;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 1;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    remove_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+    apply_bit(&mut bitboards, 7, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+
+    // Reverse check is unblockable five in two ways
+    bitboards.white_board = [0, 0, 0, 0, 0, 0];
+    bitboards.black_board = [0, 0, 0, 0, 0, 0];
+
+    let mut pos = 300;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    pos -= 19;
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    remove_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+    apply_bit(&mut bitboards, 319, global_var::PLAYER_WHITE_NB);
+    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
 }

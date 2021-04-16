@@ -13,3 +13,5 @@ except ImportError:
 
 def test_check_rust():
     gomoku_rust.gomoku_tests.test_check_is_unblockable_five()
+    gomoku_rust.gomoku_tests.test_check_free_development()
+    gomoku_rust.gomoku_tests.test_check_is_on_axe()
