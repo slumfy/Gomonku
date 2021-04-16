@@ -52,6 +52,7 @@ fn ai_move(
     y: usize,
     turn: isize,
     wining_position: (usize, i8),
+	nb_move_to_win: i8,
     display_ai_time: bool,
     search_algorithm: String,
 ) -> PyResult<((usize, usize), i32)> {
@@ -73,7 +74,11 @@ fn ai_move(
         white_captured_stone,
         black_captured_stone,
         wining_position,
+		nb_move_to_win,
     );
+	let state_info = get_move_info(&mut state);
+    println!("Black move_to_win {}", state.black_move_to_win);
+    println!("White move_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
 
     if turn == 0 {
@@ -170,11 +175,13 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         white_captured_stone,
         black_captured_stone,
         (0, 0),
+		5
     );
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
+		dict.set_item("nb_move_to_win", board_state_info.nb_move_to_win)?;
         dict.set_item("stone_captured", board_state_info.stone_captured)?;
         if player == global_var::PLAYER_WHITE_NB {
             unsafe {

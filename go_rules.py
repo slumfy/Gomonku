@@ -43,6 +43,7 @@ class GoRules:
         else:
             self.board = Rust_res["board"]
             player.capture_piece += Rust_res["stone_captured"]
+            player.nb_move_to_win = Rust_res["nb_move_to_win"]
             # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
             # if self.ai_helper:
             #     gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
@@ -73,7 +74,7 @@ class GoRules:
                 winpos = p.wining_position
                 print("AI WINPOS", winpos)
         move = gomoku_rust.ai_move(
-            self.board, player.nb, x, y, turn, winpos, display_ai_time, search_algorithm
+            self.board, player.nb, x, y, turn, winpos, player.nb_move_to_win, display_ai_time, search_algorithm
         )
         print("AI: ", move)
 

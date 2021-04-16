@@ -27,8 +27,9 @@ pub fn create_new_state(
     white_captured_stone: i8,
     black_captured_stone: i8,
     win_state: (usize, i8),
+	nb_move_to_win: i8
 ) -> State {
-    let new_state = State {
+    let mut new_state = State {
         bitboards: bitboards.clone(),
         current_player: player,
         white_captured_stone: white_captured_stone,
@@ -41,6 +42,8 @@ pub fn create_new_state(
         win_state: win_state,
         bit_current_move_pos: bit_current_move_pos,
     };
+	if player == 1 {new_state.black_move_to_win = nb_move_to_win;}
+	else {new_state.white_move_to_win = nb_move_to_win;}
     return new_state;
 }
 
@@ -53,7 +56,8 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let bit_current_move_pos: usize = index_box[pos];
-
+		let nb_move_to_win: i8 = if -state.current_player == 1 {state.black_move_to_win}
+		else {state.white_move_to_win};
         let mut child = create_new_state(
             &mut copy_bitboards,
             -state.current_player,
@@ -61,6 +65,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.white_captured_stone,
             state.black_captured_stone,
             state.win_state,
+			nb_move_to_win
         );
         child.heuristic = heuristic(&mut child);
         if child.is_playable == 0 {
