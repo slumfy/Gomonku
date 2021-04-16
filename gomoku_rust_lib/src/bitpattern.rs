@@ -221,7 +221,7 @@ fn find_blocker(
             if is_blocked > 0 && p < found_pattern.0 {
                 found_pattern.0 = p;
                 found_pattern.1 = is_blocked;
-                println!("{} found {} blocker", PATTERN[p].4, is_blocked);
+                // println!("{} found {} blocker", PATTERN[p].4, is_blocked);
                 break;
             }
         }
