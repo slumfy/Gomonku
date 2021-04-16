@@ -8,9 +8,8 @@ use crate::bitboards::Bitboards;
 use crate::check_move::check_free_development;
 use crate::check_move::check_is_unblockable_five;
 use crate::global_var;
-use crate::print::print_board_from_bitboard;
+// use crate::print::print_board_from_bitboard;
 use crate::state::create_new_state;
-use crate::state::State;
 use crate::utils::is_on_axe;
 use pyo3::prelude::*;
 use pyo3::types::*;
@@ -18,7 +17,7 @@ use std::collections::HashMap;
 
 #[pyfunction]
 pub fn test_check_free_development() {
-    let mut development_value: i32 = 0;
+    let mut development_value: i32;
 
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
