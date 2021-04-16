@@ -1,7 +1,7 @@
 //! Methods to create bitboards from vec and axes from pos.
 
-use crate::check_move::check_is_on_axe;
 use crate::global_var;
+use crate::utils::is_on_axe;
 
 #[derive(Copy, Clone, Hash)]
 pub struct Bitboards {
@@ -38,7 +38,7 @@ pub fn create_bits_axes_from_pos(
                 ret = get_bits_in_bitboard_from_pos(move_pos - axe_increment_value * i, bitboard);
             }
             if ret == global_var::OUT_OF_BOARD_MOVE
-                || !check_is_on_axe(axe_increment_value, move_pos, i, -1)
+                || !is_on_axe(axe_increment_value, move_pos, i, -1)
             {
                 bits_axes_array[bits_axes_array_index][index] |= 1 << 15;
             } else if ret == 1 {
@@ -56,7 +56,7 @@ pub fn create_bits_axes_from_pos(
                 ret = get_bits_in_bitboard_from_pos(move_pos + axe_increment_value * i, bitboard);
             }
             if ret == global_var::OUT_OF_BOARD_MOVE
-                || !check_is_on_axe(axe_increment_value, move_pos, i, 1)
+                || !is_on_axe(axe_increment_value, move_pos, i, 1)
             {
                 bits_axes_array[bits_axes_array_index][index] |= 1;
             } else if ret == 1 {

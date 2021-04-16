@@ -15,7 +15,7 @@ use crate::patterns::PATTERN;
 use crate::print::print_axe_value;
 use crate::print::print_axes;
 use crate::state::State;
-use crate::utils::get_line_from_pos;
+use crate::utils::is_on_axe;
 use pyo3::prelude::*;
 
 pub fn check_stone_color(pos: usize, bitboards: &Bitboards) -> i8 {
@@ -256,43 +256,6 @@ pub fn check_is_unblockable_five(
     return true;
 }
 
-pub fn check_is_on_axe(
-    axe_increment_value: usize,
-    move_pos: usize,
-    axe_distance: usize,
-    direction_sign: i16,
-) -> bool {
-    if (move_pos as isize
-        + axe_increment_value as isize * axe_distance as isize * direction_sign as isize)
-        < 0
-        || (move_pos as isize
-            + axe_increment_value as isize * axe_distance as isize * direction_sign as isize)
-            > 360
-    {
-        return false;
-    } else if axe_increment_value == 1 {
-        if get_line_from_pos(
-            (move_pos as isize
-                + axe_increment_value as isize * axe_distance as isize * direction_sign as isize)
-                as usize,
-        ) != get_line_from_pos(move_pos)
-        {
-            return false;
-        }
-    } else {
-        if get_line_from_pos(
-            (move_pos as isize
-                + axe_increment_value as isize * axe_distance as isize * direction_sign as isize)
-                as usize,
-        ) != (get_line_from_pos(move_pos) as isize
-            + axe_distance as isize * direction_sign as isize) as usize
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
 pub fn check_free_development(state: &State) -> i32 {
     let mut development_value: i32 = 0;
     let two_players_axes = create_bits_axes_from_pos(
@@ -315,7 +278,7 @@ pub fn check_free_development(state: &State) -> i32 {
         has_been_decounted = false;
         for i in 1..5 {
             let decount_value: i32 = (5 - i) * 2;
-            if !check_is_on_axe(
+            if !is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe],
                 state.bit_current_move_pos,
                 i as usize,
@@ -324,7 +287,7 @@ pub fn check_free_development(state: &State) -> i32 {
                 development_value -= decount_value;
                 has_been_decounted = true;
             }
-            if !check_is_on_axe(
+            if !is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe],
                 state.bit_current_move_pos,
                 i as usize,

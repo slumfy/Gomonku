@@ -28,9 +28,9 @@ use check_move::checking_and_apply_bits_move;
 use heuristic::BoardStateInfo;
 
 use crate::tests::__pyo3_get_function_test_check_free_development;
-use crate::tests::__pyo3_get_function_test_check_is_on_axe;
 use crate::tests::__pyo3_get_function_test_check_is_unblockable_five;
 use crate::tests::__pyo3_get_function_test_get_pydict;
+use crate::tests::__pyo3_get_function_test_is_on_axe;
 use crate::tests::__pyo3_get_function_test_returning_dict_to_python;
 use crate::tests::__pyo3_get_function_test_updating_from_other_function;
 
@@ -220,7 +220,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(test_get_pydict, m)?)?;
     m.add_function(wrap_pyfunction!(test_check_is_unblockable_five, m)?)?;
     m.add_function(wrap_pyfunction!(test_check_free_development, m)?)?;
-    m.add_function(wrap_pyfunction!(test_check_is_on_axe, m)?)?;
+    m.add_function(wrap_pyfunction!(test_is_on_axe, m)?)?;
     Ok(())
 }
 
