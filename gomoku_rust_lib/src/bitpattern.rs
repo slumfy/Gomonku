@@ -91,7 +91,7 @@ fn return_blocker_value(
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
         if axe_pattern[pat].1 == 2 {
-            pat_value += PATTERN[axe_pattern[pat].0].3 * 5;
+            pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
         } else if axe_pattern[pat].1 == 1 {
             pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
         }
@@ -195,9 +195,9 @@ fn find_pattern(
             }
         }
     }
-    if found_pattern.0 < PATTERN.len() {
+    if found_pattern.0 < PATTERN.len() && l < PATTERN[found_pattern.0].1 {
         return_pattern[axe] = *found_pattern;
-        println!("PATTERN FOUND {} len {} l: {}", PATTERN[found_pattern.0].4,PATTERN[found_pattern.0].1 ,l);
+        // println!("PATTERN FOUND {} len {} l: {}", PATTERN[found_pattern.0].4,PATTERN[found_pattern.0].1 ,l);
     }
 }
 
@@ -223,7 +223,6 @@ fn find_blocker(
                 }
             }
 			if is_blocked == 2 && PATTERN[p].2 != 0 && PATTERN[p].2 != l && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true {
-				println!("why");
 				is_blocked = 0;
 			} 
             if is_blocked > 0 && p < found_blocker.0 {

@@ -212,7 +212,7 @@ pub fn check_blocker(
     if PATTERN[p].2 != 0 && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true {
         is_blocked = 2;
     } else if blocker_checker == BLOCKER[b].0 {
-        is_blocked = 2;
+        is_blocked = 1;
     } else if blocker_checker != 0 {
         is_blocked = 1;
         if check_border(pos, l, axe, PATTERN[p].1) == false {
