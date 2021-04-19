@@ -1,7 +1,7 @@
 use crate::bitboard_operations::apply_bit;
 use crate::bitboard_operations::remove_bit;
 use crate::bitboards::create_bits_axes_from_pos;
-use crate::bitboards::Bitboards;
+use crate::data_struct::Bitboards;
 use crate::bitpattern::pattern_axes_finder;
 use crate::global_var;
 use crate::print::print_axes;

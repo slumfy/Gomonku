@@ -1,11 +1,11 @@
 //! Crate specialy used for printing solutions.
 
 use crate::bitboards::create_vec_from_bitboards;
-use crate::bitboards::Bitboards;
+use crate::data_struct::Bitboards;
 use crate::check_move::check_stone_color;
 use crate::global_var;
 use crate::search_space::get_search_box_bitboard;
-use crate::state::State;
+use crate::data_struct::State;
 
 pub fn print_axes(axes: &[[u16; 4]; 2], player_color: i8) {
     if player_color != global_var::PLAYER_BLACK_NB {

@@ -1,6 +1,6 @@
 use crate::bitboard_operations::apply_bit;
 use crate::bitboard_operations::remove_bit;
-use crate::bitboards::Bitboards;
+use crate::data_struct::Bitboards;
 use crate::check_move::check_is_unblockable_five;
 use crate::global_var;
 

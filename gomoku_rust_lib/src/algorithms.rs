@@ -4,7 +4,7 @@ use crate::global_var;
 use crate::print::print_heuristic_table;
 use crate::state::create_child;
 use crate::state::state_is_terminated;
-use crate::state::State;
+use crate::data_struct::State;
 use std::cmp::Reverse;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
@@ -218,17 +218,7 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
     unsafe {
         println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
     }
-    // println!("heuristic of returned move : {:?}", heuristic);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
-    // for x in 0..state.available_move.len() {
-    // 	println!("child nb {}, child heuristic {}", x,state.available_move[x].heuristic);
-    // }
-    // println!(
-    //     "ret move x = {} y = {}, ret heuristic {}",
-    //     (state.available_move[0].bit_current_move_pos) / 19,
-    //     (state.available_move[0].bit_current_move_pos) % 19,
-    //     state.available_move[0].heuristic
-    // );
     return (
         (state.available_move[0].bit_current_move_pos),
         state.available_move[0].heuristic,

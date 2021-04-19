@@ -1,24 +1,10 @@
 //! ##This current crate possess the state struct and methods to creat state!
 
-use crate::bitboards::Bitboards;
+use crate::data_struct::Bitboards;
+use crate::data_struct::State;
 use crate::heuristic::heuristic;
 
 use crate::search_space::get_search_box_bitboard;
-
-/// State struct corresponding to an instant board value for a given player.
-pub struct State {
-    pub bitboards: Bitboards,
-    pub available_move: Vec<State>,
-    pub current_player: i8,
-    pub white_captured_stone: i8,
-    pub black_captured_stone: i8,
-    pub white_move_to_win: i8,
-    pub black_move_to_win: i8,
-    pub heuristic: i32,
-    pub is_playable: i8,
-    pub win_state: (usize, i8),
-    pub bit_current_move_pos: usize,
-}
 
 pub fn create_new_state(
     bitboards: &mut Bitboards,

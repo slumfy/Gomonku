@@ -5,19 +5,8 @@ use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
 use crate::global_var;
 use crate::heuristic_ratios;
-use crate::state::State;
-
-#[derive(Debug)]
-pub struct BoardStateInfo {
-    pub is_wrong_move: i8,
-    pub stone_captured: i8,
-    pub capturable: bool,
-    pub capturing: bool,
-    pub pattern_value: i32,
-    pub blocker_value: i32,
-    pub is_winning: (usize, i8),
-    pub nb_move_to_win: i8,
-}
+use crate::data_struct::State;
+use crate::data_struct::BoardStateInfo;
 
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;

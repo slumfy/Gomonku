@@ -7,6 +7,7 @@ use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
 mod algorithms;
+mod data_struct;
 mod bitboard_operations;
 mod bitboards;
 mod bitpattern;
@@ -14,7 +15,6 @@ mod check_move;
 mod global_var;
 mod heuristic;
 mod heuristic_ratios;
-mod patterns;
 mod print;
 mod pytests;
 mod search_space;
@@ -29,7 +29,7 @@ use crate::check_move::get_move_info;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
-use heuristic::BoardStateInfo;
+use crate::data_struct::BoardStateInfo;
 
 use crate::pytests::__pyo3_get_function_pytest_check_free_development;
 use crate::pytests::__pyo3_get_function_pytest_check_is_unblockable_five;
@@ -67,7 +67,7 @@ fn ai_move(
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
     let bit_current_move_pos: usize = x * 19 + y;
     let ai_move: (usize, i32);
-    let mut state: state::State = state::create_new_state(
+    let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         -player,
         bit_current_move_pos,
@@ -168,7 +168,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     let bit_current_move_pos: usize = x * 19 + y;
 
     let mut bitboards = bitboards::create_bitboards_from_vec(&board); // BITBOARDS CREATION
-    let mut state: state::State = state::create_new_state(
+    let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         player,
         bit_current_move_pos,

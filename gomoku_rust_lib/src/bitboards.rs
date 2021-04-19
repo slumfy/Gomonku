@@ -1,13 +1,7 @@
 //! Methods to create bitboards from vec and axes from pos.
-
 use crate::global_var;
 use crate::utils::is_on_axe;
-
-#[derive(Copy, Clone, Hash)]
-pub struct Bitboards {
-    pub white_board: [u64; 6],
-    pub black_board: [u64; 6],
-}
+use crate::data_struct::Bitboards;
 
 pub fn create_bits_axes_from_pos(
     move_pos: usize,

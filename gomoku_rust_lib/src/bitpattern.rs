@@ -1,6 +1,6 @@
 //! Methods to iter throught bit axes and finds patterns.
 
-use crate::bitboards::Bitboards;
+use crate::data_struct::Bitboards;
 use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
 use crate::check_move::check_one_bit_in_pattern;
@@ -8,9 +8,9 @@ use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
 use crate::global_var;
-use crate::heuristic::BoardStateInfo;
-use crate::patterns::BLOCKER;
-use crate::patterns::PATTERN;
+use crate::data_struct::BoardStateInfo;
+use crate::global_var::BLOCKER;
+use crate::global_var::PATTERN;
 
 pub fn pattern_axes_dispatcher(
     board_state_info: &mut BoardStateInfo,
@@ -152,7 +152,7 @@ pub fn pattern_axes_finder(
             }
         }
     }
-	println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+	// println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
     return [return_pattern, return_blocker];
 }
 
@@ -234,7 +234,7 @@ fn find_blocker(
         }
     }
     if found_blocker.0 < PATTERN.len() && l < PATTERN[found_blocker.0].1 {
-		println!("BLOCKER FOUND {} value {:?} len {} l: {}", PATTERN[found_blocker.0].4,found_blocker,PATTERN[found_blocker.0].1 ,l);
+		// println!("BLOCKER FOUND {} value {:?} len {} l: {}", PATTERN[found_blocker.0].4,found_blocker,PATTERN[found_blocker.0].1 ,l);
         return_blocker[axe] = *found_blocker;
     }
 }

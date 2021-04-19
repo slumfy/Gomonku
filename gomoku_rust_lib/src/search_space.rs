@@ -1,6 +1,6 @@
 //! Creation of boxes where the AI search solutions.
 
-use crate::bitboards::Bitboards;
+use crate::data_struct::Bitboards;
 use crate::check_move::check_is_in_bitpos_list;
 
 #[allow(dead_code)]
