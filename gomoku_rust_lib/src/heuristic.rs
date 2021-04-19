@@ -118,7 +118,7 @@ fn assign_capture_value_to_state(state: &mut State, board_state_info: &BoardStat
     if capture_count >= 10 {
         value += global_var::HEURISTIC_MAX_VALUE;
     } else {
-        value += board_state_info.stone_captured as i32 * capture_count as i32 * 50;
+        value += board_state_info.stone_captured as i32 * capture_count as i32 * heuristic_ratios::CAPTURING_COUNT_RATIO_MULTIPLIER;
     }
     return value;
 }
