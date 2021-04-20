@@ -72,9 +72,9 @@ fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStat
         opponent_move_to_win = state.white_move_to_win;
     }
     if board_state_info.nb_move_to_win < opponent_move_to_win {
-        pattern_multiplier = 4;
+        pattern_multiplier = 2;
     } else {
-        blocker_multiplier = 4;
+        blocker_multiplier = 2;
     }
     value += board_state_info.blocker_value * blocker_multiplier;
     value += board_state_info.pattern_value * pattern_multiplier;

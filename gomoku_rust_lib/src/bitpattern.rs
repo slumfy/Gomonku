@@ -11,6 +11,7 @@ use crate::global_var;
 use crate::data_struct::BoardStateInfo;
 use crate::global_var::BLOCKER;
 use crate::global_var::PATTERN;
+use crate::heuristic_ratios::HEURISTIC_PATTERN;
 
 pub fn pattern_axes_dispatcher(
     board_state_info: &mut BoardStateInfo,
@@ -54,7 +55,7 @@ fn return_pattern_value(
     pos: usize,
     player: i8,
 ) {
-    // println!("pattern on axe {:?}", axe_pattern);
+     println!("pattern on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
@@ -71,9 +72,9 @@ fn return_pattern_value(
         if axe_pattern[pat].1 == 5 {
             board_state_info.pattern_value = 100000;
         } else if axe_pattern[pat].1 == 1 {
-            pat_value += PATTERN[axe_pattern[pat].0].3;
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0];
         } else if axe_pattern[pat].1 == 0 {
-            pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
         }
     }
     board_state_info.nb_move_to_win = move_to_win;
@@ -86,14 +87,14 @@ fn return_blocker_value(
     pos: usize,
     player: i8,
 ) {
-    // println!("pattern on axe {:?}", axe_pattern);
+     println!("blocker on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
         if axe_pattern[pat].1 == 2 {
-            pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
         } else if axe_pattern[pat].1 == 1 {
-            pat_value += PATTERN[axe_pattern[pat].0].3 * 10;
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
         }
     }
     board_state_info.blocker_value += pat_value;
