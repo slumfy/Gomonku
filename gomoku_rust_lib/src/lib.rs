@@ -92,8 +92,8 @@ fn ai_move(
             algorithms::negamax(
                 &mut state,
                 global_var::DEPTH,
-                global_var::HEURISTIC_MIN_VALUE,
-                global_var::HEURISTIC_MAX_VALUE,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
         } else if search_algorithm == "negamax_with_transpotable" {
@@ -101,8 +101,8 @@ fn ai_move(
             algorithms::negamax_with_transpotable(
                 &mut state,
                 global_var::DEPTH,
-                global_var::HEURISTIC_MIN_VALUE,
-                global_var::HEURISTIC_MAX_VALUE,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
         } else if search_algorithm == "negascout" {
@@ -110,8 +110,8 @@ fn ai_move(
             algorithms::negascout(
                 &mut state,
                 global_var::DEPTH,
-                global_var::HEURISTIC_MIN_VALUE,
-                global_var::HEURISTIC_MAX_VALUE,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
         } else if search_algorithm == "negascout_with_transpotable" {
@@ -119,8 +119,8 @@ fn ai_move(
             algorithms::negascout_with_transpotable(
                 &mut state,
                 global_var::DEPTH,
-                global_var::HEURISTIC_MIN_VALUE,
-                global_var::HEURISTIC_MAX_VALUE,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
         }

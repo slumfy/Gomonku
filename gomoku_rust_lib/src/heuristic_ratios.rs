@@ -2,6 +2,9 @@ pub static DEVELOPMENT_RATIO_DIVISER: i32 = 2;
 pub static CAPTURING_POS_RATIO_MULTIPLIER: i32 = 100;
 pub static CAPTURING_COUNT_RATIO_MULTIPLIER: i32 = 50;
 
+pub static HEURISTIC_MAX_VALUE: i32 = 100000;
+pub static HEURISTIC_MIN_VALUE: i32 = -100000;
+
 pub static HEURISTIC_PATTERN: [i32; 9] = [
     200,	// five XXXXX...
     90,		// four .XXXX...

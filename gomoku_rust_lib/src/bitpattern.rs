@@ -55,7 +55,7 @@ fn return_pattern_value(
     pos: usize,
     player: i8,
 ) {
-     println!("pattern on axe {:?}", axe_pattern);
+    //  println!("pattern on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
@@ -87,7 +87,7 @@ fn return_blocker_value(
     pos: usize,
     player: i8,
 ) {
-     println!("blocker on axe {:?}", axe_pattern);
+    //  println!("blocker on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {

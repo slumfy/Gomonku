@@ -1,6 +1,7 @@
 //! Four algorithms use by the AI.
 
 use crate::global_var;
+use crate::heuristic_ratios;
 use crate::print::print_heuristic_table;
 use crate::state::create_child;
 use crate::state::state_is_terminated;
@@ -22,10 +23,12 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
 	// println!("NEGAMAX player {}  color {} state: {}", state.current_player, color, state.bit_current_move_pos);
-	// for child in 0..state.available_move.len() {
-	// 	println!("child {} heuristic {} depth {}",child,state.available_move[child].heuristic,depth);
-	// }
-    let mut value: i32 = global_var::HEURISTIC_MIN_VALUE;
+	if depth == global_var::DEPTH {
+		for child in 0..state.available_move.len() {
+			println!("child {} heuristic {} pos {}",child,state.available_move[child].heuristic,state.available_move[child].bit_current_move_pos);
+		}
+	}
+    let mut value: i32 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value = -negamax(
             &mut state.available_move[child_index],
@@ -72,7 +75,7 @@ pub fn negamax_with_transpotable(
     if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
         return state.heuristic * color as i32;
     }
-    let mut value: i32 = global_var::HEURISTIC_MIN_VALUE;
+    let mut value: i32 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     let len = state.available_move.len();
     for child in 0..len {
         let negamax = -negamax(
@@ -218,6 +221,9 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
     unsafe {
         println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
     }
+	for child in 0..state.available_move.len() {
+		println!("child {} heuristic {} pos {}",child,state.available_move[child].heuristic,state.available_move[child].bit_current_move_pos);
+	}
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     return (
         (state.available_move[0].bit_current_move_pos),
