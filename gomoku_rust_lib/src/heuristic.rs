@@ -11,6 +11,7 @@ use crate::data_struct::BoardStateInfo;
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
+	state.board_info = board_state_info.clone();
     if !is_playable_move(state, &board_state_info) {
         return heuristic_ratios::HEURISTIC_MIN_VALUE;
     }
@@ -22,8 +23,7 @@ pub fn heuristic(state: &mut State) -> i32 {
     if value == heuristic_ratios::HEURISTIC_MAX_VALUE {
         return value;
     }
-    value += assign_capturing_pos_value_to_state(&board_state_info)
-        * heuristic_ratios::CAPTURING_POS_RATIO_MULTIPLIER;
+    value += assign_capturing_pos_value_to_state(&board_state_info);
     value += check_free_development(state) / heuristic_ratios::DEVELOPMENT_RATIO_DIVISER;
     value += assign_capture_value_to_state(state, &board_state_info);
     return value;
@@ -41,12 +41,12 @@ fn is_in_winning_pos(state: &mut State, board_state_info: &BoardStateInfo) -> i3
     let mut value: i32 = 0;
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
-            if state.current_player == state.win_state.1 {
+                if state.current_player == state.win_state.1 {
                 value = heuristic_ratios::HEURISTIC_MAX_VALUE;
             } else {
                 value = heuristic_ratios::HEURISTIC_MIN_VALUE;
             }
-            return value;
+            	return value;
         } else {
             state.win_state = (0, 0);
         }
@@ -72,9 +72,9 @@ fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStat
         opponent_move_to_win = state.white_move_to_win;
     }
     if board_state_info.nb_move_to_win < opponent_move_to_win {
-        pattern_multiplier = 2;
+        pattern_multiplier = heuristic_ratios::PATTERN_MULTIPLIER;
     } else {
-        blocker_multiplier = 2;
+        blocker_multiplier = heuristic_ratios::BLOCKER_MULTIPLIER;
     }
     value += board_state_info.blocker_value * blocker_multiplier;
     value += board_state_info.pattern_value * pattern_multiplier;
@@ -84,10 +84,10 @@ fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStat
 fn assign_capturing_pos_value_to_state(board_state_info: &BoardStateInfo) -> i32 {
     let mut value: i32 = 0;
     if board_state_info.capturable {
-        value -= 1;
+        value -= heuristic_ratios::CAPTURABLE_POS_SCORE;
     }
     if board_state_info.capturing {
-        value += 1;
+        value += heuristic_ratios::CAPTURING_POS_SCORE;
     }
     return value;
 }

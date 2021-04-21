@@ -42,6 +42,8 @@ fn computing_move(
     board_state_info.capturable = check_is_capturable(player_axe, opponent_axe);
     board_state_info.capturing = check_is_capturable(opponent_axe, player_axe);
     axe_pattern = pattern_axes_finder(bitboards, player_axe, opponent_axe, pos, player);
+	board_state_info.pattern_axe = axe_pattern[0];
+	board_state_info.blocker_axe = axe_pattern[1];
     return_pattern_value(board_state_info, axe_pattern[0], pos, player);
     return_blocker_value(board_state_info, axe_pattern[1], pos, player);
     if check_is_double_triple(axe_pattern[0]) {
@@ -72,7 +74,7 @@ fn return_pattern_value(
         if axe_pattern[pat].1 == 5 {
             board_state_info.pattern_value = 100000;
         } else if axe_pattern[pat].1 == 1 {
-            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0];
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
         } else if axe_pattern[pat].1 == 0 {
             pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
         }
@@ -153,7 +155,7 @@ pub fn pattern_axes_finder(
             }
         }
     }
-	// println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+	//  println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
     return [return_pattern, return_blocker];
 }
 

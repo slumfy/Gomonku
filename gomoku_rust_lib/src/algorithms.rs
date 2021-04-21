@@ -43,7 +43,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
             break;
         }
     }
-    state.heuristic = value;
+    state.heuristic += value;
     return value;
 }
 
@@ -225,6 +225,7 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
 		println!("child {} heuristic {} pos {}",child,state.available_move[child].heuristic,state.available_move[child].bit_current_move_pos);
 	}
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+	println!("boardstate of returning move {} : {:?}",state.available_move[0].bit_current_move_pos, state.available_move[0].board_info);
     return (
         (state.available_move[0].bit_current_move_pos),
         state.available_move[0].heuristic,

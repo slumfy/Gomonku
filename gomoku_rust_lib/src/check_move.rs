@@ -46,6 +46,7 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
 
 pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     let mut bitboard_info = BoardStateInfo {
+		player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
         capturable: false,
@@ -54,6 +55,8 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
+		pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+		blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
 
     bitboard_info.is_wrong_move = check_is_wrong_move(state);
@@ -88,7 +91,13 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {
-    let mut bitboard_info = BoardStateInfo {
+    let axes = create_bits_axes_from_pos(
+        state.bit_current_move_pos,
+        &state.bitboards,
+        state.current_player,
+    );
+	let mut bitboard_info = BoardStateInfo {
+		player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
         capturable: false,
@@ -97,12 +106,9 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
+		pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+		blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
-    let axes = create_bits_axes_from_pos(
-        state.bit_current_move_pos,
-        &state.bitboards,
-        state.current_player,
-    );
     pattern_axes_dispatcher(
         &mut bitboard_info,
         &mut state.bitboards,

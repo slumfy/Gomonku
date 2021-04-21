@@ -3,6 +3,7 @@
 use crate::data_struct::Bitboards;
 use crate::data_struct::State;
 use crate::heuristic::heuristic;
+use crate::BoardStateInfo;
 
 use crate::search_space::get_search_box_bitboard;
 
@@ -27,6 +28,19 @@ pub fn create_new_state(
         is_playable: 0,
         win_state: win_state,
         bit_current_move_pos: bit_current_move_pos,
+		board_info: BoardStateInfo {
+			player: player,
+			is_wrong_move: 0,
+			stone_captured: 0,
+			capturable: false,
+			capturing: false,
+			pattern_value: 0,
+			blocker_value: 0,
+			is_winning: (0, 0),
+			nb_move_to_win: 5,
+			pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+			blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+		}
     };
 	if player == 1 {new_state.black_move_to_win = nb_move_to_win;}
 	else {new_state.white_move_to_win = nb_move_to_win;}

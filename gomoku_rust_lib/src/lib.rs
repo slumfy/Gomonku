@@ -134,11 +134,6 @@ fn ai_move(
 
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
-
-    println!(
-        "previous_move: {:?} heuristic {}",
-        state.bit_current_move_pos, state.heuristic
-    );
     println!(
         "white eat: {:?} black eat: {:?}",
         white_captured_stone, black_captured_stone
