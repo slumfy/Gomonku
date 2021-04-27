@@ -63,17 +63,17 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
         return bitboard_info;
     } else {
+		apply_bit(
+            &mut state.bitboards,
+            state.bit_current_move_pos as usize,
+            state.current_player,
+        );
         let axes = create_bits_axes_from_pos(
             state.bit_current_move_pos,
             &state.bitboards,
             state.current_player,
         );
         // print_axes(&axes);
-        apply_bit(
-            &mut state.bitboards,
-            state.bit_current_move_pos as usize,
-            state.current_player,
-        );
         pattern_axes_dispatcher(
             &mut bitboard_info,
             &mut state.bitboards,
@@ -126,9 +126,10 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
 
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
     let mut count = 0;
+	// println!("axe: {:?}", axe_pattern);
     for axe in 0..axe_pattern.len() {
         if axe_pattern[axe].1 == 0 {
-            if axe_pattern[axe].0 == 7 || axe_pattern[axe].0 == 6 {
+            if axe_pattern[axe].0 >= 5 && axe_pattern[axe].0 <= 7 {
                 count += 1;
             }
         }
@@ -263,7 +264,7 @@ pub fn check_is_unblockable_five(
 }
 
 pub fn check_free_development(state: &State) -> i32 {
-    let mut development_value: i32 = 0;
+    let mut development_return_value: i32 = 0;
     let two_players_axes = create_bits_axes_from_pos(
         state.bit_current_move_pos,
         &state.bitboards,
@@ -279,7 +280,9 @@ pub fn check_free_development(state: &State) -> i32 {
         opponent_axes = two_players_axes[0];
     };
     let mut has_been_decounted: bool;
+	let mut axe_free_value: [i32;4] = [0,0,0,0];
     for axe in 0..player_axes.len() {
+		let mut development_value = 0;
         // Checking if there is a board blocker in axes
         has_been_decounted = false;
         for i in 1..5 {
@@ -318,9 +321,9 @@ pub fn check_free_development(state: &State) -> i32 {
                 break;
             } else if player_casted & 1 == 0 {
                 development_value += 1;
-            } else if player_casted & 1 == 1 {
-                development_value += 5;
-            }
+             } //else if player_casted & 1 == 1 {
+            //     development_value += 5;
+            // }
             l += 1;
         }
         let mut l = 7;
@@ -333,13 +336,16 @@ pub fn check_free_development(state: &State) -> i32 {
                 break;
             } else if player_casted & 1 == 0 {
                 development_value += 1;
-            } else if player_casted & 1 == 1 {
-                development_value += 5;
-            }
+            }// else if player_casted & 1 == 1 {
+            //     development_value += 5;
+            // }
             l -= 1;
         }
+		axe_free_value[axe] = development_value;
+		development_return_value += development_value;
     }
-    return development_value;
+	// println!("freespace: {:?}",axe_free_value);
+    return development_return_value;
 }
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
@@ -356,8 +362,8 @@ pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool
         for l in 0..6 {
             let player_shifted = player_axe >> l;
             let player_casted = player_shifted as u8;
-            //println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
             if (player_casted & PATTERN[0].0) == PATTERN[0].0 {
+				// println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
                 return true;
             }
         }

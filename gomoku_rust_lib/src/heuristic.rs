@@ -10,14 +10,16 @@ use crate::data_struct::BoardStateInfo;
 
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;
+	let mut winstate: i32 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
 	state.board_info = board_state_info.clone();
     if !is_playable_move(state, &board_state_info) {
         return heuristic_ratios::HEURISTIC_MIN_VALUE;
     }
-    value = is_in_winning_pos(state, &board_state_info);
-    if value == heuristic_ratios::HEURISTIC_MAX_VALUE || value == heuristic_ratios::HEURISTIC_MIN_VALUE {
-        return value;
+	value += assign_capture_value_to_state(state, &board_state_info);
+    winstate = is_in_winning_pos(state, &board_state_info);
+    if winstate == heuristic_ratios::HEURISTIC_MAX_VALUE || winstate == heuristic_ratios::HEURISTIC_MIN_VALUE {
+        return winstate;
     }
     value += assign_pattern_value_to_state(state, &board_state_info);
     if value == heuristic_ratios::HEURISTIC_MAX_VALUE {
@@ -25,7 +27,6 @@ pub fn heuristic(state: &mut State) -> i32 {
     }
     value += assign_capturing_pos_value_to_state(&board_state_info);
     value += check_free_development(state) / heuristic_ratios::DEVELOPMENT_RATIO_DIVISER;
-    value += assign_capture_value_to_state(state, &board_state_info);
     return value;
 }
 
@@ -39,6 +40,20 @@ fn is_playable_move(state: &mut State, board_state_info: &BoardStateInfo) -> boo
 
 fn is_in_winning_pos(state: &mut State, board_state_info: &BoardStateInfo) -> i32 {
     let mut value: i32 = 0;
+	let player_capture_count: i8;
+	let opponent_capture_count: i8;
+	if state.current_player == 1 {
+        player_capture_count = state.white_captured_stone;
+		opponent_capture_count = state.black_captured_stone;
+    } else {
+        player_capture_count = state.black_captured_stone;
+		opponent_capture_count = state.white_captured_stone;
+    }
+    if player_capture_count >= 10 {
+        return heuristic_ratios::HEURISTIC_MAX_VALUE;
+    } else if opponent_capture_count >= 10 {
+		return heuristic_ratios::HEURISTIC_MIN_VALUE;
+	}
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
                 if state.current_player == state.win_state.1 {
@@ -104,10 +119,6 @@ fn assign_capture_value_to_state(state: &mut State, board_state_info: &BoardStat
     } else {
         capture_count = state.black_captured_stone;
     }
-    if capture_count >= 10 {
-        value += heuristic_ratios::HEURISTIC_MAX_VALUE;
-    } else {
-        value += board_state_info.stone_captured as i32 * capture_count as i32 * heuristic_ratios::CAPTURING_COUNT_RATIO_MULTIPLIER;
-    }
+    value += board_state_info.stone_captured as i32 * capture_count as i32 * heuristic_ratios::CAPTURING_COUNT_RATIO_MULTIPLIER;
     return value;
 }

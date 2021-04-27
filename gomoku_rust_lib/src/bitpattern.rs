@@ -44,11 +44,12 @@ fn computing_move(
     axe_pattern = pattern_axes_finder(bitboards, player_axe, opponent_axe, pos, player);
 	board_state_info.pattern_axe = axe_pattern[0];
 	board_state_info.blocker_axe = axe_pattern[1];
+	if check_is_double_triple(axe_pattern[0]) {
+        board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
+		return;
+    }
     return_pattern_value(board_state_info, axe_pattern[0], pos, player);
     return_blocker_value(board_state_info, axe_pattern[1], pos, player);
-    if check_is_double_triple(axe_pattern[0]) {
-        board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
-    }
 }
 
 fn return_pattern_value(

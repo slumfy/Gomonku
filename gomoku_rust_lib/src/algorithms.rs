@@ -11,7 +11,7 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
 static mut TRANSPOTABLENEGA: Vec<Transpotablenode> = vec![];
-static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![];
+static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![]; 
 
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
     update_max_depth(depth);
@@ -43,7 +43,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
             break;
         }
     }
-    state.heuristic += value;
+    state.heuristic = value;
     return value;
 }
 
