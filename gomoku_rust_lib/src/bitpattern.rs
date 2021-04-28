@@ -74,10 +74,8 @@ fn return_pattern_value(
         }
         if axe_pattern[pat].1 == 5 {
             board_state_info.pattern_value = 100000;
-        } else if axe_pattern[pat].1 == 1 {
-            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
-        } else if axe_pattern[pat].1 == 0 {
-            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
+        } else if axe_pattern[pat].1 != 3 && axe_pattern[pat].1 != 2 {
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0][axe_pattern[pat].1];
         }
     }
     board_state_info.nb_move_to_win = move_to_win;
@@ -95,9 +93,9 @@ fn return_blocker_value(
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
         if axe_pattern[pat].1 == 2 {
-            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0][0];
         } else if axe_pattern[pat].1 == 1 {
-            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0] * 10;
+            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0][1];
         }
     }
     board_state_info.blocker_value += pat_value;
