@@ -1,11 +1,8 @@
 use crate::bitboard_operations::apply_bit;
-use crate::bitboard_operations::remove_bit;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitpattern::pattern_axes_finder;
 use crate::data_struct::Bitboards;
 use crate::global_var;
-use crate::print::print_axes;
-use crate::print::print_board_from_bitboard;
 
 pub fn test_pattern_axes_finder() {
     let mut bitboards: Bitboards = Bitboards {
@@ -14,7 +11,7 @@ pub fn test_pattern_axes_finder() {
     };
 
     // Alignement of 1
-    let mut pos = 19;
+    let pos = 19;
     let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
@@ -69,7 +66,7 @@ fn test_alignment_of_five() {
         black_board: [0, 0, 0, 0, 0, 0],
     };
 
-    let mut pos = 19;
+    let pos = 19;
 
     // Alignement of 5 undefeatable
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);

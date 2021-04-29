@@ -52,6 +52,7 @@ fn computing_move(
     return_blocker_value(board_state_info, axe_pattern[1], pos, player);
 }
 
+#[allow(dead_code)]
 fn return_pattern_value(
     board_state_info: &mut BoardStateInfo,
     axe_pattern: [(usize, usize); 4],
