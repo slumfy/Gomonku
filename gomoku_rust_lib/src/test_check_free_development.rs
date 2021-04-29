@@ -1,6 +1,6 @@
 use crate::bitboard_operations::apply_bit;
-use crate::data_struct::Bitboards;
 use crate::check_move::check_free_development;
+use crate::data_struct::Bitboards;
 use crate::global_var;
 // use crate::print::print_board_from_bitboard;
 use crate::state::create_new_state;
@@ -22,7 +22,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     development_value = check_free_development(&state);
     assert_eq!(development_value, 32);
@@ -36,7 +36,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     development_value = check_free_development(&state);
     assert_eq!(development_value, -8);
@@ -50,7 +50,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     development_value = check_free_development(&state);
     assert_eq!(development_value, -8);
@@ -64,7 +64,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     development_value = check_free_development(&state);
     assert_eq!(development_value, -8);
@@ -78,7 +78,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     development_value = check_free_development(&state);
     assert_eq!(development_value, -8);
@@ -97,7 +97,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     apply_bit(
         &mut bitboards,
@@ -125,7 +125,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     apply_bit(
         &mut bitboards,
@@ -163,7 +163,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     apply_bit(&mut bitboards, bit_current_move_pos, 1);
     development_value = check_free_development(&state);
@@ -217,7 +217,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     apply_bit(&mut bitboards, bit_current_move_pos, 1);
     development_value = check_free_development(&state);
@@ -280,7 +280,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     apply_bit(&mut bitboards, bit_current_move_pos, 1);
     development_value = check_free_development(&state);
@@ -347,7 +347,7 @@ pub fn test_check_free_development() {
         0,
         0,
         (0, 0),
-		5
+        5,
     );
     apply_bit(&mut bitboards, bit_current_move_pos, 1);
     development_value = check_free_development(&state);

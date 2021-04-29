@@ -1,12 +1,12 @@
 //! Crate specialy used for printing solutions.
 
 use crate::bitboards::create_vec_from_bitboards;
-use crate::data_struct::Bitboards;
 use crate::check_move::check_stone_color;
+use crate::data_struct::Bitboards;
+use crate::data_struct::State;
 use crate::global_var;
 use crate::heuristic_ratios;
 use crate::search_space::get_search_box_bitboard;
-use crate::data_struct::State;
 
 pub fn print_axes(axes: &[[u16; 4]; 2], player_color: i8) {
     if player_color != global_var::PLAYER_BLACK_NB {
@@ -50,9 +50,11 @@ pub fn print_heuristic_table(state: &State) {
                 if (state.available_move[idx].bit_current_move_pos) / 19 == x
                     && (state.available_move[idx].bit_current_move_pos) % 19 == y
                 {
-                    if state.available_move[idx].heuristic >= heuristic_ratios::HEURISTIC_MAX_VALUE {
+                    if state.available_move[idx].heuristic >= heuristic_ratios::HEURISTIC_MAX_VALUE
+                    {
                         line.push("MAX".to_string());
-                    } else if state.available_move[idx].heuristic <= heuristic_ratios::HEURISTIC_MIN_VALUE
+                    } else if state.available_move[idx].heuristic
+                        <= heuristic_ratios::HEURISTIC_MIN_VALUE
                     {
                         line.push("MIN".to_string());
                     } else {

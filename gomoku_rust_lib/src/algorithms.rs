@@ -1,17 +1,17 @@
 //! Four algorithms use by the AI.
 
+use crate::data_struct::State;
 use crate::global_var;
 use crate::heuristic_ratios;
 use crate::print::print_heuristic_table;
 use crate::state::create_child;
 use crate::state::state_is_terminated;
-use crate::data_struct::State;
 use std::cmp::Reverse;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
 static mut TRANSPOTABLENEGA: Vec<Transpotablenode> = vec![];
-static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![]; 
+static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![];
 
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
     update_max_depth(depth);
@@ -22,12 +22,17 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
-	// println!("NEGAMAX player {}  color {} state: {}", state.current_player, color, state.bit_current_move_pos);
-	if depth == global_var::DEPTH {
-		for child in 0..state.available_move.len() {
-			println!("child {} heuristic {} pos {}",child,state.available_move[child].heuristic,state.available_move[child].bit_current_move_pos);
-		}
-	}
+    // println!("NEGAMAX player {}  color {} state: {}", state.current_player, color, state.bit_current_move_pos);
+    if depth == global_var::DEPTH {
+        for child in 0..state.available_move.len() {
+            println!(
+                "child {} heuristic {} pos {}",
+                child,
+                state.available_move[child].heuristic,
+                state.available_move[child].bit_current_move_pos
+            );
+        }
+    }
     let mut value: i32 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value = -negamax(
@@ -221,11 +226,19 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
     unsafe {
         println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
     }
-	for child in 0..state.available_move.len() {
-		println!("child {} heuristic {} pos {}",child,state.available_move[child].heuristic,state.available_move[child].bit_current_move_pos);
-	}
+    for child in 0..state.available_move.len() {
+        println!(
+            "child {} heuristic {} pos {}",
+            child,
+            state.available_move[child].heuristic,
+            state.available_move[child].bit_current_move_pos
+        );
+    }
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
-	println!("boardstate of returning move {} : {:?}",state.available_move[0].bit_current_move_pos, state.available_move[0].board_info);
+    println!(
+        "boardstate of returning move {} : {:?}",
+        state.available_move[0].bit_current_move_pos, state.available_move[0].board_info
+    );
     return (
         (state.available_move[0].bit_current_move_pos),
         state.available_move[0].heuristic,

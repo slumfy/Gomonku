@@ -1,7 +1,7 @@
 //! Creation of boxes where the AI search solutions.
 
-use crate::data_struct::Bitboards;
 use crate::check_move::check_is_in_bitpos_list;
+use crate::data_struct::Bitboards;
 
 #[allow(dead_code)]
 pub fn get_search_box_bitboard(bitboard: &Bitboards) -> Vec<usize> {

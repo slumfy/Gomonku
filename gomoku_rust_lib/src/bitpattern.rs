@@ -1,14 +1,14 @@
 //! Methods to iter throught bit axes and finds patterns.
 
-use crate::data_struct::Bitboards;
 use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
-use crate::check_move::check_one_bit_in_pattern;
 use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
-use crate::global_var;
+use crate::check_move::check_one_bit_in_pattern;
+use crate::data_struct::Bitboards;
 use crate::data_struct::BoardStateInfo;
+use crate::global_var;
 use crate::global_var::BLOCKER;
 use crate::global_var::PATTERN;
 use crate::heuristic_ratios::HEURISTIC_PATTERN;
@@ -20,7 +20,7 @@ pub fn pattern_axes_dispatcher(
     pos: usize,
     player: i8,
 ) {
-	// println!("player axe dispatcher {} pos {}", player, pos);
+    // println!("player axe dispatcher {} pos {}", player, pos);
     if player == global_var::PLAYER_WHITE_NB {
         computing_move(board_state_info, &axes[0], &axes[1], bitboards, pos, player);
     } else if player == global_var::PLAYER_BLACK_NB {
@@ -42,11 +42,11 @@ fn computing_move(
     board_state_info.capturable = check_is_capturable(player_axe, opponent_axe);
     board_state_info.capturing = check_is_capturable(opponent_axe, player_axe);
     axe_pattern = pattern_axes_finder(bitboards, player_axe, opponent_axe, pos, player);
-	board_state_info.pattern_axe = axe_pattern[0];
-	board_state_info.blocker_axe = axe_pattern[1];
-	if check_is_double_triple(axe_pattern[0]) {
+    board_state_info.pattern_axe = axe_pattern[0];
+    board_state_info.blocker_axe = axe_pattern[1];
+    if check_is_double_triple(axe_pattern[0]) {
         board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
-		return;
+        return;
     }
     return_pattern_value(board_state_info, axe_pattern[0], pos, player);
     return_blocker_value(board_state_info, axe_pattern[1], pos, player);
@@ -118,7 +118,7 @@ pub fn pattern_axes_finder(
         player_axe >>= 1;
         blocker_axe >>= 1;
         let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
-		let mut found_blocker: (usize, usize) = (PATTERN.len(), 0);
+        let mut found_blocker: (usize, usize) = (PATTERN.len(), 0);
         for l in 0..6 {
             let player_shifted = player_axe >> l;
             let blocker_shifted = blocker_axe >> l;
@@ -140,7 +140,7 @@ pub fn pattern_axes_finder(
             find_blocker(
                 &mut return_blocker,
                 blocker_casted,
-				player_casted,
+                player_casted,
                 bitboards,
                 is_blocked,
                 &mut found_blocker,
@@ -154,7 +154,7 @@ pub fn pattern_axes_finder(
             }
         }
     }
-	//  println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+    //  println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
     return [return_pattern, return_blocker];
 }
 
@@ -224,9 +224,13 @@ fn find_blocker(
                     is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
                 }
             }
-			if is_blocked == 2 && PATTERN[p].2 != 0 && PATTERN[p].2 != l && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true {
-				is_blocked = 0;
-			} 
+            if is_blocked == 2
+                && PATTERN[p].2 != 0
+                && PATTERN[p].2 != l
+                && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true
+            {
+                is_blocked = 0;
+            }
             if is_blocked > 0 && p < found_blocker.0 {
                 found_blocker.0 = p;
                 found_blocker.1 = is_blocked;
@@ -236,7 +240,7 @@ fn find_blocker(
         }
     }
     if found_blocker.0 < PATTERN.len() && l < PATTERN[found_blocker.0].1 {
-		// println!("BLOCKER FOUND {} value {:?} len {} l: {}", PATTERN[found_blocker.0].4,found_blocker,PATTERN[found_blocker.0].1 ,l);
+        // println!("BLOCKER FOUND {} value {:?} len {} l: {}", PATTERN[found_blocker.0].4,found_blocker,PATTERN[found_blocker.0].1 ,l);
         return_blocker[axe] = *found_blocker;
     }
 }

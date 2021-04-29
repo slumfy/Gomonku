@@ -18,14 +18,14 @@ pub struct State {
     pub is_playable: i8,
     pub win_state: (usize, i8),
     pub bit_current_move_pos: usize,
-	pub board_info: BoardStateInfo
+    pub board_info: BoardStateInfo,
 }
 
 /// Board state information for computing heuristic and validate move
 
 #[derive(Copy, Clone, Debug)]
 pub struct BoardStateInfo {
-	pub player: i8,
+    pub player: i8,
     pub is_wrong_move: i8,
     pub stone_captured: i8,
     pub capturable: bool,
@@ -34,6 +34,6 @@ pub struct BoardStateInfo {
     pub blocker_value: i32,
     pub is_winning: (usize, i8),
     pub nb_move_to_win: i8,
-	pub	pattern_axe: [(usize, usize); 4],
-	pub	blocker_axe: [(usize, usize); 4],
+    pub pattern_axe: [(usize, usize); 4],
+    pub blocker_axe: [(usize, usize); 4],
 }

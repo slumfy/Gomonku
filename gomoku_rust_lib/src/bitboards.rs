@@ -1,8 +1,8 @@
 //! Methods to create bitboards from vec and axes from pos.
+use crate::check_move::check_stone_color;
+use crate::data_struct::Bitboards;
 use crate::global_var;
 use crate::utils::is_on_axe;
-use crate::data_struct::Bitboards;
-use crate::check_move::check_stone_color;
 
 pub fn create_bits_axes_from_pos(
     move_pos: usize,
@@ -64,12 +64,12 @@ pub fn create_bits_axes_from_pos(
     let mut index = 0;
     let move_index = 8;
     for axe_increment_value in global_var::AXE_MOUVEMENT_VALUE.iter() {
-		let color = check_stone_color(move_pos, bitboards);
-		if color == 1 {
-				bits_axes_array[0][index] = 1 << move_index;
-			} else if color == -1 {
-				bits_axes_array[1][index] = 1 << move_index;
-			}
+        let color = check_stone_color(move_pos, bitboards);
+        if color == 1 {
+            bits_axes_array[0][index] = 1 << move_index;
+        } else if color == -1 {
+            bits_axes_array[1][index] = 1 << move_index;
+        }
         // if player == global_var::PLAYER_WHITE_NB {
         //     bits_axes_array[0][index] = 1 << move_index;
         // } else {

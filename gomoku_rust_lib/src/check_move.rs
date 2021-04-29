@@ -5,16 +5,16 @@ use crate::bitboard_operations::apply_capture;
 use crate::bitboards::create_bitboards_from_vec;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::get_bits_in_bitboard_from_pos;
-use crate::data_struct::Bitboards;
 use crate::bitpattern::pattern_axes_dispatcher;
-use crate::global_var;
+use crate::data_struct::Bitboards;
 use crate::data_struct::BoardStateInfo;
+use crate::data_struct::State;
+use crate::global_var;
 use crate::global_var::BLOCKER;
 use crate::global_var::CAPTURE_PATTERN;
 use crate::global_var::PATTERN;
 use crate::print::print_axe_value;
 use crate::print::print_axes;
-use crate::data_struct::State;
 use crate::utils::is_on_axe;
 use pyo3::prelude::*;
 
@@ -46,7 +46,7 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
 
 pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     let mut bitboard_info = BoardStateInfo {
-		player: state.current_player,
+        player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
         capturable: false,
@@ -55,15 +55,15 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
-		pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
-		blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+        pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+        blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
 
     bitboard_info.is_wrong_move = check_is_wrong_move(state);
     if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
         return bitboard_info;
     } else {
-		apply_bit(
+        apply_bit(
             &mut state.bitboards,
             state.bit_current_move_pos as usize,
             state.current_player,
@@ -96,8 +96,8 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         &state.bitboards,
         state.current_player,
     );
-	let mut bitboard_info = BoardStateInfo {
-		player: state.current_player,
+    let mut bitboard_info = BoardStateInfo {
+        player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
         capturable: false,
@@ -106,8 +106,8 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
-		pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
-		blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+        pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+        blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
     pattern_axes_dispatcher(
         &mut bitboard_info,
@@ -126,7 +126,7 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
 
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
     let mut count = 0;
-	// println!("axe: {:?}", axe_pattern);
+    // println!("axe: {:?}", axe_pattern);
     for axe in 0..axe_pattern.len() {
         if axe_pattern[axe].1 == 0 {
             if axe_pattern[axe].0 >= 5 && axe_pattern[axe].0 <= 7 {
@@ -280,9 +280,9 @@ pub fn check_free_development(state: &State) -> i32 {
         opponent_axes = two_players_axes[0];
     };
     let mut has_been_decounted: bool;
-	let mut axe_free_value: [i32;4] = [0,0,0,0];
+    let mut axe_free_value: [i32; 4] = [0, 0, 0, 0];
     for axe in 0..player_axes.len() {
-		let mut development_value = 0;
+        let mut development_value = 0;
         // Checking if there is a board blocker in axes
         has_been_decounted = false;
         for i in 1..5 {
@@ -321,9 +321,9 @@ pub fn check_free_development(state: &State) -> i32 {
                 break;
             } else if player_casted & 1 == 0 {
                 development_value += 1;
-             } //else if player_casted & 1 == 1 {
-            //     development_value += 5;
-            // }
+            } //else if player_casted & 1 == 1 {
+              //     development_value += 5;
+              // }
             l += 1;
         }
         let mut l = 7;
@@ -336,15 +336,15 @@ pub fn check_free_development(state: &State) -> i32 {
                 break;
             } else if player_casted & 1 == 0 {
                 development_value += 1;
-            }// else if player_casted & 1 == 1 {
-            //     development_value += 5;
-            // }
+            } // else if player_casted & 1 == 1 {
+              //     development_value += 5;
+              // }
             l -= 1;
         }
-		axe_free_value[axe] = development_value;
-		development_return_value += development_value;
+        axe_free_value[axe] = development_value;
+        development_return_value += development_value;
     }
-	// println!("freespace: {:?}",axe_free_value);
+    // println!("freespace: {:?}",axe_free_value);
     return development_return_value;
 }
 
@@ -363,7 +363,7 @@ pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool
             let player_shifted = player_axe >> l;
             let player_casted = player_shifted as u8;
             if (player_casted & PATTERN[0].0) == PATTERN[0].0 {
-				// println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
+                // println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
                 return true;
             }
         }
