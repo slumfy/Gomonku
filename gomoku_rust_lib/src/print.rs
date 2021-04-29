@@ -8,6 +8,7 @@ use crate::global_var;
 use crate::heuristic_ratios;
 use crate::search_space::get_search_box_bitboard;
 
+#[allow(dead_code)]
 pub fn print_axes(axes: &[[u16; 4]; 2], player_color: i8) {
     if player_color != global_var::PLAYER_BLACK_NB {
         println!("white axes : ");
@@ -37,6 +38,7 @@ pub fn print_axes(axes: &[[u16; 4]; 2], player_color: i8) {
     }
 }
 
+#[allow(dead_code)]
 pub fn print_heuristic_table(state: &State) {
     let len = state.available_move.len();
     let mut table: Vec<Vec<String>> = vec![];
@@ -97,6 +99,7 @@ pub fn print_heuristic_table(state: &State) {
     }
 }
 
+#[allow(dead_code)]
 pub fn print_axe_value(axe: usize) {
     if axe == 0 {
         println!("DIAGONALE UPLEFT:")
@@ -109,6 +112,7 @@ pub fn print_axe_value(axe: usize) {
     }
 }
 
+#[allow(dead_code)]
 pub fn print_bitboards(bitboards: &Bitboards, player_color: i8) {
     println!();
     if player_color != global_var::PLAYER_BLACK_NB {
@@ -126,6 +130,7 @@ pub fn print_bitboards(bitboards: &Bitboards, player_color: i8) {
     }
 }
 
+#[allow(dead_code)]
 pub fn print_board_from_bitboard(bitboards: &Bitboards) {
     let board = create_vec_from_bitboards(bitboards);
     println!();

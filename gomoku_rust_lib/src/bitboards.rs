@@ -4,11 +4,7 @@ use crate::data_struct::Bitboards;
 use crate::global_var;
 use crate::utils::is_on_axe;
 
-pub fn create_bits_axes_from_pos(
-    move_pos: usize,
-    bitboards: &Bitboards,
-    player: i8,
-) -> [[u16; 4]; 2] {
+pub fn create_bits_axes_from_pos(move_pos: usize, bitboards: &Bitboards) -> [[u16; 4]; 2] {
     fn set_bit_in_axe_from_bitboard(
         bits_axes_array: &mut [[u16; 4]; 2],
         bits_axes_array_index: usize,
@@ -65,16 +61,11 @@ pub fn create_bits_axes_from_pos(
     let move_index = 8;
     for axe_increment_value in global_var::AXE_MOUVEMENT_VALUE.iter() {
         let color = check_stone_color(move_pos, bitboards);
-        if color == 1 {
+        if color == global_var::PLAYER_WHITE_NB {
             bits_axes_array[0][index] = 1 << move_index;
-        } else if color == -1 {
+        } else if color == global_var::PLAYER_BLACK_NB {
             bits_axes_array[1][index] = 1 << move_index;
         }
-        // if player == global_var::PLAYER_WHITE_NB {
-        //     bits_axes_array[0][index] = 1 << move_index;
-        // } else {
-        //     bits_axes_array[1][index] = 1 << move_index;
-        // }
         for i in 1..5 {
             // Getting stone from white board
             set_bit_in_axe_from_bitboard(

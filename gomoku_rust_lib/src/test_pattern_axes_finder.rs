@@ -12,7 +12,7 @@ pub fn test_pattern_axes_finder() {
 
     // Alignement of 1
     let pos = 19;
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -24,7 +24,7 @@ pub fn test_pattern_axes_finder() {
 
     // Alignement of 2
     apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -36,7 +36,7 @@ pub fn test_pattern_axes_finder() {
 
     // Alignement of 3
     apply_bit(&mut bitboards, pos + 2, global_var::PLAYER_WHITE_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -48,7 +48,7 @@ pub fn test_pattern_axes_finder() {
 
     // Alignement of 4
     apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -74,7 +74,7 @@ fn test_alignment_of_five() {
     apply_bit(&mut bitboards, pos + 2, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -87,7 +87,7 @@ fn test_alignment_of_five() {
     // Alignement of 5 defeatable
     apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos - 19, global_var::PLAYER_BLACK_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -99,7 +99,7 @@ fn test_alignment_of_five() {
 
     // Alignement of 5 undefeatable
     apply_bit(&mut bitboards, pos + 38, global_var::PLAYER_WHITE_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -111,7 +111,7 @@ fn test_alignment_of_five() {
 
     // Alignement of 5 defeatable
     apply_bit(&mut bitboards, pos + 21, global_var::PLAYER_WHITE_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -122,7 +122,7 @@ fn test_alignment_of_five() {
     assert_eq!(returned_pattern, [(0, 3), (0, 3), (0, 3), (0, 0)]);
 
     // Alignement of 5 defeatable testing if pattern match in any pos
-    let axes = create_bits_axes_from_pos(pos + 1, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos + 1, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -134,7 +134,7 @@ fn test_alignment_of_five() {
 
     // Alignement of 5 defeatable testing if pattern match in any pos
 
-    let axes = create_bits_axes_from_pos(pos + 2, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos + 2, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -145,7 +145,7 @@ fn test_alignment_of_five() {
     assert_eq!(returned_pattern, [(0, 3), (0, 3), (0, 3), (0, 0)]);
 
     // Alignement of 5 defeatable testing if pattern match in any pos
-    let axes = create_bits_axes_from_pos(pos + 3, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos + 3, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -156,7 +156,7 @@ fn test_alignment_of_five() {
     assert_eq!(returned_pattern, [(0, 3), (0, 3), (0, 3), (0, 0)]);
 
     // Alignement of 5 defeatable testing if pattern match in any pos
-    let axes = create_bits_axes_from_pos(pos + 4, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos + 4, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -169,7 +169,7 @@ fn test_alignment_of_five() {
     // Alignement of 5 undefeatable
     apply_bit(&mut bitboards, pos + 41, global_var::PLAYER_WHITE_NB);
 
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards, global_var::PLAYER_WHITE_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],

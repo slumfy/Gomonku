@@ -10,7 +10,7 @@ use crate::heuristic_ratios;
 
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;
-    let mut winstate: i32 = 0;
+    let winstate: i32;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
     state.board_info = board_state_info.clone();
     if !is_playable_move(state, &board_state_info) {

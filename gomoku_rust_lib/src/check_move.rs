@@ -18,9 +18,9 @@ use pyo3::prelude::*;
 
 pub fn check_stone_color(pos: usize, bitboards: &Bitboards) -> i8 {
     if get_bits_in_bitboard_from_pos(pos, &bitboards.white_board) != 0 {
-        return 1;
+        return global_var::PLAYER_WHITE_NB;
     } else if get_bits_in_bitboard_from_pos(pos, &bitboards.black_board) != 0 {
-        return -1;
+        return global_var::PLAYER_BLACK_NB;
     } else {
         return 0;
     }
@@ -66,11 +66,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.bit_current_move_pos as usize,
             state.current_player,
         );
-        let axes = create_bits_axes_from_pos(
-            state.bit_current_move_pos,
-            &state.bitboards,
-            state.current_player,
-        );
+        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
         // print_axes(&axes);
         pattern_axes_dispatcher(
             &mut bitboard_info,
@@ -89,11 +85,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {
-    let axes = create_bits_axes_from_pos(
-        state.bit_current_move_pos,
-        &state.bitboards,
-        state.current_player,
-    );
+    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
     let mut bitboard_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
@@ -251,7 +243,7 @@ pub fn check_is_unblockable_five(
 ) -> bool {
     for n in 0..5 {
         let check_pos = pos + n * global_var::AXE_MOUVEMENT_VALUE[axe_index];
-        let axes = create_bits_axes_from_pos(check_pos, bitboards, player);
+        let axes = create_bits_axes_from_pos(check_pos, bitboards);
 
         let order: (usize, usize) = if player == 1 { (0, 1) } else { (1, 0) };
         if check_is_capturable(&axes[order.0], &axes[order.1]) {
@@ -263,11 +255,7 @@ pub fn check_is_unblockable_five(
 
 pub fn check_free_development(state: &State) -> i32 {
     let mut development_return_value: i32 = 0;
-    let two_players_axes = create_bits_axes_from_pos(
-        state.bit_current_move_pos,
-        &state.bitboards,
-        state.current_player,
-    );
+    let two_players_axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
     let player_axes;
     let opponent_axes;
     if state.current_player == global_var::PLAYER_WHITE_NB {
@@ -348,7 +336,7 @@ pub fn check_free_development(state: &State) -> i32 {
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
     // println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
-    let two_players_axes = create_bits_axes_from_pos(pos, &bitboards, player);
+    let two_players_axes = create_bits_axes_from_pos(pos, &bitboards);
     let player_axes = if player == global_var::PLAYER_WHITE_NB {
         two_players_axes[0]
     } else {
