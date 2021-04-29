@@ -81,8 +81,7 @@ fn is_in_winning_pos(state: &mut State, board_state_info: &BoardStateInfo) -> i3
 fn assign_pattern_value_to_state(state: &mut State, board_state_info: &BoardStateInfo) -> i32 {
     let mut value: i32 = 0;
     if board_state_info.pattern_value == heuristic_ratios::HEURISTIC_MAX_VALUE {
-        value = heuristic_ratios::HEURISTIC_MAX_VALUE;
-        return value;
+        return heuristic_ratios::HEURISTIC_MAX_VALUE;
     }
     let mut opponent_move_to_win: i8;
     let mut pattern_multiplier: i32 = 1;

@@ -59,7 +59,6 @@ fn return_pattern_value(
     pos: usize,
     player: i8,
 ) {
-    //  println!("pattern on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
@@ -67,7 +66,6 @@ fn return_pattern_value(
             && axe_pattern[pat].1 != 2
             && axe_pattern[pat].1 != 3
         {
-            // println!("MOVE WIN NB {}", PATTERN[axe_pattern[pat].0].5);
             move_to_win = PATTERN[axe_pattern[pat].0].5;
         }
         if axe_pattern[pat].0 == 0 && axe_pattern[pat].1 != 3 {
