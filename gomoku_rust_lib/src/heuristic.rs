@@ -14,7 +14,9 @@ pub fn heuristic(state: &mut State) -> i32 {
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
     state.board_info = board_state_info.clone();
     if !is_playable_move(state, &board_state_info) {
-        return heuristic_ratios::HEURISTIC_MIN_VALUE;
+        // Returning heuristic min value - 1 should prevent this play in any situation
+        // (even if AI is loosing in any case, it will not play this move as a default one)
+        return heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
     }
     value += assign_capture_value_to_state(state, &board_state_info);
     winstate = is_in_winning_pos(state, &board_state_info);
@@ -24,11 +26,13 @@ pub fn heuristic(state: &mut State) -> i32 {
         return winstate;
     }
     value += assign_pattern_value_to_state(state, &board_state_info);
-    if value == heuristic_ratios::HEURISTIC_MAX_VALUE {
-        return value;
-    }
     value += assign_capturing_pos_value_to_state(&board_state_info);
     value += check_free_development(state) / heuristic_ratios::DEVELOPMENT_RATIO_DIVISER;
+    if value >= heuristic_ratios::HEURISTIC_MAX_VALUE {
+        return heuristic_ratios::HEURISTIC_MAX_VALUE;
+    } else if value <= heuristic_ratios::HEURISTIC_MIN_VALUE {
+        return heuristic_ratios::HEURISTIC_MIN_VALUE;
+    }
     return value;
 }
 
