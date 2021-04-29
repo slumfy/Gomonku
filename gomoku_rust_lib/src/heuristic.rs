@@ -23,7 +23,11 @@ pub fn heuristic(state: &mut State) -> i32 {
     if winstate == heuristic_ratios::HEURISTIC_MAX_VALUE
         || winstate == heuristic_ratios::HEURISTIC_MIN_VALUE
     {
-        return winstate;
+        return if winstate == heuristic_ratios::HEURISTIC_MAX_VALUE {
+            heuristic_ratios::HEURISTIC_MAX_VALUE + 1
+        } else {
+            heuristic_ratios::HEURISTIC_MIN_VALUE
+        };
     }
     value += assign_pattern_value_to_state(state, &board_state_info);
     value += assign_capturing_pos_value_to_state(&board_state_info);
