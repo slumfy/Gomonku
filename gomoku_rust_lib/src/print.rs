@@ -138,3 +138,15 @@ pub fn print_board_from_bitboard(bitboards: &Bitboards) {
         println!("{:?}", board_box);
     }
 }
+
+static ALPHABET: [char; 26] = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
+    'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+];
+
+#[allow(dead_code)]
+pub fn print_pos_in_human_format(pos: usize) {
+    let x_pos = 19 - pos / 19;
+    let y_pos = pos % 19;
+    println!("{:?}, {:?}", x_pos, ALPHABET[y_pos]);
+}

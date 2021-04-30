@@ -14,7 +14,7 @@ pub fn test_negamax_benchmark() {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
     };
-    let mut pos = 180;
+    let pos = 180;
     apply_bit(&mut bitboards, 0, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, 1, global_var::PLAYER_BLACK_NB);
     apply_bit(&mut bitboards, 19, global_var::PLAYER_WHITE_NB);
@@ -41,7 +41,7 @@ pub fn test_negamax_benchmark() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        global_var::PLAYER_BLACK_NB,
+        1,
     );
     let ai_move = algorithms::return_move(&mut state);
     let end_time = Instant::now();
@@ -58,7 +58,7 @@ pub fn test_negamax_benchmark() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        global_var::PLAYER_BLACK_NB,
+        1,
     );
     let ai_move = algorithms::return_move(&mut state);
     let end_time = Instant::now();
@@ -75,7 +75,7 @@ pub fn test_negamax_benchmark() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        global_var::PLAYER_BLACK_NB,
+        1,
     );
     let ai_move = algorithms::return_move(&mut state);
     let end_time = Instant::now();

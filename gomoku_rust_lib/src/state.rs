@@ -86,9 +86,7 @@ pub fn state_is_terminated(state: &mut State) -> bool {
     if state.white_captured_stone >= 10 || state.black_captured_stone >= 10 {
         return true;
     }
-    if state.heuristic == heuristic_ratios::HEURISTIC_MAX_VALUE
-        || state.heuristic == heuristic_ratios::HEURISTIC_MIN_VALUE
-    {
+    if state.heuristic >= heuristic_ratios::HEURISTIC_MAX_VALUE {
         return true;
     }
     return false;
