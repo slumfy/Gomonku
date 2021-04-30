@@ -2,6 +2,7 @@
 
 extern crate pyo3;
 
+use crate::test_algorithm_benchmark;
 use crate::test_check_free_development::test_check_free_development;
 use crate::test_check_is_unblockable_five::test_check_is_unblockable_five;
 use crate::test_is_on_axe::test_is_on_axe;
@@ -10,6 +11,11 @@ use crate::test_pattern_axes_finder::test_pattern_axes_finder;
 use pyo3::prelude::*;
 use pyo3::types::*;
 use std::collections::HashMap;
+
+#[pyfunction]
+pub fn pytest_algorithm_benchmark() {
+    test_algorithm_benchmark::test_negamax_benchmark();
+}
 
 #[pyfunction]
 pub fn pytest_pattern_axes_finder() {

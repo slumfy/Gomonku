@@ -19,6 +19,7 @@ mod print;
 mod pytests;
 mod search_space;
 mod state;
+mod test_algorithm_benchmark;
 mod test_check_free_development;
 mod test_check_is_unblockable_five;
 mod test_is_on_axe;
@@ -31,6 +32,7 @@ use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
 
+use crate::pytests::__pyo3_get_function_pytest_algorithm_benchmark;
 use crate::pytests::__pyo3_get_function_pytest_check_free_development;
 use crate::pytests::__pyo3_get_function_pytest_check_is_unblockable_five;
 use crate::pytests::__pyo3_get_function_pytest_get_pydict;
@@ -45,7 +47,7 @@ static ALPHABET: [char; 26] = [
 ];
 
 #[pyfunction]
-fn ai_move(
+pub fn ai_move(
     board: Vec<Vec<i8>>,
     player: i8,
     x: usize,
@@ -229,6 +231,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_check_free_development, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_is_on_axe, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
     Ok(())
 }
 
