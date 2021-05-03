@@ -62,11 +62,11 @@ fn return_pattern_value(
     let mut pat_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
-        if PATTERN[axe_pattern[pat].0].5 < move_to_win
+        if PATTERN[axe_pattern[pat].0].4 < move_to_win
             && axe_pattern[pat].1 != 2
             && axe_pattern[pat].1 != 3
         {
-            move_to_win = PATTERN[axe_pattern[pat].0].5;
+            move_to_win = PATTERN[axe_pattern[pat].0].4;
         }
         if axe_pattern[pat].0 == 0 && axe_pattern[pat].1 != 3 {
             board_state_info.is_winning = (pos, player);
@@ -153,7 +153,7 @@ pub fn pattern_axes_finder(
             }
         }
     }
-    //  println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+    //   println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
     return [return_pattern, return_blocker];
 }
 
@@ -184,11 +184,11 @@ fn find_pattern(
             for b in 0..BLOCKER.len() {
                 if BLOCKER[b].1 == PATTERN[p].1 {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
-                    // println!("pattern {}", PATTERN[p].4);
+                    //  println!("pattern {}", PATTERN[p].4);
                     is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
                 }
             }
-            if is_blocked < 2 && p < found_pattern.0 {
+            if is_blocked <= 2 && p < found_pattern.0 {
                 found_pattern.0 = p;
                 found_pattern.1 = is_blocked;
                 // println!("{} found {} blocker", PATTERN[p].4, is_blocked);
@@ -196,7 +196,7 @@ fn find_pattern(
             }
         }
     }
-    if found_pattern.0 < PATTERN.len() && l < PATTERN[found_pattern.0].1 {
+    if found_pattern.0 < PATTERN.len() && l <= PATTERN[found_pattern.0].1 {
         return_pattern[axe] = *found_pattern;
         // println!("PATTERN FOUND {} len {} l: {}", PATTERN[found_pattern.0].4,PATTERN[found_pattern.0].1 ,l);
     }
@@ -217,28 +217,23 @@ fn find_blocker(
     for p in 1..PATTERN.len() {
         if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
             for b in 0..BLOCKER.len() {
-                if BLOCKER[b].1 == PATTERN[p].1 {
+                if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && ( p == 5 || p == 6 ) {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
-                    // println!("pattern {}", PATTERN[p].4);
+                    //  println!("pattern {}", PATTERN[p].4);
                     is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
+					if is_blocked != 0 {break;}
                 }
             }
-            if is_blocked == 2
-                && PATTERN[p].2 != 0
-                && PATTERN[p].2 != l
-                && check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2) == true
-            {
-                is_blocked = 0;
-            }
+			println!("{} found {} blocker", PATTERN[p].3, is_blocked);
             if is_blocked > 0 && p < found_blocker.0 {
-                found_blocker.0 = p;
+				if is_blocked == 3 {found_blocker.0 = 0;}
+                else {found_blocker.0 = p;}
                 found_blocker.1 = is_blocked;
-                // println!("{} found {} blocker", PATTERN[p].4, is_blocked);
                 break;
             }
         }
     }
-    if found_blocker.0 < PATTERN.len() && l < PATTERN[found_blocker.0].1 {
+    if found_blocker.0 < PATTERN.len() && l <= PATTERN[found_blocker.0].1 {
         // println!("BLOCKER FOUND {} value {:?} len {} l: {}", PATTERN[found_blocker.0].4,found_blocker,PATTERN[found_blocker.0].1 ,l);
         return_blocker[axe] = *found_blocker;
     }

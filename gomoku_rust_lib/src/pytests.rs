@@ -7,6 +7,7 @@ use crate::test_check_free_development::test_check_free_development;
 use crate::test_check_is_unblockable_five::test_check_is_unblockable_five;
 use crate::test_is_on_axe::test_is_on_axe;
 use crate::test_pattern_axes_finder::test_pattern_axes_finder;
+use crate::test_pattern_blocker::test_pattern_blockers;
 // use crate::print::print_board_from_bitboard;
 use pyo3::prelude::*;
 use pyo3::types::*;
@@ -35,6 +36,11 @@ pub fn pytest_is_on_axe() {
 #[pyfunction]
 pub fn pytest_check_is_unblockable_five() {
     test_check_is_unblockable_five()
+}
+
+#[pyfunction]
+pub fn pytest_test_pattern_blockers() {
+    test_pattern_blockers()
 }
 
 #[pyfunction]

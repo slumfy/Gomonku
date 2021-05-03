@@ -24,6 +24,7 @@ mod test_check_free_development;
 mod test_check_is_unblockable_five;
 mod test_is_on_axe;
 mod test_pattern_axes_finder;
+mod test_pattern_blocker;
 mod utils;
 
 use crate::check_move::get_move_info;
@@ -40,6 +41,7 @@ use crate::pytests::__pyo3_get_function_pytest_is_on_axe;
 use crate::pytests::__pyo3_get_function_pytest_pattern_axes_finder;
 use crate::pytests::__pyo3_get_function_pytest_returning_dict_to_python;
 use crate::pytests::__pyo3_get_function_pytest_updating_from_other_function;
+use crate::pytests::__pyo3_get_function_pytest_test_pattern_blockers;
 
 static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -96,7 +98,7 @@ pub fn ai_move(
                 global_var::DEPTH,
                 heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
-                player,
+                1,
             );
         } else if search_algorithm == "negamax_with_transpotable" {
             println!("using negamax_with_transpotable");
@@ -176,6 +178,10 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     );
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
+	println!(
+        "boardstate of returning move {} : {:?}",
+        state.bit_current_move_pos, board_state_info
+    );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("nb_move_to_win", board_state_info.nb_move_to_win)?;
@@ -232,6 +238,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_is_on_axe, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_pattern_blockers, m)?)?;
     Ok(())
 }
 

@@ -66,7 +66,7 @@ pub fn create_bits_axes_from_pos(move_pos: usize, bitboards: &Bitboards) -> [[u1
         } else if color == global_var::PLAYER_BLACK_NB {
             bits_axes_array[1][index] = 1 << move_index;
         }
-        for i in 1..5 {
+        for i in 1..6 {
             // Getting stone from white board
             set_bit_in_axe_from_bitboard(
                 &mut bits_axes_array,
