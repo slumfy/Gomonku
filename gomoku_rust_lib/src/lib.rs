@@ -27,6 +27,7 @@ mod test_pattern_axes_finder;
 mod test_print;
 mod utils;
 
+use crate::bitboards::create_bits_axes_from_pos;
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
@@ -177,7 +178,8 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         5,
     );
 
-    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
+    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
+    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state, &axes);
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("nb_move_to_win", board_state_info.nb_move_to_win)?;

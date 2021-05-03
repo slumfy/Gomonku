@@ -1,18 +1,21 @@
-pub static DEVELOPMENT_RATIO_DIVISER: i32 = 2;
-//weight of potential capture pos
-pub static CAPTURING_POS_SCORE: i32 = 100;
-//weight of potential capturable pos
-pub static CAPTURABLE_POS_SCORE: i32 = 200;
-//multiplier for nb of stone captured
-pub static CAPTURING_COUNT_RATIO_MULTIPLIER: i32 = 50;
-
-// simulate inf for heuristic value
 pub static HEURISTIC_MAX_VALUE: i32 = i32::MAX;
 pub static HEURISTIC_MIN_VALUE: i32 = i32::MIN;
 
-// blocker/pattern multiplier for better move weight
-pub static PATTERN_MULTIPLIER: i32 = 2;
-pub static BLOCKER_MULTIPLIER: i32 = 2;
+pub static HEURISTIC_CAPTURE_TEN_STONE: i32 = HEURISTIC_MAX_VALUE;
+pub static HEURISTIC_CAPTURE_AN_OPPONENT_FIVE_IN_A_ROW: i32 =
+    HEURISTIC_PREVENT_OPPONENT_WIN_BY_CAPTURE * 5;
+pub static HEURISTIC_PREVENT_OPPONENT_WIN_BY_CAPTURE: i32 = HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW * 5;
+pub static HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW: i32 = HEURISTIC_FIVE_IN_A_ROW * 5;
+pub static HEURISTIC_FIVE_IN_A_ROW: i32 = HEURISTIC_DOUBLE_BLOCK_FOUR_IN_A_ROW * 5;
+pub static HEURISTIC_DOUBLE_BLOCK_FOUR_IN_A_ROW: i32 = HEURISTIC_FREE_FOUR_IN_A_ROW * 5;
+pub static HEURISTIC_FREE_FOUR_IN_A_ROW: i32 = HEURISTIC_SIMPLE_BLOCK_THREE_IN_A_ROW * 5;
+pub static HEURISTIC_SIMPLE_BLOCK_THREE_IN_A_ROW: i32 = HEURISTIC_PREVENT_CAPTURE_STONE * 5;
+pub static HEURISTIC_PREVENT_CAPTURE_STONE: i32 = HEURISTIC_FREE_THREE_IN_A_ROW * 5;
+pub static HEURISTIC_FREE_THREE_IN_A_ROW: i32 = HEURISTIC_FOUR_IN_A_ROW_WITH_ONE_BLOCKER * 5;
+pub static HEURISTIC_FOUR_IN_A_ROW_WITH_ONE_BLOCKER: i32 = HEURISTIC_SIMPLE_BLOCK_TWO_IN_A_ROW * 5;
+pub static HEURISTIC_SIMPLE_BLOCK_TWO_IN_A_ROW: i32 = HEURISTIC_FREE_TWO_IN_A_ROW * 5;
+pub static HEURISTIC_FREE_TWO_IN_A_ROW: i32 = 10;
+pub static HEURISTIC_POSSIBLE_AXE_DEVELOPMENT: i32 = 1;
 
 //ratio of pattern
 // index 0 for no blocker or 2 blocked
@@ -28,15 +31,3 @@ pub static HEURISTIC_PATTERN: [[i32; 2]; 9] = [
     [300, 300],   // split three rev .XX.X...
     [100, 100],   // double 	.XX.....
 ];
-
-//HEURISTIC ORDERING
-// 1 : capture 10 stones
-// 2 : pattern 5
-// 3 : double block 4
-// 4 : pattern 4
-// 5 : simple block 3
-// 6 : pattern 3
-// 7 : block double 2
-// 8 : capture 2
-// 9 : pattern 2
-// 10 : ratio freespace
