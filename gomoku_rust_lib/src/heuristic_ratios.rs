@@ -7,8 +7,8 @@ pub static CAPTURABLE_POS_SCORE: i32 = 200;
 pub static CAPTURING_COUNT_RATIO_MULTIPLIER: i32 = 50;
 
 // simulate inf for heuristic value
-pub static HEURISTIC_MAX_VALUE: i32 = 100000;
-pub static HEURISTIC_MIN_VALUE: i32 = -100000;
+pub static HEURISTIC_MAX_VALUE: i32 = i32::MAX;
+pub static HEURISTIC_MIN_VALUE: i32 = i32::MIN;
 
 // blocker/pattern multiplier for better move weight
 pub static PATTERN_MULTIPLIER: i32 = 2;

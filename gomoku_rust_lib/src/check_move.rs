@@ -42,7 +42,7 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
     return global_var::VALID_MOVE;
 }
 
-pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
+pub fn checking_and_apply_bits_move(state: &mut State, axes: &[[u16; 4]; 2]) -> BoardStateInfo {
     let mut bitboard_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
@@ -66,12 +66,11 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.bit_current_move_pos as usize,
             state.current_player,
         );
-        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
         // print_axes(&axes);
         pattern_axes_dispatcher(
             &mut bitboard_info,
             &mut state.bitboards,
-            &axes,
+            axes,
             state.bit_current_move_pos as usize,
             state.current_player,
         );
