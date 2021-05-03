@@ -27,12 +27,12 @@ pub fn heuristic(state: &mut State) -> i32 {
             && state.current_player == global_var::PLAYER_WHITE_NB
             && global_var::WHITE_CAPTURED_STONE + stone_captured >= 10
         {
-            return heuristic_ratios::HEURISTIC_MAX_VALUE;
+            return heuristic_ratios::HEURISTIC_CAPTURE_TEN_STONE;
         } else if stone_captured != 0
             && state.current_player == global_var::PLAYER_BLACK_NB
             && global_var::BLACK_CAPTURED_STONE + stone_captured >= 10
         {
-            return heuristic_ratios::HEURISTIC_MAX_VALUE;
+            return heuristic_ratios::HEURISTIC_CAPTURE_TEN_STONE;
         }
     }
 
