@@ -25,8 +25,10 @@ mod test_check_is_unblockable_five;
 mod test_is_on_axe;
 mod test_pattern_axes_finder;
 mod test_pattern_blocker;
+mod test_print;
 mod utils;
 
+use crate::bitboards::create_bits_axes_from_pos;
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
@@ -39,6 +41,7 @@ use crate::pytests::__pyo3_get_function_pytest_check_is_unblockable_five;
 use crate::pytests::__pyo3_get_function_pytest_get_pydict;
 use crate::pytests::__pyo3_get_function_pytest_is_on_axe;
 use crate::pytests::__pyo3_get_function_pytest_pattern_axes_finder;
+use crate::pytests::__pyo3_get_function_pytest_print_pos_in_human_format;
 use crate::pytests::__pyo3_get_function_pytest_returning_dict_to_python;
 use crate::pytests::__pyo3_get_function_pytest_updating_from_other_function;
 use crate::pytests::__pyo3_get_function_pytest_test_pattern_blockers;
@@ -177,7 +180,8 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         5,
     );
 
-    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
+    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
+    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state, &axes);
 	println!(
         "boardstate of returning move {} : {:?}",
         state.bit_current_move_pos, board_state_info
@@ -239,6 +243,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
 	m.add_function(wrap_pyfunction!(pytest_test_pattern_blockers, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_print_pos_in_human_format, m)?)?;
     Ok(())
 }
 

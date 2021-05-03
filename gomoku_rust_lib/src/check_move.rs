@@ -42,7 +42,7 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
     return global_var::VALID_MOVE;
 }
 
-pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
+pub fn checking_and_apply_bits_move(state: &mut State, axes: &[[u16; 4]; 2]) -> BoardStateInfo {
     let mut bitboard_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
@@ -66,12 +66,11 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.bit_current_move_pos as usize,
             state.current_player,
         );
-        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
         // print_axes(&axes);
         pattern_axes_dispatcher(
             &mut bitboard_info,
             &mut state.bitboards,
-            &axes,
+            axes,
             state.bit_current_move_pos as usize,
             state.current_player,
         );
@@ -367,6 +366,33 @@ pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool
         }
     }
     return false;
+}
+
+pub fn check_move_is_capturing_stone(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> i8 {
+    let mut stone_captured: i8 = 0;
+    for axe in 0..axes.len() {
+        let mut player_axe = axes[axe];
+        let mut blocker_axe = blocker_axes[axe];
+        player_axe >>= 1;
+        blocker_axe >>= 1;
+        let shift: [usize; 2] = [0, 3];
+        for s in shift.iter() {
+            let player_shifted = player_axe >> s;
+            let blocker_shifted = blocker_axe >> s;
+            let player_casted = player_shifted as u8;
+            let blocker_casted = blocker_shifted as u8;
+            if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
+                if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
+                    if *s == 3 {
+                        stone_captured += 2;
+                    } else {
+                        stone_captured += 2;
+                    }
+                }
+            }
+        }
+    }
+    return stone_captured;
 }
 
 pub fn check_and_apply_capture(

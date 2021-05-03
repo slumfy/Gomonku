@@ -8,6 +8,7 @@ use crate::test_check_is_unblockable_five::test_check_is_unblockable_five;
 use crate::test_is_on_axe::test_is_on_axe;
 use crate::test_pattern_axes_finder::test_pattern_axes_finder;
 use crate::test_pattern_blocker::test_pattern_blockers;
+use crate::test_print;
 // use crate::print::print_board_from_bitboard;
 use pyo3::prelude::*;
 use pyo3::types::*;
@@ -16,6 +17,11 @@ use std::collections::HashMap;
 #[pyfunction]
 pub fn pytest_algorithm_benchmark() {
     test_algorithm_benchmark::test_negamax_benchmark();
+}
+
+#[pyfunction]
+pub fn pytest_print_pos_in_human_format() {
+    test_print::test_print_pos_in_human_format();
 }
 
 #[pyfunction]
