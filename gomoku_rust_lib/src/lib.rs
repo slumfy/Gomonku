@@ -173,8 +173,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         5,
     );
 
-    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
-    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state, &axes);
+    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
     println!(
         "boardstate of returning move {} : {:?}",
         state.bit_current_move_pos, board_state_info

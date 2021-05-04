@@ -42,6 +42,7 @@ pub fn create_new_state(
             pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },
+        axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
     };
     if player == 1 {
         new_state.black_move_to_win = nb_move_to_win;

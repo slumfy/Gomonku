@@ -19,6 +19,7 @@ pub struct State {
     pub win_state: (usize, i8),
     pub bit_current_move_pos: usize,
     pub board_info: BoardStateInfo,
+    pub axes: [[u16; 4]; 2],
 }
 
 /// Board state information for computing heuristic and validate move
