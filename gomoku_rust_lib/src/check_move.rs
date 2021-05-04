@@ -56,16 +56,6 @@ pub fn checking_and_apply_bits_move(state: &mut State, axes: &[[u16; 4]; 2]) -> 
         pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
-
-    bitboard_info.is_wrong_move = check_is_wrong_move(state);
-    if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
-        return bitboard_info;
-    } else {
-        apply_bit(
-            &mut state.bitboards,
-            state.bit_current_move_pos as usize,
-            state.current_player,
-        );
         // print_axes(&axes);
         pattern_axes_dispatcher(
             &mut bitboard_info,
@@ -80,7 +70,6 @@ pub fn checking_and_apply_bits_move(state: &mut State, axes: &[[u16; 4]; 2]) -> 
             state.black_move_to_win = bitboard_info.nb_move_to_win;
         }
         return bitboard_info;
-    }
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {

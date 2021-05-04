@@ -27,6 +27,7 @@ use crate::data_struct::BoardStateInfo;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
+use crate::heuristic::heuristic;
 
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
 use tests::__pyo3_get_function_pytest_check_free_development;
@@ -172,9 +173,8 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         (0, 0),
         5,
     );
-
-    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
-    let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state, &axes);
+	heuristic(&mut state);
+    let board_state_info: BoardStateInfo = state.board_info;
     println!(
         "boardstate of returning move {} : {:?}",
         state.bit_current_move_pos, board_state_info
