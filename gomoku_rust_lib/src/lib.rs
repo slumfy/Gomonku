@@ -124,10 +124,11 @@ pub fn ai_move(
         }
         if search_algorithm == "negamax" {
             println!("using negamax");
+            // For alpha, sending  min value + 1 to prevent overflow when changing sign.
             algorithms::negamax(
                 &mut state,
                 global_var::DEPTH,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 1,
             );

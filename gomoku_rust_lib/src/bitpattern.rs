@@ -216,17 +216,22 @@ fn find_blocker(
     for p in 1..PATTERN.len() {
         if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
             for b in 0..BLOCKER.len() {
-                if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && ( p == 5 || p == 6 ) {
+                if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && (p == 5 || p == 6) {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
                     //  println!("pattern {}", PATTERN[p].4);
                     is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
-					if is_blocked != 0 {break;}
+                    if is_blocked != 0 {
+                        break;
+                    }
                 }
             }
-			println!("{} found {} blocker", PATTERN[p].3, is_blocked);
+            println!("{} found {} blocker", PATTERN[p].3, is_blocked);
             if is_blocked > 0 && p < found_blocker.0 {
-				if is_blocked == 3 {found_blocker.0 = 0;}
-                else {found_blocker.0 = p;}
+                if is_blocked == 3 {
+                    found_blocker.0 = 0;
+                } else {
+                    found_blocker.0 = p;
+                }
                 found_blocker.1 = is_blocked;
                 break;
             }

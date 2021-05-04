@@ -44,7 +44,7 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
 }
 
 pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
-    let mut bitboard_info = BoardStateInfo {
+    let mut board_state_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
@@ -58,9 +58,9 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
 
-    bitboard_info.is_wrong_move = check_is_wrong_move(state);
-    if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
-        return bitboard_info;
+    board_state_info.is_wrong_move = check_is_wrong_move(state);
+    if board_state_info.is_wrong_move != global_var::VALID_MOVE {
+        return board_state_info;
     } else {
         apply_bit(
             &mut state.bitboards,
@@ -69,7 +69,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         );
         let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
         pattern_axes_dispatcher(
-            &mut bitboard_info,
+            &mut board_state_info,
             &mut state.bitboards,
             &axes,
             state.bit_current_move_pos as usize,
@@ -77,17 +77,17 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         );
         state.axes = axes;
         if state.current_player == global_var::PLAYER_WHITE_NB {
-            state.white_move_to_win = bitboard_info.nb_move_to_win;
+            state.white_move_to_win = board_state_info.nb_move_to_win;
         } else {
-            state.black_move_to_win = bitboard_info.nb_move_to_win;
+            state.black_move_to_win = board_state_info.nb_move_to_win;
         }
-        return bitboard_info;
+        return board_state_info;
     }
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {
     let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
-    let mut bitboard_info = BoardStateInfo {
+    let mut board_state_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
@@ -101,18 +101,18 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
     pattern_axes_dispatcher(
-        &mut bitboard_info,
+        &mut board_state_info,
         &mut state.bitboards,
         &axes,
         state.bit_current_move_pos as usize,
         state.current_player,
     );
-    if state.current_player == 1 {
-        state.white_move_to_win = bitboard_info.nb_move_to_win;
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        state.white_move_to_win = board_state_info.nb_move_to_win;
     } else {
-        state.black_move_to_win = bitboard_info.nb_move_to_win;
+        state.black_move_to_win = board_state_info.nb_move_to_win;
     }
-    return bitboard_info;
+    return board_state_info;
 }
 
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
