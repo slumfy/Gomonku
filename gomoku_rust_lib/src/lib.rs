@@ -16,16 +16,9 @@ mod global_var;
 mod heuristic;
 mod heuristic_ratios;
 mod print;
-mod pytests;
 mod search_space;
 mod state;
-mod test_algorithm_benchmark;
-mod test_check_free_development;
-mod test_check_is_unblockable_five;
-mod test_is_on_axe;
-mod test_pattern_axes_finder;
-mod test_pattern_blocker;
-mod test_print;
+mod tests;
 mod utils;
 
 use crate::bitboards::create_bits_axes_from_pos;
@@ -35,16 +28,16 @@ use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
 
-use crate::pytests::__pyo3_get_function_pytest_algorithm_benchmark;
-use crate::pytests::__pyo3_get_function_pytest_check_free_development;
-use crate::pytests::__pyo3_get_function_pytest_check_is_unblockable_five;
-use crate::pytests::__pyo3_get_function_pytest_get_pydict;
-use crate::pytests::__pyo3_get_function_pytest_is_on_axe;
-use crate::pytests::__pyo3_get_function_pytest_pattern_axes_finder;
-use crate::pytests::__pyo3_get_function_pytest_pattern_blockers;
-use crate::pytests::__pyo3_get_function_pytest_print_pos_in_human_format;
-use crate::pytests::__pyo3_get_function_pytest_returning_dict_to_python;
-use crate::pytests::__pyo3_get_function_pytest_updating_from_other_function;
+use tests::__pyo3_get_function_pytest_algorithm_benchmark;
+use tests::__pyo3_get_function_pytest_check_free_development;
+use tests::__pyo3_get_function_pytest_check_is_unblockable_five;
+use tests::__pyo3_get_function_pytest_get_pydict;
+use tests::__pyo3_get_function_pytest_is_on_axe;
+use tests::__pyo3_get_function_pytest_pattern_axes_finder;
+use tests::__pyo3_get_function_pytest_pattern_blockers;
+use tests::__pyo3_get_function_pytest_print_pos_in_human_format;
+use tests::__pyo3_get_function_pytest_returning_dict_to_python;
+use tests::__pyo3_get_function_pytest_updating_from_other_function;
 
 static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
