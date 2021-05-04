@@ -82,6 +82,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.black_move_to_win = bitboard_info.nb_move_to_win;
         }
         return bitboard_info;
+    }
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {
