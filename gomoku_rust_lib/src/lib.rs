@@ -24,6 +24,7 @@ mod utils;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
+use crate::heuristic::heuristic;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
