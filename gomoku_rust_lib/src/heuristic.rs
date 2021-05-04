@@ -10,6 +10,7 @@ use crate::checking_and_apply_bits_move;
 use crate::data_struct::BoardStateInfo;
 use crate::data_struct::State;
 use crate::global_var;
+use crate::global_var::PATTERN;
 use crate::heuristic_ratios;
 
 pub fn heuristic(state: &mut State) -> i32 {
@@ -38,8 +39,6 @@ pub fn heuristic(state: &mut State) -> i32 {
         }
     }
 
-    println!("{:?}", board_state_info);
-
     // Instant return move
 
     // Move capture opponent five in a row
@@ -57,6 +56,9 @@ pub fn heuristic(state: &mut State) -> i32 {
     // Addition value move
     // Move create five in a row
 
+    for pattern_index in 0..4 {
+        println!("icii {:?}", board_state_info.pattern_axe);
+    }
     return heuristic_ratios::HEURISTIC_FIVE_IN_A_ROW;
 
     // Move double block a 4
