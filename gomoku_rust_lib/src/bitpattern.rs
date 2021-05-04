@@ -113,8 +113,8 @@ pub fn pattern_axes_finder(
     for axe_index in 0..axes.len() {
         let mut player_axe = axes[axe_index];
         let mut blocker_axe = blocker_axes[axe_index];
-		println!("player_axe{:2}: {:016b}",player, player_axe);
-		println!("blocke_axe{:2}: {:016b}",-player, blocker_axe);
+        println!("player_axe{:2}: {:016b}", player, player_axe);
+        println!("blocke_axe{:2}: {:016b}", -player, blocker_axe);
         player_axe >>= 1;
         blocker_axe >>= 1;
         let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
@@ -154,7 +154,10 @@ pub fn pattern_axes_finder(
             }
         }
     }
-    println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+    println!(
+        "return_pat {:?}, return_blo {:?}",
+        return_pattern, return_blocker
+    );
     return [return_pattern, return_blocker];
 }
 
@@ -218,17 +221,22 @@ fn find_blocker(
     for p in 1..PATTERN.len() {
         if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
             for b in 0..BLOCKER.len() {
-                if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && ( p == 5 || p == 6 ) {
+                if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && (p == 5 || p == 6) {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
                     //  println!("pattern {}", PATTERN[p].4);
                     is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
-					if is_blocked != 0 {break;}
+                    if is_blocked != 0 {
+                        break;
+                    }
                 }
             }
-			println!("{} found {} blocker", PATTERN[p].3, is_blocked);
+            println!("{} found {} blocker", PATTERN[p].3, is_blocked);
             if is_blocked > 0 && p < found_blocker.0 {
-				if is_blocked == 3 {found_blocker.0 = 0;}
-                else {found_blocker.0 = p;}
+                if is_blocked == 3 {
+                    found_blocker.0 = 0;
+                } else {
+                    found_blocker.0 = p;
+                }
                 found_blocker.1 = is_blocked;
                 break;
             }
