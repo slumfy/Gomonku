@@ -13,6 +13,7 @@ use crate::global_var;
 use crate::global_var::BLOCKER;
 use crate::global_var::CAPTURE_PATTERN;
 use crate::global_var::PATTERN;
+use crate::print::print_axes;
 use crate::utils::is_on_axe;
 use pyo3::prelude::*;
 
@@ -42,8 +43,8 @@ pub fn check_is_wrong_move(state: &State) -> i8 {
     return global_var::VALID_MOVE;
 }
 
-pub fn checking_and_apply_bits_move(state: &mut State, axes: &[[u16; 4]; 2]) -> BoardStateInfo {
-    let mut bitboard_info = BoardStateInfo {
+pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
+    let mut board_state_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
@@ -56,25 +57,37 @@ pub fn checking_and_apply_bits_move(state: &mut State, axes: &[[u16; 4]; 2]) -> 
         pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
-        // print_axes(&axes);
-        pattern_axes_dispatcher(
-            &mut bitboard_info,
+
+    board_state_info.is_wrong_move = check_is_wrong_move(state);
+    if board_state_info.is_wrong_move != global_var::VALID_MOVE {
+        return board_state_info;
+    } else {
+        apply_bit(
             &mut state.bitboards,
-            axes,
             state.bit_current_move_pos as usize,
             state.current_player,
         );
-        if state.current_player == 1 {
-            state.white_move_to_win = bitboard_info.nb_move_to_win;
+        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
+        pattern_axes_dispatcher(
+            &mut board_state_info,
+            &mut state.bitboards,
+            &axes,
+            state.bit_current_move_pos as usize,
+            state.current_player,
+        );
+        state.axes = axes;
+        if state.current_player == global_var::PLAYER_WHITE_NB {
+            state.white_move_to_win = board_state_info.nb_move_to_win;
         } else {
-            state.black_move_to_win = bitboard_info.nb_move_to_win;
+            state.black_move_to_win = board_state_info.nb_move_to_win;
         }
-        return bitboard_info;
+        return board_state_info;
+    }
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {
     let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
-    let mut bitboard_info = BoardStateInfo {
+    let mut board_state_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
         stone_captured: 0,
@@ -88,18 +101,18 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
     pattern_axes_dispatcher(
-        &mut bitboard_info,
+        &mut board_state_info,
         &mut state.bitboards,
         &axes,
         state.bit_current_move_pos as usize,
         state.current_player,
     );
-    if state.current_player == 1 {
-        state.white_move_to_win = bitboard_info.nb_move_to_win;
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        state.white_move_to_win = board_state_info.nb_move_to_win;
     } else {
-        state.black_move_to_win = bitboard_info.nb_move_to_win;
+        state.black_move_to_win = board_state_info.nb_move_to_win;
     }
-    return bitboard_info;
+    return board_state_info;
 }
 
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
@@ -194,30 +207,34 @@ pub fn check_blocker(
     axe: usize,
 ) -> usize {
     let mut is_blocked: usize;
-	let mut hole_value = false;
-	if PATTERN[p].2 != 0 {
-		hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
-	}
-	
-	// println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}",BLOCKER[b].0,blocker_casted,blocker_checker);
-	if b == 1 && hole_value == true && ((p == 6 && blocker_checker & 0x80 == 0x80) || (p == 5 && blocker_checker & 0x4 == 0x4)) {
-		is_blocked = 3;
-	}
-	else if b == 1 && hole_value == true && ((p == 5 && blocker_checker & 0x80 == 0x80) || (p == 6 && blocker_checker & 0x4 == 0x4)) {
-		is_blocked = 2;
-	}
-    else if PATTERN[p].2 != 0 && hole_value == true && p != 5 && p != 6 {
-        	is_blocked = 2;
+    let mut hole_value = false;
+    if PATTERN[p].2 != 0 {
+        hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
+    }
+
+    // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}",BLOCKER[b].0,blocker_casted,blocker_checker);
+    if b == 1
+        && hole_value == true
+        && ((p == 6 && blocker_checker & 0x80 == 0x80) || (p == 5 && blocker_checker & 0x4 == 0x4))
+    {
+        is_blocked = 3;
+    } else if b == 1
+        && hole_value == true
+        && ((p == 5 && blocker_checker & 0x80 == 0x80) || (p == 6 && blocker_checker & 0x4 == 0x4))
+    {
+        is_blocked = 2;
+    } else if PATTERN[p].2 != 0 && hole_value == true && p != 5 && p != 6 {
+        is_blocked = 2;
     } else if blocker_checker == BLOCKER[b].0 && (PATTERN[p].2 == 0 || p == 5 || p == 6) {
         is_blocked = 2;
     } else if blocker_checker != 0 && (PATTERN[p].2 == 0 || p == 5 || p == 6) {
         is_blocked = 1;
         if check_border(pos, l, axe, PATTERN[p].1) == false {
-			println!("border");
+            println!("border");
             is_blocked += 1;
         }
     } else if check_border(pos, l, axe, PATTERN[p].1) == false {
-		println!("border");
+        println!("border");
         is_blocked = 1;
         if blocker_checker != 0 {
             is_blocked += 1;

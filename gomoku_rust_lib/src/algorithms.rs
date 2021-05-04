@@ -35,13 +35,15 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
     }
     let mut value: i32 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
-        let negamax_value = -negamax(
+        let mut negamax_value;
+        negamax_value = -negamax(
             &mut state.available_move[child_index],
             depth - 1,
             -beta,
             -alpha,
             -color,
         );
+
         value = std::cmp::max(value, negamax_value);
         alpha = std::cmp::max(alpha, value);
         if alpha >= beta {
