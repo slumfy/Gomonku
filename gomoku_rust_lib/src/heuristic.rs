@@ -40,6 +40,8 @@ pub fn heuristic(state: &mut State) -> i32 {
 
     println!("{:?}", board_state_info);
 
+    // Instant return move
+
     // Move capture opponent five in a row
 
     return heuristic_ratios::HEURISTIC_CAPTURE_AN_OPPONENT_FIVE_IN_A_ROW;
@@ -52,6 +54,7 @@ pub fn heuristic(state: &mut State) -> i32 {
 
     return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
 
+    // Addition value move
     // Move create five in a row
 
     return heuristic_ratios::HEURISTIC_FIVE_IN_A_ROW;
