@@ -15,6 +15,11 @@ use pyo3::types::*;
 use std::collections::HashMap;
 
 #[pyfunction]
+pub fn pytest_pattern_blockers() {
+    test_pattern_blockers();
+}
+
+#[pyfunction]
 pub fn pytest_algorithm_benchmark() {
     test_algorithm_benchmark::test_negamax_benchmark();
 }
