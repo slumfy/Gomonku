@@ -16,6 +16,7 @@ mod global_var;
 mod heuristic;
 mod heuristic_ratios;
 mod print;
+mod pytests;
 mod search_space;
 mod state;
 mod test_algorithm_benchmark;
