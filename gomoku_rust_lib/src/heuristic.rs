@@ -1,7 +1,9 @@
 //! Heuristic of our AI.
 
+use crate::bitboard_operations::apply_bit;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::check_move::check_free_development;
+use crate::check_move::check_is_wrong_move;
 use crate::check_move::check_move_is_capturing_stone;
 use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
@@ -13,12 +15,37 @@ use crate::heuristic_ratios;
 pub fn heuristic(state: &mut State) -> i32 {
     let mut value: i32 = 0;
     let win_state: i32;
+    let mut bitboard_info = BoardStateInfo {
+        player: state.current_player,
+        is_wrong_move: 0,
+        stone_captured: 0,
+        capturable: false,
+        capturing: false,
+        pattern_value: 0,
+        blocker_value: 0,
+        is_winning: (0, 0),
+        nb_move_to_win: 5,
+        pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+        blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
+    };
+
+    bitboard_info.is_wrong_move = check_is_wrong_move(state);
+    if bitboard_info.is_wrong_move != global_var::VALID_MOVE {
+        return heuristic_ratios::HEURISTIC_MIN_VALUE;
+    }
+    apply_bit(
+        &mut state.bitboards,
+        state.bit_current_move_pos as usize,
+        state.current_player,
+    );
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        state.white_move_to_win = bitboard_info.nb_move_to_win;
+    } else {
+        state.black_move_to_win = bitboard_info.nb_move_to_win;
+    }
     let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state, &axes);
     state.board_info = board_state_info.clone();
-    if !is_playable_move(state, &board_state_info) {
-        return heuristic_ratios::HEURISTIC_MIN_VALUE;
-    }
 
     // Check if win by capturing stone
     let stone_captured = check_move_is_capturing_stone(&axes[0], &axes[1]);
@@ -90,14 +117,6 @@ pub fn heuristic(state: &mut State) -> i32 {
     return heuristic_ratios::HEURISTIC_POSSIBLE_AXE_DEVELOPMENT;
 
     return value;
-}
-
-fn is_playable_move(state: &mut State, board_state_info: &BoardStateInfo) -> bool {
-    if board_state_info.is_wrong_move != global_var::VALID_MOVE {
-        state.is_playable = board_state_info.is_wrong_move;
-        return false;
-    }
-    return true;
 }
 
 fn is_in_winning_pos(state: &mut State, board_state_info: &BoardStateInfo) -> i32 {
