@@ -132,6 +132,7 @@ fn test_alignment_of_five() {
         global_var::PLAYER_WHITE_NB,
     )[0];
     assert_eq!(returned_pattern, [(0, 5), (0, 5), (0, 5), (0, 5)]);
+
     //alignement of 5 undefeatable in collum
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],

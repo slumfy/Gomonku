@@ -263,7 +263,6 @@ pub fn check_is_unblockable_five(
     for n in 0..5 {
         let check_pos = pos + n * global_var::AXE_MOUVEMENT_VALUE[axe_index];
         let axes = create_bits_axes_from_pos(check_pos, bitboards);
-
         let order: (usize, usize) = if player == 1 { (0, 1) } else { (1, 0) };
         if check_is_capturable(&axes[order.0], &axes[order.1]) {
             return false;
