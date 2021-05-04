@@ -113,8 +113,6 @@ pub fn pattern_axes_finder(
     for axe_index in 0..axes.len() {
         let mut player_axe = axes[axe_index];
         let mut blocker_axe = blocker_axes[axe_index];
-		println!("player_axe{:2}: {:016b}",player, player_axe);
-		println!("blocke_axe{:2}: {:016b}",-player, blocker_axe);
         player_axe >>= 1;
         blocker_axe >>= 1;
         let mut found_pattern: (usize, usize) = (PATTERN.len(), 0);
@@ -154,7 +152,7 @@ pub fn pattern_axes_finder(
             }
         }
     }
-    println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
+    // println!("return_pat {:?}, return_blo {:?}", return_pattern, return_blocker);
     return [return_pattern, return_blocker];
 }
 

@@ -230,11 +230,11 @@ pub fn check_blocker(
     } else if blocker_checker != 0 && (PATTERN[p].2 == 0 || p == 5 || p == 6) {
         is_blocked = 1;
         if check_border(pos, l, axe, PATTERN[p].1) == false {
-            println!("border");
+            // println!("border");
             is_blocked += 1;
         }
     } else if check_border(pos, l, axe, PATTERN[p].1) == false {
-        println!("border");
+        // println!("border");
         is_blocked = 1;
         if blocker_checker != 0 {
             is_blocked += 1;

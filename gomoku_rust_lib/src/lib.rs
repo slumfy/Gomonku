@@ -35,10 +35,44 @@ use tests::__pyo3_get_function_pytest_check_is_unblockable_five;
 use tests::__pyo3_get_function_pytest_get_pydict;
 use tests::__pyo3_get_function_pytest_is_on_axe;
 use tests::__pyo3_get_function_pytest_pattern_axes_finder;
-use tests::__pyo3_get_function_pytest_pattern_blockers;
 use tests::__pyo3_get_function_pytest_print_pos_in_human_format;
 use tests::__pyo3_get_function_pytest_returning_dict_to_python;
 use tests::__pyo3_get_function_pytest_updating_from_other_function;
+//TEST BLOCKER
+use tests::__pyo3_get_function_pytest_test_blocker_doubles_border;
+use tests::__pyo3_get_function_pytest_test_blocker_doubles_1_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_doubles_1_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_doubles_2_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_doubles_2_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_border;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_middle;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_four_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_four_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four2_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four2_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four1_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four1_1_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four1_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four1_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four3_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four3_1_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four3_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four3_2_blocker_wrong;
+//END TEST BLOCKER
 
 static ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
@@ -235,8 +269,44 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_is_on_axe, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
-    m.add_function(wrap_pyfunction!(pytest_pattern_blockers, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_print_pos_in_human_format, m)?)?;
+	//TEST BLOCKER
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_border, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_1_blocker_left, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_1_blocker_right, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_2_blocker_left, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_2_blocker_right, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_border, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_1_blocker_left, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_1_blocker_right, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_blocker_right, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_blocker_left, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_with_hole_blocker_left, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_with_hole_blocker_right, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_3_blocker_right, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_3_blocker_middle, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_3_blocker_left, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_rev_1_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_rev_2_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_rev_2_blocker_wrong, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_1_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_2_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_2_blocker_wrong, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_four_1_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_four_2_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four2_1_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four2_2_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_1_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_1_blocker_wrong, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_2_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_2_blocker_wrong, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_1_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_1_blocker_wrong, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_2_blocker, m)?)?;
+	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_2_blocker_wrong, m)?)?;
+
+
+	// END TEST BLOCKER
     Ok(())
 }
 
