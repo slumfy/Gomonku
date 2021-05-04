@@ -144,6 +144,94 @@ fn test_blocker_triples() {
     println!("black_axes {:016b}", axes[1][3]);
     println!("return_pattern {:?}", returned_blocker);
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
+
+     //split triple rev 1blocker
+     let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+    apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 2, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_BLACK_NB);
+    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+    let returned_blocker = pattern_axes_finder(
+        &mut bitboards,
+        &axes[1],
+        &axes[0],
+        pos,
+        global_var::PLAYER_BLACK_NB,
+    )[1];
+    println!("white_axes {:016b}", axes[0][3]);
+    println!("black_axes {:016b}", axes[1][3]);
+    println!("return_pattern {:?}", returned_blocker);
+    assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 1)]);
+
+    //split triple rev 2 blocker
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+    apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 2, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_BLACK_NB);
+    let axes = create_bits_axes_from_pos(pos+3, &mut bitboards);
+    let returned_blocker = pattern_axes_finder(
+        &mut bitboards,
+        &axes[1],
+        &axes[0],
+        pos + 3,
+        global_var::PLAYER_BLACK_NB,
+    )[1];
+    println!("white_axes {:016b}", axes[0][3]);
+    println!("black_axes {:016b}", axes[1][3]);
+    println!("return_pattern {:?}", returned_blocker);
+    assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (8, 2)]);
+
+    //split triple 1blocker
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+    apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos+5, global_var::PLAYER_BLACK_NB);
+    let axes = create_bits_axes_from_pos(pos+5, &mut bitboards);
+    let returned_blocker = pattern_axes_finder(
+        &mut bitboards,
+        &axes[1],
+        &axes[0],
+        pos+5,
+        global_var::PLAYER_BLACK_NB,
+    )[1];
+    println!("white_axes {:016b}", axes[0][3]);
+    println!("black_axes {:016b}", axes[1][3]);
+    println!("return_pattern {:?}", returned_blocker);
+    assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 1)]);
+
+    //split triple 2 blocker
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+    apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 2, global_var::PLAYER_BLACK_NB);
+    let axes = create_bits_axes_from_pos(pos+2, &mut bitboards);
+    let returned_blocker = pattern_axes_finder(
+        &mut bitboards,
+        &axes[1],
+        &axes[0],
+        pos + 2,
+        global_var::PLAYER_BLACK_NB,
+    )[1];
+    println!("white_axes {:016b}", axes[0][3]);
+    println!("black_axes {:016b}", axes[1][3]);
+    println!("return_pattern {:?}", returned_blocker);
+    assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (8, 2)]);
 }
 
 fn test_blocker_four() {
@@ -227,7 +315,7 @@ fn test_blocker_four() {
     apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 5, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos+6, global_var::PLAYER_BLACK_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+    let axes = create_bits_axes_from_pos(pos+6, &mut bitboards);
     let returned_blocker = pattern_axes_finder(
         &mut bitboards,
         &axes[1],
@@ -250,7 +338,7 @@ fn test_blocker_four() {
     apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 5, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos+2, global_var::PLAYER_BLACK_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+    let axes = create_bits_axes_from_pos(pos+2, &mut bitboards);
     let returned_blocker = pattern_axes_finder(
         &mut bitboards,
         &axes[1],
@@ -296,7 +384,7 @@ fn test_blocker_four() {
     apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 5, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos+6, global_var::PLAYER_BLACK_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+    let axes = create_bits_axes_from_pos(pos+6, &mut bitboards);
     let returned_blocker = pattern_axes_finder(
         &mut bitboards,
         &axes[1],
@@ -319,7 +407,7 @@ fn test_blocker_four() {
     apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 5, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos+4, global_var::PLAYER_BLACK_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+    let axes = create_bits_axes_from_pos(pos+4, &mut bitboards);
     let returned_blocker = pattern_axes_finder(
         &mut bitboards,
         &axes[1],
@@ -342,7 +430,7 @@ fn test_blocker_four() {
     apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos+5, global_var::PLAYER_BLACK_NB);
-    let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+    let axes = create_bits_axes_from_pos(pos+5, &mut bitboards);
     let returned_blocker = pattern_axes_finder(
         &mut bitboards,
         &axes[1],
