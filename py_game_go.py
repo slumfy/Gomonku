@@ -137,7 +137,7 @@ class PyGameGo:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # click on playing AI vs AI button
-                    if event.pos[1] <= 505 and event.pos[1] >= 300:
+                    if event.pos[1] <= 505 and event.pos[1] >= 430:
                         print("AI vs AI clicked.")
                         go_rules.player_list[0].player_type = 1
                         go_rules.player_list[1].player_type = 1
