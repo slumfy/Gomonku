@@ -19,6 +19,7 @@ pub fn heuristic(state: &mut State) -> i32 {
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
 
     if !is_playable_move(state, &board_state_info) {
+        state.is_playable = -1;
         return heuristic_ratios::HEURISTIC_MIN_VALUE;
     }
     state.board_info = board_state_info.clone();
@@ -39,63 +40,61 @@ pub fn heuristic(state: &mut State) -> i32 {
         }
     }
 
-    // Instant return move
+    // // Instant return move
 
-    // Move capture opponent five in a row
+    // // Move capture opponent five in a row
 
-    return heuristic_ratios::HEURISTIC_CAPTURE_AN_OPPONENT_FIVE_IN_A_ROW;
+    // return heuristic_ratios::HEURISTIC_CAPTURE_AN_OPPONENT_FIVE_IN_A_ROW;
 
-    // Move prevent capture opponent 10 stones or more
+    // // Move prevent capture opponent 10 stones or more
 
-    return heuristic_ratios::HEURISTIC_PREVENT_OPPONENT_WIN_BY_CAPTURE;
-
-    // Move create an Unblockable five
-
-    return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
+    // return heuristic_ratios::HEURISTIC_PREVENT_OPPONENT_WIN_BY_CAPTURE;
 
     // Addition value move
-    // Move create five in a row
 
     for pattern_index in 0..4 {
-        println!("icii {:?}", board_state_info.pattern_axe);
+        if board_state_info.pattern_axe[pattern_index].1 != 3 {
+            if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"five")
+                && board_state_info.pattern_axe[pattern_index].1 != 3
+            {
+                // Checking if undefeatable 5
+                if board_state_info.pattern_axe[pattern_index].1 == 5 {
+                    return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
+                } else {
+                    value += heuristic_ratios::HEURISTIC_FIVE_IN_A_ROW;
+                }
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"four")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"split four 3")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"split four 1")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"split four 2")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"three")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"three2")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"split three")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"split three rev")
+            {
+            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
+                == Some(&"double")
+            {
+                println!("found a double");
+            }
+        }
     }
-    return heuristic_ratios::HEURISTIC_FIVE_IN_A_ROW;
-
-    // Move double block a 4
-
-    return heuristic_ratios::HEURISTIC_DOUBLE_BLOCK_FOUR_IN_A_ROW;
-
-    // Move create a free four in a row
-    return heuristic_ratios::HEURISTIC_FREE_FOUR_IN_A_ROW;
-
-    // Move simple block a three
-
-    return heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_IN_A_ROW;
-
-    // Move prevent capture
-
-    return heuristic_ratios::HEURISTIC_PREVENT_CAPTURE_STONE;
-
-    // Move create a free three in a row
-
-    return heuristic_ratios::HEURISTIC_FREE_THREE_IN_A_ROW;
-
-    // Move create a four in a row with one blocker
-
-    return heuristic_ratios::HEURISTIC_FOUR_IN_A_ROW_WITH_ONE_BLOCKER;
-
-    // Move simple block a two
-
-    return heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_TWO_IN_A_ROW;
-
-    // Move create a two in a row
-
-    return heuristic_ratios::HEURISTIC_FREE_TWO_IN_A_ROW;
-
-    // Move have possible development in axes
-
-    return heuristic_ratios::HEURISTIC_POSSIBLE_AXE_DEVELOPMENT;
-
     return value;
 }
 

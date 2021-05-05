@@ -174,7 +174,13 @@ fn find_pattern(
     for p in 0..PATTERN.len() {
         if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
             if p == 0 {
-                if check_is_unblockable_five(bitboards, pos - (l * global_var::AXE_MOUVEMENT_VALUE[axe]), axe, player) == true {
+                if check_is_unblockable_five(
+                    bitboards,
+                    pos - (l * global_var::AXE_MOUVEMENT_VALUE[axe]),
+                    axe,
+                    player,
+                ) == true
+                {
                     *return_pattern = [(0, 5), (0, 5), (0, 5), (0, 5)];
                     break;
                 } else {
@@ -198,7 +204,10 @@ fn find_pattern(
             }
         }
     }
-    if return_pattern[0].1 != 5 && found_pattern.0 < PATTERN.len() && l <= PATTERN[found_pattern.0].1 {
+    if return_pattern[0].1 != 5
+        && found_pattern.0 < PATTERN.len()
+        && l <= PATTERN[found_pattern.0].1
+    {
         return_pattern[axe] = *found_pattern;
     }
 }

@@ -23,16 +23,16 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
     // println!("NEGAMAX player {}  color {} state: {}", state.current_player, color, state.bit_current_move_pos);
-    if depth == global_var::DEPTH {
-        for child in 0..state.available_move.len() {
-            println!(
-                "child {} heuristic {} pos {}",
-                child,
-                state.available_move[child].heuristic,
-                state.available_move[child].bit_current_move_pos
-            );
-        }
-    }
+    // if depth == global_var::DEPTH {
+    //     for child in 0..state.available_move.len() {
+    //         println!(
+    //             "child {} heuristic {} pos {}",
+    //             child,
+    //             state.available_move[child].heuristic,
+    //             state.available_move[child].bit_current_move_pos
+    //         );
+    //     }
+    // }
     let mut value: i32 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let mut negamax_value;
@@ -225,17 +225,17 @@ pub fn negascout_with_transpotable(
 
 pub fn return_move(state: &mut State) -> (usize, i32) {
     print_heuristic_table(state);
-    unsafe {
-        println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
-    }
-    for child in 0..state.available_move.len() {
-        println!(
-            "child {} heuristic {} pos {}",
-            child,
-            state.available_move[child].heuristic,
-            state.available_move[child].bit_current_move_pos
-        );
-    }
+    // unsafe {
+    //     println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
+    // }
+    // for child in 0..state.available_move.len() {
+    //     println!(
+    //         "child {} heuristic {} pos {}",
+    //         child,
+    //         state.available_move[child].heuristic,
+    //         state.available_move[child].bit_current_move_pos
+    //     );
+    // }
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     return (
         (state.available_move[0].bit_current_move_pos),
