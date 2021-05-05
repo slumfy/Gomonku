@@ -188,10 +188,10 @@ fn check_in_map(
 fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> bool {
     let axe_mouvement_value: i16 = global_var::AXE_MOUVEMENT_VALUE[axe] as i16;
     let pattern_pos: i16 = pos as i16 - l as i16 * axe_mouvement_value;
-    if check_in_map(axe_mouvement_value, pattern_pos, 1, -1) == false {
+    if check_in_map(axe_mouvement_value, pattern_pos + axe_mouvement_value, 1, -1) == false {
         return false;
     }
-    if check_in_map(axe_mouvement_value, pattern_pos, pattern_length as i16, 1) == false {
+    if check_in_map(axe_mouvement_value, pattern_pos - axe_mouvement_value, pattern_length as i16, 1) == false {
         return false;
     }
     return true;
