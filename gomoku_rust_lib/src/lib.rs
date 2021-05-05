@@ -6,6 +6,9 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
+#[macro_use]
+extern crate lazy_static;
+
 mod algorithms;
 mod bitboard_operations;
 mod bitboards;
@@ -39,39 +42,39 @@ use tests::__pyo3_get_function_pytest_print_pos_in_human_format;
 use tests::__pyo3_get_function_pytest_returning_dict_to_python;
 use tests::__pyo3_get_function_pytest_updating_from_other_function;
 //TEST BLOCKER
-use tests::__pyo3_get_function_pytest_test_blocker_doubles_border;
 use tests::__pyo3_get_function_pytest_test_blocker_doubles_1_blocker_left;
 use tests::__pyo3_get_function_pytest_test_blocker_doubles_1_blocker_right;
 use tests::__pyo3_get_function_pytest_test_blocker_doubles_2_blocker_left;
 use tests::__pyo3_get_function_pytest_test_blocker_doubles_2_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_border;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_middle;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker_wrong;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_doubles_border;
 use tests::__pyo3_get_function_pytest_test_blocker_four_1_blocker;
 use tests::__pyo3_get_function_pytest_test_blocker_four_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four2_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four2_2_blocker;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four1_1_blocker;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four1_1_blocker_wrong;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four1_2_blocker;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four1_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four2_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_four2_2_blocker;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four3_1_blocker;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four3_1_blocker_wrong;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four3_2_blocker;
 use tests::__pyo3_get_function_pytest_test_blocker_split_four3_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_1_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker;
+use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker_wrong;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_left;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_middle;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_right;
+use tests::__pyo3_get_function_pytest_test_blocker_triple_border;
 //END TEST BLOCKER
 
 static ALPHABET: [char; 26] = [
@@ -210,10 +213,10 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     );
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
-    println!(
-        "boardstate of returning move {} : {:?}",
-        state.bit_current_move_pos, board_state_info
-    );
+    // println!(
+    //     "boardstate of returning move {} : {:?}",
+    //     state.bit_current_move_pos, board_state_info
+    // );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("nb_move_to_win", board_state_info.nb_move_to_win)?;
@@ -271,43 +274,129 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_print_pos_in_human_format, m)?)?;
-	//TEST BLOCKER
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_border, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_1_blocker_left, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_1_blocker_right, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_2_blocker_left, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_2_blocker_right, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_border, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_1_blocker_left, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_1_blocker_right, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_blocker_right, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_blocker_left, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_with_hole_blocker_left, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_2_with_hole_blocker_right, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_3_blocker_right, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_3_blocker_middle, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_3_blocker_left, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_rev_1_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_rev_2_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_rev_2_blocker_wrong, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_1_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_2_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_triple_2_blocker_wrong, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_four_1_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_four_2_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four2_1_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four2_2_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_1_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_1_blocker_wrong, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_2_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four1_2_blocker_wrong, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_1_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_1_blocker_wrong, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_2_blocker, m)?)?;
-	m.add_function(wrap_pyfunction!(pytest_test_blocker_split_four3_2_blocker_wrong, m)?)?;
+    //TEST BLOCKER
+    m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_border, m)?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_doubles_1_blocker_left,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_doubles_1_blocker_right,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_doubles_2_blocker_left,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_doubles_2_blocker_right,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_border, m)?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_1_blocker_left,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_1_blocker_right,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_2_blocker_right,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_2_blocker_left,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_2_with_hole_blocker_left,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_2_with_hole_blocker_right,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_3_blocker_right,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_3_blocker_middle,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_triple_3_blocker_left,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_triple_rev_1_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_triple_rev_2_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_triple_rev_2_blocker_wrong,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_triple_1_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_triple_2_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_triple_2_blocker_wrong,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(pytest_test_blocker_four_1_blocker, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_test_blocker_four_2_blocker, m)?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four2_1_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four2_2_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four1_1_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four1_1_blocker_wrong,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four1_2_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four1_2_blocker_wrong,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four3_1_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four3_1_blocker_wrong,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four3_2_blocker,
+        m
+    )?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_test_blocker_split_four3_2_blocker_wrong,
+        m
+    )?)?;
 
-
-	// END TEST BLOCKER
+    // END TEST BLOCKER
     Ok(())
 }
 
