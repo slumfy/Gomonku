@@ -166,6 +166,7 @@ fn check_in_map(
     direction_sign: i16,
 ) -> bool {
     let calcul = pattern_pos + axe_mouvement_value * offset * direction_sign;
+	println!("calcul = {}", calcul);
     if calcul < 0 {
         return false;
     }
@@ -188,11 +189,13 @@ fn check_in_map(
 fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> bool {
     let axe_mouvement_value: i16 = global_var::AXE_MOUVEMENT_VALUE[axe] as i16;
     let pattern_pos: i16 = pos as i16 - l as i16 * axe_mouvement_value;
+	println!("pattern pos = {}, l = {}, axe = {}, pos = {}, pattern_length = {}", pattern_pos, l, axe_mouvement_value, pos, pattern_length);
     if check_in_map(axe_mouvement_value, pattern_pos + axe_mouvement_value, 1, -1) == false {
         return false;
     }
     if check_in_map(axe_mouvement_value, pattern_pos - axe_mouvement_value, pattern_length as i16, 1) == false {
-        return false;
+        println!("test");
+		return false;
     }
     return true;
 }
@@ -239,11 +242,11 @@ pub fn check_blocker(
     } else if blocker_checker != 0 && PATTERN[p].2 == 0 {
         is_blocked = 1;
         if check_border(pos, l, axe, PATTERN[p].1) == false {
-            // println!("border");
+            println!("border");
             is_blocked += 1;
         }
     } else if check_border(pos, l, axe, PATTERN[p].1) == false {
-        // println!("border");
+        println!("border");
         is_blocked = 1;
         if blocker_checker != 0 {
             is_blocked += 1;
