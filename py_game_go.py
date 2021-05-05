@@ -42,7 +42,7 @@ class PyGameGo:
             self.reset_icon_size = width, height = 32, 32
             self.return_icon_size = width, height = 32, 32
             self.screen = pygame.display.set_mode(size=MAIN_WINDOW_SIZE)
-            self.go_board = pygame.image.load("ressources/images/goboard.png")
+            self.go_board = pygame.image.load("ressources/images/goboard-1.png")
             self.go_menu = pygame.image.load("ressources/images/gomenu.png")
             self.go_settings = pygame.image.load("ressources/images/gosettings.png")
             self.go_sound_off = pygame.transform.scale(
