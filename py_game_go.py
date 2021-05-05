@@ -104,7 +104,6 @@ class PyGameGo:
                     sys.exit()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print("event pos = ", event.pos[1])
                     # Return to menu button
                     if (
                         event.pos[1] >= 0
@@ -117,7 +116,6 @@ class PyGameGo:
                         self.theme_number += 1
                         if self.theme_number > 2:
                             self.theme_number = 1
-                        print("la")
                         self.go_board = pygame.image.load(
                             "ressources/images/goboard-" + str(self.theme_number) + ".png"
                         )
