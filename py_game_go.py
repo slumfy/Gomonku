@@ -42,8 +42,9 @@ class PyGameGo:
             self.reset_icon_size = width, height = 32, 32
             self.return_icon_size = width, height = 32, 32
             self.screen = pygame.display.set_mode(size=MAIN_WINDOW_SIZE)
+            self.theme_number = 1
             self.go_board = pygame.image.load("ressources/images/goboard-1.png")
-            self.go_menu = pygame.image.load("ressources/images/gomenu.png")
+            self.go_menu = pygame.image.load("ressources/images/gomenu-1.png")
             self.go_settings = pygame.image.load("ressources/images/gosettings.png")
             self.go_sound_off = pygame.transform.scale(
                 pygame.image.load("ressources/images/sound-icon/sound_off.png"),
@@ -68,7 +69,6 @@ class PyGameGo:
             self.black_stone_resize = pygame.transform.scale(self.black_stone, STONE_SIZE)
             self.grey_stone = pygame.image.load("ressources/images/greycircle.png")
             self.grey_stone_resize = pygame.transform.scale(self.grey_stone, STONE_SIZE)
-
         self.player: Player = None
 
     def update_sound_status(self, sound_status: bool, background_page):
@@ -113,6 +113,24 @@ class PyGameGo:
                         and event.pos[0] <= self.return_icon_size[1]
                     ):
                         return 0
+                    elif event.pos[1] >= 10 and event.pos[1] <= 500:
+                        self.theme_number += 1
+                        if self.theme_number > 2:
+                            self.theme_number = 1
+                        print("la")
+                        self.go_board = pygame.image.load(
+                            "ressources/images/goboard-" + str(self.theme_number) + ".png"
+                        )
+                        self.go_menu = pygame.transform.scale(
+                            pygame.image.load(
+                                "ressources/images/gomenu-" + str(self.theme_number) + ".png"
+                            ),
+                            MAIN_WINDOW_SIZE,
+                        )
+                        self.go_board_resize = pygame.transform.scale(
+                            self.go_board, MAIN_WINDOW_SIZE
+                        )
+
                     # click on sound icon
                     elif (
                         event.pos[1] <= self.sound_icon_size[1]
