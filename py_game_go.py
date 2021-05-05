@@ -44,6 +44,7 @@ class PyGameGo:
             self.screen = pygame.display.set_mode(size=MAIN_WINDOW_SIZE)
             self.go_board = pygame.image.load("ressources/images/goboard.png")
             self.go_menu = pygame.image.load("ressources/images/gomenu.png")
+            self.go_settings = pygame.image.load("ressources/images/gosettings.png")
             self.go_sound_off = pygame.transform.scale(
                 pygame.image.load("ressources/images/sound-icon/sound_off.png"),
                 self.sound_icon_size,
@@ -70,31 +71,65 @@ class PyGameGo:
 
         self.player: Player = None
 
-    def update_sound_status(self, sound_status: bool):
+    def update_sound_status(self, sound_status: bool, background_page):
         self.sound_status = sound_status
         if self.sound_status is True:
             pygame.mixer.music.set_volume(0.05)
             pygame.mixer.music.play(-1)
         else:
             pygame.mixer.music.stop()
-        self.display_sound_icon()
 
-    def display_sound_icon(self):
-        self.screen.blit(self.go_menu, self.start_point)
+    def display_page(self, background_page, return_button=False, sound_status=False):
+        self.screen.blit(background_page, self.start_point)
 
-        if self.sound_status is True:
-            self.screen.blit(self.go_sound_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0))
-        else:
-            self.screen.blit(
-                self.go_sound_off,
-                (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0),
-            )
+        if return_button:
+            self.screen.blit(self.return_on, (0, 0))
+        if sound_status:
+            if self.sound_status is True:
+                self.screen.blit(
+                    self.go_sound_on, (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0)
+                )
+            else:
+                self.screen.blit(
+                    self.go_sound_off,
+                    (MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0], 0),
+                )
         pygame.display.flip()
+
+    def settings(self):
+        self.display_page(background_page=self.go_settings, return_button=True, sound_status=True)
+        while 1:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print("event pos = ", event.pos[1])
+                    # Return to menu button
+                    if (
+                        event.pos[1] >= 0
+                        and event.pos[1] <= self.return_icon_size[0]
+                        and event.pos[0] >= 0
+                        and event.pos[0] <= self.return_icon_size[1]
+                    ):
+                        return 0
+                    # click on sound icon
+                    elif (
+                        event.pos[1] <= self.sound_icon_size[1]
+                        and event.pos[1] >= 0
+                        and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.sound_icon_size[0]
+                        and event.pos[0] <= MAIN_WINDOW_SIZE[0]
+                    ):
+                        self.update_sound_status(not self.sound_status, self.go_settings)
+                        self.display_page(
+                            background_page=self.go_settings, return_button=True, sound_status=True
+                        )
 
     def menu(self, go_rules: GoRules):
         self.screen.blit(self.go_menu, self.start_point)
-        self.update_sound_status(self.sound_status)
+        self.update_sound_status(self.sound_status, self.go_menu)
         pygame.display.flip()
+        self.display_page(background_page=self.go_menu, return_button=False, sound_status=True)
         self.player = go_rules.player_list[0]
         while 1:
             for event in pygame.event.get():
@@ -102,22 +137,31 @@ class PyGameGo:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     # click on playing AI vs AI button
-                    if event.pos[1] <= 720 and event.pos[1] >= 585:
+                    if event.pos[1] <= 505 and event.pos[1] >= 300:
+                        print("AI vs AI clicked.")
                         go_rules.player_list[0].player_type = 1
                         go_rules.player_list[1].player_type = 1
                         go_rules.ai_versus = 1
                         self.playing(go_rules=go_rules)
-                        self.display_sound_icon()
-                    # click on playing HUMAN vs AI button
-                    if event.pos[1] <= 500 and event.pos[1] >= 415:
+                    # click on playing human vs AI button
+                    if event.pos[1] <= 585 and event.pos[1] > 505:
+                        print("Human vs AI clicked.")
                         go_rules.player_list[1].player_type = PlayerType.AI.value
                         self.playing(go_rules=go_rules)
-                        self.display_sound_icon()
-                    # click on playing vs human button
-                    if event.pos[1] <= 585 and event.pos[1] >= 505:
+                    # click on playing human vs human button
+                    if event.pos[1] <= 665 and event.pos[1] > 585:
+                        print("Human vs Human clicked.")
                         go_rules.player_list[1].player_type = PlayerType.HUMAN.value
                         self.playing(go_rules=go_rules)
-                        self.display_sound_icon()
+                    # click on settings
+                    if event.pos[1] <= 765 and event.pos[1] > 665:
+                        print("Settings clicked.")
+                        go_rules.player_list[1].player_type = PlayerType.HUMAN.value
+                        self.settings()
+                    self.display_page(
+                        background_page=self.go_menu, return_button=False, sound_status=True
+                    )
+
                     # click on sound icon
                     if (
                         event.pos[1] <= self.sound_icon_size[1]
@@ -126,7 +170,10 @@ class PyGameGo:
                         and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                     ):
                         self.screen.blit(self.go_menu, self.start_point)
-                        self.update_sound_status(not self.sound_status)
+                        self.update_sound_status(not self.sound_status, self.go_menu)
+                        self.display_page(
+                            background_page=self.go_menu, return_button=False, sound_status=True
+                        )
 
     def win(self, go_rules: GoRules):
         self.moves_count = 0

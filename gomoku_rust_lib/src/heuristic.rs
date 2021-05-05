@@ -24,6 +24,7 @@ pub fn heuristic(state: &mut State) -> i32 {
     }
     state.board_info = board_state_info.clone();
 
+    // Instant return move
     // Check if win by capturing stone
     let stone_captured = check_move_is_capturing_stone(&state.axes[0], &state.axes[1]);
     unsafe {
@@ -39,8 +40,6 @@ pub fn heuristic(state: &mut State) -> i32 {
             return heuristic_ratios::HEURISTIC_CAPTURE_TEN_STONE;
         }
     }
-
-    // // Instant return move
 
     // // Move capture opponent five in a row
 
@@ -58,7 +57,7 @@ pub fn heuristic(state: &mut State) -> i32 {
                 == Some(&"five")
                 && board_state_info.pattern_axe[pattern_index].1 != 3
             {
-                // Checking if undefeatable 5
+                // Checking if undefeatable 5, pattern should be (0, 5)
                 if board_state_info.pattern_axe[pattern_index].1 == 5 {
                     return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
                 } else {
