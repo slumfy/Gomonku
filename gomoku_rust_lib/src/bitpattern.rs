@@ -249,7 +249,7 @@ fn find_blocker(
             }
         }
     }
-	println!("foundblocker: {:?}", found_blocker);
+	// println!("foundblocker: {:?}", found_blocker);
     if (found_blocker.0 < PATTERN.len() && l <= PATTERN[found_blocker.0].1) || is_blocked == 3 {
         // println!("BLOCKER FOUND {} value {:?} len {} l: {}", PATTERN[found_blocker.0].4,found_blocker,PATTERN[found_blocker.0].1 ,l);
         return_blocker[axe] = *found_blocker;
