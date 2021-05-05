@@ -211,23 +211,32 @@ pub fn check_blocker(
     if PATTERN[p].2 != 0 {
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
-
-    // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}",BLOCKER[b].0,blocker_casted,blocker_checker);
-    if b == 1
-        && hole_value == true
-        && ((p == 6 && blocker_checker & 0x80 == 0x80) || (p == 5 && blocker_checker & 0x4 == 0x4))
-    {
-        is_blocked = 3;
-    } else if b == 1
-        && hole_value == true
-        && ((p == 5 && blocker_checker & 0x80 == 0x80) || (p == 6 && blocker_checker & 0x4 == 0x4))
-    {
+    // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b);
+	if ( p == 5 || p == 6) {
+		if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80) || (p == 6 && blocker_checker & 0x4 != 0x4) {
+			return 0;
+		}
+		if b == 1 && hole_value == true && blocker_checker == BLOCKER[b].0 {
+			return 3;
+		}
+		if blocker_checker == BLOCKER[b].0 {
+			return 2;
+		}
+		else if blocker_checker != 0 {
+			if check_border(pos, l, axe, PATTERN[p].1) == false {
+				return 2;
+			}
+			return 1;
+		}
+	}
+	if PATTERN[p].2 != 0 && l != PATTERN[p].2 && hole_value == true {
+		is_blocked = 0;
+	}
+    else if PATTERN[p].2 != 0 && hole_value == true && ( p != 5 || p != 6) {
         is_blocked = 2;
-    } else if PATTERN[p].2 != 0 && hole_value == true && p != 5 && p != 6 {
+    } else if blocker_checker == BLOCKER[b].0 && PATTERN[p].2 == 0 {
         is_blocked = 2;
-    } else if blocker_checker == BLOCKER[b].0 && (PATTERN[p].2 == 0 || p == 5 || p == 6) {
-        is_blocked = 2;
-    } else if blocker_checker != 0 && (PATTERN[p].2 == 0 || p == 5 || p == 6) {
+    } else if blocker_checker != 0 && PATTERN[p].2 == 0 {
         is_blocked = 1;
         if check_border(pos, l, axe, PATTERN[p].1) == false {
             // println!("border");

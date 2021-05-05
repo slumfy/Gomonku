@@ -539,7 +539,7 @@ pub fn test_blocker_four_1_blocker() {
    println!("white_axes {:016b}", axes[0][3]);
    println!("black_axes {:016b}", axes[1][3]);
    println!("return_pattern {:?}", returned_blocker);
-   assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (2, 1)]);
+   assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (1, 1)]);
 }
 
 pub fn test_blocker_four_2_blocker() {
@@ -565,7 +565,7 @@ pub fn test_blocker_four_2_blocker() {
    println!("white_axes {:016b}", axes[0][3]);
    println!("black_axes {:016b}", axes[1][3]);
    println!("return_pattern {:?}", returned_blocker);
-   assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (2, 2)]);
+   assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (1, 2)]);
 }
 
 pub fn test_blocker_split_four2_1_blocker() {
