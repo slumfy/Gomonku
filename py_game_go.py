@@ -109,13 +109,12 @@ class PyGameGo:
 
     def settings(self):
         self.display_setting_page()
-        while 1:
 
+        while 1:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print("event.pos[1] = ", event.pos[1])
                     # Return to menu button
                     if (
                         event.pos[1] >= 0
@@ -124,6 +123,7 @@ class PyGameGo:
                         and event.pos[0] <= self.return_icon_size[1]
                     ):
                         return 0
+                    # Click on NEXT THEME button
                     elif event.pos[1] >= 125 and event.pos[1] < 205:
                         self.theme_number += 1
                         if self.theme_number > 2:
@@ -147,8 +147,7 @@ class PyGameGo:
                             self.go_board, MAIN_WINDOW_SIZE
                         )
                         self.display_setting_page()
-
-                    # click on sound icon
+                    # Click on sound icon
                     elif (
                         event.pos[1] <= self.sound_icon_size[1]
                         and event.pos[1] >= 0
@@ -169,24 +168,24 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # click on playing AI vs AI button
+                    # Click on playing AI vs AI button
                     if event.pos[1] <= 505 and event.pos[1] >= 430:
                         print("AI vs AI clicked.")
                         go_rules.player_list[0].player_type = 1
                         go_rules.player_list[1].player_type = 1
                         go_rules.ai_versus = 1
                         self.playing(go_rules=go_rules)
-                    # click on playing human vs AI button
+                    # Click on playing human vs AI button
                     if event.pos[1] <= 585 and event.pos[1] > 505:
                         print("Human vs AI clicked.")
                         go_rules.player_list[1].player_type = PlayerType.AI.value
                         self.playing(go_rules=go_rules)
-                    # click on playing human vs human button
+                    # Click on playing human vs human button
                     if event.pos[1] <= 665 and event.pos[1] > 585:
                         print("Human vs Human clicked.")
                         go_rules.player_list[1].player_type = PlayerType.HUMAN.value
                         self.playing(go_rules=go_rules)
-                    # click on settings
+                    # Click on settings
                     if event.pos[1] <= 765 and event.pos[1] > 665:
                         print("Settings clicked.")
                         go_rules.player_list[1].player_type = PlayerType.HUMAN.value
@@ -195,7 +194,7 @@ class PyGameGo:
                         background_page=self.go_menu, return_button=False, sound_status=True
                     )
 
-                    # click on sound icon
+                    # Click on sound icon
                     if (
                         event.pos[1] <= self.sound_icon_size[1]
                         and event.pos[1] >= 0
