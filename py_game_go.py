@@ -45,7 +45,7 @@ class PyGameGo:
             self.theme_number = 1
             self.go_board = pygame.image.load("ressources/images/goboard-1.png")
             self.go_menu = pygame.image.load("ressources/images/gomenu-1.png")
-            self.go_settings = pygame.image.load("ressources/images/gosettings.png")
+            self.go_settings = pygame.image.load("ressources/images/gosettings-1.png")
             self.go_sound_off = pygame.transform.scale(
                 pygame.image.load("ressources/images/sound-icon/sound_off.png"),
                 self.sound_icon_size,
@@ -96,14 +96,26 @@ class PyGameGo:
                 )
         pygame.display.flip()
 
-    def settings(self):
+    def display_setting_page(self):
         self.display_page(background_page=self.go_settings, return_button=True, sound_status=True)
+        self.print_font(
+            64,
+            "NEXT THEME",
+            200,
+            150,
+            "Black",
+        )
+        pygame.display.flip()
+
+    def settings(self):
+        self.display_setting_page()
         while 1:
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
-
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    print("event.pos[1] = ", event.pos[1])
                     # Return to menu button
                     if (
                         event.pos[1] >= 0
@@ -112,7 +124,7 @@ class PyGameGo:
                         and event.pos[0] <= self.return_icon_size[1]
                     ):
                         return 0
-                    elif event.pos[1] >= 10 and event.pos[1] <= 500:
+                    elif event.pos[1] >= 125 and event.pos[1] < 205:
                         self.theme_number += 1
                         if self.theme_number > 2:
                             self.theme_number = 1
@@ -125,9 +137,16 @@ class PyGameGo:
                             ),
                             MAIN_WINDOW_SIZE,
                         )
+                        self.go_settings = pygame.transform.scale(
+                            pygame.image.load(
+                                "ressources/images/gosettings-" + str(self.theme_number) + ".png"
+                            ),
+                            MAIN_WINDOW_SIZE,
+                        )
                         self.go_board_resize = pygame.transform.scale(
                             self.go_board, MAIN_WINDOW_SIZE
                         )
+                        self.display_setting_page()
 
                     # click on sound icon
                     elif (
@@ -137,9 +156,7 @@ class PyGameGo:
                         and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                     ):
                         self.update_sound_status(not self.sound_status, self.go_settings)
-                        self.display_page(
-                            background_page=self.go_settings, return_button=True, sound_status=True
-                        )
+                        self.display_setting_page()
 
     def menu(self, go_rules: GoRules):
         self.screen.blit(self.go_menu, self.start_point)
@@ -211,8 +228,8 @@ class PyGameGo:
             + "  previous move: "
             + "Illegal move",
             64,
-            32,
-            "Black",
+            680,
+            "White",
         )
 
     def print_player_move(self, x: int, y: int):
@@ -226,7 +243,7 @@ class PyGameGo:
             + BOARD_NOTATION[0][x]
             + BOARD_NOTATION[1][y],
             64,
-            32,
+            680,
             "Black",
         )
 
