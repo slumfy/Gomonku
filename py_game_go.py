@@ -228,7 +228,7 @@ class PyGameGo:
             + "Illegal move",
             64,
             680,
-            "White",
+            "Red",
         )
 
     def print_player_move(self, x: int, y: int):
@@ -316,6 +316,10 @@ class PyGameGo:
     def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
             self.print_illegal_move()
+            self.print_capture_count(
+                white_capture_count=go_rules.player_list[0].capture_piece,
+                black_capture_count=go_rules.player_list[1].capture_piece,
+            )
         elif stone_status == 0:
             if self.sound_status:
                 self.placing_stone_sound.play()
@@ -383,10 +387,13 @@ class PyGameGo:
     def print_font(self, size, msg, x, y, color):
         BLACK = (0, 0, 0)
         WHITE = (255, 255, 255)
+        RED = (218, 56, 21)
         sysfont = pygame.font.get_default_font()
         font = pygame.font.SysFont(None, size)
         if color == "Black":
             render = font.render(msg, True, BLACK)
+        elif color == "Red":
+            render = font.render(msg, True, RED)
         else:
             render = font.render(msg, True, WHITE)
         self.screen.blit(render, (x, y))
