@@ -195,22 +195,10 @@ fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> usiz
     let mut border_count: usize = 0;
     // println!("pattern pos = {}, l = {}, axe = {}, pos = {}, pattern_length = {}, amv {}", pattern_pos, l, axe_mouvement_value, pos, pattern_length, axe_mouvement_value);
     // println!("low = {} high = {}",pattern_pos + axe_mouvement_value,pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16);
-    if check_in_map(
-        axe_mouvement_value,
-        low,
-        1,
-        -1,
-    ) == false
-    {
+    if check_in_map(axe_mouvement_value, low, 1, -1) == false {
         border_count += 1;
     }
-    if check_in_map(
-        axe_mouvement_value,
-        high,
-        1,
-        1,
-    ) == false
-    {
+    if check_in_map(axe_mouvement_value, high, 1, 1) == false {
         border_count += 1;
     }
     // println!("bordercount {}", border_count);
@@ -313,6 +301,8 @@ pub fn check_potential_winning_alignment(state: &State) -> [bool; 4] {
         let mut left_blocked = false;
         let mut right_blocked = false;
 
+        let player_axe = player_axes[axe_index];
+        let opponent_axe = opponent_axes[axe_index];
         for i in 1..7 {
             if !is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe_index],
@@ -330,23 +320,22 @@ pub fn check_potential_winning_alignment(state: &State) -> [bool; 4] {
             ) {
                 left_blocked = true;
             }
-            let player_axe = player_axes[axe_index];
-            let opponent_axe = opponent_axes[axe_index];
-            let player_shifted = player_axe >> 6 - i;
+
+            let player_shifted = player_axe >> 8 - i;
             let player_casted = player_shifted as u8;
-            let opponent_shifted = opponent_axe >> 6 - i;
-            let opponent_casted = opponent_shifted as u8;
-            if opponent_casted & 1 == 1 {
-                left_blocked = true;
-            } else if (player_casted & 0 == 0 || player_casted & 1 == 1) && !left_blocked {
-                free_space += 1;
-            }
-            let player_shifted = player_axe >> 6 + i;
-            let player_casted = player_shifted as u8;
-            let opponent_shifted = opponent_axe >> 6 + i;
+            let opponent_shifted = opponent_axe >> 8 - i;
             let opponent_casted = opponent_shifted as u8;
             if opponent_casted & 1 == 1 {
                 right_blocked = true;
+            } else if (player_casted & 0 == 0 || player_casted & 1 == 1) && !left_blocked {
+                free_space += 1;
+            }
+            let player_shifted = player_axe >> 8 + i;
+            let player_casted = player_shifted as u8;
+            let opponent_shifted = opponent_axe >> 8 + i;
+            let opponent_casted = opponent_shifted as u8;
+            if opponent_casted & 1 == 1 {
+                left_blocked = true;
             } else if (player_casted & 0 == 0 || player_casted & 1 == 1) && !right_blocked {
                 free_space += 1;
             }
