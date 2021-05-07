@@ -28,6 +28,7 @@ pub fn test_pattern_axes_finder() {
     // Alignement of 2 blocked left 0XX
     apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
     let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+	// print_board_from_bitboard(&bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -247,7 +248,6 @@ fn test_four() {
     apply_bit(&mut bitboards, pos + 18, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 36, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 72, global_var::PLAYER_WHITE_NB);
-    print_board_from_bitboard(&bitboards);
     let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
@@ -269,6 +269,7 @@ fn test_four() {
     apply_bit(&mut bitboards, pos + 36, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 54, global_var::PLAYER_WHITE_NB);
     let axes = create_bits_axes_from_pos(pos, &mut bitboards);
+	// print_board_from_bitboard(&bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -276,7 +277,7 @@ fn test_four() {
         pos,
         global_var::PLAYER_WHITE_NB,
     )[0];
-    assert_eq!(returned_pattern, [(0, 3), (0, 3), (2, 0), (0, 3)]);
+    assert_eq!(returned_pattern, [(0, 3), (0, 3), (1, 0), (0, 3)]);
 
     // split four one border left
     let mut bitboards: Bitboards = Bitboards {

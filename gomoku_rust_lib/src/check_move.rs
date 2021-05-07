@@ -166,7 +166,7 @@ fn check_in_map(
     direction_sign: i16,
 ) -> bool {
     let calcul = pattern_pos + axe_mouvement_value * offset * direction_sign;
-	println!("calcul = {}", calcul);
+	// println!("calcul = {}", calcul);
     if calcul < 0 {
         return false;
     }
@@ -174,12 +174,12 @@ fn check_in_map(
     let line = pattern_pos / 19;
     // Ligne
     if axe_mouvement_value == 1 {
-		println!("linechecked {} line {}", line_checked,line);
+		// println!("linechecked {} line {}", line_checked,line);
         if line_checked != line {
             return false;
         }
     } else {
-		println!("not ligne checked {} calcul: {}",line_checked ,line + offset * direction_sign);
+		// println!("not ligne checked {} calcul: {}",line_checked ,line + offset * direction_sign);
         if line_checked != line + offset * direction_sign {
             return false;
         }
@@ -187,19 +187,22 @@ fn check_in_map(
     return true;
 }
 
-fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> bool {
+fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> usize {
     let axe_mouvement_value: i16 = global_var::AXE_MOUVEMENT_VALUE[axe] as i16;
     let pattern_pos: i16 = pos as i16 - l as i16 * axe_mouvement_value;
-	println!("pattern pos = {}, l = {}, axe = {}, pos = {}, pattern_length = {}, amv {}", pattern_pos, l, axe_mouvement_value, pos, pattern_length, axe_mouvement_value);
+	let low = pattern_pos + axe_mouvement_value;
+	let high = pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16;
+	let mut border_count: usize = 0;
+	// println!("pattern pos = {}, l = {}, axe = {}, pos = {}, pattern_length = {}, amv {}", pattern_pos, l, axe_mouvement_value, pos, pattern_length, axe_mouvement_value);
+	// println!("low = {} high = {}",pattern_pos + axe_mouvement_value,pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16);
     if check_in_map(axe_mouvement_value, pattern_pos + axe_mouvement_value, 1, -1) == false {
-		println!("low");
-        return false;
+		border_count += 1;
     }
-    if check_in_map(axe_mouvement_value, pattern_pos - axe_mouvement_value, pattern_length as i16, 1) == false {
-        println!("high");
-		return false;
+    if check_in_map(axe_mouvement_value, pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16, 1, 1) == false {
+        border_count += 1;
     }
-    return true;
+	// println!("bordercount {}", border_count);
+    return border_count;
 }
 
 pub fn check_blocker(
@@ -216,6 +219,7 @@ pub fn check_blocker(
     if PATTERN[p].2 != 0 {
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
+	let border_count = check_border(pos, l, axe, PATTERN[p].1);
     // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b);
 	if ( p == 5 || p == 6) {
 		if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80) || (p == 6 && blocker_checker & 0x4 != 0x4) {
@@ -228,7 +232,7 @@ pub fn check_blocker(
 			return 2;
 		}
 		else if blocker_checker != 0 {
-			if check_border(pos, l, axe, PATTERN[p].1) == false {
+			if border_count > 0 {
 				return 2;
 			}
 			return 1;
@@ -243,14 +247,11 @@ pub fn check_blocker(
         is_blocked = 2;
     } else if blocker_checker != 0 && PATTERN[p].2 == 0 {
         is_blocked = 1;
-        if check_border(pos, l, axe, PATTERN[p].1) == false {
-            is_blocked += 1;
+        if is_blocked + border_count >= 2 {
+            is_blocked = 2;
         }
-    } else if check_border(pos, l, axe, PATTERN[p].1) == false {
-        is_blocked = 1;
-        if blocker_checker != 0 {
-            is_blocked += 1;
-        }
+    } else if border_count >= 0 {
+        is_blocked = border_count;
     } else {
         is_blocked = 0;
     }
