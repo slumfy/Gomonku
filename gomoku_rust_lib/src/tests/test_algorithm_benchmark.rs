@@ -7,7 +7,7 @@
 // use crate::state;
 // use std::time::Instant;
 
-// pub fn test_negamax_benchmark() {
+pub fn test_negamax_benchmark() {
     // let mut depth = 1;
 
     // let mut bitboards: Bitboards = Bitboards {
@@ -129,4 +129,4 @@
     // let end_time = Instant::now();
     // println!("time to process {:?}", end_time.duration_since(start_time));
     // println!();
-// }
+}

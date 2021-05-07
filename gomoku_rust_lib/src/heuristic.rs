@@ -2,9 +2,9 @@
 
 use crate::bitboard_operations::apply_bit;
 use crate::bitboards::create_bits_axes_from_pos;
-use crate::check_move::check_free_development;
 use crate::check_move::check_is_wrong_move;
 use crate::check_move::check_move_is_capturing_stone;
+use crate::check_move::check_potential_winning_alignment;
 use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
 use crate::data_struct::BoardStateInfo;
@@ -41,59 +41,8 @@ pub fn heuristic(state: &mut State) -> i32 {
         }
     }
 
-    // // Move capture opponent five in a row
-
-    // return heuristic_ratios::HEURISTIC_CAPTURE_AN_OPPONENT_FIVE_IN_A_ROW;
-
-    // // Move prevent capture opponent 10 stones or more
-
-    // return heuristic_ratios::HEURISTIC_PREVENT_OPPONENT_WIN_BY_CAPTURE;
-
-    // Addition value move
-
-    for pattern_index in 0..4 {
-        if board_state_info.pattern_axe[pattern_index].1 != 3 {
-            if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"five")
-                && board_state_info.pattern_axe[pattern_index].1 != 3
-            {
-                // Checking if undefeatable 5, pattern should be (0, 5)
-                if board_state_info.pattern_axe[pattern_index].1 == 5 {
-                    return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
-                } else {
-                    value += heuristic_ratios::HEURISTIC_FIVE_IN_A_ROW;
-                }
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"four")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"split four 3")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"split four 1")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"split four 2")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"three")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"three2")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"split three")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"split three rev")
-            {
-            } else if global_var::PATTERN_NAME.get(&board_state_info.pattern_axe[pattern_index].0)
-                == Some(&"double")
-            {
-                println!("found a double");
-            }
-        }
-    }
+    let axes_development_value = check_potential_winning_alignment(state);
+    println!("axes_development_value {:?}", axes_development_value);
     return value;
 }
 

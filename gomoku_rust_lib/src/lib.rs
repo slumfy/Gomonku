@@ -32,9 +32,9 @@ use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
 
-// use tests::__pyo3_get_function_pytest_algorithm_benchmark;
-use tests::__pyo3_get_function_pytest_check_free_development;
+use tests::__pyo3_get_function_pytest_algorithm_benchmark;
 use tests::__pyo3_get_function_pytest_check_is_unblockable_five;
+use tests::__pyo3_get_function_pytest_check_potential_winning_alignment;
 use tests::__pyo3_get_function_pytest_get_pydict;
 use tests::__pyo3_get_function_pytest_is_on_axe;
 use tests::__pyo3_get_function_pytest_pattern_axes_finder;
@@ -269,11 +269,14 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_updating_from_other_function, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_get_pydict, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_check_is_unblockable_five, m)?)?;
-    m.add_function(wrap_pyfunction!(pytest_check_free_development, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_is_on_axe, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
-    // m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_print_pos_in_human_format, m)?)?;
+    m.add_function(wrap_pyfunction!(
+        pytest_check_potential_winning_alignment,
+        m
+    )?)?;
     //TEST BLOCKER
     m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_border, m)?)?;
     m.add_function(wrap_pyfunction!(

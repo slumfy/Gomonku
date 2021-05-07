@@ -3,59 +3,59 @@
 extern crate pyo3;
 
 mod test_algorithm_benchmark;
-mod test_check_free_development;
 mod test_check_is_unblockable_five;
+mod test_check_potential_winning_alignment;
 mod test_is_on_axe;
 mod test_pattern_axes_finder;
 mod test_pattern_blocker;
 mod test_print;
-use test_check_free_development::test_check_free_development;
 use test_check_is_unblockable_five::test_check_is_unblockable_five;
+use test_check_potential_winning_alignment::test_check_potential_winning_alignment;
 use test_is_on_axe::test_is_on_axe;
 use test_pattern_axes_finder::test_pattern_axes_finder;
 //TEST BLOCKER
-use test_pattern_blocker::test_blocker_doubles_border;
 use test_pattern_blocker::test_blocker_doubles_1_blocker_left;
 use test_pattern_blocker::test_blocker_doubles_1_blocker_right;
 use test_pattern_blocker::test_blocker_doubles_2_blocker_left;
 use test_pattern_blocker::test_blocker_doubles_2_blocker_right;
-use test_pattern_blocker::test_blocker_triple_border;
-use test_pattern_blocker::test_blocker_triple_1_blocker_left;
-use test_pattern_blocker::test_blocker_triple_1_blocker_right;
-use test_pattern_blocker::test_blocker_triple_2_blocker_right;
-use test_pattern_blocker::test_blocker_triple_2_blocker_left;
-use test_pattern_blocker::test_blocker_triple_2_with_hole_blocker_left;
-use test_pattern_blocker::test_blocker_triple_2_with_hole_blocker_right;
-use test_pattern_blocker::test_blocker_triple_3_blocker_right;
-use test_pattern_blocker::test_blocker_triple_3_blocker_middle;
-use test_pattern_blocker::test_blocker_triple_3_blocker_left;
-use test_pattern_blocker::test_blocker_split_triple_rev_1_blocker;
-use test_pattern_blocker::test_blocker_split_triple_rev_2_blocker;
-use test_pattern_blocker::test_blocker_split_triple_rev_2_blocker_wrong;
-use test_pattern_blocker::test_blocker_split_triple_1_blocker;
-use test_pattern_blocker::test_blocker_split_triple_2_blocker;
-use test_pattern_blocker::test_blocker_split_triple_2_blocker_wrong;
+use test_pattern_blocker::test_blocker_doubles_border;
 use test_pattern_blocker::test_blocker_four_1_blocker;
 use test_pattern_blocker::test_blocker_four_2_blocker;
-use test_pattern_blocker::test_blocker_split_four2_1_blocker;
-use test_pattern_blocker::test_blocker_split_four2_2_blocker;
 use test_pattern_blocker::test_blocker_split_four1_1_blocker;
 use test_pattern_blocker::test_blocker_split_four1_1_blocker_wrong;
 use test_pattern_blocker::test_blocker_split_four1_2_blocker;
 use test_pattern_blocker::test_blocker_split_four1_2_blocker_wrong;
+use test_pattern_blocker::test_blocker_split_four2_1_blocker;
+use test_pattern_blocker::test_blocker_split_four2_2_blocker;
 use test_pattern_blocker::test_blocker_split_four3_1_blocker;
 use test_pattern_blocker::test_blocker_split_four3_1_blocker_wrong;
 use test_pattern_blocker::test_blocker_split_four3_2_blocker;
 use test_pattern_blocker::test_blocker_split_four3_2_blocker_wrong;
+use test_pattern_blocker::test_blocker_split_triple_1_blocker;
+use test_pattern_blocker::test_blocker_split_triple_2_blocker;
+use test_pattern_blocker::test_blocker_split_triple_2_blocker_wrong;
+use test_pattern_blocker::test_blocker_split_triple_rev_1_blocker;
+use test_pattern_blocker::test_blocker_split_triple_rev_2_blocker;
+use test_pattern_blocker::test_blocker_split_triple_rev_2_blocker_wrong;
+use test_pattern_blocker::test_blocker_triple_1_blocker_left;
+use test_pattern_blocker::test_blocker_triple_1_blocker_right;
+use test_pattern_blocker::test_blocker_triple_2_blocker_left;
+use test_pattern_blocker::test_blocker_triple_2_blocker_right;
+use test_pattern_blocker::test_blocker_triple_2_with_hole_blocker_left;
+use test_pattern_blocker::test_blocker_triple_2_with_hole_blocker_right;
+use test_pattern_blocker::test_blocker_triple_3_blocker_left;
+use test_pattern_blocker::test_blocker_triple_3_blocker_middle;
+use test_pattern_blocker::test_blocker_triple_3_blocker_right;
+use test_pattern_blocker::test_blocker_triple_border;
 //END TEST BLOCKER
 use pyo3::prelude::*;
 use pyo3::types::*;
 use std::collections::HashMap;
 
-// #[pyfunction]
-// pub fn pytest_algorithm_benchmark() {
-//     test_algorithm_benchmark::test_negamax_benchmark();
-// }
+#[pyfunction]
+pub fn pytest_algorithm_benchmark() {
+    test_algorithm_benchmark::test_negamax_benchmark();
+}
 
 #[pyfunction]
 pub fn pytest_print_pos_in_human_format() {
@@ -63,13 +63,13 @@ pub fn pytest_print_pos_in_human_format() {
 }
 
 #[pyfunction]
-pub fn pytest_pattern_axes_finder() {
-    test_pattern_axes_finder();
+pub fn pytest_check_potential_winning_alignment() {
+    test_check_potential_winning_alignment();
 }
 
 #[pyfunction]
-pub fn pytest_check_free_development() {
-    test_check_free_development();
+pub fn pytest_pattern_axes_finder() {
+    test_pattern_axes_finder();
 }
 
 #[pyfunction]

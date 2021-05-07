@@ -166,7 +166,7 @@ fn check_in_map(
     direction_sign: i16,
 ) -> bool {
     let calcul = pattern_pos + axe_mouvement_value * offset * direction_sign;
-	// println!("calcul = {}", calcul);
+    // println!("calcul = {}", calcul);
     if calcul < 0 {
         return false;
     }
@@ -174,12 +174,12 @@ fn check_in_map(
     let line = pattern_pos / 19;
     // Ligne
     if axe_mouvement_value == 1 {
-		// println!("linechecked {} line {}", line_checked,line);
+        // println!("linechecked {} line {}", line_checked,line);
         if line_checked != line {
             return false;
         }
     } else {
-		// println!("not ligne checked {} calcul: {}",line_checked ,line + offset * direction_sign);
+        // println!("not ligne checked {} calcul: {}",line_checked ,line + offset * direction_sign);
         if line_checked != line + offset * direction_sign {
             return false;
         }
@@ -190,18 +190,30 @@ fn check_in_map(
 fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> usize {
     let axe_mouvement_value: i16 = global_var::AXE_MOUVEMENT_VALUE[axe] as i16;
     let pattern_pos: i16 = pos as i16 - l as i16 * axe_mouvement_value;
-	let low = pattern_pos + axe_mouvement_value;
-	let high = pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16;
-	let mut border_count: usize = 0;
-	// println!("pattern pos = {}, l = {}, axe = {}, pos = {}, pattern_length = {}, amv {}", pattern_pos, l, axe_mouvement_value, pos, pattern_length, axe_mouvement_value);
-	// println!("low = {} high = {}",pattern_pos + axe_mouvement_value,pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16);
-    if check_in_map(axe_mouvement_value, pattern_pos + axe_mouvement_value, 1, -1) == false {
-		border_count += 1;
-    }
-    if check_in_map(axe_mouvement_value, pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16, 1, 1) == false {
+    let low = pattern_pos + axe_mouvement_value;
+    let high = pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16;
+    let mut border_count: usize = 0;
+    // println!("pattern pos = {}, l = {}, axe = {}, pos = {}, pattern_length = {}, amv {}", pattern_pos, l, axe_mouvement_value, pos, pattern_length, axe_mouvement_value);
+    // println!("low = {} high = {}",pattern_pos + axe_mouvement_value,pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16);
+    if check_in_map(
+        axe_mouvement_value,
+        pattern_pos + axe_mouvement_value,
+        1,
+        -1,
+    ) == false
+    {
         border_count += 1;
     }
-	// println!("bordercount {}", border_count);
+    if check_in_map(
+        axe_mouvement_value,
+        pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16,
+        1,
+        1,
+    ) == false
+    {
+        border_count += 1;
+    }
+    // println!("bordercount {}", border_count);
     return border_count;
 }
 
@@ -219,29 +231,29 @@ pub fn check_blocker(
     if PATTERN[p].2 != 0 {
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
-	let border_count = check_border(pos, l, axe, PATTERN[p].1);
+    let border_count = check_border(pos, l, axe, PATTERN[p].1);
     // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b);
-	if ( p == 5 || p == 6) {
-		if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80) || (p == 6 && blocker_checker & 0x4 != 0x4) {
-			return 0;
-		}
-		if b == 1 && hole_value == true && blocker_checker == BLOCKER[b].0 {
-			return 3;
-		}
-		if blocker_checker == BLOCKER[b].0 {
-			return 2;
-		}
-		else if blocker_checker != 0 {
-			if border_count > 0 {
-				return 2;
-			}
-			return 1;
-		}
-	}
-	if PATTERN[p].2 != 0 && l != PATTERN[p].2 && hole_value == true {
-		is_blocked = 0;
-	}
-    else if PATTERN[p].2 != 0 && hole_value == true && ( p != 5 || p != 6) {
+    if p == 5 || p == 6 {
+        if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80)
+            || (p == 6 && blocker_checker & 0x4 != 0x4)
+        {
+            return 0;
+        }
+        if b == 1 && hole_value == true && blocker_checker == BLOCKER[b].0 {
+            return 3;
+        }
+        if blocker_checker == BLOCKER[b].0 {
+            return 2;
+        } else if blocker_checker != 0 {
+            if border_count > 0 {
+                return 2;
+            }
+            return 1;
+        }
+    }
+    if PATTERN[p].2 != 0 && l != PATTERN[p].2 && hole_value == true {
+        is_blocked = 0;
+    } else if PATTERN[p].2 != 0 && hole_value == true && (p != 5 || p != 6) {
         is_blocked = 2;
     } else if blocker_checker == BLOCKER[b].0 && PATTERN[p].2 == 0 {
         is_blocked = 2;
@@ -284,85 +296,70 @@ pub fn check_is_unblockable_five(
     return true;
 }
 
-pub fn check_free_development(state: &State) -> i32 {
-    let mut development_return_value: i32 = 0;
-    let two_players_axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
+pub fn check_potential_winning_alignment(state: &State) -> [bool; 4] {
     let player_axes;
     let opponent_axes;
     if state.current_player == global_var::PLAYER_WHITE_NB {
-        player_axes = two_players_axes[0];
-        opponent_axes = two_players_axes[1];
+        player_axes = state.axes[0];
+        opponent_axes = state.axes[1];
     } else {
-        player_axes = two_players_axes[1];
-        opponent_axes = two_players_axes[0];
+        player_axes = state.axes[1];
+        opponent_axes = state.axes[0];
     };
-    let mut has_been_decounted: bool;
-    let mut axe_free_value: [i32; 4] = [0, 0, 0, 0];
-    for axe in 0..player_axes.len() {
-        let mut development_value = 0;
-        // Checking if there is a board blocker in axes
-        has_been_decounted = false;
-        for i in 1..5 {
-            let decount_value: i32 = (5 - i) * 2;
+    let mut axe_free_value: [bool; 4] = [false, false, false, false];
+
+    for axe_index in 0..player_axes.len() {
+        let mut free_space: i8 = 0;
+        let mut left_blocked = false;
+        let mut right_blocked = false;
+
+        for i in 1..7 {
             if !is_on_axe(
-                global_var::AXE_MOUVEMENT_VALUE[axe],
+                global_var::AXE_MOUVEMENT_VALUE[axe_index],
                 state.bit_current_move_pos,
                 i as usize,
                 1,
             ) {
-                development_value -= decount_value;
-                has_been_decounted = true;
+                right_blocked = true;
             }
             if !is_on_axe(
-                global_var::AXE_MOUVEMENT_VALUE[axe],
+                global_var::AXE_MOUVEMENT_VALUE[axe_index],
                 state.bit_current_move_pos,
                 i as usize,
                 -1,
             ) {
-                development_value -= decount_value;
-                has_been_decounted = true;
+                left_blocked = true;
             }
-            if has_been_decounted {
-                break;
-            }
-        }
-        let player_axe = player_axes[axe];
-        let opponent_axe = opponent_axes[axe];
-        let mut l = 9;
-        while l < 13 {
-            let player_shifted = player_axe >> l;
+            let player_axe = player_axes[axe_index];
+            let opponent_axe = opponent_axes[axe_index];
+            let player_shifted = player_axe >> 6 - i;
             let player_casted = player_shifted as u8;
-            let opponent_shifted = opponent_axe >> l;
+            let opponent_shifted = opponent_axe >> 6 - i;
             let opponent_casted = opponent_shifted as u8;
             if opponent_casted & 1 == 1 {
-                break;
-            } else if player_casted & 1 == 0 {
-                development_value += 1;
-            } //else if player_casted & 1 == 1 {
-              //     development_value += 5;
-              // }
-            l += 1;
-        }
-        let mut l = 7;
-        while l > 3 {
-            let player_shifted = player_axe >> l;
+                left_blocked = true;
+            } else if (player_casted & 0 == 0 || player_casted & 1 == 1) && !left_blocked {
+                free_space += 1;
+            }
+            let player_shifted = player_axe >> 6 + i;
             let player_casted = player_shifted as u8;
-            let opponent_shifted = opponent_axe >> l;
+            let opponent_shifted = opponent_axe >> 6 + i;
             let opponent_casted = opponent_shifted as u8;
             if opponent_casted & 1 == 1 {
-                break;
-            } else if player_casted & 1 == 0 {
-                development_value += 1;
-            } // else if player_casted & 1 == 1 {
-              //     development_value += 5;
-              // }
-            l -= 1;
+                right_blocked = true;
+            } else if (player_casted & 0 == 0 || player_casted & 1 == 1) && !right_blocked {
+                free_space += 1;
+            }
         }
-        axe_free_value[axe] = development_value;
-        development_return_value += development_value;
+        println!("free_space at end : {:?}", free_space);
+        if free_space >= 4 {
+            axe_free_value[axe_index] = true;
+        } else {
+            axe_free_value[axe_index] = false;
+        }
     }
-    // println!("freespace: {:?}",axe_free_value);
-    return development_return_value;
+
+    return axe_free_value;
 }
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
