@@ -25,7 +25,7 @@ mod tests;
 mod utils;
 
 // use crate::bitboards::create_bits_axes_from_pos;
-// use crate::check_move::get_move_info;
+use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
 // use crate::heuristic::heuristic;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
@@ -114,7 +114,7 @@ pub fn ai_move(
         wining_position,
         nb_move_to_win,
     );
-    // let state_info = get_move_info(&mut state);
+    get_move_info(&mut state);
     println!("Black move_to_win {}", state.black_move_to_win);
     println!("White move_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();

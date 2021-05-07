@@ -1,8 +1,5 @@
 //! Heuristic of our AI.
 
-use crate::bitboard_operations::apply_bit;
-use crate::bitboards::create_bits_axes_from_pos;
-use crate::check_move::check_is_wrong_move;
 use crate::check_move::check_move_is_capturing_stone;
 use crate::check_move::check_potential_winning_alignment;
 use crate::check_pos_still_win;
@@ -10,7 +7,7 @@ use crate::checking_and_apply_bits_move;
 use crate::data_struct::BoardStateInfo;
 use crate::data_struct::State;
 use crate::global_var;
-use crate::global_var::PATTERN;
+// use crate::global_var::PATTERN;
 use crate::heuristic_ratios;
 
 pub fn heuristic(state: &mut State) -> i32 {

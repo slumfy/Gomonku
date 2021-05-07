@@ -13,7 +13,7 @@ use crate::global_var;
 use crate::global_var::BLOCKER;
 use crate::global_var::CAPTURE_PATTERN;
 use crate::global_var::PATTERN;
-use crate::print::print_axes;
+// use crate::print::print_axes;
 use crate::utils::is_on_axe;
 use pyo3::prelude::*;
 
@@ -197,7 +197,7 @@ fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> usiz
     // println!("low = {} high = {}",pattern_pos + axe_mouvement_value,pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16);
     if check_in_map(
         axe_mouvement_value,
-        pattern_pos + axe_mouvement_value,
+        low,
         1,
         -1,
     ) == false
@@ -206,7 +206,7 @@ fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> usiz
     }
     if check_in_map(
         axe_mouvement_value,
-        pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16,
+        high,
         1,
         1,
     ) == false
@@ -262,7 +262,7 @@ pub fn check_blocker(
         if is_blocked + border_count >= 2 {
             is_blocked = 2;
         }
-    } else if border_count >= 0 {
+    } else if border_count > 0 {
         is_blocked = border_count;
     } else {
         is_blocked = 0;
