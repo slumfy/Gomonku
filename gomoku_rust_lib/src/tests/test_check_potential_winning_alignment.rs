@@ -77,7 +77,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
-    print_board_from_bitboard(&bitboards);
     ret = check_potential_winning_alignment(&state);
     assert_eq!(ret, [true, true, false, false]);
 
@@ -97,6 +96,23 @@ pub fn test_check_potential_winning_alignment() {
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     ret = check_potential_winning_alignment(&state);
-    print_board_from_bitboard(&bitboards);
     assert_eq!(ret, [true, true, true, false]);
+
+    println!(" 6 ");
+
+    // stone in up right corner blocked at a distance of two in line
+    pos = 18;
+    apply_bit(&mut bitboards, pos - 2, global_var::PLAYER_BLACK_NB);
+    state = state::create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        pos,
+        0,
+        0,
+        (0, 0),
+        0,
+    );
+    state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
+    ret = check_potential_winning_alignment(&state);
+    assert_eq!(ret, [false, true, true, false]);
 }
