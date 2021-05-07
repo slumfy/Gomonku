@@ -24,15 +24,15 @@ mod state;
 mod tests;
 mod utils;
 
-use crate::bitboards::create_bits_axes_from_pos;
-use crate::check_move::get_move_info;
+// use crate::bitboards::create_bits_axes_from_pos;
+// use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
-use crate::heuristic::heuristic;
+// use crate::heuristic::heuristic;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
 
-use tests::__pyo3_get_function_pytest_algorithm_benchmark;
+// use tests::__pyo3_get_function_pytest_algorithm_benchmark;
 use tests::__pyo3_get_function_pytest_check_free_development;
 use tests::__pyo3_get_function_pytest_check_is_unblockable_five;
 use tests::__pyo3_get_function_pytest_get_pydict;
@@ -114,7 +114,7 @@ pub fn ai_move(
         wining_position,
         nb_move_to_win,
     );
-    let state_info = get_move_info(&mut state);
+    // let state_info = get_move_info(&mut state);
     println!("Black move_to_win {}", state.black_move_to_win);
     println!("White move_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
@@ -272,7 +272,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_check_free_development, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_is_on_axe, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_pattern_axes_finder, m)?)?;
-    m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
+    // m.add_function(wrap_pyfunction!(pytest_algorithm_benchmark, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_print_pos_in_human_format, m)?)?;
     //TEST BLOCKER
     m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_border, m)?)?;

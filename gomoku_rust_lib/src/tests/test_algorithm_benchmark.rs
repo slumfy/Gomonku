@@ -1,13 +1,13 @@
-use crate::algorithms;
-use crate::bitboard_operations::apply_bit;
-use crate::data_struct;
-use crate::data_struct::Bitboards;
-use crate::global_var;
-use crate::heuristic_ratios;
-use crate::state;
-use std::time::Instant;
+// use crate::algorithms;
+// use crate::bitboard_operations::apply_bit;
+// use crate::data_struct;
+// use crate::data_struct::Bitboards;
+// use crate::global_var;
+// use crate::heuristic_ratios;
+// use crate::state;
+// use std::time::Instant;
 
-pub fn test_negamax_benchmark() {
+// pub fn test_negamax_benchmark() {
     // let mut depth = 1;
 
     // let mut bitboards: Bitboards = Bitboards {
@@ -129,4 +129,4 @@ pub fn test_negamax_benchmark() {
     // let end_time = Instant::now();
     // println!("time to process {:?}", end_time.duration_since(start_time));
     // println!();
-}
+// }

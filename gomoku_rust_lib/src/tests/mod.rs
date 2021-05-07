@@ -52,10 +52,10 @@ use pyo3::prelude::*;
 use pyo3::types::*;
 use std::collections::HashMap;
 
-#[pyfunction]
-pub fn pytest_algorithm_benchmark() {
-    test_algorithm_benchmark::test_negamax_benchmark();
-}
+// #[pyfunction]
+// pub fn pytest_algorithm_benchmark() {
+//     test_algorithm_benchmark::test_negamax_benchmark();
+// }
 
 #[pyfunction]
 pub fn pytest_print_pos_in_human_format() {

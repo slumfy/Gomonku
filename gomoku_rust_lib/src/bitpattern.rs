@@ -5,7 +5,6 @@ use crate::check_move::check_blocker;
 use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
-use crate::check_move::check_one_bit_in_pattern;
 use crate::data_struct::Bitboards;
 use crate::data_struct::BoardStateInfo;
 use crate::global_var;
@@ -49,7 +48,7 @@ fn computing_move(
         return;
     }
     return_pattern_value(board_state_info, axe_pattern[0], pos, player);
-    return_blocker_value(board_state_info, axe_pattern[1], pos, player);
+    return_blocker_value(board_state_info, axe_pattern[1]);
 }
 
 #[allow(dead_code)]
@@ -90,12 +89,9 @@ fn return_pattern_value(
 fn return_blocker_value(
     board_state_info: &mut BoardStateInfo,
     axe_pattern: [(usize, usize); 4],
-    pos: usize,
-    player: i8,
 ) {
     //  println!("blocker on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
-    let mut move_to_win: i8 = 5;
     for pat in 0..axe_pattern.len() {
         if axe_pattern[pat].1 == 2 {
             pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0][0];
@@ -148,12 +144,10 @@ pub fn pattern_axes_finder(
                 &mut return_blocker,
                 blocker_casted,
                 player_casted,
-                bitboards,
                 blocker_is_blocking,
                 &mut found_blocker,
                 axe_index,
                 pos,
-                player,
                 l,
             );
             if return_pattern[0].1 == 5 {
@@ -222,15 +216,13 @@ fn find_blocker(
     return_blocker: &mut [(usize, usize); 4],
     player_casted: u8,
     blocker_casted: u8,
-    bitboards: &mut Bitboards,
     mut is_blocked: usize,
     found_blocker: &mut (usize, usize),
     axe: usize,
     pos: usize,
-    player: i8,
     l: usize,
 ) {
-    let mut blocker_count = 0;
+    let mut blocker_count: usize;
     for p in 1..PATTERN.len() {
         if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
             for b in 0..BLOCKER.len() {
