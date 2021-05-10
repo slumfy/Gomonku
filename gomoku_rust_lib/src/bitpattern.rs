@@ -2,6 +2,7 @@
 
 use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
+use crate::check_move::check_pattern_blocker;
 use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
@@ -192,14 +193,14 @@ fn find_pattern(
             for b in 0..BLOCKER.len() {
                 if BLOCKER[b].1 == PATTERN[p].1 {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
-                    //println!("pattern {}", PATTERN[p].3);
-                    is_blocked = check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
+                    println!("pattern {}", PATTERN[p].3);
+                    is_blocked = check_pattern_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
                 }
             }
             if is_blocked <= 2 && p < found_pattern.0 {
                 found_pattern.0 = p;
                 found_pattern.1 = is_blocked;
-                // println!("{} found {} blocker", PATTERN[p].4, is_blocked);
+                println!("{} found {} blocker", PATTERN[p].4, is_blocked);
                 break;
             }
         }
