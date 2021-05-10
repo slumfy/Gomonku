@@ -28,6 +28,7 @@ mod utils;
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
 // use crate::heuristic::heuristic;
+use bitboards::create_bits_axes_from_pos;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
@@ -211,6 +212,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         (0, 0),
         5,
     );
+    state.axes = create_bits_axes_from_pos(bit_current_move_pos, &mut bitboards);
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
     println!(
