@@ -38,8 +38,12 @@ pub fn heuristic(state: &mut State) -> i32 {
         }
     }
 
-    let axes_development_value = check_potential_winning_alignment(state);
-    println!("axes_development_value {:?}", axes_development_value);
+    let potential_winning_alignment = check_potential_winning_alignment(state);
+    for index in 0..potential_winning_alignment.len() {
+        if potential_winning_alignment[index] {
+            value += heuristic_ratios::HEURISTIC_POSSIBLE_AXE_DEVELOPMENT;
+        }
+    }
     return value;
 }
 
