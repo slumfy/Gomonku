@@ -38,6 +38,7 @@ pub fn heuristic(state: &mut State) -> i32 {
         }
     }
 
+    // Check potential_winning_alignment
     let potential_winning_alignment = check_potential_winning_alignment(state);
     for index in 0..potential_winning_alignment.len() {
         if potential_winning_alignment[index] {
