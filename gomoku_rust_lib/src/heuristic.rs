@@ -1,6 +1,5 @@
 //! Heuristic of our AI.
 
-use crate::check_move::check_move_is_capturing_stone;
 use crate::check_move::check_potential_winning_alignment;
 use crate::check_pos_still_win;
 use crate::checking_and_apply_bits_move;
@@ -57,6 +56,13 @@ pub fn heuristic(state: &mut State) -> i32 {
         if numbers_of_blocker_on_pattern != 3 {
             value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
                 [numbers_of_blocker_on_pattern];
+        }
+
+        let found_blocker_pattern_on_axe = board_state_info.blocker_axe[axe_index].0;
+        let numbers_of_blocker_on_blocked_pattern = board_state_info.blocker_axe[axe_index].1;
+        if numbers_of_blocker_on_blocked_pattern != 3 {
+            value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
+                [numbers_of_blocker_on_blocked_pattern];
         }
     }
     return value;
