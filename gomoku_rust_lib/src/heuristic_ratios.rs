@@ -41,12 +41,12 @@ pub static HEURISTIC_PATTERN: [[i32; 3]; 10] = [
     [
         HEURISTIC_FREE_THREE_IN_A_ROW,
         HEURISTIC_PREVENT_CAPTURE_STONE,
-        0,
+        HEURISTIC_PREVENT_CAPTURE_STONE / 3,
     ], // three  .XXX....
     [
         HEURISTIC_FREE_THREE_IN_A_ROW,
         HEURISTIC_PREVENT_CAPTURE_STONE,
-        0,
+        HEURISTIC_PREVENT_CAPTURE_STONE / 3,
     ], // three2  .XXX....
     [HEURISTIC_FREE_THREE_IN_A_ROW, 0, 0], // split three .X.XX...
     [HEURISTIC_FREE_THREE_IN_A_ROW, 0, 0], // split three rev .XX.X...
