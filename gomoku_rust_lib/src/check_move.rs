@@ -378,9 +378,9 @@ pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool
 
 pub fn check_move_is_capturing_stone(axes: &[u16; 4], blocker_axes: &[u16; 4]) -> i8 {
     let mut stone_captured: i8 = 0;
-    for axe in 0..axes.len() {
-        let mut player_axe = axes[axe];
-        let mut blocker_axe = blocker_axes[axe];
+    for axe_index in 0..axes.len() {
+        let mut player_axe = axes[axe_index];
+        let mut blocker_axe = blocker_axes[axe_index];
         player_axe >>= 1;
         blocker_axe >>= 1;
         let shift: [usize; 2] = [0, 3];

@@ -24,15 +24,13 @@ pub fn heuristic(state: &mut State) -> i32 {
     // Instant return move
     // Check if win by capturing stone
     let stone_captured = check_move_is_capturing_stone(&state.axes[0], &state.axes[1]);
+    println!("stone_captured = {:?}", stone_captured);
     unsafe {
         if stone_captured != 0
-            && state.current_player == global_var::PLAYER_WHITE_NB
-            && global_var::WHITE_CAPTURED_STONE + stone_captured >= 10
-        {
-            return heuristic_ratios::HEURISTIC_CAPTURE_TEN_STONE;
-        } else if stone_captured != 0
-            && state.current_player == global_var::PLAYER_BLACK_NB
-            && global_var::BLACK_CAPTURED_STONE + stone_captured >= 10
+            && ((state.current_player == global_var::PLAYER_WHITE_NB
+                && global_var::WHITE_CAPTURED_STONE + stone_captured >= 10)
+                || (state.current_player == global_var::PLAYER_BLACK_NB
+                    && global_var::BLACK_CAPTURED_STONE + stone_captured >= 10))
         {
             return heuristic_ratios::HEURISTIC_CAPTURE_TEN_STONE;
         }
@@ -40,6 +38,11 @@ pub fn heuristic(state: &mut State) -> i32 {
     // Checking if undefeatable 5, every pattern_axe should be (0 , 5)
     if board_state_info.pattern_axe[0].1 == 5 {
         return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
+    }
+
+    // Add stone captured value
+    if stone_captured != 0 {
+        value += heuristic_ratios::HEURISTIC_CAPTURING_ONE_STONE * stone_captured as i32;
     }
 
     for axe_index in 0..4 {
@@ -52,11 +55,6 @@ pub fn heuristic(state: &mut State) -> i32 {
         // Check pattern on axe and add the value
         let found_pattern_on_axe = board_state_info.pattern_axe[axe_index].0;
         let numbers_of_blocker_on_pattern = board_state_info.pattern_axe[axe_index].1;
-        println!("found_pattern_on_axe : {:?}", found_pattern_on_axe);
-        println!(
-            "numbers_of_blocker_on_pattern : {:?}",
-            numbers_of_blocker_on_pattern
-        );
         if numbers_of_blocker_on_pattern != 3 {
             value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
                 [numbers_of_blocker_on_pattern];

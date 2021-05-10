@@ -100,10 +100,10 @@ class PyGameGo:
         self.display_page(background_page=self.go_settings, return_button=True, sound_status=True)
         self.print_font(
             64,
-            "NEXT THEME",
-            200,
+            "THEME NUMBER : " + str(self.theme_number),
+            145,
             150,
-            "Black",
+            "BLACK_BLUE_ONE",
         )
         pygame.display.flip()
 
@@ -243,7 +243,7 @@ class PyGameGo:
             + BOARD_NOTATION[1][y],
             64,
             680,
-            "Black",
+            "BLACK_BLUE_ONE",
         )
 
     def print_capture_count(self, white_capture_count: int, black_capture_count: int):
@@ -256,7 +256,7 @@ class PyGameGo:
             + str(black_capture_count),
             64,
             660,
-            "Black",
+            "BLACK_BLUE_ONE",
         )
 
     def playing(self, go_rules: GoRules):
@@ -388,12 +388,15 @@ class PyGameGo:
         BLACK = (0, 0, 0)
         WHITE = (255, 255, 255)
         RED = (218, 56, 21)
+        BLACK_BLUE_ONE = (40, 61, 100)
         sysfont = pygame.font.get_default_font()
         font = pygame.font.SysFont(None, size)
         if color == "Black":
             render = font.render(msg, True, BLACK)
         elif color == "Red":
             render = font.render(msg, True, RED)
+        elif color == "BLACK_BLUE_ONE":
+            render = font.render(msg, True, BLACK_BLUE_ONE)
         else:
             render = font.render(msg, True, WHITE)
         self.screen.blit(render, (x, y))

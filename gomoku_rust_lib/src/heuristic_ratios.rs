@@ -18,6 +18,8 @@ pub static _HEURISTIC_FOUR_IN_A_ROW_WITH_ONE_BLOCKER: i32 =
 pub static _HEURISTIC_SIMPLE_BLOCK_TWO_IN_A_ROW: i32 = HEURISTIC_FREE_TWO_IN_A_ROW * 5;
 pub static HEURISTIC_FREE_TWO_IN_A_ROW: i32 = 10;
 pub static HEURISTIC_POSSIBLE_AXE_DEVELOPMENT: i32 = 1;
+// TODO: This heuristic value is not sure
+pub static HEURISTIC_CAPTURING_ONE_STONE: i32 = 15;
 
 //ratio of pattern
 // index 0 for no blocker or 2 blocked
