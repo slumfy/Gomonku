@@ -224,6 +224,24 @@ pub fn check_pattern_blocker(
     }
 	println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b);
     let border_count = check_border(pos, l, axe, PATTERN[p].1);
+	if p == 5 || p == 6 {
+        if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80)
+            || (p == 6 && blocker_checker & 0x4 != 0x4)
+        {
+            return 2;
+        }
+        if b == 1 && hole_value == true && blocker_checker == BLOCKER[b].0 {
+            return 2;
+        }
+        if blocker_checker == BLOCKER[b].0 {
+            return 2;
+        } else if blocker_checker != 0 {
+            if border_count > 0 {
+                return 2;
+            }
+            return 1;
+        }
+    }
 	if PATTERN[p].2 != 0 && hole_value == true && (p != 5 || p != 6) {
         is_blocked = 2;
     } else if blocker_checker == BLOCKER[b].0 && PATTERN[p].2 == 0 {
