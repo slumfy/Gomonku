@@ -37,12 +37,29 @@ pub fn heuristic(state: &mut State) -> i32 {
             return heuristic_ratios::HEURISTIC_CAPTURE_TEN_STONE;
         }
     }
+    // Checking if undefeatable 5, every pattern_axe should be (0 , 5)
+    if board_state_info.pattern_axe[0].1 == 5 {
+        return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
+    }
 
-    // Check potential_winning_alignment
-    let potential_winning_alignment = check_potential_winning_alignment(state);
-    for index in 0..potential_winning_alignment.len() {
-        if potential_winning_alignment[index] {
+    for axe_index in 0..4 {
+        // Check potential_winning_alignment
+        let potential_winning_alignment = check_potential_winning_alignment(state);
+        if potential_winning_alignment[axe_index] {
             value += heuristic_ratios::HEURISTIC_POSSIBLE_AXE_DEVELOPMENT;
+        }
+
+        // Check pattern on axe and add the value
+        let found_pattern_on_axe = board_state_info.pattern_axe[axe_index].0;
+        let numbers_of_blocker_on_pattern = board_state_info.pattern_axe[axe_index].1;
+        println!("found_pattern_on_axe : {:?}", found_pattern_on_axe);
+        println!(
+            "numbers_of_blocker_on_pattern : {:?}",
+            numbers_of_blocker_on_pattern
+        );
+        if numbers_of_blocker_on_pattern != 3 {
+            value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
+                [numbers_of_blocker_on_pattern];
         }
     }
     return value;

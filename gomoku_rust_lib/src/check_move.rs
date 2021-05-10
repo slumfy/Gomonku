@@ -54,11 +54,11 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
-		axe_free_value: [false,false,false,false],
+        axe_free_value: [false, false, false, false],
         pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
-	board_state_info.axe_free_value = check_potential_winning_alignment(state);
+    board_state_info.axe_free_value = check_potential_winning_alignment(state);
     board_state_info.is_wrong_move = check_is_wrong_move(state);
     if board_state_info.is_wrong_move != global_var::VALID_MOVE {
         return board_state_info;
@@ -98,11 +98,11 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         blocker_value: 0,
         is_winning: (0, 0),
         nb_move_to_win: 5,
-		axe_free_value: [false,false,false,false],
+        axe_free_value: [false, false, false, false],
         pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
     };
-	board_state_info.axe_free_value = check_potential_winning_alignment(state);
+    board_state_info.axe_free_value = check_potential_winning_alignment(state);
     pattern_axes_dispatcher(
         &mut board_state_info,
         &mut state.bitboards,
@@ -343,7 +343,6 @@ pub fn check_potential_winning_alignment(state: &State) -> [bool; 4] {
                 free_space += 1;
             }
         }
-        println!("free_space at end : {:?}", free_space);
         if free_space >= 4 {
             axe_free_value[axe_index] = true;
         } else {
