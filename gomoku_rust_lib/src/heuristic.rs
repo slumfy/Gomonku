@@ -20,11 +20,10 @@ pub fn heuristic(state: &mut State) -> i32 {
         return heuristic_ratios::HEURISTIC_MIN_VALUE;
     }
     state.board_info = board_state_info.clone();
+    let stone_captured = state.board_info.stone_captured;
 
     // Instant return move
     // Check if win by capturing stone
-    let stone_captured = check_move_is_capturing_stone(&state.axes[0], &state.axes[1]);
-    println!("stone_captured = {:?}", stone_captured);
     unsafe {
         if stone_captured != 0
             && ((state.current_player == global_var::PLAYER_WHITE_NB
