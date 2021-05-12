@@ -2,9 +2,9 @@ use crate::bitboard_operations::apply_bit;
 // use crate::bitboard_operations::remove_bit;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitpattern::pattern_axes_finder;
-use crate::print::print_board_from_bitboard;
 use crate::data_struct::Bitboards;
 use crate::global_var;
+use crate::print::print_board_from_bitboard;
 
 pub fn test_pattern_axes_finder() {
     let mut bitboards: Bitboards = Bitboards {
@@ -28,7 +28,7 @@ pub fn test_pattern_axes_finder() {
     // Alignement of 2 blocked left 0XX
     apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
     let axes = create_bits_axes_from_pos(pos, &mut bitboards);
-	// print_board_from_bitboard(&bitboards);
+    // print_board_from_bitboard(&bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -258,7 +258,7 @@ fn test_four() {
     )[0];
     assert_eq!(returned_pattern, [(0, 3), (0, 3), (2, 0), (0, 3)]);
 
-    // four next to border 
+    // four next to border
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -269,7 +269,7 @@ fn test_four() {
     apply_bit(&mut bitboards, pos + 36, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 54, global_var::PLAYER_WHITE_NB);
     let axes = create_bits_axes_from_pos(pos, &mut bitboards);
-	// print_board_from_bitboard(&bitboards);
+    // print_board_from_bitboard(&bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
@@ -361,7 +361,6 @@ fn test_four() {
     assert_eq!(returned_pattern, [(4, 1), (0, 3), (0, 3), (0, 3)]);
 }
 
-
 fn test_three() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
@@ -440,13 +439,13 @@ fn test_three() {
     )[0];
     assert_eq!(returned_pattern, [(0, 3), (0, 3), (0, 3), (8, 0)]);
 
-// split three rev rigth border
+    // split three rev rigth border
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
     };
     let pos = 17;
-    apply_bit(&mut bitboards, pos , global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos - 2, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos - 3, global_var::PLAYER_WHITE_NB);
     print_board_from_bitboard(&bitboards);

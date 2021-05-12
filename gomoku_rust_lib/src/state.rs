@@ -39,7 +39,7 @@ pub fn create_new_state(
             blocker_value: 0,
             is_winning: (0, 0),
             nb_move_to_win: 5,
-			axe_free_value: [false,false,false,false],
+            axe_free_value: [false, false, false, false],
             pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },

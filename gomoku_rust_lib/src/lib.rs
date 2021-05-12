@@ -96,7 +96,7 @@ pub fn ai_move(
     search_algorithm: String,
     depth: i32,
 ) -> PyResult<((usize, usize), i32)> {
-    println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
+    // println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
 
@@ -118,8 +118,8 @@ pub fn ai_move(
         nb_move_to_win,
     );
     get_move_info(&mut state);
-    println!("Black move_to_win {}", state.black_move_to_win);
-    println!("White move_to_win {}", state.white_move_to_win);
+    // println!("Black move_to_win {}", state.black_move_to_win);
+    // println!("White move_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
 
     if turn == 0 {
@@ -176,15 +176,15 @@ pub fn ai_move(
 
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
-    println!(
-        "white eat: {:?} black eat: {:?}",
-        white_captured_stone, black_captured_stone
-    );
-    println!(
-        "negamax in board {:?}:{} turn {}",
-        ai_x_move, ALPHABET[ai_y_move as usize], turn
-    );
-    println!("negamax {:?}", ai_move);
+    // println!(
+    //     "white eat: {:?} black eat: {:?}",
+    //     white_captured_stone, black_captured_stone
+    // );
+    // println!(
+    //     "negamax in board {:?}:{} turn {}",
+    //     ai_x_move, ALPHABET[ai_y_move as usize], turn
+    // );
+    // println!("negamax {:?}", ai_move);
     Ok(((ai_x_move, ai_y_move), ai_move.1))
 }
 
@@ -194,7 +194,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     let py = gil.python();
     let dict = PyDict::new(py);
 
-    println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
+    // println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -217,10 +217,10 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     state.axes = create_bits_axes_from_pos(bit_current_move_pos, &mut bitboards);
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
-    println!(
-        "boardstate of returning move {} : {:?}",
-        state.bit_current_move_pos, board_state_info
-    );
+    // println!(
+    //     "boardstate of returning move {} : {:?}",
+    //     state.bit_current_move_pos, board_state_info
+    // );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("nb_move_to_win", board_state_info.nb_move_to_win)?;
@@ -237,9 +237,9 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         if board_state_info.is_winning.1 != 0 {
             dict.set_item("wining_position", board_state_info.is_winning)?;
         }
-        println!("winstate =>> {:?}", board_state_info.is_winning);
+        // println!("winstate =>> {:?}", board_state_info.is_winning);
     } else {
-        println!("Wrong move status = {:?}", board_state_info.is_wrong_move);
+        // println!("Wrong move status = {:?}", board_state_info.is_wrong_move);
         dict.set_item("game_status", board_state_info.is_wrong_move)?;
     }
     board = bitboards::create_vec_from_bitboards(&state.bitboards);
