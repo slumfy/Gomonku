@@ -224,10 +224,10 @@ pub fn negascout_with_transpotable(
 }
 
 pub fn return_move(state: &mut State) -> (usize, i32) {
-    print_heuristic_table(state);
-    // unsafe {
-    //     println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
-    // }
+    // print_heuristic_table(state);
+    unsafe {
+        println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
+    }
     // for child in 0..state.available_move.len() {
     //     println!(
     //         "child {} heuristic {} pos {}",

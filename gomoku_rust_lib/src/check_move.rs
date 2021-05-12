@@ -281,7 +281,7 @@ pub fn check_blocker(
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
     let border_count = check_border(pos, l, axe, PATTERN[p].1);
-	println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}, patternlenght {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value, PATTERN[p].1);
+	// println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}, patternlenght {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value, PATTERN[p].1);
     if p == 5 || p == 6 {
         if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80)
             || (p == 6 && blocker_checker & 0x4 != 0x4)
