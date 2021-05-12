@@ -6,6 +6,7 @@ from go_rules import GoRules
 from player import Player
 from utils import logger_factory
 from global_var import (
+    ALGORITHM,
     BOARD_NOTATION,
     MAIN_WINDOW_SIZE,
     STONE_SIZE,
@@ -113,6 +114,13 @@ class PyGameGo:
             250,
             "BLACK_BLUE_ONE",
         )
+        self.print_font(
+            64,
+            "Algorithm: " + self.search_algorithm,
+            145,
+            350,
+            "BLACK_BLUE_ONE",
+        )
         pygame.display.flip()
 
     def settings(self):
@@ -123,7 +131,7 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # print(event.pos)
+                    print(event.pos)
                     # Return to menu button
                     if (
                         event.pos[1] >= 0
@@ -165,6 +173,18 @@ class PyGameGo:
                     elif (event.pos[0] > 300 and event.pos[0] < 325 and event.pos[1] > 265 and event.pos[1] < 285):
                         if self.depth > 1:
                             self.depth -= 1
+                        self.display_setting_page()
+                    # change algorithm
+                    elif event.pos[1] >= 300 and event.pos[1] < 400:
+                        for algo in range(0,ALGORITHM.__len__()):
+                            print(algo)
+                            print(ALGORITHM[algo],self.search_algorithm)
+                            if algo == ALGORITHM.__len__() - 1:
+                                self.search_algorithm = ALGORITHM[0]
+                                break
+                            if ALGORITHM[algo] == self.search_algorithm:
+                                self.search_algorithm = ALGORITHM[algo + 1]
+                                break
                         self.display_setting_page()
                     # Click on sound icon
                     elif (

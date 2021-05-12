@@ -109,7 +109,7 @@ pub fn ai_move(
     let ai_move: (usize, i32);
     let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
-        -player,
+        -player, 
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
@@ -137,7 +137,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 1,
             );
-        } else if search_algorithm == "negamax_with_transpotable" {
+        } else if search_algorithm == "negamax_tt" {
             println!("using negamax_with_transpotable");
             algorithms::negamax_with_transpotable(
                 &mut state,
@@ -155,7 +155,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-        } else if search_algorithm == "negascout_with_transpotable" {
+        } else if search_algorithm == "negascout_tt" {
             println!("using negascout_with_transpotable");
             algorithms::negascout_with_transpotable(
                 &mut state,

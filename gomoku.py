@@ -27,15 +27,15 @@ def main(argv=None):
         help="Disable or enable Search box.",
         action="store_true",
     )
-    parser.add_argument(
-        "--search_algorithm",
-        help="""
-    - negamax
-    - negamax_with_transpotable
-    - negascout
-    - negascout_with_transpotable""",
-        default="negamax",
-    )
+    # parser.add_argument(
+    #     "--search_algorithm",
+    #     help="""
+    # - negamax
+    # - negamax_with_transpotable
+    # - negascout
+    # - negascout_with_transpotable""",
+    #     default="negamax",
+    # )
     args = parser.parse_args(argv)
     go_rules = GoRules(ai_helper=args.no_ai_helper)
     game = PyGameGo(

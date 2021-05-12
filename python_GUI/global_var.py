@@ -59,3 +59,5 @@ PLAYER_BLACK_NB = -1
 class PlayerType(Enum):
     HUMAN = 0
     AI = 1
+
+ALGORITHM = ["negamax", "negamax_tt", "negascout", "negascout_tt"]
