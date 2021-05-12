@@ -93,6 +93,7 @@ pub fn ai_move(
     nb_move_to_win: i8,
     display_ai_time: bool,
     search_algorithm: String,
+	depth: i32,
 ) -> PyResult<((usize, usize), i32)> {
     println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
@@ -130,7 +131,7 @@ pub fn ai_move(
             // For alpha, sending  min value + 1 to prevent overflow when changing sign.
             algorithms::negamax(
                 &mut state,
-                global_var::DEPTH,
+                depth,
                 heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 1,
@@ -139,8 +140,8 @@ pub fn ai_move(
             println!("using negamax_with_transpotable");
             algorithms::negamax_with_transpotable(
                 &mut state,
-                global_var::DEPTH,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                depth,
+                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
@@ -148,8 +149,8 @@ pub fn ai_move(
             println!("using negascout");
             algorithms::negascout(
                 &mut state,
-                global_var::DEPTH,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                depth,
+                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
@@ -157,8 +158,8 @@ pub fn ai_move(
             println!("using negascout_with_transpotable");
             algorithms::negascout_with_transpotable(
                 &mut state,
-                global_var::DEPTH,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                depth,
+                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );

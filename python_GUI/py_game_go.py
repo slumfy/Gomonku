@@ -29,6 +29,7 @@ class PyGameGo:
         self.search_algorithm = search_algorithm
 
         self.logger = logger_factory("PyGameGo")
+        self.depth = 1
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
@@ -105,6 +106,13 @@ class PyGameGo:
             150,
             "BLACK_BLUE_ONE",
         )
+        self.print_font(
+            64,
+            "Depth: " + "< " + str("{:<2}").format(self.depth) + " >",
+            145,
+            250,
+            "BLACK_BLUE_ONE",
+        )
         pygame.display.flip()
 
     def settings(self):
@@ -115,6 +123,7 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
+                    # print(event.pos)
                     # Return to menu button
                     if (
                         event.pos[1] >= 0
@@ -146,6 +155,16 @@ class PyGameGo:
                         self.go_board_resize = pygame.transform.scale(
                             self.go_board, MAIN_WINDOW_SIZE
                         )
+                        self.display_setting_page()
+                    # add depth
+                    elif (event.pos[0] > 385 and event.pos[0] < 425 and event.pos[1] > 265 and event.pos[1] < 285):
+                        if self.depth < 99:
+                            self.depth += 1
+                        self.display_setting_page()
+                    # substract depth
+                    elif (event.pos[0] > 300 and event.pos[0] < 325 and event.pos[1] > 265 and event.pos[1] < 285):
+                        if self.depth > 1:
+                            self.depth -= 1
                         self.display_setting_page()
                     # Click on sound icon
                     elif (
@@ -280,7 +299,8 @@ class PyGameGo:
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
                 AI_move = go_rules.AI_move(
-                    self.player, x, y, self.moves_count, self.display_ai_time, self.search_algorithm
+                    self.player, x, y, self.moves_count, self.display_ai_time,
+                    self.search_algorithm, self.depth
                 )
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)

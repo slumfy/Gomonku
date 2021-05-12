@@ -3,6 +3,9 @@ use crate::data_struct::Transpotablenode;
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
+pub static mut TRANSPOTABLENEGA: Vec<Transpotablenode> = vec![];
+pub static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![];
+
 pub fn transposition_table_push(state: &State, depth: i32, transpo_table: &mut Vec<Transpotablenode>) {
     let mut hash = DefaultHasher::new();
     state.bitboards.hash(&mut hash);
