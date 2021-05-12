@@ -191,16 +191,16 @@ fn find_pattern(
                 }
             }
             for b in 0..BLOCKER.len() {
-                if BLOCKER[b].1 == PATTERN[p].1 {
+                if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && (p == 5 || p == 6) {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
-                    println!("pattern {}", PATTERN[p].3);
+                    // println!("pattern {}", PATTERN[p].3);
                     is_blocked = check_pattern_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
                 }
             }
-            if is_blocked <= 2 && p < found_pattern.0 {
+            if is_blocked <= 2 && (is_blocked > found_pattern.1 || p < found_pattern.0) {
                 found_pattern.0 = p;
                 found_pattern.1 = is_blocked;
-                println!("{} found {} blocker", PATTERN[p].4, is_blocked);
+                // println!("{} found {} blocker", PATTERN[p].3, is_blocked);
                 break;
             }
         }
@@ -231,13 +231,13 @@ fn find_blocker(
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
                     blocker_count =
                         check_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
-                    // println!("pattern {}, isblocked {}, blocker_count {} b = {}", PATTERN[p].3,is_blocked,blocker_count, b);
+                    println!("pattern {}, isblocked {}, blocker_count {} b = {}", PATTERN[p].3,is_blocked,blocker_count, b);
                     if is_blocked < blocker_count {
                         is_blocked = blocker_count;
                     }
                 }
             }
-            // println!("{} found {} blocker l = {} p = {}", PATTERN[p].3, is_blocked, l,p);
+            println!("{} found {} blocker l = {} p = {}", PATTERN[p].3, is_blocked, l,p);
             if is_blocked == 3 || (is_blocked > 0 && p < found_blocker.0) {
                 if is_blocked == 3 {
                     found_blocker.0 = 0;
