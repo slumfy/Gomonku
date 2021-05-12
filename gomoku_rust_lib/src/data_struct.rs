@@ -5,6 +5,13 @@ pub struct Bitboards {
     pub black_board: [u64; 6],
 }
 
+/// Transpo table Node
+pub struct Transpotablenode {
+    pub hash: u64,
+    pub depth: i32,
+    pub value: i32,
+}
+
 /// State struct corresponding to an instant board value for a given player.
 pub struct State {
     pub bitboards: Bitboards,

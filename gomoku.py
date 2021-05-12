@@ -1,5 +1,6 @@
 import argparse
-
+import sys
+sys.path.append('./python_GUI/')
 from go_rules import GoRules
 from py_game_go import PyGameGo
 

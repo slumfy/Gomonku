@@ -23,6 +23,7 @@ mod search_space;
 mod state;
 mod tests;
 mod utils;
+mod transpotable;
 
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
