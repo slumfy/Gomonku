@@ -102,6 +102,7 @@ pub fn ai_move(
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
+		global_var::DEPTH = depth;
     }
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
     let bit_current_move_pos: usize = x * 19 + y;

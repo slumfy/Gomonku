@@ -3,7 +3,7 @@
 use std::collections::HashMap;
 
 // Search algorithm global vars
-pub static DEPTH: i32 = 3;
+pub static mut DEPTH: i32 = 1;
 // depth reach with negamax
 pub static mut MAX_DEPTH_REACH: i32 = 0;
 // nb of node checked by negamax
