@@ -1,20 +1,20 @@
 //! Four algorithms use by the AI.
 
 use crate::data_struct::State;
+use crate::data_struct::Transpotablenode;
 use crate::global_var;
 use crate::heuristic_ratios;
 use crate::print::print_heuristic_table;
 use crate::state::create_child;
 use crate::state::state_is_terminated;
-use std::cmp::Reverse;
-use crate::data_struct::Transpotablenode;
-use crate::transpotable::transposition_table_search;
 use crate::transpotable::transposition_table_push;
+use crate::transpotable::transposition_table_search;
 use crate::transpotable::TRANSPOTABLENEGA;
 use crate::transpotable::TRANSPOTABLESCOUT;
+use std::cmp::Reverse;
 
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
-	update_node_checked_count();
+    update_node_checked_count();
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
         return state.heuristic * color as i32;
@@ -64,15 +64,15 @@ fn update_max_depth(depth: i32) {
 }
 
 fn update_node_checked_count() {
-	unsafe {
-		global_var::NODE_CHECKED_COUNT += 1;
-	}
+    unsafe {
+        global_var::NODE_CHECKED_COUNT += 1;
+    }
 }
 
 fn reset_node_checked_count() {
-	unsafe {
-		global_var::NODE_CHECKED_COUNT = 0;
-	}
+    unsafe {
+        global_var::NODE_CHECKED_COUNT = 0;
+    }
 }
 
 pub fn negamax_with_transpotable(
@@ -237,12 +237,12 @@ pub fn negascout_with_transpotable(
 }
 
 pub fn return_move(state: &mut State) -> (usize, i32) {
-    // print_heuristic_table(state);
+    print_heuristic_table(state);
     unsafe {
         println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
-		println!("nb of node checked: {:?}", global_var::NODE_CHECKED_COUNT);
+        println!("nb of node checked: {:?}", global_var::NODE_CHECKED_COUNT);
     }
-	reset_node_checked_count();
+    reset_node_checked_count();
     // for child in 0..state.available_move.len() {
     //     println!(
     //         "child {} heuristic {} pos {}",
@@ -257,5 +257,3 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
         state.available_move[0].heuristic,
     );
 }
-
-

@@ -53,6 +53,7 @@ pub fn heuristic(state: &mut State) -> i32 {
         // Check pattern on axe and add the value
         let found_pattern_on_axe = board_state_info.pattern_axe[axe_index].0;
         let numbers_of_blocker_on_pattern = board_state_info.pattern_axe[axe_index].1;
+        // Blocker value of 3 means no pattern found
         if numbers_of_blocker_on_pattern != 3 {
             value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
                 [numbers_of_blocker_on_pattern];
@@ -60,6 +61,7 @@ pub fn heuristic(state: &mut State) -> i32 {
 
         let found_blocker_pattern_on_axe = board_state_info.blocker_axe[axe_index].0;
         let numbers_of_blocker_on_blocked_pattern = board_state_info.blocker_axe[axe_index].1;
+        // Blocker value of 3 means no pattern found
         if numbers_of_blocker_on_blocked_pattern != 3 {
             value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
                 [numbers_of_blocker_on_blocked_pattern];
