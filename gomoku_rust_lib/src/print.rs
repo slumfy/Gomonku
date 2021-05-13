@@ -54,13 +54,51 @@ pub fn print_heuristic_table(state: &State) {
                 {
                     if state.available_move[idx].heuristic >= heuristic_ratios::HEURISTIC_MAX_VALUE
                     {
-                        line.push("MAX".to_string());
+                        line.push(" MAX ".to_string());
                     } else if state.available_move[idx].heuristic
                         <= heuristic_ratios::HEURISTIC_MIN_VALUE
                     {
-                        line.push("MIN".to_string());
+                        line.push(" MIN ".to_string());
                     } else {
-                        line.push(state.available_move[idx].heuristic.to_string());
+                        // Printing Million value move
+                        if state.available_move[idx].heuristic >= 1000000
+                            || state.available_move[idx].heuristic <= -1000000
+                        {
+                            line.push(
+                                vec![
+                                    " ".to_string(),
+                                    (state.available_move[idx].heuristic / 1000000).to_string(),
+                                    "M ".to_string(),
+                                ]
+                                .join(""),
+                            );
+                        }
+                        // Printing Kilo value move
+                        else if (state.available_move[idx].heuristic >= 1000
+                            && state.available_move[idx].heuristic < 1000000)
+                            || (state.available_move[idx].heuristic <= -1000
+                                && state.available_move[idx].heuristic > -1000000)
+                        {
+                            line.push(
+                                vec![
+                                    " ".to_string(),
+                                    (state.available_move[idx].heuristic / 1000).to_string(),
+                                    "K ".to_string(),
+                                ]
+                                .join(""),
+                            );
+                        }
+                        // Printing Small value move
+                        else {
+                            line.push(
+                                vec![
+                                    " ".to_string(),
+                                    state.available_move[idx].heuristic.to_string(),
+                                    " ".to_string(),
+                                ]
+                                .join(""),
+                            );
+                        }
                     }
                     trigger = 1;
                 }
@@ -71,11 +109,11 @@ pub fn print_heuristic_table(state: &State) {
                     if pos == box_list[b] {
                         let color = check_stone_color(pos, &state.bitboards);
                         if color == global_var::PLAYER_WHITE_NB {
-                            line.push("*".to_string());
+                            line.push(" * ".to_string());
                         } else if color == global_var::PLAYER_BLACK_NB {
-                            line.push("°".to_string());
+                            line.push(" ° ".to_string());
                         } else {
-                            line.push("/".to_string());
+                            line.push(" / ".to_string());
                         }
                         trigger = 1;
                     }
