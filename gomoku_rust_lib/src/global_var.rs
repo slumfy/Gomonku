@@ -8,6 +8,8 @@ pub static mut DEPTH: i32 = 1;
 pub static mut MAX_DEPTH_REACH: i32 = 0;
 // nb of node checked by negamax
 pub static mut NODE_CHECKED_COUNT: i32 = 0;
+// nb of pruning cut
+pub static mut PRUNING_COUNT: i32 = 0;
 // Capturing stone count
 pub static mut WHITE_CAPTURED_STONE: i8 = 0;
 pub static mut BLACK_CAPTURED_STONE: i8 = 0;

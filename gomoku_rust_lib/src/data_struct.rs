@@ -13,6 +13,7 @@ pub struct Transpotablenode {
 }
 
 /// State struct corresponding to an instant board value for a given player.
+#[derive(Clone)]
 pub struct State {
     pub bitboards: Bitboards,
     pub available_move: Vec<State>,
