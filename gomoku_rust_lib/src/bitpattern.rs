@@ -184,20 +184,16 @@ fn find_pattern(
                 {
                     *return_pattern = [(0, 5), (0, 5), (0, 5), (0, 5)];
                     break;
-                } else {
-                    found_pattern.0 = 0;
-                    found_pattern.1 = 0;
-                    break;
                 }
             }
             for b in 0..BLOCKER.len() {
                 if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && (p == 5 || p == 6) {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
-                    // println!("pattern {}", PATTERN[p].3);
                     is_blocked = check_pattern_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
-                }
+					// println!("pattern {} is blocked {}", PATTERN[p].3, is_blocked);
+				}
             }
-            if is_blocked <= 2 && (is_blocked > found_pattern.1 || p < found_pattern.0) {
+            if is_blocked <= 2 && found_pattern.0 != 0 && (is_blocked > found_pattern.1 || p < found_pattern.0) {
                 found_pattern.0 = p;
                 found_pattern.1 = is_blocked;
                 // println!("{} found {} blocker", PATTERN[p].3, is_blocked);

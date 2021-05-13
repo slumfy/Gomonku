@@ -75,6 +75,18 @@ fn reset_node_checked_count() {
     }
 }
 
+fn update_pruning_count() {
+    unsafe {
+        global_var::PRUNING_COUNT += 1;
+    }
+}
+
+fn reset_pruning_count() {
+    unsafe {
+        global_var::PRUNING_COUNT = 0;
+    }
+}
+
 pub fn negamax_with_transpotable(
     mut state: &mut State,
     depth: i32,
@@ -108,6 +120,7 @@ pub fn negamax_with_transpotable(
         value = std::cmp::max(value, negamax);
         alpha = std::cmp::max(alpha, value);
         if alpha >= beta {
+			update_pruning_count();
             // println!("pruning");
             break;
         }
@@ -241,8 +254,10 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
     unsafe {
         println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
         println!("nb of node checked: {:?}", global_var::NODE_CHECKED_COUNT);
+		println!("pruning count: {:?}", global_var::PRUNING_COUNT);
     }
     reset_node_checked_count();
+	reset_pruning_count();
     // for child in 0..state.available_move.len() {
     //     println!(
     //         "child {} heuristic {} pos {}",
