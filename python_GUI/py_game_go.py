@@ -165,20 +165,30 @@ class PyGameGo:
                         )
                         self.display_setting_page()
                     # add depth
-                    elif (event.pos[0] > 385 and event.pos[0] < 425 and event.pos[1] > 265 and event.pos[1] < 285):
-                        if self.depth < 99:
+                    elif (
+                        event.pos[0] > 385
+                        and event.pos[0] < 425
+                        and event.pos[1] > 265
+                        and event.pos[1] < 285
+                    ):
+                        if self.depth < 10:
                             self.depth += 1
                         self.display_setting_page()
                     # substract depth
-                    elif (event.pos[0] > 300 and event.pos[0] < 325 and event.pos[1] > 265 and event.pos[1] < 285):
+                    elif (
+                        event.pos[0] > 300
+                        and event.pos[0] < 325
+                        and event.pos[1] > 265
+                        and event.pos[1] < 285
+                    ):
                         if self.depth > 1:
                             self.depth -= 1
                         self.display_setting_page()
                     # change algorithm
                     elif event.pos[1] >= 300 and event.pos[1] < 400:
-                        for algo in range(0,ALGORITHM.__len__()):
+                        for algo in range(0, ALGORITHM.__len__()):
                             print(algo)
-                            print(ALGORITHM[algo],self.search_algorithm)
+                            print(ALGORITHM[algo], self.search_algorithm)
                             if algo == ALGORITHM.__len__() - 1:
                                 self.search_algorithm = ALGORITHM[0]
                                 break
@@ -319,8 +329,13 @@ class PyGameGo:
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
                 AI_move = go_rules.AI_move(
-                    self.player, x, y, self.moves_count, self.display_ai_time,
-                    self.search_algorithm, self.depth
+                    self.player,
+                    x,
+                    y,
+                    self.moves_count,
+                    self.display_ai_time,
+                    self.search_algorithm,
+                    self.depth,
                 )
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)

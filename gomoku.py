@@ -1,6 +1,7 @@
 import argparse
 import sys
-sys.path.append('./python_GUI/')
+
+sys.path.append("./python_GUI/")
 from go_rules import GoRules
 from py_game_go import PyGameGo
 
@@ -27,16 +28,18 @@ def main(argv=None):
         help="Disable or enable Search box.",
         action="store_true",
     )
-    # parser.add_argument(
-    #     "--search_algorithm",
-    #     help="""
-    # - negamax
-    # - negamax_with_transpotable
-    # - negascout
-    # - negascout_with_transpotable""",
-    #     default="negamax",
-    # )
+    parser.add_argument(
+        "--search_algorithm",
+        choices=["negamax", "negamax_tt", "negascout", "negascout_tt"],
+        help="""
+    - negamax
+    - negamax_tt
+    - negascout
+    - negascout_tt""",
+        default="negamax",
+    )
     args = parser.parse_args(argv)
+    print("search_algorithm = ", args.search_algorithm)
     go_rules = GoRules(ai_helper=args.no_ai_helper)
     game = PyGameGo(
         sound_status=not args.no_sound,
