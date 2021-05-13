@@ -22,8 +22,8 @@ mod print;
 mod search_space;
 mod state;
 mod tests;
-mod utils;
 mod transpotable;
+mod utils;
 
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
@@ -32,6 +32,7 @@ use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
 
+use tests::__pyo3_get_function_pytest_ai_move;
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
 use tests::__pyo3_get_function_pytest_check_is_unblockable_five;
 use tests::__pyo3_get_function_pytest_check_potential_winning_alignment;
@@ -93,7 +94,7 @@ pub fn ai_move(
     nb_move_to_win: i8,
     display_ai_time: bool,
     search_algorithm: String,
-	depth: i32,
+    depth: i32,
 ) -> PyResult<((usize, usize), i32)> {
     println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
@@ -102,14 +103,14 @@ pub fn ai_move(
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
-		global_var::DEPTH = depth;
+        global_var::DEPTH = depth;
     }
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
     let bit_current_move_pos: usize = x * 19 + y;
     let ai_move: (usize, i32);
     let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
-        -player, 
+        -player,
         bit_current_move_pos,
         white_captured_stone,
         black_captured_stone,
@@ -268,6 +269,7 @@ fn reset_game() {
 /// A Python module implemented in Rust.
 #[pymodule]
 pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(pytest_ai_move, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_returning_dict_to_python, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_updating_from_other_function, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_get_pydict, m)?)?;

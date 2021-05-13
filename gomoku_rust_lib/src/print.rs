@@ -46,7 +46,30 @@ pub fn print_heuristic_table(state: &State) {
     let mut trigger = 0;
     let box_list = get_search_box_bitboard(&state.bitboards);
 
+    line.push("".to_string());
+    line.push("  A".to_string());
+    line.push("  B".to_string());
+    line.push("  C".to_string());
+    line.push("  D".to_string());
+    line.push("  E".to_string());
+    line.push("  F".to_string());
+    line.push("  G".to_string());
+    line.push("  H".to_string());
+    line.push("  I".to_string());
+    line.push("  J".to_string());
+    line.push("  K".to_string());
+    line.push("  L".to_string());
+    line.push("  M".to_string());
+    line.push("  N".to_string());
+    line.push("  O".to_string());
+    line.push("  P".to_string());
+    line.push("  Q".to_string());
+    line.push("  R".to_string());
+    line.push("  S".to_string());
+    table.push(line);
+    line = vec![];
     for x in 0..19 {
+        line.push(x.to_string());
         for y in 0..19 {
             for idx in 0..len {
                 if (state.available_move[idx].bit_current_move_pos) / 19 == x
@@ -54,11 +77,11 @@ pub fn print_heuristic_table(state: &State) {
                 {
                     if state.available_move[idx].heuristic >= heuristic_ratios::HEURISTIC_MAX_VALUE
                     {
-                        line.push(" MAX ".to_string());
+                        line.push("MAX".to_string());
                     } else if state.available_move[idx].heuristic
                         <= heuristic_ratios::HEURISTIC_MIN_VALUE
                     {
-                        line.push(" MIN ".to_string());
+                        line.push("MIN".to_string());
                     } else {
                         // Printing Million value move
                         if state.available_move[idx].heuristic >= 1000000
@@ -66,9 +89,9 @@ pub fn print_heuristic_table(state: &State) {
                         {
                             line.push(
                                 vec![
-                                    " ".to_string(),
+                                    "".to_string(),
                                     (state.available_move[idx].heuristic / 1000000).to_string(),
-                                    "M ".to_string(),
+                                    "M".to_string(),
                                 ]
                                 .join(""),
                             );
@@ -81,9 +104,9 @@ pub fn print_heuristic_table(state: &State) {
                         {
                             line.push(
                                 vec![
-                                    " ".to_string(),
+                                    "".to_string(),
                                     (state.available_move[idx].heuristic / 1000).to_string(),
-                                    "K ".to_string(),
+                                    "K".to_string(),
                                 ]
                                 .join(""),
                             );
@@ -129,8 +152,8 @@ pub fn print_heuristic_table(state: &State) {
         line = vec![];
     }
     println!("heuristic table:");
-    for x in 0..table.len() {
-        for y in 0..table.len() {
+    for x in 0..(table.len()) {
+        for y in 0..(table.len()) {
             print!("{:5}", table[x][y]);
         }
         println!("");
@@ -172,7 +195,14 @@ pub fn print_bitboards(bitboards: &Bitboards, player_color: i8) {
 pub fn print_board_from_bitboard(bitboards: &Bitboards) {
     let board = create_vec_from_bitboards(bitboards);
     println!();
+    println!("    A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S");
+    let mut x = 0;
     for board_box in board {
+        print!("{:?} ", x);
+        if x < 10 {
+            print!(" ");
+        }
+        x += 1;
         println!("{:?}", board_box);
     }
 }

@@ -3,12 +3,14 @@
 extern crate pyo3;
 
 mod test_algorithm_benchmark;
+mod test_check_ai_move;
 mod test_check_is_unblockable_five;
 mod test_check_potential_winning_alignment;
 mod test_is_on_axe;
 mod test_pattern_axes_finder;
 mod test_pattern_blocker;
 mod test_print;
+use test_check_ai_move::test_ai_move;
 use test_check_is_unblockable_five::test_check_is_unblockable_five;
 use test_check_potential_winning_alignment::test_check_potential_winning_alignment;
 use test_is_on_axe::test_is_on_axe;
@@ -60,6 +62,11 @@ pub fn pytest_algorithm_benchmark() {
 #[pyfunction]
 pub fn pytest_print_pos_in_human_format() {
     test_print::test_print_pos_in_human_format();
+}
+
+#[pyfunction]
+pub fn pytest_ai_move() {
+    test_ai_move();
 }
 
 #[pyfunction]
