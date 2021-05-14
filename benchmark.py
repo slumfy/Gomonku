@@ -7,8 +7,7 @@ except ImportError:
     # Build rust lib
     process = subprocess.Popen("rust_compilation_release.sh", shell=True, stdout=subprocess.PIPE)
     process.wait()
-    print(process.returncode)
-import gomoku_rust
+    import gomoku_rust
 
 
 def benchmark_test():
