@@ -59,6 +59,16 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     let index_box: Vec<usize> = get_search_box_bitboard(&state.bitboards);
     let len = index_box.len();
     childs_list = Vec::new();
+	let mut saved_child = create_new_state(
+		&mut state.bitboards.clone(),
+		-state.current_player,
+		index_box[0],
+		state.white_captured_stone,
+		state.black_captured_stone,
+		state.win_state,
+		0,
+	);
+	saved_child.heuristic = 0;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let bit_current_move_pos: usize = index_box[pos];
@@ -77,10 +87,34 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             nb_move_to_win,
         );
         child.heuristic = heuristic(&mut child);
-        if child.is_playable == 0 {
-            childs_list.push(child);
+		if pos == 0 || child.heuristic > saved_child.heuristic {
+			saved_child = child.clone();
+		}
+		//TEST improved selection
+		let mut playable: bool = false;
+		if child.heuristic == heuristic_ratios::HEURISTIC_MAX_VALUE {
+			childs_list.clear();
+			childs_list.push(child);
+			break;
+		}
+        if child.is_playable == 0 && child.heuristic != heuristic_ratios::HEURISTIC_MIN_VALUE {
+			for x in 0..4 {
+				if child.board_info.pattern_axe[x].1 != 3 {
+				playable = true;
+				}
+				if child.board_info.blocker_axe[x].1 != 3 {
+					playable = true;
+				}
+			}
         }
+		if playable == true {
+			childs_list.push(child);
+		}
     }
+	if childs_list.len() == 0 {
+		childs_list.push(saved_child);
+	}
+	// END TEST
     return childs_list;
 }
 

@@ -41,6 +41,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 1;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -68,6 +69,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 2;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -96,6 +98,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 3;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -124,6 +127,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 4;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -152,6 +156,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 5;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -180,6 +185,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 6;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -208,6 +214,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 7;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -236,6 +243,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 8;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -264,6 +272,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 9;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
@@ -292,6 +301,7 @@ pub fn test_negamax_benchmark() {
     let mut copy_state = state.clone();
     let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 10;
+		unsafe{global_var::DEPTH = depth;}
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
         algorithms::negamax(
