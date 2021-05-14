@@ -69,7 +69,7 @@ pub fn print_heuristic_table(state: &State) {
     table.push(line);
     line = vec![];
     for x in 0..19 {
-        line.push(x.to_string());
+        line.push((19 - x).to_string());
         for y in 0..19 {
             for idx in 0..len {
                 if (state.available_move[idx].bit_current_move_pos) / 19 == x
