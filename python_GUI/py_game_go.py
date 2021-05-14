@@ -416,7 +416,7 @@ class PyGameGo:
             "Turn :  "
             + str(math.floor((self.moves_count + 1) / 2))
             + "  "
-            + self.player.color
+            + ("White" if self.player.color == "Black" else "Black")
             + "  previous move: "
             + BOARD_NOTATION[0][x]
             + BOARD_NOTATION[1][y],
