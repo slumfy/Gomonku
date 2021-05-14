@@ -14,6 +14,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 lazy_static = "1.4.0"
+stoppable_thread = "0.2.1"
 
 [dependencies.pyo3]
 version = "0.13.2"

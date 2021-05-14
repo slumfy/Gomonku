@@ -11,6 +11,10 @@ args = ["clean"]
 command = "cargo"
 args = ["build"]
 
+[tasks.build-release]
+command = "cargo"
+args = ["build", "--release"]
+
 [tasks.re]
 dependencies = [
     "clean",

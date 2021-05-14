@@ -43,7 +43,7 @@ pub struct BoardStateInfo {
     pub blocker_value: i32,
     pub is_winning: (usize, i8),
     pub nb_move_to_win: i8,
-	pub axe_free_value: [bool; 4],
+    pub axe_free_value: [bool; 4],
     pub pattern_axe: [(usize, usize); 4],
     pub blocker_axe: [(usize, usize); 4],
 }

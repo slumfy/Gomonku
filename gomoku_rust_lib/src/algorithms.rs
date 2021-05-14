@@ -120,7 +120,7 @@ pub fn negamax_with_transpotable(
         value = std::cmp::max(value, negamax);
         alpha = std::cmp::max(alpha, value);
         if alpha >= beta {
-			update_pruning_count();
+            update_pruning_count();
             // println!("pruning");
             break;
         }
@@ -128,7 +128,7 @@ pub fn negamax_with_transpotable(
     unsafe {
         transposition_table_push(state, depth, &mut TRANSPOTABLENEGA);
     }
-    // // println!("alpha {}  beta {}", alpha, beta);
+    // println!("alpha {}  beta {}", alpha, beta);
     state.heuristic = value;
     return value;
 }
@@ -179,7 +179,7 @@ pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, c
             break;
         }
     }
-    // // println!("alpha {}  beta {}", alpha, beta);
+    // println!("alpha {}  beta {}", alpha, beta);
     state.heuristic = alpha;
     return alpha;
 }
@@ -244,7 +244,7 @@ pub fn negascout_with_transpotable(
     unsafe {
         transposition_table_push(state, depth, &mut TRANSPOTABLESCOUT);
     }
-    // // println!("alpha {}  beta {}", alpha, beta);
+    // println!("alpha {}  beta {}", alpha, beta);
     state.heuristic = alpha;
     return alpha;
 }
@@ -254,10 +254,10 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
     unsafe {
         println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
         println!("nb of node checked: {:?}", global_var::NODE_CHECKED_COUNT);
-		println!("pruning count: {:?}", global_var::PRUNING_COUNT);
+        println!("pruning count: {:?}", global_var::PRUNING_COUNT);
     }
     reset_node_checked_count();
-	reset_pruning_count();
+    reset_pruning_count();
     // for child in 0..state.available_move.len() {
     //     println!(
     //         "child {} heuristic {} pos {}",

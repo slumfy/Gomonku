@@ -2,10 +2,10 @@
 
 use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
-use crate::check_move::check_pattern_blocker;
 use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
 use crate::check_move::check_is_unblockable_five;
+use crate::check_move::check_pattern_blocker;
 use crate::data_struct::Bitboards;
 use crate::data_struct::BoardStateInfo;
 use crate::global_var;
@@ -87,10 +87,7 @@ fn return_pattern_value(
     board_state_info.pattern_value += pattern_value;
 }
 
-fn return_blocker_value(
-    board_state_info: &mut BoardStateInfo,
-    axe_pattern: [(usize, usize); 4],
-) {
+fn return_blocker_value(board_state_info: &mut BoardStateInfo, axe_pattern: [(usize, usize); 4]) {
     //  println!("blocker on axe {:?}", axe_pattern);
     let mut pat_value: i32 = 0;
     for pat in 0..axe_pattern.len() {
@@ -189,11 +186,15 @@ fn find_pattern(
             for b in 0..BLOCKER.len() {
                 if BLOCKER[b].1 == PATTERN[p].1 || BLOCKER[b].1 == 6 && (p == 5 || p == 6) {
                     let blocker_checker: u8 = blocker_casted & BLOCKER[b].0;
-                    is_blocked = check_pattern_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
-					// println!("pattern {} is blocked {}", PATTERN[p].3, is_blocked);
-				}
+                    is_blocked =
+                        check_pattern_blocker(blocker_checker, blocker_casted, pos, b, p, l, axe);
+                    // println!("pattern {} is blocked {}", PATTERN[p].3, is_blocked);
+                }
             }
-            if is_blocked <= 2 && found_pattern.0 != 0 && (is_blocked > found_pattern.1 || p < found_pattern.0) {
+            if is_blocked <= 2
+                && found_pattern.0 != 0
+                && (is_blocked > found_pattern.1 || p < found_pattern.0)
+            {
                 found_pattern.0 = p;
                 found_pattern.1 = is_blocked;
                 // println!("{} found {} blocker", PATTERN[p].3, is_blocked);

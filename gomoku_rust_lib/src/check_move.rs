@@ -217,24 +217,25 @@ pub fn check_pattern_blocker(
     l: usize,
     axe: usize,
 ) -> usize {
-	let mut is_blocked: usize;
+    let mut is_blocked: usize;
     let mut hole_value = false;
-	if PATTERN[p].1 == 8 && (l != 1 || l != 4) {
-		return 0
-	}
+    if PATTERN[p].1 == 8 && (l != 1 || l != 4) {
+        return 0;
+    }
     if PATTERN[p].2 != 0 {
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
-	// println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value);
+    // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value);
     let border_count = check_border(pos, l, axe, PATTERN[p].1);
-	if p == 5 || p == 6 {
+    if p == 5 || p == 6 {
         if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80)
             || (p == 6 && blocker_checker & 0x4 != 0x4)
         {
             return 0;
         }
         if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 == 0x80)
-		|| (p == 6 && blocker_checker & 0x4 == 0x4) {
+            || (p == 6 && blocker_checker & 0x4 == 0x4)
+        {
             return 2;
         }
         if blocker_checker == BLOCKER[b].0 {
@@ -246,7 +247,7 @@ pub fn check_pattern_blocker(
             return 1;
         }
     }
-	if PATTERN[p].2 != 0 && hole_value == true && (p != 5 || p != 6) {
+    if PATTERN[p].2 != 0 && hole_value == true && (p != 5 || p != 6) {
         is_blocked = 2;
     } else if blocker_checker == BLOCKER[b].0 && PATTERN[p].2 == 0 {
         is_blocked = 2;
@@ -274,14 +275,14 @@ pub fn check_blocker(
 ) -> usize {
     let mut is_blocked: usize;
     let mut hole_value = false;
-	if l >= PATTERN[p].1 {
-		return 0;
-	}
+    if l >= PATTERN[p].1 {
+        return 0;
+    }
     if PATTERN[p].2 != 0 {
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
     let border_count = check_border(pos, l, axe, PATTERN[p].1);
-	// println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}, patternlenght {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value, PATTERN[p].1);
+    // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}, patternlenght {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value, PATTERN[p].1);
     if p == 5 || p == 6 {
         if b == 1 && hole_value == true && (p == 5 && blocker_checker & 0x80 != 0x80)
             || (p == 6 && blocker_checker & 0x4 != 0x4)
