@@ -72,6 +72,7 @@ class PyGameGo:
             self.grey_stone = pygame.image.load("ressources/images/greycircle.png")
             self.grey_stone_resize = pygame.transform.scale(self.grey_stone, STONE_SIZE)
         self.player: Player = None
+        self.starting_stone_color = PLAYER_WHITE_NB
 
     def update_sound_status(self, sound_status: bool, background_page):
         self.sound_status = sound_status
@@ -119,6 +120,14 @@ class PyGameGo:
             "Algorithm: " + self.search_algorithm,
             145,
             350,
+            "BLACK_BLUE_ONE",
+        )
+        self.print_font(
+            64,
+            "Starting color: "
+            + ("White" if self.starting_stone_color == PLAYER_WHITE_NB else "Black"),
+            145,
+            450,
             "BLACK_BLUE_ONE",
         )
         pygame.display.flip()
@@ -196,6 +205,10 @@ class PyGameGo:
                                 self.search_algorithm = ALGORITHM[algo + 1]
                                 break
                         self.display_setting_page()
+                    # change first player
+                    elif event.pos[1] >= 400 and event.pos[1] < 500:
+                        self.starting_stone_color = -self.starting_stone_color
+                        self.display_setting_page()
                     # Click on sound icon
                     elif (
                         event.pos[1] <= self.sound_icon_size[1]
@@ -256,58 +269,6 @@ class PyGameGo:
                             background_page=self.go_menu, return_button=False, sound_status=True
                         )
 
-    def win(self, go_rules: GoRules):
-        self.moves_count = 0
-        while 1:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    go_rules.reset_game()
-                    self.menu(go_rules)
-
-    def print_illegal_move(self):
-        self.print_font(
-            32,
-            "Turn :  "
-            + str(math.floor((self.moves_count + 1) / 2))
-            + "  "
-            + self.player.color
-            + "  previous move: "
-            + "Illegal move",
-            64,
-            680,
-            "Red",
-        )
-
-    def print_player_move(self, x: int, y: int):
-        self.print_font(
-            32,
-            "Turn :  "
-            + str(math.floor((self.moves_count + 1) / 2))
-            + "  "
-            + self.player.color
-            + "  previous move: "
-            + BOARD_NOTATION[0][x]
-            + BOARD_NOTATION[1][y],
-            64,
-            680,
-            "BLACK_BLUE_ONE",
-        )
-
-    def print_capture_count(self, white_capture_count: int, black_capture_count: int):
-        self.print_font(
-            32,
-            "White capture count :  "
-            + str(white_capture_count)
-            + "  "
-            + "Black capture count :   "
-            + str(black_capture_count),
-            64,
-            660,
-            "BLACK_BLUE_ONE",
-        )
-
     def playing(self, go_rules: GoRules):
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
@@ -320,6 +281,11 @@ class PyGameGo:
             black_capture_count=go_rules.player_list[1].capture_piece,
         )
         self.board_screen_blit(go_rules, 33, 62)
+
+        if self.starting_stone_color == PLAYER_WHITE_NB:
+            self.player = go_rules.player_list[0]
+        else:
+            self.player = go_rules.player_list[1]
 
         while 1:
             self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
@@ -406,6 +372,58 @@ class PyGameGo:
         pygame.display.flip()
         if win_status != 0:
             self.win(go_rules=go_rules)
+
+    def win(self, go_rules: GoRules):
+        self.moves_count = 0
+        while 1:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    go_rules.reset_game()
+                    self.menu(go_rules)
+
+    def print_illegal_move(self):
+        self.print_font(
+            32,
+            "Turn :  "
+            + str(math.floor((self.moves_count + 1) / 2))
+            + "  "
+            + self.player.color
+            + "  previous move: "
+            + "Illegal move",
+            64,
+            680,
+            "Red",
+        )
+
+    def print_player_move(self, x: int, y: int):
+        self.print_font(
+            32,
+            "Turn :  "
+            + str(math.floor((self.moves_count + 1) / 2))
+            + "  "
+            + self.player.color
+            + "  previous move: "
+            + BOARD_NOTATION[0][x]
+            + BOARD_NOTATION[1][y],
+            64,
+            680,
+            "BLACK_BLUE_ONE",
+        )
+
+    def print_capture_count(self, white_capture_count: int, black_capture_count: int):
+        self.print_font(
+            32,
+            "White capture count :  "
+            + str(white_capture_count)
+            + "  "
+            + "Black capture count :   "
+            + str(black_capture_count),
+            64,
+            660,
+            "BLACK_BLUE_ONE",
+        )
 
     def mouse_pos_to_piece_pos(self, pos, space, offset):
         var = int((pos - offset) / space)
