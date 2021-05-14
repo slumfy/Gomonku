@@ -78,7 +78,7 @@ use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_right;
 use tests::__pyo3_get_function_pytest_test_blocker_triple_border;
 //END TEST BLOCKER
 
-static ALPHABET: [char; 26] = [
+static _ALPHABET: [char; 26] = [
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
     'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
 ];
