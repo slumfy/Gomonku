@@ -44,12 +44,17 @@ pub fn test_ai_move() {
     algorithms::negamax(
         &mut state,
         depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
     let ai_returned_move = algorithms::return_move(&mut state);
     println!("AI MOVE : ");
     print_pos_in_human_format(ai_returned_move.0);
+    apply_bit(
+        &mut bitboards,
+        ai_returned_move.0,
+        global_var::PLAYER_BLACK_NB,
+    );
     print_board_from_bitboard(&bitboards);
 }
