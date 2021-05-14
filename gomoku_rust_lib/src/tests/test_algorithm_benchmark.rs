@@ -12,7 +12,7 @@ use std::time::Instant;
 use stoppable_thread;
 
 pub fn test_negamax_benchmark() {
-    let time_before_kill_process = Duration::from_secs_f64(2);
+    let time_before_kill_process = Duration::from_secs_f64(2.0);
 
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
