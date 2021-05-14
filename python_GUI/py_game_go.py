@@ -205,7 +205,7 @@ class PyGameGo:
                                 self.search_algorithm = ALGORITHM[algo + 1]
                                 break
                         self.display_setting_page()
-                    # change first player
+                    # change first player color
                     elif event.pos[1] >= 400 and event.pos[1] < 500:
                         self.starting_stone_color = -self.starting_stone_color
                         self.display_setting_page()
@@ -286,6 +286,7 @@ class PyGameGo:
             self.player = go_rules.player_list[0]
         else:
             self.player = go_rules.player_list[1]
+        self.print_player_to_move()
 
         while 1:
             self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
@@ -306,6 +307,7 @@ class PyGameGo:
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(self.player, x, y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
+                self.print_player_to_move()
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -319,6 +321,7 @@ class PyGameGo:
                             and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                         ):
                             x, y = self.reset_button(go_rules)
+                            self.print_player_to_move()
                         # Return to menu button
                         elif (
                             event.pos[1] >= 0
@@ -333,6 +336,7 @@ class PyGameGo:
                             y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
                             stone_status = go_rules.place_stone(self.player, x, y)
                             self.play_piece(go_rules, stone_status, win_status, x, y)
+                            self.print_player_to_move()
 
     def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
@@ -395,6 +399,15 @@ class PyGameGo:
             64,
             680,
             "Red",
+        )
+
+    def print_player_to_move(self):
+        self.print_font(
+            32,
+            "Player to move : " + self.player.color,
+            64,
+            40,
+            "BLACK_BLUE_ONE",
         )
 
     def print_player_move(self, x: int, y: int):
@@ -477,7 +490,10 @@ class PyGameGo:
     def reset_button(self, go_rules):
         go_rules.reset_game()
         self.moves_count = 0
-        self.player = go_rules.player_list[0]
+        if self.starting_stone_color == PLAYER_WHITE_NB:
+            self.player = go_rules.player_list[0]
+        else:
+            self.player = go_rules.player_list[1]
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
         pygame.display.flip()
