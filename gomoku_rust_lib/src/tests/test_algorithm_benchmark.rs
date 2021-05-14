@@ -5,13 +5,14 @@ use crate::data_struct::Bitboards;
 use crate::global_var;
 use crate::heuristic_ratios;
 use crate::state;
+use colour::{green_ln, red_ln};
 use std::thread;
 use std::time::Duration;
 use std::time::Instant;
 use stoppable_thread;
 
 pub fn test_negamax_benchmark() {
-    let time_before_kill_process = Duration::from_secs(1);
+    let time_before_kill_process = Duration::from_secs_f64(2);
 
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
@@ -38,7 +39,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 1
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 1;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -52,6 +53,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
     thread::sleep(time_before_kill_process);
@@ -60,7 +66,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 2
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 2;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -74,6 +80,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -83,7 +94,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 3
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 3;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -97,6 +108,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -106,7 +122,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 4
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 4;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -120,6 +136,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -129,7 +150,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 5
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 5;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -143,6 +164,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -152,7 +178,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 6
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 6;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -166,6 +192,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -175,7 +206,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 7
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 7;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -189,6 +220,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -198,7 +234,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 8
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 8;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -212,6 +248,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -221,7 +262,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 9
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 9;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -235,6 +276,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
@@ -244,7 +290,7 @@ pub fn test_negamax_benchmark() {
 
     // Try with depth 10
     let mut copy_state = state.clone();
-    let handle = stoppable_thread::spawn(move |stopped| {
+    let handle = stoppable_thread::spawn(move |_stopped| {
         let depth = 10;
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
@@ -258,6 +304,11 @@ pub fn test_negamax_benchmark() {
         algorithms::return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
+        if end_time.duration_since(start_time) <= time_before_kill_process {
+            green_ln!("Depth {} success !", depth);
+        } else {
+            red_ln!("Depth {} failed !", depth);
+        }
         println!();
     });
 
