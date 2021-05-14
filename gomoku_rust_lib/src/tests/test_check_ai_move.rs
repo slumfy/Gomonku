@@ -56,5 +56,6 @@ pub fn test_ai_move() {
         ai_returned_move.0,
         global_var::PLAYER_BLACK_NB,
     );
+    // assert_eq!(ai_returned_move)
     print_board_from_bitboard(&bitboards);
 }
