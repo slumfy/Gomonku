@@ -46,23 +46,6 @@ pub static PATTERN: [(u8, usize, usize, &str, i8); 10] = [
     (0x60, 4, 0, "double", 3),          // double 	.XX.....
 ];
 
-lazy_static! {
-    pub static ref PATTERN_NAME: HashMap<usize, &'static str> = {
-        let mut m = HashMap::new();
-        m.insert(0, "five");
-        m.insert(1, "four");
-        m.insert(2, "split four 3");
-        m.insert(3, "split four 1");
-        m.insert(4, "split four 2");
-        m.insert(5, "three");
-        m.insert(6, "three2");
-        m.insert(7, "split three");
-        m.insert(8, "split three rev");
-        m.insert(9, "double");
-        m
-    };
-}
-
 pub static CAPTURE_PATTERN: [(u8, usize, &str); 2] = [
     (0x90, 5, "capturing pair"), // capturing pair	X..X....
     (0x60, 4, "double"),         // double 	.XX.....

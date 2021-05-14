@@ -6,9 +6,6 @@ use pyo3::types::PyDict;
 use pyo3::{wrap_pyfunction, wrap_pymodule};
 use std::time::Instant;
 
-#[macro_use]
-extern crate lazy_static;
-
 mod algorithms;
 mod bitboard_operations;
 mod bitboards;
