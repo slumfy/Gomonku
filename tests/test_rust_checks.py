@@ -8,7 +8,7 @@ except ImportError:
     process = subprocess.Popen("rust_compilation.sh", shell=True, stdout=subprocess.PIPE)
     process.wait()
     print(process.returncode)
-import gomoku_rust
+    import gomoku_rust
 
 
 def test_check_rust():

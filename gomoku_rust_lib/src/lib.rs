@@ -134,7 +134,7 @@ pub fn ai_move(
             algorithms::negamax(
                 &mut state,
                 depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 1,
             );
@@ -143,7 +143,7 @@ pub fn ai_move(
             algorithms::negamax_with_transpotable(
                 &mut state,
                 depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
@@ -152,7 +152,7 @@ pub fn ai_move(
             algorithms::negascout(
                 &mut state,
                 depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
@@ -161,7 +161,7 @@ pub fn ai_move(
             algorithms::negascout_with_transpotable(
                 &mut state,
                 depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE + 1,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );

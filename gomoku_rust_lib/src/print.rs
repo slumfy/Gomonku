@@ -214,7 +214,7 @@ static ALPHABET: [char; 26] = [
 
 #[allow(dead_code)]
 pub fn print_pos_in_human_format(pos: usize) {
-    let x_pos = 19 - pos / 19;
+    let x_pos = 18 - pos / 19;
     let y_pos = pos % 19;
     println!("{:?}, {:?}", x_pos, ALPHABET[y_pos]);
 }
