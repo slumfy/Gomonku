@@ -23,3 +23,7 @@ def test_pattern_axes_finder():
 
 def test_check_potential_winning_alignment():
     gomoku_rust.gomoku_tests.pytest_check_potential_winning_alignment()
+
+
+def test_check_is_capturable():
+    gomoku_rust.gomoku_tests.pytest_check_is_capturable()

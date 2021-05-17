@@ -31,6 +31,7 @@ use check_move::checking_and_apply_bits_move;
 
 use tests::__pyo3_get_function_pytest_ai_move;
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
+use tests::__pyo3_get_function_pytest_check_is_capturable;
 use tests::__pyo3_get_function_pytest_check_is_unblockable_five;
 use tests::__pyo3_get_function_pytest_check_potential_winning_alignment;
 use tests::__pyo3_get_function_pytest_get_pydict;
@@ -267,6 +268,7 @@ fn reset_game() {
 #[pymodule]
 pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(pytest_ai_move, m)?)?;
+    m.add_function(wrap_pyfunction!(pytest_check_is_capturable, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_returning_dict_to_python, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_updating_from_other_function, m)?)?;
     m.add_function(wrap_pyfunction!(pytest_get_pydict, m)?)?;

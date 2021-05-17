@@ -47,6 +47,8 @@ pub fn heuristic(state: &mut State) -> i32 {
         value += heuristic_ratios::HEURISTIC_CAPTURING_ONE_STONE * stone_captured as i32;
     }
 
+    let mut count_simple_blocking_triple = 0;
+    let mut count_simple_blocking_two = 0;
     for axe_index in 0..4 {
         // Check potential_winning_alignment
         let potential_winning_alignment = check_potential_winning_alignment(state);
@@ -57,21 +59,52 @@ pub fn heuristic(state: &mut State) -> i32 {
         // Check pattern on axe and add the value
         let found_pattern_on_axe = board_state_info.pattern_axe[axe_index].0;
         let numbers_of_blocker_on_pattern = board_state_info.pattern_axe[axe_index].1;
-        // Blocker value of 3 means no pattern found
+        // Blocker value of 3 means no pattern found, so no value to add on this axe.
         if numbers_of_blocker_on_pattern != 3 {
             value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
                 [numbers_of_blocker_on_pattern];
         }
 
+        // Check blocker pattern on axe and add the value
         let found_blocker_pattern_on_axe = board_state_info.blocker_axe[axe_index].0;
         let numbers_of_blocker_on_blocked_pattern = board_state_info.blocker_axe[axe_index].1;
         // Blocker value of 3 means no pattern found
         if numbers_of_blocker_on_blocked_pattern != 3 {
+            count_simple_blocking_triple +=
+                is_simple_blocking_three_pattern(found_blocker_pattern_on_axe);
+            count_simple_blocking_two +=
+                is_simple_blocking_two_pattern(found_blocker_pattern_on_axe);
             value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
                 [numbers_of_blocker_on_blocked_pattern];
         }
+
+        // Checking if AI try to block a double triple
+        if count_simple_blocking_triple >= 2 {
+            value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
+        }
+
+        // Force AI to block combination of free tree and free two
+        if count_simple_blocking_two >= 1 && count_simple_blocking_triple >= 1 {
+            value += heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO;
+        }
     }
     return value;
+}
+
+fn is_simple_blocking_two_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
+    // Check blocker table in heuristic_ratios.rs
+    if found_blocker_pattern_on_axe == 9 {
+        return 1;
+    }
+    return 0;
+}
+
+fn is_simple_blocking_three_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
+    // Check blocker table in heuristic_ratios.rs
+    if found_blocker_pattern_on_axe > 4 && found_blocker_pattern_on_axe < 6 {
+        return 1;
+    }
+    return 0;
 }
 
 fn is_playable_move(state: &mut State, board_state_info: &BoardStateInfo) -> bool {

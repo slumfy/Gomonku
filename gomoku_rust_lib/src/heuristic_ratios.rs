@@ -20,6 +20,10 @@ pub static HEURISTIC_POSSIBLE_AXE_DEVELOPMENT: i32 = 1;
 // TODO: This heuristic value is not sure
 pub static HEURISTIC_CAPTURING_ONE_STONE: i32 = 15;
 
+// Combinative heuristic blocker
+pub static HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO: i32 = HEURISTIC_FREE_THREE_IN_A_ROW * 5;
+pub static HEURISTIC_BLOCK_A_DOUBLE_THREE: i32 = -(HEURISTIC_SIMPLE_BLOCK_THREE_IN_A_ROW * 2);
+
 //ratio of pattern
 // index 0 for no blocker or 2 blocked
 // index 1 for 1 blocker or 1 blocked
