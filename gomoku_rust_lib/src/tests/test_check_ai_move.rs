@@ -11,6 +11,7 @@ use crate::print::print_pos_in_human_format;
 use crate::state;
 
 pub fn test_ai_move() {
+    // First test, just testing AI will choose undefeatable 5
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -24,7 +25,6 @@ pub fn test_ai_move() {
     apply_bit(&mut bitboards, 103, global_var::PLAYER_BLACK_NB);
     apply_bit(&mut bitboards, 104, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, 121, global_var::PLAYER_BLACK_NB);
-    // apply_bit(&mut bitboards, 123, global_var::PLAYER_BLACK_NB);
     apply_bit(&mut bitboards, 139, global_var::PLAYER_BLACK_NB);
     apply_bit(&mut bitboards, 140, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, 141, global_var::PLAYER_WHITE_NB);
@@ -49,13 +49,108 @@ pub fn test_ai_move() {
         1,
     );
     let ai_returned_move = algorithms::return_move(&mut state);
-    println!("AI MOVE : ");
-    print_pos_in_human_format(ai_returned_move.0);
-    apply_bit(
+    assert_eq!(ai_returned_move.0, 175);
+
+    // Second test, testing if AI choose simple blocking two instead of double block three
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    apply_bit(&mut bitboards, 180, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 181, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 182, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 10, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 11, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 183, global_var::PLAYER_BLACK_NB);
+    let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
-        ai_returned_move.0,
-        global_var::PLAYER_BLACK_NB,
+        global_var::PLAYER_WHITE_NB,
+        180,
+        0,
+        0,
+        (0, 0),
+        0,
     );
-    // assert_eq!(ai_returned_move)
-    print_board_from_bitboard(&bitboards);
+    let depth = 1;
+    state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    algorithms::negamax(
+        &mut state,
+        depth,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        1,
+    );
+    let ai_returned_move = algorithms::return_move(&mut state);
+    assert_eq!(ai_returned_move.0, 9);
+
+    // Third test, testing blocking a three and blocking a two in the same time instead of blocking four and doing a three.
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    apply_bit(&mut bitboards, 180, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 181, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 182, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 198, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, 202, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 217, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, 221, global_var::PLAYER_WHITE_NB);
+    let mut state: data_struct::State = state::create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        180,
+        0,
+        0,
+        (0, 0),
+        0,
+    );
+    let depth = 1;
+    state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    algorithms::negamax(
+        &mut state,
+        depth,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        1,
+    );
+    let ai_returned_move = algorithms::return_move(&mut state);
+
+    assert_eq!(ai_returned_move.0, 183);
+
+    // Fourth test, testing AI not blocking a double three.
+    println!("test 4");
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    apply_bit(&mut bitboards, 180, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 181, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 182, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 202, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 221, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 240, global_var::PLAYER_WHITE_NB);
+    let mut state: data_struct::State = state::create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        180,
+        0,
+        0,
+        (0, 0),
+        0,
+    );
+    let depth = 1;
+    state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    algorithms::negamax(
+        &mut state,
+        depth,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        1,
+    );
+    let ai_returned_move = algorithms::return_move(&mut state);
+
+    assert_eq!(ai_returned_move.0, 179);
 }
