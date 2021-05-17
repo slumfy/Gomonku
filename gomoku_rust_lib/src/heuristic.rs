@@ -6,7 +6,6 @@ use crate::checking_and_apply_bits_move;
 use crate::data_struct::BoardStateInfo;
 use crate::data_struct::State;
 use crate::global_var;
-// use crate::global_var::PATTERN;
 use crate::heuristic_ratios;
 
 pub fn heuristic(state: &mut State) -> i32 {
@@ -24,6 +23,12 @@ pub fn heuristic(state: &mut State) -> i32 {
         return ret;
     }
     let stone_captured = state.board_info.stone_captured;
+    let opponent_stone_captured;
+    if state.current_player == global_var::VALID_MOVE {
+        opponent_stone_captured = state.black_captured_stone;
+    } else {
+        opponent_stone_captured = state.white_captured_stone;
+    }
 
     // Instant return move
     // Check if win by capturing stone
@@ -61,8 +66,26 @@ pub fn heuristic(state: &mut State) -> i32 {
         let numbers_of_blocker_on_pattern = board_state_info.pattern_axe[axe_index].1;
         // Blocker value of 3 means no pattern found, so no value to add on this axe.
         if numbers_of_blocker_on_pattern != 3 {
-            value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
-                [numbers_of_blocker_on_pattern];
+            // Checking if creating a triple that will prevent a double to be captured.
+            if numbers_of_blocker_on_pattern > 0
+                && found_pattern_on_axe > 4
+                && found_pattern_on_axe < 6
+            {
+                let current_player_axe;
+                if state.current_player == global_var::PLAYER_WHITE_NB {
+                    current_player_axe = 0;
+                } else {
+                    current_player_axe = 1;
+                }
+                value += checking_if_pattern_is_blocking_a_capture_and_return_value(
+                    state.axes[current_player_axe][axe_index],
+                    numbers_of_blocker_on_pattern,
+                    opponent_stone_captured,
+                );
+            } else {
+                value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
+                    [numbers_of_blocker_on_pattern];
+            }
         }
 
         // Check blocker pattern on axe and add the value
@@ -79,7 +102,8 @@ pub fn heuristic(state: &mut State) -> i32 {
         }
 
         // Checking if AI try to block a double triple
-        if count_simple_blocking_triple >= 2 {
+        if count_simple_blocking_two >= 2 {
+            println!("laa");
             value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
         }
 
@@ -87,6 +111,34 @@ pub fn heuristic(state: &mut State) -> i32 {
         if count_simple_blocking_two >= 1 && count_simple_blocking_triple >= 1 {
             value += heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO;
         }
+    }
+    return value;
+}
+
+fn checking_if_pattern_is_blocking_a_capture_and_return_value(
+    axe: u16,
+    numbers_of_blocker_on_pattern: usize,
+    opponent_stone_captured: i8,
+) -> i32 {
+    let mut value = 0;
+    // Checking if new placed stone is not in center of pattern, otherwise it will
+    // not prevent a two to be captureted (ex : -0X-X- before move, -0XXX- after)
+    // Using bitwise to know that, current move is at position 8 on axe so we
+    // check position 7 and 9 respectively to know if move is in center of the pattern.
+
+    if !(axe & (1 << 7) == 1 << 7) && (axe & (1 << 9) == 1 << 9) {
+        // Only one blocker, good move
+        if numbers_of_blocker_on_pattern == 1 {
+            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+                opponent_stone_captured,
+            );
+        } else {
+            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+                opponent_stone_captured,
+            ) / 3;
+        }
+    } else if numbers_of_blocker_on_pattern == 1 {
+        value += heuristic_ratios::HEURISTIC_THREE_IN_A_ROW_ONE_BLOCKER;
     }
     return value;
 }
