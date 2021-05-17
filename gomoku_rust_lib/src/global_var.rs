@@ -10,6 +10,8 @@ pub static mut MAX_DEPTH_REACH: i32 = 0;
 pub static mut NODE_CHECKED_COUNT: i32 = 0;
 // nb of pruning cut
 pub static mut PRUNING_COUNT: i32 = 0;
+// nb of transpotable cut
+pub static mut TT_COUNT: i32 = 0;
 // Capturing stone count
 pub static mut WHITE_CAPTURED_STONE: i8 = 0;
 pub static mut BLACK_CAPTURED_STONE: i8 = 0;
