@@ -12,7 +12,18 @@ except ImportError:
     import gomoku_rust
 
 from player import Player
-from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB, PlayerType
+from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB,BOARD_NOTATION , PlayerType
+
+class Move:
+    board = []
+    move = None
+    player = 0
+    eated_stone = 0
+    def __init__(self, board, move, player, eated_stone):
+            self.board = board
+            self.move = move
+            self.player = player
+            self.eated_stone = eated_stone
 
 
 class GoRules:
@@ -20,6 +31,7 @@ class GoRules:
     player_list = []
     ai_helper: bool = False
     ai_versus = 0
+    move_list = []
 
     def __init__(self, ai_helper: bool = False):
         self.ai_helper = ai_helper
@@ -41,6 +53,8 @@ class GoRules:
         if Rust_res["game_status"] != 0:
             return -2
         else:
+            self.move_list.append( Move(Rust_res["board"], (x*19+y), player, Rust_res["stone_captured"]) )
+            self.print_move_list()
             self.board = Rust_res["board"]
             player.capture_piece += Rust_res["stone_captured"]
             player.nb_move_to_win = Rust_res["nb_move_to_win"]
@@ -109,6 +123,7 @@ class GoRules:
             self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.HUMAN.value, "Black"))
 
     def reset_game(self):
+        self.move_list = []
         self.reset_players()
         self.clear_board()
         gomoku_rust.reset_game()
@@ -117,3 +132,36 @@ class GoRules:
         for L in range(len(self.board)):
             for l in range((len(self.board[L]))):
                 self.board[L][l] = 0
+
+    def previous_move(self):
+        move_list_len = len(self.move_list)
+        if move_list_len != 0:
+            move_to_remove = self.move_list[move_list_len - 1]
+            offset = 2
+            for player in self.player_list:
+                if player.player_type == 1:
+                    offset = 3
+                if player == move_to_remove.player:
+                    player.capture_piece -= move_to_remove.eated_stone
+            if move_list_len == 0 or move_list_len == 1 or (offset == 3 and move_list_len <= 2):
+                self.move_list = []
+                self.reset_game()
+                return 0, 0
+            move = self.move_list[move_list_len - offset]
+            self.board = move.board
+            if offset == 2:
+                self.move_list.pop(-1)
+            else:
+                self.move_list.pop(-1)
+                self.move_list.pop(-1)
+            self.print_move_list()
+            return move.move // 19, move.move % 19
+        return 0, 0
+
+    def print_move_list(self):
+        print("list of move(" + str(len(self.move_list)) +"): ", end="")
+        for move in self.move_list:
+            x = move.move // 19
+            y = move.move % 19
+            print(BOARD_NOTATION[0][x] + BOARD_NOTATION[1][y] + ", ", end="")
+        print()

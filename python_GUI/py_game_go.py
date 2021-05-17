@@ -59,6 +59,10 @@ class PyGameGo:
                 pygame.image.load("ressources/images/reset-icon.png"),
                 self.reset_icon_size,
             )
+            self.previous_move = pygame.transform.scale(
+                pygame.image.load("ressources/images/previous_move.png"),
+                self.reset_icon_size,
+            )
             self.return_on = pygame.transform.scale(
                 pygame.image.load("ressources/images/return-icon.png"),
                 self.return_icon_size,
@@ -272,6 +276,7 @@ class PyGameGo:
     def playing(self, go_rules: GoRules):
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
+        self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
         self.screen.blit(self.return_on, (0, 0))
         pygame.display.flip()
 
@@ -290,6 +295,7 @@ class PyGameGo:
 
         while 1:
             self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
+            self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
             self.screen.blit(self.return_on, (0, 0))
             pygame.display.flip()
             win_status = 0
@@ -315,13 +321,22 @@ class PyGameGo:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         # Reset game button
                         if (
-                            event.pos[1] <= self.sound_icon_size[1]
+                            event.pos[1] <= self.reset_icon_size[1]
                             and event.pos[1] >= 0
                             and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0]
                             and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                         ):
+                            print("RESET")
                             x, y = self.reset_button(go_rules)
                             self.print_player_to_move()
+                        # previous move button
+                        elif (
+                            event.pos[1] <= self.reset_icon_size[1] * 2
+                            and event.pos[1] >= self.reset_icon_size[1]
+                            and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0]
+                            and event.pos[0] <= MAIN_WINDOW_SIZE[0]
+                        ):
+                            self.previousmove(go_rules)
                         # Return to menu button
                         elif (
                             event.pos[1] >= 0
@@ -496,8 +511,32 @@ class PyGameGo:
             self.player = go_rules.player_list[1]
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
+        self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
         pygame.display.flip()
         return 0, 0
+
+    def previousmove(self, go_rules):
+        if len(go_rules.move_list) > 0:
+            x, y = go_rules.previous_move()
+            print(x,y)
+            AI = False
+            for player in go_rules.player_list:
+                if player.player_type == 1:
+                    AI = True
+                    break
+            if AI == False:
+                if self.player.nb == PLAYER_WHITE_NB:
+                    self.player = go_rules.player_list[1]
+                elif self.player.nb == PLAYER_BLACK_NB:
+                    self.player = go_rules.player_list[0]
+            self.screen.blit(self.go_board_resize, self.start_point)
+            self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
+            self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
+            self.board_screen_blit(go_rules, 33, 62)
+            if self.search_box_status == True:
+                self.print_box(go_rules, self.player, x, y, self.moves_count)
+            pygame.display.flip()
+            self.print_player_to_move()
 
     def print_box(self, go_rules, player, x, y, turn):
         space, offset = 33, 62
