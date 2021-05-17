@@ -326,7 +326,6 @@ class PyGameGo:
                             and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0]
                             and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                         ):
-                            print("RESET")
                             x, y = self.reset_button(go_rules)
                             self.print_player_to_move()
                         # previous move button
@@ -518,7 +517,6 @@ class PyGameGo:
     def previousmove(self, go_rules):
         if len(go_rules.move_list) > 0:
             x, y = go_rules.previous_move()
-            print(x,y)
             AI = False
             for player in go_rules.player_list:
                 if player.player_type == 1:
