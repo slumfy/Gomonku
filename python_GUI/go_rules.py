@@ -154,7 +154,7 @@ class GoRules:
             else:
                 self.move_list.pop(-1)
                 self.move_list.pop(-1)
-            self.print_move_list()
+            # self.print_move_list()
             return move.move // 19, move.move % 19
         return 0, 0
 
