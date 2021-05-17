@@ -70,10 +70,6 @@ pub fn heuristic(state: &mut State) -> i32 {
         let numbers_of_blocker_on_blocked_pattern = board_state_info.blocker_axe[axe_index].1;
         // Blocker value of 3 means no pattern found
         if numbers_of_blocker_on_blocked_pattern != 3 {
-            println!(
-                "found_blocker_pattern_on_axe {:?}",
-                found_blocker_pattern_on_axe
-            );
             count_simple_blocking_triple +=
                 is_simple_blocking_three_pattern(found_blocker_pattern_on_axe);
             count_simple_blocking_two +=
@@ -84,13 +80,11 @@ pub fn heuristic(state: &mut State) -> i32 {
 
         // Checking if AI try to block a double triple
         if count_simple_blocking_triple >= 2 {
-            println!("HEURISTIC_BLOCK_A_DOUBLE_THREE");
             value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
         }
 
         // Force AI to block combination of free tree and free two
         if count_simple_blocking_two >= 1 && count_simple_blocking_triple >= 1 {
-            println!("COMBINATIVE PATTERN BLOCKER");
             value += heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO;
         }
     }
@@ -100,7 +94,6 @@ pub fn heuristic(state: &mut State) -> i32 {
 fn is_simple_blocking_two_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
     // Check blocker table in heuristic_ratios.rs
     if found_blocker_pattern_on_axe == 9 {
-        println!("simple blocking two");
         return 1;
     }
     return 0;
@@ -109,7 +102,6 @@ fn is_simple_blocking_two_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
 fn is_simple_blocking_three_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
     // Check blocker table in heuristic_ratios.rs
     if found_blocker_pattern_on_axe > 4 && found_blocker_pattern_on_axe < 6 {
-        println!("simple blocking three");
         return 1;
     }
     return 0;
