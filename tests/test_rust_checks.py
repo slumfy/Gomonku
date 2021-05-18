@@ -16,8 +16,8 @@ def test_check_rust():
     gomoku_rust.gomoku_tests.pytest_print_pos_in_human_format()
 
 
-def test_check_is_unblockable_five():
-    gomoku_rust.gomoku_tests.pytest_check_is_unblockable_five()
+def test_check_pattern_is_not_capturable_five():
+    gomoku_rust.gomoku_tests.pytest_check_pattern_is_not_capturable_five()
 
 
 def test_pattern_axes_finder():

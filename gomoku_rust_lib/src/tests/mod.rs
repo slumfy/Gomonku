@@ -5,16 +5,16 @@ extern crate pyo3;
 mod test_algorithm_benchmark;
 mod test_check_ai_move;
 mod test_check_is_capturable;
-mod test_check_is_unblockable_five;
 mod test_check_potential_winning_alignment;
+mod test_check_is_unblockable_five;
 mod test_is_on_axe;
 mod test_pattern_axes_finder;
 mod test_pattern_blocker;
 mod test_print;
 use test_check_ai_move::test_ai_move;
 use test_check_is_capturable::test_check_is_capturable;
-use test_check_is_unblockable_five::test_check_is_unblockable_five;
 use test_check_potential_winning_alignment::test_check_potential_winning_alignment;
+use test_check_is_unblockable_five::test_check_pattern_is_not_capturable_five;
 use test_is_on_axe::test_is_on_axe;
 use test_pattern_axes_finder::test_pattern_axes_finder;
 //TEST BLOCKER
@@ -92,8 +92,8 @@ pub fn pytest_is_on_axe() {
 }
 
 #[pyfunction]
-pub fn pytest_check_is_unblockable_five() {
-    test_check_is_unblockable_five()
+pub fn pytest_check_pattern_is_not_capturable_five() {
+    test_check_pattern_is_not_capturable_five()
 }
 
 //TEST BLOCKER
