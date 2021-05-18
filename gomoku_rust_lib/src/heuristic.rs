@@ -87,17 +87,16 @@ pub fn heuristic(state: &mut State) -> i32 {
                     opponent_stone_captured,
                 );
             } else {
-                // Check if it's creating a pattern two with one blocker and the blocker is actually opponent stone, so it's a capturable move
-                if found_pattern_on_axe == 9
+                // Check if it's creating a pattern two with one blocker and the blocker is actually opponent stone, so it's a capturable move.
+                // Except this one, add pattern heuristic ratio to value.
+                if !(found_pattern_on_axe == 9
                     && numbers_of_blocker_on_pattern == 1
                     && !pattern_two_is_capturable(
                         state.axes[current_player_axe][axe_index],
                         state.axes[opponent_axe][axe_index],
-                    )
+                    ))
                 {
-                    value += 2;
-                } else {
-                    // Other pattern values
+                    // Add pattern values
                     value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
                         [numbers_of_blocker_on_pattern];
                 }
