@@ -139,7 +139,7 @@ fn reduce_child_list(childs_list: Vec<State>) -> Vec<State> {
 			}
 		}
 	}
-	println!("max_patt {} max_block {}",max_pattern,max_blocker);
+	// println!("max_patt {} max_block {}",max_pattern,max_blocker);
 	for child in 0..childs_list.len() {
 		for x in 0..4 {
 			if childs_list[child].board_info.pattern_axe[x].0 == max_pattern {
