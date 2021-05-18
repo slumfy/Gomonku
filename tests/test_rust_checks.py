@@ -12,9 +12,12 @@ except ImportError:
 
 
 def test_check_rust():
-    gomoku_rust.gomoku_tests.pytest_check_is_unblockable_five()
     gomoku_rust.gomoku_tests.pytest_is_on_axe()
     gomoku_rust.gomoku_tests.pytest_print_pos_in_human_format()
+
+
+def test_check_is_unblockable_five():
+    gomoku_rust.gomoku_tests.pytest_check_is_unblockable_five()
 
 
 def test_pattern_axes_finder():
