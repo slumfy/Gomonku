@@ -1,10 +1,11 @@
 use crate::bitboard_operations::apply_bit;
 use crate::bitboard_operations::remove_bit;
-use crate::check_move::check_is_unblockable_five;
+use crate::check_move::check_pattern_is_not_capturable;
 use crate::data_struct::Bitboards;
 use crate::global_var;
+use crate::print::print_board_from_bitboard;
 
-pub fn test_check_is_unblockable_five() {
+pub fn test_check_pattern_is_not_capturable_five() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -19,7 +20,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 0, 3, 1, 5),
+        true
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -37,7 +41,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 19, 3, 1, 5),
+        false
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -55,7 +62,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 19, 3, 1, 5),
+        false
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -73,7 +83,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 19, 3, 1, 5),
+        false
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -91,7 +104,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 19, 3, 1, 5),
+        false
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -108,7 +124,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, 4, global_var::PLAYER_BLACK_NB);
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 19, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), false);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 19, 3, 1, 5),
+        false
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -124,7 +143,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 19, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 19, 3, 1, 5),
+        true
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -142,7 +164,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 20, 3, 1), false);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 20, 3, 1, 5),
+        false
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -158,7 +183,10 @@ pub fn test_check_is_unblockable_five() {
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     pos += 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 20, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 20, 3, 1, 5),
+        true
+    );
 
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
     bitboards.black_board = [0, 0, 0, 0, 0, 0];
@@ -178,7 +206,10 @@ pub fn test_check_is_unblockable_five() {
     pos += 20;
 
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 180, 3, 1, 5),
+        true
+    );
 
     // Can capture in colone
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
@@ -200,7 +231,10 @@ pub fn test_check_is_unblockable_five() {
 
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
 
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), false);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 180, 0, 1, 5),
+        false
+    );
 
     // Cannot capture in colone because there is already a black stone
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
@@ -223,7 +257,10 @@ pub fn test_check_is_unblockable_five() {
 
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
 
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 180, 0, 1, 5),
+        true
+    );
 
     // Cannot capture in line because bigger than 2 whites stone
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
@@ -253,7 +290,10 @@ pub fn test_check_is_unblockable_five() {
 
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
 
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 180, 0, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, 180, 0, 1, 5),
+        true
+    );
 
     // Reverse check is unblockable five in two ways
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
@@ -270,9 +310,15 @@ pub fn test_check_is_unblockable_five() {
     pos -= 1;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     remove_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, pos, 3, 1, 5),
+        true
+    );
     apply_bit(&mut bitboards, 7, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, pos, 3, 1, 5),
+        true
+    );
 
     // Reverse check is unblockable five in two ways
     bitboards.white_board = [0, 0, 0, 0, 0, 0];
@@ -289,7 +335,13 @@ pub fn test_check_is_unblockable_five() {
     pos -= 19;
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
     remove_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, pos, 3, 1, 5),
+        true
+    );
     apply_bit(&mut bitboards, 319, global_var::PLAYER_WHITE_NB);
-    assert_eq!(check_is_unblockable_five(&mut bitboards, 0, 3, 1), true);
+    assert_eq!(
+        check_pattern_is_not_capturable(&mut bitboards, pos, 3, 1, 5),
+        true
+    );
 }

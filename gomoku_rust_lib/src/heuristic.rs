@@ -22,22 +22,25 @@ pub fn heuristic(state: &mut State) -> i32 {
     {
         return ret;
     }
-    let stone_captured = state.board_info.stone_captured;
-    let opponent_stone_captured;
+    let move_stone_captured = state.board_info.stone_captured;
+    let player_total_stone_captured;
+    let opponent_total_stone_captured;
     if state.current_player == global_var::VALID_MOVE {
-        opponent_stone_captured = state.black_captured_stone;
+        opponent_total_stone_captured = state.black_captured_stone;
+        player_total_stone_captured = state.white_captured_stone;
     } else {
-        opponent_stone_captured = state.white_captured_stone;
+        opponent_total_stone_captured = state.white_captured_stone;
+        player_total_stone_captured = state.black_captured_stone;
     }
 
     // Instant return move
     // Check if win by capturing stone
     unsafe {
-        if stone_captured != 0
+        if move_stone_captured != 0
             && ((state.current_player == global_var::PLAYER_WHITE_NB
-                && global_var::WHITE_CAPTURED_STONE + stone_captured >= 10)
+                && global_var::WHITE_CAPTURED_STONE + move_stone_captured >= 10)
                 || (state.current_player == global_var::PLAYER_BLACK_NB
-                    && global_var::BLACK_CAPTURED_STONE + stone_captured >= 10))
+                    && global_var::BLACK_CAPTURED_STONE + move_stone_captured >= 10))
         {
             return heuristic_ratios::HEURISTIC_CAPTURE_TEN_STONE;
         }
@@ -48,8 +51,10 @@ pub fn heuristic(state: &mut State) -> i32 {
     }
 
     // Add stone captured value
-    if stone_captured != 0 {
-        value += heuristic_ratios::HEURISTIC_CAPTURING_ONE_STONE * stone_captured as i32;
+    if move_stone_captured != 0 {
+        value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+            player_total_stone_captured,
+        );
     }
 
     let mut count_simple_blocking_triple = 0;
@@ -84,7 +89,7 @@ pub fn heuristic(state: &mut State) -> i32 {
                     state.axes[current_player_axe][axe_index],
                     state.axes[opponent_axe][axe_index],
                     numbers_of_blocker_on_pattern,
-                    opponent_stone_captured,
+                    opponent_total_stone_captured,
                 );
             } else {
                 // Check if it's creating a pattern two with one blocker and the blocker is actually opponent stone, so it's a capturable move.
@@ -127,6 +132,10 @@ pub fn heuristic(state: &mut State) -> i32 {
         }
     }
     return value;
+}
+
+fn pattern_is_capturable() -> bool {
+    return false;
 }
 
 fn pattern_two_is_capturable(current_player_axe: u16, opponent_axe: u16) -> bool {

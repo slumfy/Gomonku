@@ -329,13 +329,14 @@ pub fn check_one_bit_in_pattern(pattern: &u8, length: usize) -> bool {
     }
 }
 
-pub fn check_is_unblockable_five(
+pub fn check_pattern_is_not_capturable(
     bitboards: &mut Bitboards,
     pos: usize,
     axe_index: usize,
     player: i8,
+    pattern_len: usize,
 ) -> bool {
-    for n in 0..5 {
+    for n in 0..pattern_len {
         let check_pos = pos + n * global_var::AXE_MOUVEMENT_VALUE[axe_index];
         let axes = create_bits_axes_from_pos(check_pos, bitboards);
         let order: (usize, usize) = if player == 1 { (0, 1) } else { (1, 0) };

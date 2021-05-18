@@ -4,8 +4,8 @@ use crate::check_move::check_and_apply_capture;
 use crate::check_move::check_blocker;
 use crate::check_move::check_is_capturable;
 use crate::check_move::check_is_double_triple;
-use crate::check_move::check_is_unblockable_five;
 use crate::check_move::check_pattern_blocker;
+use crate::check_move::check_pattern_is_not_capturable;
 use crate::data_struct::Bitboards;
 use crate::data_struct::BoardStateInfo;
 use crate::global_var;
@@ -172,11 +172,12 @@ fn find_pattern(
     for p in 0..PATTERN.len() {
         if (player_casted & PATTERN[p].0) == PATTERN[p].0 {
             if p == 0 {
-                if check_is_unblockable_five(
+                if check_pattern_is_not_capturable(
                     bitboards,
                     pos - (l * global_var::AXE_MOUVEMENT_VALUE[axe]),
                     axe,
                     player,
+                    5,
                 ) == true
                 {
                     *return_pattern = [(0, 5), (0, 5), (0, 5), (0, 5)];
@@ -191,17 +192,21 @@ fn find_pattern(
                     // println!("pattern {} is blocked {}", PATTERN[p].3, is_blocked);
                 }
             }
-			let mut stone_in_pattern = false;
-			// println!("l {}", l);
-			for pos in 0..5 {
-				if global_var::STONE_POS_IN_PAT[p][pos] != 0x00 && (0x80 >> l) & global_var::STONE_POS_IN_PAT[p][pos] == global_var::STONE_POS_IN_PAT[p][pos] {
-					// println!("l    {:08b}", l);
-					// println!("spip {:08b} {}, {}", global_var::STONE_POS_IN_PAT[p][pos],p,pos);
-					stone_in_pattern = true;
-					break;
-				}
-			}
-            if is_blocked < 2 && stone_in_pattern == true
+            let mut stone_in_pattern = false;
+            // println!("l {}", l);
+            for pos in 0..5 {
+                if global_var::STONE_POS_IN_PAT[p][pos] != 0x00
+                    && (0x80 >> l) & global_var::STONE_POS_IN_PAT[p][pos]
+                        == global_var::STONE_POS_IN_PAT[p][pos]
+                {
+                    // println!("l    {:08b}", l);
+                    // println!("spip {:08b} {}, {}", global_var::STONE_POS_IN_PAT[p][pos],p,pos);
+                    stone_in_pattern = true;
+                    break;
+                }
+            }
+            if is_blocked < 2
+                && stone_in_pattern == true
                 && found_pattern.0 != 0
                 && (is_blocked > found_pattern.1 || p < found_pattern.0)
             {

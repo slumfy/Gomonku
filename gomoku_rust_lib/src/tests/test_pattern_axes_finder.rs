@@ -368,18 +368,18 @@ fn test_three() {
     };
     let pos = 2;
     // three2
+    apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, pos + 1, global_var::PLAYER_WHITE_NB);
     apply_bit(&mut bitboards, pos + 2, global_var::PLAYER_WHITE_NB);
-    apply_bit(&mut bitboards, pos + 3, global_var::PLAYER_WHITE_NB);
-    apply_bit(&mut bitboards, pos + 4, global_var::PLAYER_WHITE_NB);
     let axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let returned_pattern = pattern_axes_finder(
         &mut bitboards,
         &axes[0],
         &axes[1],
-        pos,
+        pos + 1,
         global_var::PLAYER_WHITE_NB,
     )[0];
-    assert_eq!(returned_pattern, [(0, 3), (0, 3), (0, 3), (6, 0)]);
+    assert_eq!(returned_pattern, [(0, 3), (0, 3), (0, 3), (5, 0)]);
 
     // split three
     let mut bitboards: Bitboards = Bitboards {
