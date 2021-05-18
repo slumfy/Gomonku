@@ -68,7 +68,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 		state.win_state,
 		0,
 	);
-	saved_child.heuristic = 0;
+	saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let bit_current_move_pos: usize = index_box[pos];
@@ -87,7 +87,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             nb_move_to_win,
         );
         child.heuristic = heuristic(&mut child);
-		if pos == 0 || child.heuristic > saved_child.heuristic {
+		if child.is_playable == 0 && (saved_child.bit_current_move_pos == 0 || child.heuristic > saved_child.heuristic) {
 			saved_child = child.clone();
 		}
 		//TEST improved selection
@@ -115,6 +115,9 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 		childs_list.push(saved_child);
 	}
 	// END TEST
+	for child in 0..childs_list.len(){
+		println!("childlist {:?}",childs_list[child].bit_current_move_pos);
+	}
     return childs_list;
 }
 

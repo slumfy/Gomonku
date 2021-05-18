@@ -515,9 +515,10 @@ class PyGameGo:
         return 0, 0
 
     def previousmove(self, go_rules):
+        AI = False
+        x, y = 0, 0
         if len(go_rules.move_list) > 0:
             x, y = go_rules.previous_move()
-            AI = False
             for player in go_rules.player_list:
                 if player.player_type == 1:
                     AI = True
