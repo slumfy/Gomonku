@@ -191,7 +191,17 @@ fn find_pattern(
                     // println!("pattern {} is blocked {}", PATTERN[p].3, is_blocked);
                 }
             }
-            if is_blocked <= 2
+			let mut stone_in_pattern = false;
+			// println!("l {}", l);
+			for pos in 0..5 {
+				if global_var::STONE_POS_IN_PAT[p][pos] != 0x00 && (0x80 >> l) & global_var::STONE_POS_IN_PAT[p][pos] == global_var::STONE_POS_IN_PAT[p][pos] {
+					// println!("l    {:08b}", l);
+					// println!("spip {:08b} {}, {}", global_var::STONE_POS_IN_PAT[p][pos],p,pos);
+					stone_in_pattern = true;
+					break;
+				}
+			}
+            if is_blocked < 2 && stone_in_pattern == true
                 && found_pattern.0 != 0
                 && (is_blocked > found_pattern.1 || p < found_pattern.0)
             {

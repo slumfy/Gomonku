@@ -215,10 +215,10 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     state.axes = create_bits_axes_from_pos(bit_current_move_pos, &mut bitboards);
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
-    // println!(
-    //     "boardstate of returning move {} : {:?}",
-    //     state.bit_current_move_pos, board_state_info
-    // );
+    println!(
+        "boardstate of returning move {} : {:?}",
+        state.bit_current_move_pos, board_state_info
+    );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("nb_move_to_win", board_state_info.nb_move_to_win)?;

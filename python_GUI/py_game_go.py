@@ -292,7 +292,7 @@ class PyGameGo:
         else:
             self.player = go_rules.player_list[1]
         self.print_player_to_move()
-
+        wrong_count = 0
         while 1:
             self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
             self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
@@ -522,19 +522,20 @@ class PyGameGo:
                 if player.player_type == 1:
                     AI = True
                     break
-            if AI == False:
-                if self.player.nb == PLAYER_WHITE_NB:
-                    self.player = go_rules.player_list[1]
-                elif self.player.nb == PLAYER_BLACK_NB:
-                    self.player = go_rules.player_list[0]
-            self.screen.blit(self.go_board_resize, self.start_point)
-            self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
-            self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
-            self.board_screen_blit(go_rules, 33, 62)
-            if self.search_box_status == True:
-                self.print_box(go_rules, self.player, x, y, self.moves_count)
-            pygame.display.flip()
-            self.print_player_to_move()
+        self.moves_count = len(go_rules.move_list)
+        if AI == False:
+            if self.player.nb == PLAYER_WHITE_NB:
+                self.player = go_rules.player_list[1]
+            elif self.player.nb == PLAYER_BLACK_NB:
+                self.player = go_rules.player_list[0]
+        self.screen.blit(self.go_board_resize, self.start_point)
+        self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
+        self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
+        self.board_screen_blit(go_rules, 33, 62)
+        if self.search_box_status == True:
+            self.print_box(go_rules, self.player, x, y, self.moves_count)
+        pygame.display.flip()
+        self.print_player_to_move()
 
     def print_box(self, go_rules, player, x, y, turn):
         space, offset = 33, 62
