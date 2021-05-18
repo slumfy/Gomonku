@@ -296,4 +296,174 @@ pub fn test_ai_move() {
     let ai_returned_move = algorithms::return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 302);
+
+    // Test 9, testing AI not doing a three blocking because it's actually not preventing a capture "--XX-0-".
+    println!("test 9");
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    apply_bit(&mut bitboards, 180, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 181, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 300, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 301, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 178, global_var::PLAYER_BLACK_NB);
+
+    let mut state: data_struct::State = state::create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_BLACK_NB,
+        180,
+        0,
+        0,
+        (0, 0),
+        0,
+    );
+    let depth = 1;
+    state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    algorithms::negamax(
+        &mut state,
+        depth,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        1,
+    );
+    let ai_returned_move = algorithms::return_move(&mut state);
+
+    assert_eq!(ai_returned_move.0, 182);
+
+    // Test 10, testing AI should preventing a capture "--0XX--".
+    println!("test 10");
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    apply_bit(&mut bitboards, 181, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, 182, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 183, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 300, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 301, global_var::PLAYER_WHITE_NB);
+
+    let mut state: data_struct::State = state::create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_BLACK_NB,
+        180,
+        0,
+        0,
+        (0, 0),
+        0,
+    );
+    let depth = 1;
+    state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    algorithms::negamax(
+        &mut state,
+        depth,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        1,
+    );
+    let ai_returned_move = algorithms::return_move(&mut state);
+
+    assert_eq!(ai_returned_move.0, 184);
+
+    // // Test 11, testing AI should preventing a capture "--X0XX--".
+    // println!("test 11");
+    // let mut bitboards: Bitboards = Bitboards {
+    //     white_board: [0, 0, 0, 0, 0, 0],
+    //     black_board: [0, 0, 0, 0, 0, 0],
+    // };
+
+    // apply_bit(&mut bitboards, 180, global_var::PLAYER_WHITE_NB);
+    // apply_bit(&mut bitboards, 181, global_var::PLAYER_BLACK_NB);
+    // apply_bit(&mut bitboards, 182, global_var::PLAYER_WHITE_NB);
+    // apply_bit(&mut bitboards, 183, global_var::PLAYER_WHITE_NB);
+    // apply_bit(&mut bitboards, 300, global_var::PLAYER_WHITE_NB);
+    // apply_bit(&mut bitboards, 301, global_var::PLAYER_WHITE_NB);
+
+    // let mut state: data_struct::State = state::create_new_state(
+    //     &mut bitboards,
+    //     global_var::PLAYER_BLACK_NB,
+    //     180,
+    //     0,
+    //     0,
+    //     (0, 0),
+    //     0,
+    // );
+    // let depth = 1;
+    // state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    // algorithms::negamax(
+    //     &mut state,
+    //     depth,
+    //     heuristic_ratios::HEURISTIC_MIN_VALUE,
+    //     heuristic_ratios::HEURISTIC_MAX_VALUE,
+    //     1,
+    // );
+    // let ai_returned_move = algorithms::return_move(&mut state);
+
+    // assert_eq!(ai_returned_move.0, 184);
+
+    // Test 12, testing AI will choose a two pattern non capturable instead of capturable.
+    println!("test 12");
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    apply_bit(&mut bitboards, 180, global_var::PLAYER_WHITE_NB);
+    apply_bit(&mut bitboards, 181, global_var::PLAYER_BLACK_NB);
+    apply_bit(&mut bitboards, 300, global_var::PLAYER_BLACK_NB);
+
+    let mut state: data_struct::State = state::create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        180,
+        0,
+        0,
+        (0, 0),
+        0,
+    );
+    let depth = 1;
+    state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    algorithms::negamax(
+        &mut state,
+        depth,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        1,
+    );
+    let ai_returned_move = algorithms::return_move(&mut state);
+
+    assert_eq!(ai_returned_move.0, 161);
+
+    // Test 13, testing pattern two blocked by wall is not counting as a capturable pos.
+    println!("test 13");
+    let mut bitboards: Bitboards = Bitboards {
+        white_board: [0, 0, 0, 0, 0, 0],
+        black_board: [0, 0, 0, 0, 0, 0],
+    };
+
+    apply_bit(&mut bitboards, 0, global_var::PLAYER_BLACK_NB);
+
+    let mut state: data_struct::State = state::create_new_state(
+        &mut bitboards,
+        global_var::PLAYER_WHITE_NB,
+        180,
+        0,
+        0,
+        (0, 0),
+        0,
+    );
+    let depth = 1;
+    state.axes = create_bits_axes_from_pos(160, &mut bitboards);
+    algorithms::negamax(
+        &mut state,
+        depth,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        1,
+    );
+    let ai_returned_move = algorithms::return_move(&mut state);
+
+    assert_eq!(ai_returned_move.0, 1);
 }
