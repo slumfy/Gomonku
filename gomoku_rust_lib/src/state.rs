@@ -115,11 +115,48 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 		childs_list.push(saved_child);
 	}
 	// END TEST
-	for child in 0..childs_list.len(){
-		println!("childlist {:?}",childs_list[child].bit_current_move_pos);
+	// for child in 0..childs_list.len(){
+	// 	println!("childlist {:?}",childs_list[child].bit_current_move_pos);
+	// }
+	if childs_list.len() > 1 {
+	childs_list = reduce_child_list(childs_list);
 	}
     return childs_list;
 }
+
+fn reduce_child_list(childs_list: Vec<State>) -> Vec<State> {
+	let mut max_pattern = 10;
+	let mut max_blocker = 10;
+	let mut reduce_list: Vec<State>;
+	reduce_list = Vec::new();
+	for child in 0..childs_list.len() {
+		for x in 0..4 {
+			if childs_list[child].board_info.pattern_axe[x].1 != 3 && childs_list[child].board_info.pattern_axe[x].0 < max_pattern {
+				max_pattern = childs_list[child].board_info.pattern_axe[x].0;
+			}
+			if childs_list[child].board_info.blocker_axe[x].1 != 3 && childs_list[child].board_info.blocker_axe[x].0 < max_blocker {
+				max_blocker = childs_list[child].board_info.blocker_axe[x].0;
+			}
+		}
+	}
+	println!("max_patt {} max_block {}",max_pattern,max_blocker);
+	for child in 0..childs_list.len() {
+		for x in 0..4 {
+			if childs_list[child].board_info.pattern_axe[x].0 == max_pattern {
+				if childs_list[child].board_info.pattern_axe[x].1 != 3 {
+				reduce_list.push(childs_list[child].clone());
+				break;
+			}
+		}
+			if childs_list[child].board_info.blocker_axe[x].0 == max_blocker {
+				reduce_list.push(childs_list[child].clone());
+				break;
+			}
+		}
+	}
+	return reduce_list;
+}
+
 
 pub fn state_is_terminated(state: &mut State) -> bool {
     if state.white_captured_stone >= 10 || state.black_captured_stone >= 10 {

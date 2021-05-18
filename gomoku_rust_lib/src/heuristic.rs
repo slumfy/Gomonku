@@ -153,13 +153,13 @@ fn checking_if_pattern_is_blocking_a_capture_and_return_value(
     // check position 7 and 9 respectively to know if move is in center of the pattern.
     // also checking that enemy position can actually capture the two pattern.
 
-    println!("current_player_axe = {:016b}", current_player_axe);
-    println!("opponent_axe = {:016b}", opponent_axe);
+    // println!("current_player_axe = {:016b}", current_player_axe);
+    // println!("opponent_axe = {:016b}", opponent_axe);
     if (current_player_axe & (1 << 7) == 1 << 7) ^ (current_player_axe & (1 << 9) == 1 << 9)
         && !(opponent_axe & (1 << 9) == 1 << 9)
         && !(opponent_axe & (1 << 7) == 1 << 7)
     {
-        println!("blocking a capture");
+        // println!("blocking a capture");
         // Only one blocker, good move
         if numbers_of_blocker_on_pattern == 1 {
             value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(

@@ -23,6 +23,9 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, col
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
+	if state.available_move.len() <= 1 {
+		return state.heuristic * color as i32;
+    }
     // println!("NEGAMAX player {}  color {} state: {}", state.current_player, color, state.bit_current_move_pos);
     // if depth == global_var::DEPTH {
     //     for child in 0..state.available_move.len() {

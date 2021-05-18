@@ -30,7 +30,7 @@ class PyGameGo:
         self.search_algorithm = search_algorithm
 
         self.logger = logger_factory("PyGameGo")
-        self.depth = 1
+        self.depth = 5
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
