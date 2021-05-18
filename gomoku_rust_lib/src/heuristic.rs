@@ -72,13 +72,17 @@ pub fn heuristic(state: &mut State) -> i32 {
                 && found_pattern_on_axe < 6
             {
                 let current_player_axe;
+                let opponent_axe;
                 if state.current_player == global_var::PLAYER_WHITE_NB {
                     current_player_axe = 0;
+                    opponent_axe = 1;
                 } else {
                     current_player_axe = 1;
+                    opponent_axe = 0;
                 }
                 value += checking_if_pattern_is_blocking_a_capture_and_return_value(
                     state.axes[current_player_axe][axe_index],
+                    state.axes[opponent_axe][axe_index],
                     numbers_of_blocker_on_pattern,
                     opponent_stone_captured,
                 );
@@ -103,7 +107,6 @@ pub fn heuristic(state: &mut State) -> i32 {
 
         // Checking if AI try to block a double triple
         if count_simple_blocking_two >= 2 {
-            println!("laa");
             value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
         }
 
@@ -116,7 +119,8 @@ pub fn heuristic(state: &mut State) -> i32 {
 }
 
 fn checking_if_pattern_is_blocking_a_capture_and_return_value(
-    axe: u16,
+    current_player_axe: u16,
+    opponent_axe: u16,
     numbers_of_blocker_on_pattern: usize,
     opponent_stone_captured: i8,
 ) -> i32 {
@@ -125,8 +129,13 @@ fn checking_if_pattern_is_blocking_a_capture_and_return_value(
     // not prevent a two to be captureted (ex : -0X-X- before move, -0XXX- after)
     // Using bitwise to know that, current move is at position 8 on axe so we
     // check position 7 and 9 respectively to know if move is in center of the pattern.
+    // also checking that enemy position can actually capture the two pattern.
 
-    if !(axe & (1 << 7) == 1 << 7) && (axe & (1 << 9) == 1 << 9) {
+    if !(current_player_axe & (1 << 7) == 1 << 7)
+        && (current_player_axe & (1 << 9) == 1 << 9)
+        && !(opponent_axe & (1 << 9) == 1 << 9)
+        && !(opponent_axe & (1 << 7) == 1 << 7)
+    {
         // Only one blocker, good move
         if numbers_of_blocker_on_pattern == 1 {
             value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
