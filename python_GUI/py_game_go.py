@@ -77,6 +77,8 @@ class PyGameGo:
             self.black_stone_resize = pygame.transform.scale(self.black_stone, STONE_SIZE)
             self.grey_stone = pygame.image.load("ressources/images/greycircle.png")
             self.grey_stone_resize = pygame.transform.scale(self.grey_stone, STONE_SIZE)
+            self.blue_stone = pygame.image.load("ressources/images/bluecircle.png")
+            self.blue_stone_resize = pygame.transform.scale(self.blue_stone, STONE_SIZE)
         self.player: Player = None
         self.starting_stone_color = PLAYER_WHITE_NB
 
@@ -305,7 +307,11 @@ class PyGameGo:
                 (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]),
             )
             self.screen.blit(self.return_on, (0, 0))
-            if ai_helper == None and self.player.player_type == PlayerType.HUMAN.value and self.ai_helper == True:
+            if (
+                ai_helper == None
+                and self.player.player_type == PlayerType.HUMAN.value
+                and self.ai_helper == True
+            ):
                 ai_helper = go_rules.AI_move(
                     self.player,
                     x,
@@ -584,7 +590,7 @@ class PyGameGo:
     def print_ai_helper(self, x, y):
         space, offset = 33, 62
         self.screen.blit(
-            self.grey_stone_resize,
+            self.blue_stone_resize,
             (
                 x * space + offset - STONE_SIZE[0] / 2,
                 y * space + offset - STONE_SIZE[1] / 2,
