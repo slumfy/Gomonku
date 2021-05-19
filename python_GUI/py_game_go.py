@@ -138,6 +138,13 @@ class PyGameGo:
             450,
             "BLACK_BLUE_ONE",
         )
+        self.print_font(
+            64,
+            "AI Helper: " + ("True" if self.ai_helper else "False"),
+            145,
+            550,
+            "BLACK_BLUE_ONE",
+        )
         pygame.display.flip()
 
     def settings(self):
@@ -216,6 +223,10 @@ class PyGameGo:
                     # change first player color
                     elif event.pos[1] >= 400 and event.pos[1] < 500:
                         self.starting_stone_color = -self.starting_stone_color
+                        self.display_setting_page()
+                    # change first player color
+                    elif event.pos[1] >= 500 and event.pos[1] < 600:
+                        self.ai_helper = False if self.ai_helper else True
                         self.display_setting_page()
                     # Click on sound icon
                     elif (
