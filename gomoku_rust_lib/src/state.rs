@@ -70,7 +70,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 		state.win_state,
 		0,
 	);
-	saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
+	saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let bit_current_move_pos: usize = index_box[pos];
@@ -102,7 +102,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         if child.is_playable == 0 {
 			for x in 0..4 {
 				if child.board_info.pattern_axe[x].1 != 3 {
-				playable = true;
+					playable = true;
 				}
 				if child.board_info.blocker_axe[x].1 != 3 {
 					playable = true;

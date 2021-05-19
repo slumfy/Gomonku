@@ -199,6 +199,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
+		println!("whitcap {} blackcap {}", white_captured_stone,black_captured_stone);
     }
     let bit_current_move_pos: usize = x * 19 + y;
 
@@ -261,6 +262,17 @@ fn reset_game() {
     unsafe {
         global_var::WHITE_CAPTURED_STONE = 0;
         global_var::BLACK_CAPTURED_STONE = 0;
+    }
+}
+#[pyfunction]
+fn update_eat_for_player(player: i8, eated_stones:i8) {
+    unsafe {
+		if player == 1{
+        	global_var::WHITE_CAPTURED_STONE = eated_stones;
+		}
+		else {
+        global_var::BLACK_CAPTURED_STONE = eated_stones;
+		}
     }
 }
 
@@ -418,6 +430,7 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
     m.add_function(wrap_pyfunction!(check_move_is_still_winning, m)?)?;
     m.add_function(wrap_pyfunction!(reset_game, m)?)?;
+	m.add_function(wrap_pyfunction!(update_eat_for_player, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }
