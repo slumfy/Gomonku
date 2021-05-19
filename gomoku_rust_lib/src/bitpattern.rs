@@ -48,18 +48,15 @@ fn computing_move(
         board_state_info.is_wrong_move = global_var::DOUBLE_TRIPLE_MOVE;
         return;
     }
-    return_pattern_value(board_state_info, axe_pattern[0], pos, player);
-    return_blocker_value(board_state_info, axe_pattern[1]);
+    set_move_to_win_and_is_winning(board_state_info, axe_pattern[0], pos, player);
 }
 
-#[allow(dead_code)]
-fn return_pattern_value(
+fn set_move_to_win_and_is_winning(
     board_state_info: &mut BoardStateInfo,
     axe_pattern: [(usize, usize); 4],
     pos: usize,
     player: i8,
 ) {
-    let mut pattern_value: i32 = 0;
     let mut move_to_win: i8 = 5;
     for pattern_index in 0..axe_pattern.len() {
         // Checking if the pattern have less move to win and replace current move to win.
@@ -73,31 +70,8 @@ fn return_pattern_value(
         if axe_pattern[pattern_index].0 == 0 && axe_pattern[pattern_index].1 != 3 {
             board_state_info.is_winning = (pos, player);
         }
-        // Checking if pattern is an undefeatable 5
-        if axe_pattern[pattern_index].1 == 5 {
-            board_state_info.pattern_value = 100000;
-        }
-        // Add other pattern value
-        else if axe_pattern[pattern_index].1 != 3 && axe_pattern[pattern_index].1 != 2 {
-            pattern_value +=
-                HEURISTIC_PATTERN[axe_pattern[pattern_index].0][axe_pattern[pattern_index].1];
-        }
     }
     board_state_info.nb_move_to_win = move_to_win;
-    board_state_info.pattern_value += pattern_value;
-}
-
-fn return_blocker_value(board_state_info: &mut BoardStateInfo, axe_pattern: [(usize, usize); 4]) {
-    //  println!("blocker on axe {:?}", axe_pattern);
-    let mut pat_value: i32 = 0;
-    for pat in 0..axe_pattern.len() {
-        if axe_pattern[pat].1 == 2 {
-            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0][0];
-        } else if axe_pattern[pat].1 == 1 {
-            pat_value += HEURISTIC_PATTERN[axe_pattern[pat].0][1];
-        }
-    }
-    board_state_info.blocker_value += pat_value;
 }
 
 pub fn pattern_axes_finder(
