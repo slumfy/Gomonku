@@ -12,18 +12,20 @@ except ImportError:
     import gomoku_rust
 
 from player import Player
-from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB,BOARD_NOTATION , PlayerType
+from global_var import PLAYER_BLACK_NB, PLAYER_WHITE_NB, BOARD_NOTATION, PlayerType
+
 
 class Move:
     board = []
     move = None
     player = 0
     eated_stone = 0
+
     def __init__(self, board, move, player, eated_stone):
-            self.board = board
-            self.move = move
-            self.player = player
-            self.eated_stone = eated_stone
+        self.board = board
+        self.move = move
+        self.player = player
+        self.eated_stone = eated_stone
 
 
 class GoRules:
@@ -51,7 +53,9 @@ class GoRules:
         if Rust_res["game_status"] != 0:
             return -2
         else:
-            self.move_list.append( Move(Rust_res["board"], (x*19+y), player, Rust_res["stone_captured"]) )
+            self.move_list.append(
+                Move(Rust_res["board"], (x * 19 + y), player, Rust_res["stone_captured"])
+            )
             self.print_move_list()
             self.board = Rust_res["board"]
             player.capture_piece += Rust_res["stone_captured"]
@@ -155,7 +159,7 @@ class GoRules:
         return 0, 0
 
     def print_move_list(self):
-        print("list of move(" + str(len(self.move_list)) +"): ", end="")
+        print("list of move(" + str(len(self.move_list)) + "): ", end="")
         for move in self.move_list:
             x = move.move // 19
             y = move.move % 19
