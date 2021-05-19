@@ -22,15 +22,17 @@ class PyGameGo:
         sound_status: bool = False,
         test_mode: bool = False,
         search_box_status: bool = False,
+        ai_helper: bool = True,
         display_ai_time: bool = False,
         search_algorithm: str = "negamax",
     ):
         self.test_mode = test_mode
+        self.ai_helper = ai_helper
         self.display_ai_time = display_ai_time
         self.search_algorithm = search_algorithm
 
         self.logger = logger_factory("PyGameGo")
-        self.depth = 1
+        self.depth = 5
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
@@ -295,7 +297,7 @@ class PyGameGo:
         else:
             self.player = go_rules.player_list[1]
         self.print_player_to_move()
-        wrong_count = 0
+        ai_helper = None
         while 1:
             self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
             self.screen.blit(
@@ -303,6 +305,18 @@ class PyGameGo:
                 (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]),
             )
             self.screen.blit(self.return_on, (0, 0))
+            if ai_helper == None and self.player.player_type == PlayerType.HUMAN.value and self.ai_helper == True:
+                ai_helper = go_rules.AI_move(
+                    self.player,
+                    x,
+                    y,
+                    self.moves_count,
+                    self.display_ai_time,
+                    self.search_algorithm,
+                    self.depth,
+                )
+            if self.player.player_type == PlayerType.HUMAN.value and self.ai_helper == True:
+                self.print_ai_helper(ai_helper[0][1], ai_helper[0][0])
             pygame.display.flip()
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
@@ -320,6 +334,7 @@ class PyGameGo:
                 stone_status = go_rules.place_stone(self.player, x, y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
                 self.print_player_to_move()
+                ai_helper = None
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -332,6 +347,7 @@ class PyGameGo:
                             and event.pos[0] >= MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0]
                             and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                         ):
+                            ai_helper = None
                             x, y = self.reset_button(go_rules)
                             self.print_player_to_move()
                         # previous move button
@@ -342,6 +358,7 @@ class PyGameGo:
                             and event.pos[0] <= MAIN_WINDOW_SIZE[0]
                         ):
                             self.previousmove(go_rules)
+                            ai_helper = None
                         # Return to menu button
                         elif (
                             event.pos[1] >= 0
@@ -357,6 +374,7 @@ class PyGameGo:
                             stone_status = go_rules.place_stone(self.player, x, y)
                             self.play_piece(go_rules, stone_status, win_status, x, y)
                             self.print_player_to_move()
+                            ai_helper = None
 
     def play_piece(self, go_rules, stone_status, win_status, x, y):
         if stone_status == -2:
@@ -562,3 +580,13 @@ class PyGameGo:
                         pos[0] * space + offset - STONE_SIZE[1] / 2,
                     ),
                 )
+
+    def print_ai_helper(self, x, y):
+        space, offset = 33, 62
+        self.screen.blit(
+            self.grey_stone_resize,
+            (
+                x * space + offset - STONE_SIZE[0] / 2,
+                y * space + offset - STONE_SIZE[1] / 2,
+            ),
+        )

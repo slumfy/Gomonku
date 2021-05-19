@@ -5,6 +5,8 @@ use crate::data_struct::State;
 use crate::heuristic::heuristic;
 use crate::heuristic_ratios;
 use crate::BoardStateInfo;
+use std::cmp::Reverse;
+
 
 use crate::search_space::get_search_box_bitboard;
 
@@ -118,63 +120,73 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 	// for child in 0..childs_list.len(){
 	// 	println!("childlist {:?}",childs_list[child].bit_current_move_pos);
 	// }
-	if childs_list.len() > 1 {
-	childs_list = reduce_child_list(childs_list);
+	childs_list.sort_by_key(|d| Reverse(d.heuristic));
+	let mut new_list: Vec<State> = Vec::new();
+	let mut len = childs_list.len();
+	if len > 5 {
+		len = 5;
 	}
-    return childs_list;
+	for child in 0..len {
+		new_list.push(childs_list[child].clone());
+	}
+	return new_list;
+	// if childs_list.len() > 1 {
+	// childs_list = reduce_child_list(childs_list);
+	// }
+    // return childs_list;
 }
 
-fn reduce_child_list(childs_list: Vec<State>) -> Vec<State> {
-	let mut max_pattern = 10;
-	let mut max_blocker = 10;
-	let mut reduce_list: Vec<State>;
-	let mut max_pattern_child: State = childs_list[0].clone();
-	let mut max_blocker_child: State = childs_list[0].clone();
-	reduce_list = Vec::new();
-	for child in 0..childs_list.len() {
-		for x in 0..4 {
-			if childs_list[child].board_info.pattern_axe[x].1 != 3 && childs_list[child].board_info.pattern_axe[x].0 < max_pattern {
-				max_pattern = childs_list[child].board_info.pattern_axe[x].0;
-				max_pattern_child = childs_list[child].clone();
-			}
-			if childs_list[child].board_info.blocker_axe[x].1 != 3 && childs_list[child].board_info.blocker_axe[x].0 < max_blocker {
-				max_blocker = childs_list[child].board_info.blocker_axe[x].0;
-				max_blocker_child = childs_list[child].clone();
-			}
-		}
-	}
-	// println!("max_patt {} max_block {}",max_pattern,max_blocker);
-	for child in 0..childs_list.len() {
-		for x in 0..4 {
-			if childs_list[child].board_info.pattern_axe[x].0 == max_pattern {
-				if childs_list[child].board_info.pattern_axe[x].1 != 3 {
-				if childs_list[child].heuristic > max_pattern_child.heuristic {
-					max_pattern_child = childs_list[child].clone();
-				}
-				reduce_list.push(childs_list[child].clone());
-				break;
-			}
-		}
-			if childs_list[child].board_info.blocker_axe[x].0 == max_blocker {
-				if childs_list[child].heuristic > max_blocker_child.heuristic {
-					max_blocker_child = childs_list[child].clone();
-				}
-				reduce_list.push(childs_list[child].clone());
-				break;
-			}
-		}
-	}
-	let mut max_reduce_list:Vec<State> = Vec::new();
-	if max_pattern_child.bit_current_move_pos != max_blocker_child.bit_current_move_pos {
-		max_reduce_list.push(max_pattern_child.clone());
-		max_reduce_list.push(max_blocker_child.clone());
-	}
-	else {
-		max_reduce_list.push(max_pattern_child.clone());
-	}
-	// return reduce_list;
-	return max_reduce_list;
-}
+// fn reduce_child_list(childs_list: Vec<State>) -> Vec<State> {
+// 	let mut max_pattern = 10;
+// 	let mut max_blocker = 10;
+// 	let mut reduce_list: Vec<State>;
+// 	let mut max_pattern_child: State = childs_list[0].clone();
+// 	let mut max_blocker_child: State = childs_list[0].clone();
+// 	reduce_list = Vec::new();
+// 	for child in 0..childs_list.len() {
+// 		for x in 0..4 {
+// 			if childs_list[child].board_info.pattern_axe[x].1 != 3 && childs_list[child].board_info.pattern_axe[x].0 < max_pattern {
+// 				max_pattern = childs_list[child].board_info.pattern_axe[x].0;
+// 				max_pattern_child = childs_list[child].clone();
+// 			}
+// 			if childs_list[child].board_info.blocker_axe[x].1 != 3 && childs_list[child].board_info.blocker_axe[x].0 < max_blocker {
+// 				max_blocker = childs_list[child].board_info.blocker_axe[x].0;
+// 				max_blocker_child = childs_list[child].clone();
+// 			}
+// 		}
+// 	}
+// 	// println!("max_patt {} max_block {}",max_pattern,max_blocker);
+// 	for child in 0..childs_list.len() {
+// 		for x in 0..4 {
+// 			if childs_list[child].board_info.pattern_axe[x].0 == max_pattern {
+// 				if childs_list[child].board_info.pattern_axe[x].1 != 3 {
+// 				if childs_list[child].heuristic > max_pattern_child.heuristic {
+// 					max_pattern_child = childs_list[child].clone();
+// 				}
+// 				reduce_list.push(childs_list[child].clone());
+// 				break;
+// 			}
+// 		}
+// 			if childs_list[child].board_info.blocker_axe[x].0 == max_blocker {
+// 				if childs_list[child].heuristic > max_blocker_child.heuristic {
+// 					max_blocker_child = childs_list[child].clone();
+// 				}
+// 				reduce_list.push(childs_list[child].clone());
+// 				break;
+// 			}
+// 		}
+// 	}
+// 	let mut max_reduce_list:Vec<State> = Vec::new();
+// 	if max_pattern_child.bit_current_move_pos != max_blocker_child.bit_current_move_pos {
+// 		max_reduce_list.push(max_pattern_child.clone());
+// 		max_reduce_list.push(max_blocker_child.clone());
+// 	}
+// 	else {
+// 		max_reduce_list.push(max_pattern_child.clone());
+// 	}
+// 	// return reduce_list;
+// 	return max_reduce_list;
+// }
 
 
 pub fn state_is_terminated(state: &mut State) -> bool {

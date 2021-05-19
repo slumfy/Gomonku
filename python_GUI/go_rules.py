@@ -29,12 +29,10 @@ class Move:
 class GoRules:
     board = []
     player_list = []
-    ai_helper: bool = False
     ai_versus = 0
     move_list = []
 
-    def __init__(self, ai_helper: bool = False):
-        self.ai_helper = ai_helper
+    def __init__(self):
         m = 19
         n = 19
         self.board = [[0] * m for i in range(n)]
@@ -59,8 +57,6 @@ class GoRules:
             player.capture_piece += Rust_res["stone_captured"]
             player.nb_move_to_win = Rust_res["nb_move_to_win"]
             # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
-            # if self.ai_helper:
-            #     gomoku_rust.negamax(Rust_res["board"], player.nb, x, y)
             if player.capture_piece >= 10:
                 return player.nb
             if "wining_position" in Rust_res.keys():

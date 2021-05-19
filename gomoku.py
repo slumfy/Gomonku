@@ -14,9 +14,9 @@ def main(argv=None):
         action="store_true",
     )
     parser.add_argument(
-        "--no_ai_helper",
+        "--ai_helper",
         help="Disable or enable AI helper.",
-        action="store_false",
+        action="store_true",
     )
     parser.add_argument(
         "--display_ai_time",
@@ -40,9 +40,10 @@ def main(argv=None):
     )
     args = parser.parse_args(argv)
     print("search_algorithm = ", args.search_algorithm)
-    go_rules = GoRules(ai_helper=args.no_ai_helper)
+    go_rules = GoRules()
     game = PyGameGo(
         sound_status=not args.no_sound,
+        ai_helper= args.ai_helper,
         search_box_status=args.with_search_box,
         display_ai_time=args.display_ai_time,
         search_algorithm=args.search_algorithm,
