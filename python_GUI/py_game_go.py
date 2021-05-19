@@ -30,7 +30,7 @@ class PyGameGo:
         self.search_algorithm = search_algorithm
 
         self.logger = logger_factory("PyGameGo")
-        self.depth = 5
+        self.depth = 1
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
@@ -276,7 +276,10 @@ class PyGameGo:
     def playing(self, go_rules: GoRules):
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
-        self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
+        self.screen.blit(
+            self.previous_move,
+            (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]),
+        )
         self.screen.blit(self.return_on, (0, 0))
         pygame.display.flip()
 
@@ -295,7 +298,10 @@ class PyGameGo:
         wrong_count = 0
         while 1:
             self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
-            self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
+            self.screen.blit(
+                self.previous_move,
+                (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]),
+            )
             self.screen.blit(self.return_on, (0, 0))
             pygame.display.flip()
             win_status = 0
@@ -510,7 +516,10 @@ class PyGameGo:
             self.player = go_rules.player_list[1]
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
-        self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
+        self.screen.blit(
+            self.previous_move,
+            (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]),
+        )
         pygame.display.flip()
         return 0, 0
 
@@ -531,7 +540,10 @@ class PyGameGo:
                 self.player = go_rules.player_list[0]
         self.screen.blit(self.go_board_resize, self.start_point)
         self.screen.blit(self.reset_on, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], 0))
-        self.screen.blit(self.previous_move, (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]))
+        self.screen.blit(
+            self.previous_move,
+            (MAIN_WINDOW_SIZE[0] - self.reset_icon_size[0], self.reset_icon_size[1]),
+        )
         self.board_screen_blit(go_rules, 33, 62)
         if self.search_box_status == True:
             self.print_box(go_rules, self.player, x, y, self.moves_count)
