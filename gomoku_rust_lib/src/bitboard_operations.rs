@@ -2,13 +2,19 @@
 
 use crate::data_struct::Bitboards;
 
-pub fn apply_capture(bitboards: &mut Bitboards, axe: usize, s: isize, pos: usize, player: i8) {
+pub fn apply_capture(
+    bitboards: &mut Bitboards,
+    axe_mouvement_value: usize,
+    direction_sign: isize,
+    pos: usize,
+    player: i8,
+) {
     let opponent = -player;
     for n in 1..3 {
-        if s == -1 {
-            remove_bit(bitboards, pos - (n * axe), opponent);
+        if direction_sign == -1 {
+            remove_bit(bitboards, pos - (n * axe_mouvement_value), opponent);
         } else {
-            remove_bit(bitboards, pos + (n * axe), opponent);
+            remove_bit(bitboards, pos + (n * axe_mouvement_value), opponent);
         }
     }
 }
