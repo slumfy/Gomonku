@@ -13,20 +13,20 @@ use crate::transpotable::TRANSPOTABLENEGA;
 use crate::transpotable::TRANSPOTABLESCOUT;
 use std::cmp::Reverse;
 
-pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
+pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, color: i8) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
-        return state.heuristic * color as i32;
+        return state.heuristic * color as i64;
     }
     if depth != 0 {
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
-	if state.available_move.len() <= 1 {
-		return state.heuristic * color as i32;
+    if state.available_move.len() <= 1 {
+        return state.heuristic * color as i64;
     }
-    let mut value: i32 = heuristic_ratios::HEURISTIC_MIN_VALUE;
+    let mut value: i64 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value;
         negamax_value = -negamax(
@@ -94,13 +94,13 @@ fn reset_tt_count() {
 pub fn negamax_with_transpotable(
     mut state: &mut State,
     depth: i32,
-    mut alpha: i32,
-    beta: i32,
+    mut alpha: i64,
+    beta: i64,
     color: i8,
-) -> i32 {
+) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
-    let tt_search: (bool, i32, i32);
+    let tt_search: (bool, i32, i64);
     unsafe { tt_search = transposition_table_search(state, &TRANSPOTABLENEGA) };
     if tt_search.0 == true && tt_search.1 >= depth {
         update_tt_count();
@@ -112,9 +112,9 @@ pub fn negamax_with_transpotable(
     }
     // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
     if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
-        return state.heuristic * color as i32;
+        return state.heuristic * color as i64;
     }
-    let mut value: i32 = heuristic_ratios::HEURISTIC_MIN_VALUE;
+    let mut value: i64 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     let len = state.available_move.len();
     for child in 0..len {
         let negamax = -negamax(
@@ -140,17 +140,17 @@ pub fn negamax_with_transpotable(
     return value;
 }
 
-pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, color: i8) -> i32 {
+pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, color: i8) -> i64 {
     if depth != 0 && state.available_move.len() == 0 {
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
     // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
     if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
-        state.heuristic = state.heuristic * color as i32;
-        return state.heuristic * color as i32;
+        state.heuristic = state.heuristic * color as i64;
+        return state.heuristic * color as i64;
     }
-    let mut value: i32;
+    let mut value: i64;
     let len = state.available_move.len();
     for child in 0..len {
         if child == 0 {
@@ -194,11 +194,11 @@ pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i32, beta: i32, c
 pub fn negascout_with_transpotable(
     mut state: &mut State,
     depth: i32,
-    mut alpha: i32,
-    beta: i32,
+    mut alpha: i64,
+    beta: i64,
     color: i8,
-) -> i32 {
-    let tt_search: (bool, i32, i32);
+) -> i64 {
+    let tt_search: (bool, i32, i64);
     unsafe { tt_search = transposition_table_search(state, &TRANSPOTABLESCOUT) };
     if tt_search.0 == true && tt_search.1 >= depth {
         return tt_search.2;
@@ -209,10 +209,10 @@ pub fn negascout_with_transpotable(
     }
     // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);
     if depth == 0 || state.available_move.len() == 0 || state_is_terminated(state) == true {
-        state.heuristic = state.heuristic * color as i32;
-        return state.heuristic * color as i32;
+        state.heuristic = state.heuristic * color as i64;
+        return state.heuristic * color as i64;
     }
-    let mut value: i32;
+    let mut value: i64;
     let len = state.available_move.len();
     for child in 0..len {
         if child == 0 {
@@ -256,7 +256,7 @@ pub fn negascout_with_transpotable(
     return alpha;
 }
 
-pub fn return_move(state: &mut State) -> (usize, i32) {
+pub fn return_move(state: &mut State) -> (usize, i64) {
     print_heuristic_table(state);
     unsafe {
         println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
@@ -267,7 +267,7 @@ pub fn return_move(state: &mut State) -> (usize, i32) {
     reset_node_checked_count();
     reset_pruning_count();
     reset_tt_count();
-	// println!("NB OF MOVE: {}",state.available_move.len());
+    // println!("NB OF MOVE: {}",state.available_move.len());
     // for child in 0..state.available_move.len() {
     //     println!(
     //         "child {} heuristic {} pos {}",

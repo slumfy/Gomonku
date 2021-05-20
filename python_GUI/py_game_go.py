@@ -23,6 +23,7 @@ class PyGameGo:
         test_mode: bool = False,
         search_box_status: bool = False,
         ai_helper: bool = True,
+        depth: int = 5,
         display_ai_time: bool = False,
         search_algorithm: str = "negamax",
     ):
@@ -32,7 +33,7 @@ class PyGameGo:
         self.search_algorithm = search_algorithm
 
         self.logger = logger_factory("PyGameGo")
-        self.depth = 5
+        self.depth = depth
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:

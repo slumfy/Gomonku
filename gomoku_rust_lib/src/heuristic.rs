@@ -8,8 +8,8 @@ use crate::data_struct::State;
 use crate::global_var;
 use crate::heuristic_ratios;
 
-pub fn heuristic(state: &mut State) -> i32 {
-    let mut value: i32 = 0;
+pub fn heuristic(state: &mut State) -> i64 {
+    let mut value: i64 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
 
     if !is_playable_move(state, &board_state_info) {
@@ -60,6 +60,16 @@ pub fn heuristic(state: &mut State) -> i32 {
 
     let mut count_simple_blocking_triple = 0;
     let mut count_simple_blocking_two = 0;
+    let current_player_axe;
+    let opponent_axe;
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        current_player_axe = 0;
+        opponent_axe = 1;
+    } else {
+        current_player_axe = 1;
+        opponent_axe = 0;
+    }
+
     for axe_index in 0..4 {
         // Check potential_winning_alignment
         let potential_winning_alignment = check_potential_winning_alignment(state);
@@ -72,15 +82,6 @@ pub fn heuristic(state: &mut State) -> i32 {
         let numbers_of_blocker_on_pattern = board_state_info.pattern_axe[axe_index].1;
         // Blocker value of 3 means no pattern found, so no value to add on this axe.
         if numbers_of_blocker_on_pattern != 3 {
-            let current_player_axe;
-            let opponent_axe;
-            if state.current_player == global_var::PLAYER_WHITE_NB {
-                current_player_axe = 0;
-                opponent_axe = 1;
-            } else {
-                current_player_axe = 1;
-                opponent_axe = 0;
-            }
             // Checking if creating a triple that will prevent a double to be captured.
             if numbers_of_blocker_on_pattern > 0
                 && found_pattern_on_axe > 4
@@ -114,17 +115,22 @@ pub fn heuristic(state: &mut State) -> i32 {
         let numbers_of_blocker_on_blocked_pattern = board_state_info.blocker_axe[axe_index].1;
         // Blocker value of 3 means no pattern found
         if numbers_of_blocker_on_blocked_pattern != 3 {
-            count_simple_blocking_triple +=
-                is_simple_blocking_three_pattern(found_blocker_pattern_on_axe);
-            count_simple_blocking_two +=
-                is_simple_blocking_two_pattern(found_blocker_pattern_on_axe);
+            count_simple_blocking_triple += is_simple_blocking_three_pattern(
+                found_blocker_pattern_on_axe,
+                state.axes[opponent_axe][axe_index],
+                state.axes[current_player_axe][axe_index],
+            );
+            count_simple_blocking_two += is_simple_blocking_two_pattern(
+                found_blocker_pattern_on_axe,
+                state.axes[opponent_axe][axe_index],
+                state.axes[current_player_axe][axe_index],
+            );
             value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
                 [numbers_of_blocker_on_blocked_pattern];
         }
 
         // Checking if AI try to block a double triple and prevent it
         if count_simple_blocking_two >= 2 {
-            println!("ici! Blocking double triple!");
             value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
         }
 
@@ -152,7 +158,7 @@ fn checking_if_pattern_is_blocking_a_capture_and_return_value(
     opponent_axe: u16,
     numbers_of_blocker_on_pattern: usize,
     opponent_stone_captured: i8,
-) -> i32 {
+) -> i64 {
     let mut value = 0;
     // Checking if new placed stone is not in center of pattern, otherwise it will
     // not prevent a two to be captureted (ex : -0X-X- before move, -0XXX- after)
@@ -183,17 +189,42 @@ fn checking_if_pattern_is_blocking_a_capture_and_return_value(
     return value;
 }
 
-fn is_simple_blocking_two_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
+fn is_simple_blocking_two_pattern(
+    found_blocker_pattern_on_axe: usize,
+    opponent_axe: u16,
+    current_player_axe: u16,
+) -> i16 {
     // Check blocker table in heuristic_ratios.rs
-    if found_blocker_pattern_on_axe == 9 {
+    if found_blocker_pattern_on_axe == 9
+        && ((opponent_axe & (1 << 7) == 1 << 7
+            && opponent_axe & (1 << 6) == 1 << 6
+            && current_player_axe & (1 << 5) != 1 << 5)
+            || (opponent_axe & (1 << 9) == 1 << 9
+                && opponent_axe & (1 << 10) == 1 << 10
+                && current_player_axe & (1 << 11) != 1 << 11))
+    {
         return 1;
     }
     return 0;
 }
 
-fn is_simple_blocking_three_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
+fn is_simple_blocking_three_pattern(
+    found_blocker_pattern_on_axe: usize,
+    opponent_axe: u16,
+    current_player_axe: u16,
+) -> i16 {
     // Check blocker table in heuristic_ratios.rs
-    if found_blocker_pattern_on_axe > 4 && found_blocker_pattern_on_axe < 6 {
+    if found_blocker_pattern_on_axe > 4
+        && found_blocker_pattern_on_axe < 6
+        && ((opponent_axe & (1 << 7) == 1 << 7
+            && opponent_axe & (1 << 6) == 1 << 6
+            && opponent_axe & (1 << 5) == 1 << 5
+            && current_player_axe & (1 << 4) != 1 << 4)
+            || (opponent_axe & (1 << 9) == 1 << 9
+                && opponent_axe & (1 << 10) == 1 << 10
+                && opponent_axe & (1 << 11) == 1 << 11
+                && current_player_axe & (1 << 12) != 1 << 12))
+    {
         return 1;
     }
     return 0;
@@ -207,7 +238,7 @@ fn is_playable_move(state: &mut State, board_state_info: &BoardStateInfo) -> boo
     return true;
 }
 
-fn is_in_winning_pos(state: &mut State) -> i32 {
+fn is_in_winning_pos(state: &mut State) -> i64 {
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
             if state.current_player == state.win_state.1 {

@@ -9,7 +9,7 @@ pub struct Bitboards {
 pub struct Transpotablenode {
     pub hash: u64,
     pub depth: i32,
-    pub value: i32,
+    pub value: i64,
 }
 
 /// State struct corresponding to an instant board value for a given player.
@@ -22,7 +22,7 @@ pub struct State {
     pub black_captured_stone: i8,
     pub white_move_to_win: i8,
     pub black_move_to_win: i8,
-    pub heuristic: i32,
+    pub heuristic: i64,
     pub is_playable: i8,
     pub win_state: (usize, i8),
     pub bit_current_move_pos: usize,
@@ -39,9 +39,9 @@ pub struct BoardStateInfo {
     pub stone_captured: i8,
     pub capturable: bool,
     pub capturing: bool,
-    pub captured_pattern_blocking_value: i32,
-    pub pattern_value: i32,
-    pub blocker_value: i32,
+    pub captured_pattern_blocking_value: i64,
+    pub pattern_value: i64,
+    pub blocker_value: i64,
     pub is_winning: (usize, i8),
     pub nb_move_to_win: i8,
     pub axe_free_value: [bool; 4],

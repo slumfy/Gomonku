@@ -29,6 +29,13 @@ def main(argv=None):
         action="store_true",
     )
     parser.add_argument(
+        "--depth",
+        help="Set the depth of algorithm search (from 1 to 10).",
+        choices=range(1, 11),
+        type=int,
+        default=5,
+    )
+    parser.add_argument(
         "--search_algorithm",
         choices=["negamax", "negamax_tt", "negascout", "negascout_tt"],
         help="""
@@ -43,9 +50,10 @@ def main(argv=None):
     go_rules = GoRules()
     game = PyGameGo(
         sound_status=not args.no_sound,
-        ai_helper= args.ai_helper,
+        ai_helper=args.ai_helper,
         search_box_status=args.with_search_box,
         display_ai_time=args.display_ai_time,
+        depth=args.depth,
         search_algorithm=args.search_algorithm,
     )
     game.menu(go_rules=go_rules)

@@ -12,7 +12,7 @@ fn return_captured_pattern_blocking_value(
     axes: [[u16; 4]; 2],
     pos: usize,
     opponent: i8,
-) -> i32 {
+) -> i64 {
     let opponent_pattern_axes: [(usize, usize); 4];
     if opponent == global_var::PLAYER_WHITE_NB {
         opponent_pattern_axes =

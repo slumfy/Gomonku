@@ -93,7 +93,7 @@ pub fn ai_move(
     display_ai_time: bool,
     search_algorithm: String,
     depth: i32,
-) -> PyResult<((usize, usize), i32)> {
+) -> PyResult<((usize, usize), i64)> {
     // println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -105,7 +105,7 @@ pub fn ai_move(
     }
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
     let bit_current_move_pos: usize = x * 19 + y;
-    let ai_move: (usize, i32);
+    let ai_move: (usize, i64);
     let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         -player,
@@ -199,7 +199,10 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     unsafe {
         white_captured_stone = global_var::WHITE_CAPTURED_STONE;
         black_captured_stone = global_var::BLACK_CAPTURED_STONE;
-		println!("whitcap {} blackcap {}", white_captured_stone,black_captured_stone);
+        println!(
+            "whitcap {} blackcap {}",
+            white_captured_stone, black_captured_stone
+        );
     }
     let bit_current_move_pos: usize = x * 19 + y;
 
@@ -265,14 +268,13 @@ fn reset_game() {
     }
 }
 #[pyfunction]
-fn update_eat_for_player(player: i8, eated_stones:i8) {
+fn update_eat_for_player(player: i8, eated_stones: i8) {
     unsafe {
-		if player == 1{
-        	global_var::WHITE_CAPTURED_STONE = eated_stones;
-		}
-		else {
-        global_var::BLACK_CAPTURED_STONE = eated_stones;
-		}
+        if player == 1 {
+            global_var::WHITE_CAPTURED_STONE = eated_stones;
+        } else {
+            global_var::BLACK_CAPTURED_STONE = eated_stones;
+        }
     }
 }
 
@@ -430,7 +432,7 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
     m.add_function(wrap_pyfunction!(check_move_is_still_winning, m)?)?;
     m.add_function(wrap_pyfunction!(reset_game, m)?)?;
-	m.add_function(wrap_pyfunction!(update_eat_for_player, m)?)?;
+    m.add_function(wrap_pyfunction!(update_eat_for_player, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }

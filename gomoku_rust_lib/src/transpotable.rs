@@ -6,7 +6,11 @@ use std::hash::{Hash, Hasher};
 pub static mut TRANSPOTABLENEGA: Vec<Transpotablenode> = vec![];
 pub static mut TRANSPOTABLESCOUT: Vec<Transpotablenode> = vec![];
 
-pub fn transposition_table_push(state: &State, depth: i32, transpo_table: &mut Vec<Transpotablenode>) {
+pub fn transposition_table_push(
+    state: &State,
+    depth: i32,
+    transpo_table: &mut Vec<Transpotablenode>,
+) {
     let mut hash = DefaultHasher::new();
     state.bitboards.hash(&mut hash);
     let state_hash: u64 = hash.finish();
@@ -21,7 +25,7 @@ pub fn transposition_table_push(state: &State, depth: i32, transpo_table: &mut V
 pub unsafe fn transposition_table_search(
     state: &State,
     transpo_table: &Vec<Transpotablenode>,
-) -> (bool, i32, i32) {
+) -> (bool, i32, i64) {
     let mut hash = DefaultHasher::new();
     state.bitboards.hash(&mut hash);
     let state_hash: u64 = hash.finish();
