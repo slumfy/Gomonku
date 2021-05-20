@@ -58,8 +58,9 @@ pub fn heuristic(state: &mut State) -> i64 {
         );
     }
 
-    let mut count_simple_blocking_triple = 0;
+    let mut count_blocking_triple = 0;
     let mut count_simple_blocking_two = 0;
+    let mut count_blocking_two = 0;
     let current_player_axe;
     let opponent_axe;
     if state.current_player == global_var::PLAYER_WHITE_NB {
@@ -115,16 +116,13 @@ pub fn heuristic(state: &mut State) -> i64 {
         let numbers_of_blocker_on_blocked_pattern = board_state_info.blocker_axe[axe_index].1;
         // Blocker value of 3 means no pattern found
         if numbers_of_blocker_on_blocked_pattern != 3 {
-            count_simple_blocking_triple += is_simple_blocking_three_pattern(
-                found_blocker_pattern_on_axe,
-                state.axes[opponent_axe][axe_index],
-                state.axes[current_player_axe][axe_index],
-            );
+            count_blocking_triple += is_blocking_three_pattern(found_blocker_pattern_on_axe);
             count_simple_blocking_two += is_simple_blocking_two_pattern(
                 found_blocker_pattern_on_axe,
                 state.axes[opponent_axe][axe_index],
                 state.axes[current_player_axe][axe_index],
             );
+            count_blocking_two += is_blocking_two_pattern(found_blocker_pattern_on_axe);
             value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
                 [numbers_of_blocker_on_blocked_pattern];
         }
@@ -135,7 +133,7 @@ pub fn heuristic(state: &mut State) -> i64 {
         }
 
         // Force AI to block combination of free tree and free two
-        if count_simple_blocking_two >= 1 && count_simple_blocking_triple >= 1 {
+        if count_blocking_two >= 1 && count_blocking_triple >= 1 {
             value += heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO;
         }
     }
@@ -208,23 +206,17 @@ fn is_simple_blocking_two_pattern(
     return 0;
 }
 
-fn is_simple_blocking_three_pattern(
-    found_blocker_pattern_on_axe: usize,
-    opponent_axe: u16,
-    current_player_axe: u16,
-) -> i16 {
+fn is_blocking_two_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
     // Check blocker table in heuristic_ratios.rs
-    if found_blocker_pattern_on_axe > 4
-        && found_blocker_pattern_on_axe < 6
-        && ((opponent_axe & (1 << 7) == 1 << 7
-            && opponent_axe & (1 << 6) == 1 << 6
-            && opponent_axe & (1 << 5) == 1 << 5
-            && current_player_axe & (1 << 4) != 1 << 4)
-            || (opponent_axe & (1 << 9) == 1 << 9
-                && opponent_axe & (1 << 10) == 1 << 10
-                && opponent_axe & (1 << 11) == 1 << 11
-                && current_player_axe & (1 << 12) != 1 << 12))
-    {
+    if found_blocker_pattern_on_axe == 9 {
+        return 1;
+    }
+    return 0;
+}
+
+fn is_blocking_three_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
+    // Check blocker table in heuristic_ratios.rs
+    if found_blocker_pattern_on_axe > 4 && found_blocker_pattern_on_axe < 6 {
         return 1;
     }
     return 0;
