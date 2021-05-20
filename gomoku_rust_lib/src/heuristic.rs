@@ -135,7 +135,6 @@ pub fn heuristic(state: &mut State) -> i64 {
 
         // Force AI to block combination of free tree and free two
         if count_blocking_two >= 1 && count_blocking_triple >= 1 {
-            println!("iCI!!!!");
             value += heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO;
         }
     }
