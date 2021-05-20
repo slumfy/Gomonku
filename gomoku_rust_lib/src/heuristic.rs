@@ -129,11 +129,13 @@ pub fn heuristic(state: &mut State) -> i64 {
 
         // Checking if AI try to block a double triple and prevent it
         if count_simple_blocking_two >= 2 {
+            // Adding a negative value 2 times bigger than a free three.
             value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
         }
 
         // Force AI to block combination of free tree and free two
         if count_blocking_two >= 1 && count_blocking_triple >= 1 {
+            println!("iCI!!!!");
             value += heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO;
         }
     }
@@ -164,19 +166,18 @@ fn checking_if_pattern_is_blocking_a_capture_and_return_value(
     // check position 7 and 9 respectively to know if move is in center of the pattern.
     // also checking that enemy position can actually capture the two pattern.
 
-    // println!("current_player_axe = {:016b}", current_player_axe);
-    // println!("opponent_axe = {:016b}", opponent_axe);
     if (current_player_axe & (1 << 7) == 1 << 7) ^ (current_player_axe & (1 << 9) == 1 << 9)
         && !(opponent_axe & (1 << 9) == 1 << 9)
         && !(opponent_axe & (1 << 7) == 1 << 7)
     {
-        // println!("blocking a capture");
         // Only one blocker, good move
         if numbers_of_blocker_on_pattern == 1 {
             value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
                 opponent_stone_captured,
             );
-        } else {
+        }
+        // Two blocker, not really good move because we will create a two blocker three, unplayable.
+        else {
             value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
                 opponent_stone_captured,
             ) / 3;
