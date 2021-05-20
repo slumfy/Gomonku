@@ -142,6 +142,7 @@ class GoRules:
             for player in self.player_list:
                 if player.player_type == 1:
                     offset = 3
+            for player in self.player_list:
                 if player == move_to_remove.player:
                     player.capture_piece -= move_to_remove.eated_stone
                     gomoku_rust.update_eat_for_player(player.nb, player.capture_piece)
