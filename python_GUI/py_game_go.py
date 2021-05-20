@@ -212,13 +212,12 @@ class PyGameGo:
                     # change algorithm
                     elif event.pos[1] >= 300 and event.pos[1] < 400:
                         for algo in range(0, ALGORITHM.__len__()):
-                            print(algo)
-                            print(ALGORITHM[algo], self.search_algorithm)
                             if algo == ALGORITHM.__len__() - 1:
                                 self.search_algorithm = ALGORITHM[0]
                                 break
                             if ALGORITHM[algo] == self.search_algorithm:
                                 self.search_algorithm = ALGORITHM[algo + 1]
+                                print(self.search_algorithm)
                                 break
                         self.display_setting_page()
                     # change first player color

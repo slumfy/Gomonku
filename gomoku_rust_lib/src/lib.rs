@@ -135,7 +135,8 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-        } else if search_algorithm == "negascout" {
+        }
+		 else if search_algorithm == "negascout" {
             println!("using negascout");
             algorithms::negascout(
                 &mut state,
@@ -144,8 +145,16 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
+		} else if search_algorithm == "minimax" {
+            println!("using minimax");
+            algorithms::minimax(
+                &mut state,
+                depth,
+                heuristic_ratios::HEURISTIC_MIN_VALUE,
+                heuristic_ratios::HEURISTIC_MAX_VALUE,
+                true,
+            );
 		}
-
         ai_move = algorithms::return_move(&mut state);
     }
     if display_ai_time {

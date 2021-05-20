@@ -1,4 +1,5 @@
 mod negamax;
+mod minimax;
 mod negascout;
 mod transpotable;
 pub mod algo_utils;
@@ -6,6 +7,10 @@ use crate::data_struct::State;
 
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, color: i8) -> i64 {
 	return(negamax::negamax(state, depth, alpha, beta, color));
+}
+
+pub fn minimax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, maximizingplayer: bool) -> i64 {
+	return(minimax::minimax(state, depth, alpha, beta, true));
 }
 
 pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, color: i8) -> i64 {
