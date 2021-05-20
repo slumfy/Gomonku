@@ -134,7 +134,7 @@ pub fn ai_move(
                 depth,
                 heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
-                1,
+                player,
             );
         } else if search_algorithm == "negamax_tt" {
             println!("using negamax_with_transpotable");
