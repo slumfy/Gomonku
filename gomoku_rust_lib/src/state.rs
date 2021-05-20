@@ -37,6 +37,7 @@ pub fn create_new_state(
             stone_captured: 0,
             capturable: false,
             capturing: false,
+            captured_pattern_blocking_value: 0,
             pattern_value: 0,
             blocker_value: 0,
             is_winning: (0, 0),

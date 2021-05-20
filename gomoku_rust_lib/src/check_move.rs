@@ -1,7 +1,7 @@
 //! Methods to check moves and bits.
 
 use crate::bitboard_operations::apply_bit;
-use crate::bitboard_operations::apply_capture;
+use crate::bitboard_operations::apply_capture_and_return_captured_pattern_blocking_value;
 use crate::bitboards::create_bitboards_from_vec;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::bitboards::get_bits_in_bitboard_from_pos;
@@ -50,6 +50,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         stone_captured: 0,
         capturable: false,
         capturing: false,
+        captured_pattern_blocking_value: 0,
         pattern_value: 0,
         blocker_value: 0,
         is_winning: (0, 0),
@@ -94,6 +95,7 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         stone_captured: 0,
         capturable: false,
         capturing: false,
+        captured_pattern_blocking_value: 0,
         pattern_value: 0,
         blocker_value: 0,
         is_winning: (0, 0),
@@ -438,12 +440,12 @@ pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool
 
 pub fn check_and_apply_capture(
     bitboards: &mut Bitboards,
+    board_state_info: &mut BoardStateInfo,
     axes: &[u16; 4],
     blocker_axes: &[u16; 4],
     pos: usize,
     player: i8,
-) -> i8 {
-    let mut stone_captured: i8 = 0;
+) {
     for axe in 0..axes.len() {
         let mut player_axe = axes[axe];
         let mut blocker_axe = blocker_axes[axe];
@@ -458,18 +460,20 @@ pub fn check_and_apply_capture(
             if (player_casted & CAPTURE_PATTERN[0].0) == CAPTURE_PATTERN[0].0 {
                 if (blocker_casted & CAPTURE_PATTERN[1].0) == CAPTURE_PATTERN[1].0 {
                     if *s == 3 {
-                        stone_captured += 2;
-                        apply_capture(
+                        board_state_info.stone_captured += 2;
+                        apply_capture_and_return_captured_pattern_blocking_value(
                             bitboards,
+                            board_state_info,
                             global_var::AXE_MOUVEMENT_VALUE[axe],
                             -1,
                             pos,
                             player,
                         );
                     } else {
-                        stone_captured += 2;
-                        apply_capture(
+                        board_state_info.stone_captured += 2;
+                        apply_capture_and_return_captured_pattern_blocking_value(
                             bitboards,
+                            board_state_info,
                             global_var::AXE_MOUVEMENT_VALUE[axe],
                             1,
                             pos,
@@ -480,7 +484,6 @@ pub fn check_and_apply_capture(
             }
         }
     }
-    return stone_captured;
 }
 
 #[pyfunction]

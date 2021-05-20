@@ -1,5 +1,5 @@
 /// Bitboards representation of goban
-#[derive(Copy, Clone, Hash,Debug)]
+#[derive(Copy, Clone, Hash, Debug)]
 pub struct Bitboards {
     pub white_board: [u64; 6],
     pub black_board: [u64; 6],
@@ -13,7 +13,7 @@ pub struct Transpotablenode {
 }
 
 /// State struct corresponding to an instant board value for a given player.
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 pub struct State {
     pub bitboards: Bitboards,
     pub available_move: Vec<State>,
@@ -39,6 +39,7 @@ pub struct BoardStateInfo {
     pub stone_captured: i8,
     pub capturable: bool,
     pub capturing: bool,
+    pub captured_pattern_blocking_value: i32,
     pub pattern_value: i32,
     pub blocker_value: i32,
     pub is_winning: (usize, i8),

@@ -37,8 +37,14 @@ fn computing_move(
     player: i8,
 ) {
     let axe_pattern: [[(usize, usize); 4]; 2];
-    board_state_info.stone_captured =
-        check_and_apply_capture(bitboards, player_axe, opponent_axe, pos, player);
+    check_and_apply_capture(
+        bitboards,
+        board_state_info,
+        player_axe,
+        opponent_axe,
+        pos,
+        player,
+    );
     board_state_info.capturable = check_is_capturable(player_axe, opponent_axe);
     board_state_info.capturing = check_is_capturable(opponent_axe, player_axe);
     axe_pattern = pattern_axes_finder(bitboards, player_axe, opponent_axe, pos, player);

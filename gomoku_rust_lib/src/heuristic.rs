@@ -17,6 +17,7 @@ pub fn heuristic(state: &mut State) -> i32 {
         return heuristic_ratios::HEURISTIC_MIN_VALUE;
     }
     state.board_info = board_state_info.clone();
+    value += board_state_info.captured_pattern_blocking_value;
     let ret = is_in_winning_pos(state);
     if ret == heuristic_ratios::HEURISTIC_MAX_VALUE || ret == heuristic_ratios::HEURISTIC_MIN_VALUE
     {
@@ -123,6 +124,7 @@ pub fn heuristic(state: &mut State) -> i32 {
 
         // Checking if AI try to block a double triple and prevent it
         if count_simple_blocking_two >= 2 {
+            println!("ici! Blocking double triple!");
             value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
         }
 
