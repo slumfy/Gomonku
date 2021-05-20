@@ -1,4 +1,5 @@
 use crate::algorithms;
+use crate::algorithms::algo_utils::return_move;
 use crate::bitboard_operations::apply_bit;
 use crate::data_struct;
 use crate::data_struct::Bitboards;
@@ -51,7 +52,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -79,7 +80,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -108,7 +109,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -137,7 +138,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -166,7 +167,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -195,7 +196,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -224,7 +225,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -253,7 +254,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -282,7 +283,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {
@@ -311,7 +312,7 @@ pub fn test_negamax_benchmark() {
             heuristic_ratios::HEURISTIC_MAX_VALUE,
             1,
         );
-        algorithms::return_move(&mut copy_state);
+        return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
         if end_time.duration_since(start_time) <= time_before_kill_process {

@@ -19,7 +19,6 @@ mod print;
 mod search_space;
 mod state;
 mod tests;
-mod transpotable;
 mod utils;
 
 use crate::check_move::get_move_info;
@@ -136,15 +135,6 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-        } else if search_algorithm == "negamax_tt" {
-            println!("using negamax_with_transpotable");
-            algorithms::negamax_with_transpotable(
-                &mut state,
-                depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
-                heuristic_ratios::HEURISTIC_MAX_VALUE,
-                player,
-            );
         } else if search_algorithm == "negascout" {
             println!("using negascout");
             algorithms::negascout(
@@ -154,16 +144,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-        } else if search_algorithm == "negascout_tt" {
-            println!("using negascout_with_transpotable");
-            algorithms::negascout_with_transpotable(
-                &mut state,
-                depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
-                heuristic_ratios::HEURISTIC_MAX_VALUE,
-                player,
-            );
-        }
+		}
 
         ai_move = algorithms::return_move(&mut state);
     }

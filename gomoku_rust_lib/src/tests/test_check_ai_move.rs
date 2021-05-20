@@ -1,4 +1,5 @@
 use crate::algorithms;
+use crate::algorithms::algo_utils::return_move;
 use crate::bitboard_operations::apply_bit;
 use crate::bitboards::create_bits_axes_from_pos;
 use crate::check_move::check_potential_winning_alignment;
@@ -48,7 +49,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
     assert_eq!(ai_returned_move.0, 175);
 
     // Second test, testing if AI choose simple blocking two instead of double block three
@@ -81,7 +82,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
     assert_eq!(ai_returned_move.0, 9);
 
     // Third test, testing blocking a three and blocking a two in the same time instead of blocking four and doing a three.
@@ -115,7 +116,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 183);
 
@@ -148,7 +149,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 161);
 
@@ -186,7 +187,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
     print_board_from_bitboard(&bitboards);
 
     assert_eq!(ai_returned_move.0, 184);
@@ -221,7 +222,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 42);
 
@@ -255,7 +256,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 42);
 
@@ -293,7 +294,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 302);
 
@@ -328,7 +329,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 182);
 
@@ -363,7 +364,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 184);
 
@@ -399,7 +400,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 184);
 
@@ -432,7 +433,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 161);
 
@@ -463,7 +464,7 @@ pub fn test_ai_move() {
         heuristic_ratios::HEURISTIC_MAX_VALUE,
         1,
     );
-    let ai_returned_move = algorithms::return_move(&mut state);
+    let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 1);
 }
