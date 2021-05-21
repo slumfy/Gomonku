@@ -25,7 +25,7 @@ pub struct State {
     pub heuristic: i64,
     pub is_playable: i8,
     pub win_state: (usize, i8),
-    pub bit_current_move_pos: usize,
+    pub current_move_pos: usize,
     pub board_info: BoardStateInfo,
     pub axes: [[u16; 4]; 2],
 }

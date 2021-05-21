@@ -20,12 +20,12 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
     //         "child {} heuristic {} pos {}",
     //         child,
     //         state.available_move[child].heuristic,
-    //         state.available_move[child].bit_current_move_pos
+    //         state.available_move[child].current_move_pos
     //     );
     // }
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     return (
-        (state.available_move[0].bit_current_move_pos),
+        (state.available_move[0].current_move_pos),
         state.available_move[0].heuristic,
     );
 }

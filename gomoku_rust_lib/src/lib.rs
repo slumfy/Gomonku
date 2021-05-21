@@ -45,11 +45,6 @@ use tests::__pyo3_get_function_pytest_test_blockers;
 use tests::__pyo3_get_function_pytest_updating_from_other_function;
 //END TEST BLOCKER
 
-static _ALPHABET: [char; 26] = [
-    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S',
-    'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-];
-
 #[pyfunction]
 pub fn ai_move(
     board: Vec<Vec<i8>>,
@@ -73,12 +68,12 @@ pub fn ai_move(
         global_var::DEPTH = depth;
     }
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
-    let bit_current_move_pos: usize = x * 19 + y;
+    let current_move_pos: usize = x * 19 + y;
     let ai_move: (usize, i64);
     let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         -player,
-        bit_current_move_pos,
+        current_move_pos,
         white_captured_stone,
         black_captured_stone,
         wining_position,
@@ -180,24 +175,24 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
             white_captured_stone, black_captured_stone
         );
     }
-    let bit_current_move_pos: usize = x * 19 + y;
+    let current_move_pos: usize = x * 19 + y;
 
     let mut bitboards = bitboards::create_bitboards_from_vec(&board); // BITBOARDS CREATION
     let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         player,
-        bit_current_move_pos,
+        current_move_pos,
         white_captured_stone,
         black_captured_stone,
         (0, 0),
         5,
     );
-    state.axes = create_bits_axes_from_pos(bit_current_move_pos, &mut bitboards);
+    state.axes = create_bits_axes_from_pos(current_move_pos, &mut bitboards);
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
     println!(
         "boardstate of returning move {} : {:?}",
-        state.bit_current_move_pos, board_state_info
+        state.current_move_pos, board_state_info
     );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;

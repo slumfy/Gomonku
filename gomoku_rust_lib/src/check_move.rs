@@ -37,7 +37,7 @@ fn check_overlapping_stone(pos: usize, bitboards: &Bitboards) -> bool {
 }
 
 pub fn check_is_wrong_move(state: &State) -> i8 {
-    if !check_overlapping_stone(state.bit_current_move_pos, &state.bitboards) {
+    if !check_overlapping_stone(state.current_move_pos, &state.bitboards) {
         return global_var::OVERLAPPING_STONE_MOVE;
     }
     return global_var::VALID_MOVE;
@@ -66,15 +66,15 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
     } else {
         apply_bit(
             &mut state.bitboards,
-            state.bit_current_move_pos as usize,
+            state.current_move_pos as usize,
             state.current_player,
         );
-        let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
+        let axes = create_bits_axes_from_pos(state.current_move_pos, &state.bitboards);
         pattern_axes_dispatcher(
             &mut board_state_info,
             &mut state.bitboards,
             &axes,
-            state.bit_current_move_pos as usize,
+            state.current_move_pos as usize,
             state.current_player,
         );
         state.axes = axes;
@@ -88,7 +88,7 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
 }
 
 pub fn get_move_info(state: &mut State) -> BoardStateInfo {
-    let axes = create_bits_axes_from_pos(state.bit_current_move_pos, &state.bitboards);
+    let axes = create_bits_axes_from_pos(state.current_move_pos, &state.bitboards);
     let mut board_state_info = BoardStateInfo {
         player: state.current_player,
         is_wrong_move: 0,
@@ -109,7 +109,7 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         &mut board_state_info,
         &mut state.bitboards,
         &axes,
-        state.bit_current_move_pos as usize,
+        state.current_move_pos as usize,
         state.current_player,
     );
     if state.current_player == global_var::PLAYER_WHITE_NB {
@@ -371,7 +371,7 @@ pub fn check_potential_winning_alignment(state: &State) -> [bool; 4] {
         for i in 1..7 {
             if !is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe_index],
-                state.bit_current_move_pos,
+                state.current_move_pos,
                 i as usize,
                 1,
             ) {
@@ -379,7 +379,7 @@ pub fn check_potential_winning_alignment(state: &State) -> [bool; 4] {
             }
             if !is_on_axe(
                 global_var::AXE_MOUVEMENT_VALUE[axe_index],
-                state.bit_current_move_pos,
+                state.current_move_pos,
                 i as usize,
                 -1,
             ) {

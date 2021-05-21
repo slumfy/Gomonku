@@ -13,7 +13,7 @@ use crate::search_space::get_search_box_bitboard;
 pub fn create_new_state(
     bitboards: &mut Bitboards,
     player: i8,
-    bit_current_move_pos: usize,
+    current_move_pos: usize,
     white_captured_stone: i8,
     black_captured_stone: i8,
     win_state: (usize, i8),
@@ -30,7 +30,7 @@ pub fn create_new_state(
         heuristic: 0,
         is_playable: 0,
         win_state: win_state,
-        bit_current_move_pos: bit_current_move_pos,
+        current_move_pos: current_move_pos,
         board_info: BoardStateInfo {
             player: player,
             is_wrong_move: 0,
@@ -74,7 +74,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
-        let bit_current_move_pos: usize = index_box[pos];
+        let current_move_pos: usize = index_box[pos];
         let nb_move_to_win: i8 = if -state.current_player == 1 {
             state.black_move_to_win
         } else {
@@ -83,7 +83,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         let mut child = create_new_state(
             &mut copy_bitboards,
             -state.current_player,
-            bit_current_move_pos,
+            current_move_pos,
             state.white_captured_stone,
             state.black_captured_stone,
             state.win_state,
@@ -91,7 +91,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         );
         child.heuristic = heuristic(&mut child);
         if child.is_playable == global_var::VALID_MOVE
-            && (saved_child.bit_current_move_pos == 0 || child.heuristic > saved_child.heuristic)
+            && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
         {
             saved_child = child.clone();
         }
@@ -121,7 +121,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     }
     // END TEST
     // for child in 0..childs_list.len(){
-    // 	println!("childlist {:?}",childs_list[child].bit_current_move_pos);
+    // 	println!("childlist {:?}",childs_list[child].current_move_pos);
     // }
     childs_list.sort_by_key(|d| Reverse(d.heuristic));
     let mut new_list: Vec<State> = Vec::new();
@@ -180,7 +180,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 // 		}
 // 	}
 // 	let mut max_reduce_list:Vec<State> = Vec::new();
-// 	if max_pattern_child.bit_current_move_pos != max_blocker_child.bit_current_move_pos {
+// 	if max_pattern_child.current_move_pos != max_blocker_child.current_move_pos {
 // 		max_reduce_list.push(max_pattern_child.clone());
 // 		max_reduce_list.push(max_blocker_child.clone());
 // 	}

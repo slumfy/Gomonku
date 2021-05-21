@@ -72,8 +72,8 @@ pub fn print_heuristic_table(state: &State) {
         line.push((19 - x).to_string());
         for y in 0..19 {
             for idx in 0..len {
-                if (state.available_move[idx].bit_current_move_pos) / 19 == x
-                    && (state.available_move[idx].bit_current_move_pos) % 19 == y
+                if (state.available_move[idx].current_move_pos) / 19 == x
+                    && (state.available_move[idx].current_move_pos) % 19 == y
                 {
                     if state.available_move[idx].heuristic >= heuristic_ratios::HEURISTIC_MAX_VALUE
                     {
@@ -214,7 +214,7 @@ static ALPHABET: [char; 26] = [
 
 #[allow(dead_code)]
 pub fn print_pos_in_human_format(pos: usize) {
-    let x_pos = 18 - pos / 19;
+    let x_pos = 19 - pos / 19;
     let y_pos = pos % 19;
     println!("{:?}, {:?}", x_pos, ALPHABET[y_pos]);
 }
