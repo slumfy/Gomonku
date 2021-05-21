@@ -135,8 +135,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-        }
-		 else if search_algorithm == "negascout" {
+        } else if search_algorithm == "negascout" {
             println!("using negascout");
             algorithms::negascout(
                 &mut state,
@@ -145,7 +144,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-		} else if search_algorithm == "minimax" {
+        } else if search_algorithm == "minimax" {
             println!("using minimax");
             algorithms::minimax(
                 &mut state,
@@ -154,7 +153,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 true,
             );
-		}
+        }
         ai_move = algorithms::return_move(&mut state);
     }
     if display_ai_time {
@@ -176,13 +175,30 @@ pub fn ai_move(
     Ok(((ai_x_move, ai_y_move), ai_move.1))
 }
 
+fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
+    // Run negamax with depth 1 to see if only min_value is returned.
+    // If it's the case, it means that the player have win.
+    let ai_move: (usize, i64);
+    algorithms::negamax(
+        state,
+        1,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        opponent,
+    );
+    ai_move = algorithms::return_move(state);
+    if ai_move.1 == heuristic_ratios::HEURISTIC_MIN_VALUE {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 #[pyfunction]
 fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
-
-    // println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -228,6 +244,13 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         }
         if board_state_info.is_winning.1 != 0 {
             dict.set_item("wining_position", board_state_info.is_winning)?;
+            state.win_state = board_state_info.is_winning;
+            // Run algorithm again for opponent to see if player have win.
+            if player_win(&mut state, -player) {
+                dict.set_item("player_win", true)?;
+            } else {
+                dict.set_item("player_win", false)?;
+            }
         }
         // println!("winstate =>> {:?}", board_state_info.is_winning);
     } else {

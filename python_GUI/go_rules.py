@@ -41,43 +41,47 @@ class GoRules:
         self.player_list.append(Player(PLAYER_WHITE_NB, PlayerType.HUMAN.value, "White"))
         self.player_list.append(Player(PLAYER_BLACK_NB, PlayerType.HUMAN.value, "Black"))
 
-    def place_stone(self, player, x, y):
-        opponant = -player.nb
-        winpos = (0, 0)
-        for p in self.player_list:
-            if p.nb == opponant:
-                if p.wining_position[1] != 0:
-                    winpos = p.wining_position
-        rust_place_stone_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
+    def place_stone(self, current_player, x, y):
+        # Return winning player, otherwise return 0. (-1 for black player, 1 for white player)
+        rust_place_stone_res = gomoku_rust.place_stone(self.board, current_player.nb, x, y)
         # print(rust_place_stone_res)
         if rust_place_stone_res["game_status"] != 0:
             return -2
         else:
             self.move_list.append(
-                Move(rust_place_stone_res["board"], (x * 19 + y), player, rust_place_stone_res["stone_captured"])
+                Move(
+                    rust_place_stone_res["board"],
+                    (x * 19 + y),
+                    current_player,
+                    rust_place_stone_res["stone_captured"],
+                )
             )
             self.print_move_list()
             self.board = rust_place_stone_res["board"]
-            player.capture_piece += rust_place_stone_res["stone_captured"]
-            player.nb_move_to_win = rust_place_stone_res["nb_move_to_win"]
+            current_player.capture_piece += rust_place_stone_res["stone_captured"]
+            current_player.nb_move_to_win = rust_place_stone_res["nb_move_to_win"]
             # gomoku_rust.show_state(rust_place_stone_res["board"], player.nb, x, y)
-            if player.capture_piece >= 10:
-                return player.nb
+            if current_player.capture_piece >= 10:
+                return current_player.nb
             if "wining_position" in rust_place_stone_res.keys():
-                for p in self.player_list:
-                    if p.nb == player.nb:
-                        p.wining_position = rust_place_stone_res["wining_position"]
-            for pl in self.player_list:
-                if pl != player:
-                    if pl.wining_position[1] != 0:
+                for player in self.player_list:
+                    if player.nb == current_player.nb:
+                        player.wining_position = rust_place_stone_res["wining_position"]
+                        # If player win, no need to go further, return the winning player.
+                        if rust_place_stone_res["player_win"]:
+                            return player.nb
+            for player in self.player_list:
+                if player != current_player:
+                    if player.wining_position[1] != 0:
                         if (
-                            gomoku_rust.check_move_is_still_winning(self.board, pl.wining_position)
+                            gomoku_rust.check_move_is_still_winning(
+                                self.board, player.wining_position
+                            )
                             == True
                         ):
-                            print("true")
-                            return pl.nb
+                            return player.nb
                         else:
-                            pl.wining_position = (0, 0)
+                            player.wining_position = (0, 0)
             return 0
 
     def AI_move(self, player, x, y, turn, display_ai_time: bool, search_algorithm: str, depth):
