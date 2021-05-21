@@ -72,6 +72,7 @@ name = "gomoku_rust"
 version = "0.1.0"
 dependencies = [
  "colour",
+ "lazy_static",
  "pyo3",
  "stoppable_thread",
 ]

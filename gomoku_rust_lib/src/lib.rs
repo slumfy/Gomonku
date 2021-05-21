@@ -21,6 +21,9 @@ mod state;
 mod tests;
 mod utils;
 
+#[macro_use]
+extern crate lazy_static;
+
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
 use bitboards::create_bits_axes_from_pos;

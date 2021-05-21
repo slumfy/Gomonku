@@ -13,6 +13,7 @@ name = "gomoku_rust"
 crate-type = ["cdylib"]
 
 [dependencies]
+lazy_static = "1.4.0"
 stoppable_thread = "0.2.1"
 colour = "0.6.0"
 

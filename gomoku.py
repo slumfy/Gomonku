@@ -37,11 +37,13 @@ def main(argv=None):
     )
     parser.add_argument(
         "--search_algorithm",
-        choices=["negamax", "negascout","minimax"],
+        choices=["negamax", "negascout","minimax","NTDF","BNS"],
         help="""
     - negamax
     - negascout
-	- minimax""",
+	- minimax
+	- NTDF
+	- BNS""",
         default="negamax",
     )
     args = parser.parse_args(argv)
