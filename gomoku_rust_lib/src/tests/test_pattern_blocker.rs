@@ -5,38 +5,103 @@ use crate::data_struct::Bitboards;
 use crate::global_var;
 
 pub fn test_blockers() {
+    println!("test_blocker_doubles_border");
     test_blocker_doubles_border();
+
+    println!("test_blocker_doubles_1_blocker_left");
     test_blocker_doubles_1_blocker_left();
+
+    println!("test_blocker_doubles_1_blocker_right");
     test_blocker_doubles_1_blocker_right();
+
+    println!("test_blocker_doubles_2_blocker_left");
     test_blocker_doubles_2_blocker_left();
+
+    println!("test_blocker_doubles_2_blocker_right");
     test_blocker_doubles_2_blocker_right();
+
+    println!("test_blocker_triple_border");
     test_blocker_triple_border();
+
+    println!("test_blocker_triple_1_blocker_left");
     test_blocker_triple_1_blocker_left();
+
+    println!("test_blocker_triple_1_blocker_right");
     test_blocker_triple_1_blocker_right();
+
+    println!("test_blocker_triple_2_blocker_right");
     test_blocker_triple_2_blocker_right();
+
+    println!("test_blocker_triple_2_blocker_left");
     test_blocker_triple_2_blocker_left();
+
+    println!("test_blocker_triple_2_with_hole_blocker_left");
     test_blocker_triple_2_with_hole_blocker_left();
+
+    println!("test_blocker_triple_2_with_hole_blocker_right");
     test_blocker_triple_2_with_hole_blocker_right();
+
+    println!("test_blocker_triple_3_blocker_right");
     test_blocker_triple_3_blocker_right();
+
+    println!("test_blocker_triple_3_blocker_middle");
     test_blocker_triple_3_blocker_middle();
+
+    println!("test_blocker_triple_3_blocker_left");
     test_blocker_triple_3_blocker_left();
+
+    println!("test_blocker_split_triple_rev_1_blocker");
     test_blocker_split_triple_rev_1_blocker();
+
+    println!("test_blocker_split_triple_rev_2_blocker");
     test_blocker_split_triple_rev_2_blocker();
+
+    println!("test_blocker_split_triple_rev_2_blocker_wrong");
     test_blocker_split_triple_rev_2_blocker_wrong();
+
+    println!("test_blocker_split_triple_1_blocker");
     test_blocker_split_triple_1_blocker();
+
+    println!("test_blocker_split_triple_2_blocker");
     test_blocker_split_triple_2_blocker();
+
+    println!("test_blocker_split_triple_2_blocker_wrong");
     test_blocker_split_triple_2_blocker_wrong();
+
+    println!("test_blocker_four_1_blocker");
     test_blocker_four_1_blocker();
+
+    println!("test_blocker_four_2_blocker");
     test_blocker_four_2_blocker();
+
+    println!("test_blocker_split_four2_1_blocker");
     test_blocker_split_four2_1_blocker();
+
+    println!("test_blocker_split_four2_2_blocker");
     test_blocker_split_four2_2_blocker();
+
+    println!("test_blocker_split_four1_1_blocker");
     test_blocker_split_four1_1_blocker();
+
+    println!("test_blocker_split_four1_1_blocker_wrong");
     test_blocker_split_four1_1_blocker_wrong();
+
+    println!("test_blocker_split_four1_2_blocker");
     test_blocker_split_four1_2_blocker();
+
+    println!("test_blocker_split_four1_2_blocker_wrong");
     test_blocker_split_four1_2_blocker_wrong();
+
+    println!("test_blocker_split_four3_1_blocker");
     test_blocker_split_four3_1_blocker();
+
+    println!("test_blocker_split_four3_1_blocker_wrong");
     test_blocker_split_four3_1_blocker_wrong();
+
+    println!("test_blocker_split_four3_2_blocker");
     test_blocker_split_four3_2_blocker();
+
+    println!("test_blocker_split_four3_2_blocker_wrong");
     test_blocker_split_four3_2_blocker_wrong();
 }
 
