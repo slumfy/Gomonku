@@ -1,3 +1,9 @@
+use crate::algorithms::algo_utils::update_max_depth;
+use crate::algorithms::algo_utils::update_node_checked_count;
+use crate::algorithms::transpotable::transposition_table_push;
+use crate::algorithms::transpotable::transposition_table_search;
+use crate::algorithms::transpotable::TRANSPOTABLENEGA;
+use crate::algorithms::transpotable::TRANSPOTABLESCOUT;
 use crate::data_struct::State;
 use crate::data_struct::Transpotablenode;
 use crate::global_var;

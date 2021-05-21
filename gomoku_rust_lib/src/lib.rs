@@ -41,41 +41,8 @@ use tests::__pyo3_get_function_pytest_is_on_axe;
 use tests::__pyo3_get_function_pytest_pattern_axes_finder;
 use tests::__pyo3_get_function_pytest_print_pos_in_human_format;
 use tests::__pyo3_get_function_pytest_returning_dict_to_python;
+use tests::__pyo3_get_function_pytest_test_blockers;
 use tests::__pyo3_get_function_pytest_updating_from_other_function;
-//TEST BLOCKER
-use tests::__pyo3_get_function_pytest_test_blocker_doubles_1_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_doubles_1_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_doubles_2_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_doubles_2_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_doubles_border;
-use tests::__pyo3_get_function_pytest_test_blocker_four_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_four_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four1_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four1_1_blocker_wrong;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four1_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four1_2_blocker_wrong;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four2_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four2_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four3_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four3_1_blocker_wrong;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four3_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_four3_2_blocker_wrong;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_2_blocker_wrong;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_1_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker;
-use tests::__pyo3_get_function_pytest_test_blocker_split_triple_rev_2_blocker_wrong;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_1_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_2_with_hole_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_left;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_middle;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_3_blocker_right;
-use tests::__pyo3_get_function_pytest_test_blocker_triple_border;
 //END TEST BLOCKER
 
 static _ALPHABET: [char; 26] = [
@@ -138,8 +105,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-        }
-		 else if search_algorithm == "negascout" {
+        } else if search_algorithm == "negascout" {
             println!("using negascout");
             algorithms::negascout(
                 &mut state,
@@ -148,7 +114,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 player,
             );
-		} else if search_algorithm == "minimax" {
+        } else if search_algorithm == "minimax" {
             println!("using minimax");
             algorithms::minimax(
                 &mut state,
@@ -157,7 +123,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 true,
             );
-		}
+        }
         ai_move = algorithms::return_move(&mut state);
     }
     if display_ai_time {
@@ -179,13 +145,30 @@ pub fn ai_move(
     Ok(((ai_x_move, ai_y_move), ai_move.1))
 }
 
+fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
+    // Run negamax with depth 1 to see if only min_value is returned.
+    // If it's the case, it means that the player have win.
+    let ai_move: (usize, i64);
+    algorithms::negamax(
+        state,
+        1,
+        heuristic_ratios::HEURISTIC_MIN_VALUE,
+        heuristic_ratios::HEURISTIC_MAX_VALUE,
+        opponent,
+    );
+    ai_move = algorithms::return_move(state);
+    if ai_move.1 == heuristic_ratios::HEURISTIC_MIN_VALUE {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 #[pyfunction]
 fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyResult<PyObject> {
     let gil = Python::acquire_gil();
     let py = gil.python();
     let dict = PyDict::new(py);
-
-    // println!("place stone for player {:?} at x {:?} y {:?}", player, x, y);
 
     let white_captured_stone: i8;
     let black_captured_stone: i8;
@@ -231,6 +214,13 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         }
         if board_state_info.is_winning.1 != 0 {
             dict.set_item("wining_position", board_state_info.is_winning)?;
+            state.win_state = board_state_info.is_winning;
+            // Run algorithm again for opponent to see if player have win.
+            if player_win(&mut state, -player) {
+                dict.set_item("player_win", true)?;
+            } else {
+                dict.set_item("player_win", false)?;
+            }
         }
         // println!("winstate =>> {:?}", board_state_info.is_winning);
     } else {
@@ -292,128 +282,7 @@ pub fn gomoku_tests(_py: Python, m: &PyModule) -> PyResult<()> {
         m
     )?)?;
     //TEST BLOCKER
-    m.add_function(wrap_pyfunction!(pytest_test_blocker_doubles_border, m)?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_doubles_1_blocker_left,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_doubles_1_blocker_right,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_doubles_2_blocker_left,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_doubles_2_blocker_right,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(pytest_test_blocker_triple_border, m)?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_1_blocker_left,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_1_blocker_right,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_2_blocker_right,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_2_blocker_left,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_2_with_hole_blocker_left,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_2_with_hole_blocker_right,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_3_blocker_right,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_3_blocker_middle,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_triple_3_blocker_left,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_triple_rev_1_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_triple_rev_2_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_triple_rev_2_blocker_wrong,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_triple_1_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_triple_2_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_triple_2_blocker_wrong,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(pytest_test_blocker_four_1_blocker, m)?)?;
-    m.add_function(wrap_pyfunction!(pytest_test_blocker_four_2_blocker, m)?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four2_1_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four2_2_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four1_1_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four1_1_blocker_wrong,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four1_2_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four1_2_blocker_wrong,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four3_1_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four3_1_blocker_wrong,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four3_2_blocker,
-        m
-    )?)?;
-    m.add_function(wrap_pyfunction!(
-        pytest_test_blocker_split_four3_2_blocker_wrong,
-        m
-    )?)?;
-
-    // END TEST BLOCKER
+    m.add_function(wrap_pyfunction!(pytest_test_blockers, m)?)?;
     Ok(())
 }
 

@@ -1,5 +1,5 @@
-use crate::global_var;
 use crate::data_struct::State;
+use crate::global_var;
 use crate::print::print_heuristic_table;
 use std::cmp::Reverse;
 

@@ -126,8 +126,8 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     childs_list.sort_by_key(|d| Reverse(d.heuristic));
     let mut new_list: Vec<State> = Vec::new();
     let mut len = childs_list.len();
-    if len > 5 {
-        len = 5;
+    if len > 10 {
+        len = 10;
     }
     for child in 0..len {
         new_list.push(childs_list[child].clone());
