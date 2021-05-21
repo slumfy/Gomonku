@@ -4,7 +4,43 @@ use crate::bitpattern::pattern_axes_finder;
 use crate::data_struct::Bitboards;
 use crate::global_var;
 
-pub fn test_blocker_doubles_border() {
+pub fn test_blockers() {
+    test_blocker_doubles_border();
+    test_blocker_doubles_1_blocker_left();
+    test_blocker_doubles_1_blocker_right();
+    test_blocker_doubles_2_blocker_left();
+    test_blocker_doubles_2_blocker_right();
+    test_blocker_triple_border();
+    test_blocker_triple_1_blocker_left();
+    test_blocker_triple_1_blocker_right();
+    test_blocker_triple_2_blocker_right();
+    test_blocker_triple_2_blocker_left();
+    test_blocker_triple_2_with_hole_blocker_left();
+    test_blocker_triple_2_with_hole_blocker_right();
+    test_blocker_triple_3_blocker_right();
+    test_blocker_triple_3_blocker_middle();
+    test_blocker_triple_3_blocker_left();
+    test_blocker_split_triple_rev_1_blocker();
+    test_blocker_split_triple_rev_2_blocker();
+    test_blocker_split_triple_rev_2_blocker_wrong();
+    test_blocker_split_triple_1_blocker();
+    test_blocker_split_triple_2_blocker();
+    test_blocker_split_triple_2_blocker_wrong();
+    test_blocker_four_1_blocker();
+    test_blocker_four_2_blocker();
+    test_blocker_split_four2_1_blocker();
+    test_blocker_split_four2_2_blocker();
+    test_blocker_split_four1_1_blocker();
+    test_blocker_split_four1_1_blocker_wrong();
+    test_blocker_split_four1_2_blocker();
+    test_blocker_split_four1_2_blocker_wrong();
+    test_blocker_split_four3_1_blocker();
+    test_blocker_split_four3_1_blocker_wrong();
+    test_blocker_split_four3_2_blocker();
+    test_blocker_split_four3_2_blocker_wrong();
+}
+
+fn test_blocker_doubles_border() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -27,7 +63,7 @@ pub fn test_blocker_doubles_border() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 2)]);
 }
 
-pub fn test_blocker_doubles_1_blocker_left() {
+fn test_blocker_doubles_1_blocker_left() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -50,7 +86,7 @@ pub fn test_blocker_doubles_1_blocker_left() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 1)]);
 }
 
-pub fn test_blocker_doubles_1_blocker_right() {
+fn test_blocker_doubles_1_blocker_right() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -73,7 +109,7 @@ pub fn test_blocker_doubles_1_blocker_right() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 1)]);
 }
 
-pub fn test_blocker_doubles_2_blocker_left() {
+fn test_blocker_doubles_2_blocker_left() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -97,7 +133,7 @@ pub fn test_blocker_doubles_2_blocker_left() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 2)]);
 }
 
-pub fn test_blocker_doubles_2_blocker_right() {
+fn test_blocker_doubles_2_blocker_right() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -121,7 +157,7 @@ pub fn test_blocker_doubles_2_blocker_right() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 2)]);
 }
 
-pub fn test_blocker_triple_border() {
+fn test_blocker_triple_border() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -145,7 +181,7 @@ pub fn test_blocker_triple_border() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 2)]);
 }
 
-pub fn test_blocker_triple_1_blocker_left() {
+fn test_blocker_triple_1_blocker_left() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -169,7 +205,7 @@ pub fn test_blocker_triple_1_blocker_left() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 1)]);
 }
 
-pub fn test_blocker_triple_1_blocker_right() {
+fn test_blocker_triple_1_blocker_right() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -193,7 +229,7 @@ pub fn test_blocker_triple_1_blocker_right() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 1)]);
 }
 
-pub fn test_blocker_triple_2_blocker_right() {
+fn test_blocker_triple_2_blocker_right() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -218,7 +254,7 @@ pub fn test_blocker_triple_2_blocker_right() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 2)]);
 }
 
-pub fn test_blocker_triple_2_blocker_left() {
+fn test_blocker_triple_2_blocker_left() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -243,7 +279,7 @@ pub fn test_blocker_triple_2_blocker_left() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 2)]);
 }
 
-pub fn test_blocker_triple_2_with_hole_blocker_left() {
+fn test_blocker_triple_2_with_hole_blocker_left() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -268,7 +304,7 @@ pub fn test_blocker_triple_2_with_hole_blocker_left() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 2)]);
 }
 
-pub fn test_blocker_triple_2_with_hole_blocker_right() {
+fn test_blocker_triple_2_with_hole_blocker_right() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -293,7 +329,7 @@ pub fn test_blocker_triple_2_with_hole_blocker_right() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (6, 2)]);
 }
 
-pub fn test_blocker_triple_3_blocker_right() {
+fn test_blocker_triple_3_blocker_right() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -319,7 +355,7 @@ pub fn test_blocker_triple_3_blocker_right() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
 }
 
-pub fn test_blocker_triple_3_blocker_middle() {
+fn test_blocker_triple_3_blocker_middle() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -345,7 +381,7 @@ pub fn test_blocker_triple_3_blocker_middle() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
 }
 
-pub fn test_blocker_triple_3_blocker_left() {
+fn test_blocker_triple_3_blocker_left() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -371,7 +407,7 @@ pub fn test_blocker_triple_3_blocker_left() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
 }
 
-pub fn test_blocker_split_triple_rev_1_blocker() {
+fn test_blocker_split_triple_rev_1_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -395,7 +431,7 @@ pub fn test_blocker_split_triple_rev_1_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 1)]);
 }
 
-pub fn test_blocker_split_triple_rev_2_blocker() {
+fn test_blocker_split_triple_rev_2_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -419,7 +455,7 @@ pub fn test_blocker_split_triple_rev_2_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (8, 2)]);
 }
 
-pub fn test_blocker_split_triple_rev_2_blocker_wrong() {
+fn test_blocker_split_triple_rev_2_blocker_wrong() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -444,7 +480,7 @@ pub fn test_blocker_split_triple_rev_2_blocker_wrong() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
 }
 
-pub fn test_blocker_split_triple_1_blocker() {
+fn test_blocker_split_triple_1_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -468,7 +504,7 @@ pub fn test_blocker_split_triple_1_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 1)]);
 }
 
-pub fn test_blocker_split_triple_2_blocker() {
+fn test_blocker_split_triple_2_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -492,7 +528,7 @@ pub fn test_blocker_split_triple_2_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (7, 2)]);
 }
 
-pub fn test_blocker_split_triple_2_blocker_wrong() {
+fn test_blocker_split_triple_2_blocker_wrong() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -517,7 +553,7 @@ pub fn test_blocker_split_triple_2_blocker_wrong() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
 }
 
-pub fn test_blocker_four_1_blocker() {
+fn test_blocker_four_1_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -542,7 +578,7 @@ pub fn test_blocker_four_1_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (1, 1)]);
 }
 
-pub fn test_blocker_four_2_blocker() {
+fn test_blocker_four_2_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -568,7 +604,7 @@ pub fn test_blocker_four_2_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (1, 2)]);
 }
 
-pub fn test_blocker_split_four2_1_blocker() {
+fn test_blocker_split_four2_1_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -593,7 +629,7 @@ pub fn test_blocker_split_four2_1_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (9, 1)]);
 }
 
-pub fn test_blocker_split_four2_2_blocker() {
+fn test_blocker_split_four2_2_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -618,7 +654,7 @@ pub fn test_blocker_split_four2_2_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (4, 2)]);
 }
 
-pub fn test_blocker_split_four1_1_blocker() {
+fn test_blocker_split_four1_1_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -643,7 +679,7 @@ pub fn test_blocker_split_four1_1_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 1)]);
 }
 
-pub fn test_blocker_split_four1_1_blocker_wrong() {
+fn test_blocker_split_four1_1_blocker_wrong() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -668,7 +704,7 @@ pub fn test_blocker_split_four1_1_blocker_wrong() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
 }
 
-pub fn test_blocker_split_four1_2_blocker() {
+fn test_blocker_split_four1_2_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -693,7 +729,7 @@ pub fn test_blocker_split_four1_2_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (3, 2)]);
 }
 
-pub fn test_blocker_split_four1_2_blocker_wrong() {
+fn test_blocker_split_four1_2_blocker_wrong() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -719,7 +755,7 @@ pub fn test_blocker_split_four1_2_blocker_wrong() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 2)]);
 }
 
-pub fn test_blocker_split_four3_1_blocker() {
+fn test_blocker_split_four3_1_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -744,7 +780,7 @@ pub fn test_blocker_split_four3_1_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (5, 1)]);
 }
 
-pub fn test_blocker_split_four3_1_blocker_wrong() {
+fn test_blocker_split_four3_1_blocker_wrong() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -769,7 +805,7 @@ pub fn test_blocker_split_four3_1_blocker_wrong() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (0, 3)]);
 }
 
-pub fn test_blocker_split_four3_2_blocker() {
+fn test_blocker_split_four3_2_blocker() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],
@@ -794,7 +830,7 @@ pub fn test_blocker_split_four3_2_blocker() {
     assert_eq!(returned_blocker, [(0, 3), (0, 3), (0, 3), (2, 2)]);
 }
 
-pub fn test_blocker_split_four3_2_blocker_wrong() {
+fn test_blocker_split_four3_2_blocker_wrong() {
     let mut bitboards: Bitboards = Bitboards {
         white_board: [0, 0, 0, 0, 0, 0],
         black_board: [0, 0, 0, 0, 0, 0],

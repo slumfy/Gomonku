@@ -348,7 +348,7 @@ class PyGameGo:
                     self.depth,
                 )
                 x, y = AI_move[0]
-                stone_status = go_rules.place_stone(self.player, x, y)
+                stone_status = go_rules.place_stone(current_player=self.player, x=x, y=y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
                 self.print_player_to_move()
                 ai_helper = None
@@ -388,7 +388,9 @@ class PyGameGo:
                             self.screen.blit(self.go_board_resize, self.start_point)
                             x = self.mouse_pos_to_piece_pos(event.pos[1], 33, 62)
                             y = self.mouse_pos_to_piece_pos(event.pos[0], 33, 62)
-                            stone_status = go_rules.place_stone(self.player, x, y)
+                            stone_status = go_rules.place_stone(
+                                current_player=self.player, x=x, y=y
+                            )
                             self.play_piece(go_rules, stone_status, win_status, x, y)
                             self.print_player_to_move()
                             ai_helper = None
