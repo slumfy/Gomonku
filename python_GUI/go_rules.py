@@ -48,25 +48,25 @@ class GoRules:
             if p.nb == opponant:
                 if p.wining_position[1] != 0:
                     winpos = p.wining_position
-        Rust_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
-        # print(Rust_res)
-        if Rust_res["game_status"] != 0:
+        rust_place_stone_res = gomoku_rust.place_stone(self.board, player.nb, x, y)
+        # print(rust_place_stone_res)
+        if rust_place_stone_res["game_status"] != 0:
             return -2
         else:
             self.move_list.append(
-                Move(Rust_res["board"], (x * 19 + y), player, Rust_res["stone_captured"])
+                Move(rust_place_stone_res["board"], (x * 19 + y), player, rust_place_stone_res["stone_captured"])
             )
             self.print_move_list()
-            self.board = Rust_res["board"]
-            player.capture_piece += Rust_res["stone_captured"]
-            player.nb_move_to_win = Rust_res["nb_move_to_win"]
-            # gomoku_rust.show_state(Rust_res["board"], player.nb, x, y)
+            self.board = rust_place_stone_res["board"]
+            player.capture_piece += rust_place_stone_res["stone_captured"]
+            player.nb_move_to_win = rust_place_stone_res["nb_move_to_win"]
+            # gomoku_rust.show_state(rust_place_stone_res["board"], player.nb, x, y)
             if player.capture_piece >= 10:
                 return player.nb
-            if "wining_position" in Rust_res.keys():
+            if "wining_position" in rust_place_stone_res.keys():
                 for p in self.player_list:
                     if p.nb == player.nb:
-                        p.wining_position = Rust_res["wining_position"]
+                        p.wining_position = rust_place_stone_res["wining_position"]
             for pl in self.player_list:
                 if pl != player:
                     if pl.wining_position[1] != 0:
