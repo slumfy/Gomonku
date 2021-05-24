@@ -142,10 +142,10 @@ pub fn heuristic(state: &mut State) -> i64 {
 }
 
 fn pattern_two_is_capturable(current_player_axe: u16, opponent_axe: u16) -> bool {
-    if ((current_player_axe & (1 << 7) == 1 << 7)
-        && (opponent_axe & (1 << 8) == 1 << 8 || opponent_axe & (1 << 6) == 1 << 6))
-        || ((current_player_axe & (1 << 9) == 1 << 9)
-            && (opponent_axe & (1 << 10) == 1 << 10 || opponent_axe & (1 << 7) == 1 << 7))
+    if (current_player_axe & (1 << 7) == (1 << 7)
+        && (opponent_axe & (1 << 9) == (1 << 9) || opponent_axe & (1 << 6) == (1 << 6)))
+        || (current_player_axe & (1 << 9) == 1 << 9
+            && (opponent_axe & (1 << 10) == (1 << 10) || opponent_axe & (1 << 7) == (1 << 7)))
     {
         return true;
     }
