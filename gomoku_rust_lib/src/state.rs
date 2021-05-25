@@ -150,10 +150,10 @@ pub fn state_is_terminated(state: &mut State) -> bool {
     }
 	let mut opponent_capture_score: i8 = 0;
 	if state.current_player == global_var::PLAYER_WHITE_NB {
-		opponent_capture_score = state.black_captured_stone;
+		opponent_capture_score = state.total_black_captured_stone;
 	}
 	else {
-		opponent_capture_score = state.white_captured_stone;
+		opponent_capture_score = state.total_white_captured_stone;
 	}
     if state.board_info.pattern_axe[0].1 == 5 {
 		if state.available_move.len() == 0 {
