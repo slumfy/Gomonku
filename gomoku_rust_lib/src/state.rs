@@ -47,6 +47,7 @@ pub fn create_new_state(
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },
         axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
+		stone_threaten: 0,
     };
     if player == 1 {
         new_state.black_move_to_win = nb_move_to_win;
@@ -72,6 +73,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         0,
     );
     saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
+	let mut stone_threaten: u32 = 0;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let current_move_pos: usize = index_box[pos];
@@ -90,6 +92,9 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             nb_move_to_win,
         );
         child.heuristic = heuristic(&mut child);
+		if child.board_info.capturable == true {
+			stone_threaten += 1;
+		}
         if child.is_playable == global_var::VALID_MOVE
             && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
         {
@@ -119,10 +124,6 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     if childs_list.len() == 0 {
         childs_list.push(saved_child);
     }
-    // END TEST
-    // for child in 0..childs_list.len(){
-    // 	println!("childlist {:?}",childs_list[child].current_move_pos);
-    // }
     childs_list.sort_by_key(|d| Reverse(d.heuristic));
     let mut new_list: Vec<State> = Vec::new();
     let mut len = childs_list.len();
@@ -130,73 +131,21 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         len = 10;
     }
     for child in 0..len {
+		childs_list[child].stone_threaten = stone_threaten;
         new_list.push(childs_list[child].clone());
     }
     return new_list;
-    // if childs_list.len() > 1 {
-    // childs_list = reduce_child_list(childs_list);
-    // }
-    // return childs_list;
 }
-
-// fn reduce_child_list(childs_list: Vec<State>) -> Vec<State> {
-// 	let mut max_pattern = 10;
-// 	let mut max_blocker = 10;
-// 	let mut reduce_list: Vec<State>;
-// 	let mut max_pattern_child: State = childs_list[0].clone();
-// 	let mut max_blocker_child: State = childs_list[0].clone();
-// 	reduce_list = Vec::new();
-// 	for child in 0..childs_list.len() {
-// 		for x in 0..4 {
-// 			if childs_list[child].board_info.pattern_axe[x].1 != 3 && childs_list[child].board_info.pattern_axe[x].0 < max_pattern {
-// 				max_pattern = childs_list[child].board_info.pattern_axe[x].0;
-// 				max_pattern_child = childs_list[child].clone();
-// 			}
-// 			if childs_list[child].board_info.blocker_axe[x].1 != 3 && childs_list[child].board_info.blocker_axe[x].0 < max_blocker {
-// 				max_blocker = childs_list[child].board_info.blocker_axe[x].0;
-// 				max_blocker_child = childs_list[child].clone();
-// 			}
-// 		}
-// 	}
-// 	// println!("max_patt {} max_block {}",max_pattern,max_blocker);
-// 	for child in 0..childs_list.len() {
-// 		for x in 0..4 {
-// 			if childs_list[child].board_info.pattern_axe[x].0 == max_pattern {
-// 				if childs_list[child].board_info.pattern_axe[x].1 != 3 {
-// 				if childs_list[child].heuristic > max_pattern_child.heuristic {
-// 					max_pattern_child = childs_list[child].clone();
-// 				}
-// 				reduce_list.push(childs_list[child].clone());
-// 				break;
-// 			}
-// 		}
-// 			if childs_list[child].board_info.blocker_axe[x].0 == max_blocker {
-// 				if childs_list[child].heuristic > max_blocker_child.heuristic {
-// 					max_blocker_child = childs_list[child].clone();
-// 				}
-// 				reduce_list.push(childs_list[child].clone());
-// 				break;
-// 			}
-// 		}
-// 	}
-// 	let mut max_reduce_list:Vec<State> = Vec::new();
-// 	if max_pattern_child.current_move_pos != max_blocker_child.current_move_pos {
-// 		max_reduce_list.push(max_pattern_child.clone());
-// 		max_reduce_list.push(max_blocker_child.clone());
-// 	}
-// 	else {
-// 		max_reduce_list.push(max_pattern_child.clone());
-// 	}
-// 	// return reduce_list;
-// 	return max_reduce_list;
-// }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
     if state.white_captured_stone >= 10 || state.black_captured_stone >= 10 {
         return true;
     }
-    if state.board_info.pattern_axe[0].1 == 5 {
+    if state.board_info.pattern_axe[0].1 == 5 && state.stone_threaten == 0 {
         return true;
     }
+	// if state.board_info.pattern_axe[0].0 == 0 && state.stone_threaten == 0 && state.board_info.capturable == false {
+    //     return true;
+    // }
     return false;
 }

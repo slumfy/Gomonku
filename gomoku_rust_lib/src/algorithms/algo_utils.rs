@@ -11,19 +11,18 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
         println!("pruning count: {:?}", global_var::PRUNING_COUNT);
         println!("TT cut count: {:?}", global_var::TT_COUNT);
     }
+	reset_max_depth();
     reset_node_checked_count();
     reset_pruning_count();
     reset_tt_count();
-    // println!("NB OF MOVE: {}",state.available_move.len());
+	// state.available_move.sort_by_key(|d| d.heuristic);
     // for child in 0..state.available_move.len() {
-    //     println!(
-    //         "child {} heuristic {} pos {}",
-    //         child,
-    //         state.available_move[child].heuristic,
-    //         state.available_move[child].current_move_pos
-    //     );
+	// 	if state.available_move[child].heuristic == -state.heuristic {
+	// 		return(state.available_move[child].current_move_pos,
+	// 			state.available_move[child].heuristic);
+	// 	}
+		
     // }
-    state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     return (
         (state.available_move[0].current_move_pos),
         state.available_move[0].heuristic,
@@ -32,9 +31,16 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
 
 pub fn update_max_depth(depth: i32) {
     unsafe {
+		// println!("maxdepth {} DEPTH {} , depth {}",global_var::MAX_DEPTH_REACH,global_var::DEPTH,depth);
         if global_var::DEPTH - depth > global_var::MAX_DEPTH_REACH {
             global_var::MAX_DEPTH_REACH = global_var::DEPTH - depth;
         }
+    }
+}
+
+pub fn reset_max_depth() {
+    unsafe {
+        global_var::MAX_DEPTH_REACH = 0;
     }
 }
 

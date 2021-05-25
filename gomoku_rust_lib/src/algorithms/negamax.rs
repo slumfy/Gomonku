@@ -18,6 +18,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, col
     if depth == 0 || state_is_terminated(state) == true {
         // transpotable::tt_insert(state,depth);
         // transpotable::tt_search(state,depth);
+		// println!("color of node {}, heuristic * color {}, depth {}", color, state.heuristic * color as i64,depth);
         return state.heuristic * color as i64;
     }
     if depth != 0 {
@@ -46,5 +47,9 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, col
         }
     }
     state.heuristic = value;
+	println!();
+	println!("NEW VALUE OF NODE: {}", state.heuristic);
+	print_pos_in_human_format(state.current_move_pos);
+	println!();
     return value;
 }

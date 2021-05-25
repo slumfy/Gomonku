@@ -83,13 +83,9 @@ pub fn ai_move(
     // println!("Black move_to_win {}", state.black_move_to_win);
     // println!("White move_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
-
     if turn == 0 {
         ai_move = (180, 0);
     } else {
-        unsafe {
-            global_var::MAX_DEPTH_REACH = 0;
-        }
         if search_algorithm == "negamax" {
             println!("using negamax");
             // For alpha, sending  min value + 1 to prevent overflow when changing sign.
@@ -143,6 +139,9 @@ pub fn ai_move(
 fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
     // Run negamax with depth 1 to see if only min_value is returned.
     // If it's the case, it means that the player have win.
+	unsafe {
+        global_var::DEPTH = 1;
+    }
     let ai_move: (usize, i64);
     algorithms::negamax(
         state,

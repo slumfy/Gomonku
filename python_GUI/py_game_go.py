@@ -305,10 +305,11 @@ class PyGameGo:
         )
         self.board_screen_blit(go_rules, 33, 62)
 
-        if self.starting_stone_color == PLAYER_WHITE_NB:
-            self.player = go_rules.player_list[0]
-        else:
-            self.player = go_rules.player_list[1]
+        if self.moves_count == 0:
+            if self.starting_stone_color == PLAYER_WHITE_NB:
+                self.player = go_rules.player_list[0]
+            else:
+                self.player = go_rules.player_list[1]
         self.print_player_to_move()
         ai_helper = None
         while 1:
