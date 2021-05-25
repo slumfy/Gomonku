@@ -28,7 +28,7 @@ pub struct State {
     pub current_move_pos: usize,
     pub board_info: BoardStateInfo,
     pub axes: [[u16; 4]; 2],
-	pub stone_threaten: u32,
+	pub max_eat_next_move : i8,
 }
 
 /// Board state information for computing heuristic and validate move

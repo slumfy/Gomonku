@@ -21,10 +21,15 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, col
 		// println!("color of node {}, heuristic * color {}, depth {}", color, state.heuristic * color as i64,depth);
         return state.heuristic * color as i64;
     }
-    if depth != 0 {
+    if depth != 0 && state.available_move.len() == 0 {
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
+	unsafe {
+		if depth == global_var::DEPTH {
+			println!("nb of child {}", state.available_move.len());
+		}
+}
     if state.available_move.len() < 1 {
         return state.heuristic * color as i64;
     }
