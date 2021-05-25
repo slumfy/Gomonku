@@ -25,7 +25,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, col
         state.available_move = create_child(&mut state);
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
-    if state.available_move.len() <= 1 {
+    if state.available_move.len() < 1 {
         return state.heuristic * color as i64;
     }
     let mut value: i64 = heuristic_ratios::HEURISTIC_MIN_VALUE;
