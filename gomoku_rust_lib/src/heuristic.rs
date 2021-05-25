@@ -26,7 +26,7 @@ pub fn heuristic(state: &mut State) -> i64 {
     let move_stone_captured = state.board_info.stone_captured;
     let player_total_stone_captured;
     let opponent_total_stone_captured;
-    if state.current_player == global_var::VALID_MOVE {
+    if state.current_player == global_var::PLAYER_WHITE_NB {
         opponent_total_stone_captured = state.total_black_captured_stone;
         player_total_stone_captured = state.total_white_captured_stone;
     } else {
@@ -53,9 +53,24 @@ pub fn heuristic(state: &mut State) -> i64 {
 
     // Add stone captured value
     if move_stone_captured != 0 {
-        value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
-            player_total_stone_captured,
-        );
+        if state.current_player == global_var::PLAYER_WHITE_NB {
+            state.all_depth_white_captured_stone_value =
+                heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+                    player_total_stone_captured,
+                );
+        } else {
+            state.all_depth_black_captured_stone_value =
+                heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+                    player_total_stone_captured,
+                );
+        }
+    }
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        value += state.all_depth_white_captured_stone_value;
+        value -= state.all_depth_black_captured_stone_value;
+    } else {
+        value += state.all_depth_black_captured_stone_value;
+        value -= state.all_depth_white_captured_stone_value;
     }
 
     let mut count_blocking_triple = 0;
