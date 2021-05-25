@@ -1,7 +1,5 @@
 //! Global variables used in rust.
 
-use std::collections::HashMap;
-
 // Search algorithm global vars
 pub static mut DEPTH: i32 = 1;
 // depth reach with negamax
@@ -13,8 +11,8 @@ pub static mut PRUNING_COUNT: i32 = 0;
 // nb of transpotable cut
 pub static mut TT_COUNT: i32 = 0;
 // Capturing stone count
-pub static mut WHITE_CAPTURED_STONE: i8 = 0;
-pub static mut BLACK_CAPTURED_STONE: i8 = 0;
+pub static mut TOTAL_WHITE_CAPTURED_STONE: i8 = 0;
+pub static mut TOTAL_BLACK_CAPTURED_STONE: i8 = 0;
 
 // Player color
 pub static PLAYER_WHITE_NB: i8 = 1;

@@ -59,12 +59,12 @@ pub fn ai_move(
     depth: i32,
 ) -> PyResult<((usize, usize), i64)> {
     // println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
-    let white_captured_stone: i8;
-    let black_captured_stone: i8;
+    let total_white_captured_stone: i8;
+    let total_black_captured_stone: i8;
 
     unsafe {
-        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
-        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
+        total_white_captured_stone = global_var::TOTAL_WHITE_CAPTURED_STONE;
+        total_black_captured_stone = global_var::TOTAL_BLACK_CAPTURED_STONE;
         global_var::DEPTH = depth;
     }
     let mut bitboards = bitboards::create_bitboards_from_vec(&board);
@@ -74,8 +74,10 @@ pub fn ai_move(
         &mut bitboards,
         -player,
         current_move_pos,
-        white_captured_stone,
-        black_captured_stone,
+        total_white_captured_stone,
+        total_black_captured_stone,
+        0,
+        0,
         wining_position,
         nb_move_to_win,
     );
@@ -139,7 +141,7 @@ pub fn ai_move(
 fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
     // Run negamax with depth 1 to see if only min_value is returned.
     // If it's the case, it means that the player have win.
-	unsafe {
+    unsafe {
         global_var::DEPTH = 1;
     }
     let ai_move: (usize, i64);
@@ -164,14 +166,14 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     let py = gil.python();
     let dict = PyDict::new(py);
 
-    let white_captured_stone: i8;
-    let black_captured_stone: i8;
+    let total_white_captured_stone: i8;
+    let total_black_captured_stone: i8;
     unsafe {
-        white_captured_stone = global_var::WHITE_CAPTURED_STONE;
-        black_captured_stone = global_var::BLACK_CAPTURED_STONE;
+        total_white_captured_stone = global_var::TOTAL_WHITE_CAPTURED_STONE;
+        total_black_captured_stone = global_var::TOTAL_BLACK_CAPTURED_STONE;
         println!(
             "whitcap {} blackcap {}",
-            white_captured_stone, black_captured_stone
+            total_white_captured_stone, total_black_captured_stone
         );
     }
     let current_move_pos: usize = x * 19 + y;
@@ -181,8 +183,10 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         &mut bitboards,
         player,
         current_move_pos,
-        white_captured_stone,
-        black_captured_stone,
+        total_white_captured_stone,
+        total_black_captured_stone,
+        0,
+        0,
         (0, 0),
         5,
     );
@@ -199,11 +203,11 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         dict.set_item("stone_captured", board_state_info.stone_captured)?;
         if player == global_var::PLAYER_WHITE_NB {
             unsafe {
-                global_var::WHITE_CAPTURED_STONE += board_state_info.stone_captured;
+                global_var::TOTAL_WHITE_CAPTURED_STONE += board_state_info.stone_captured;
             }
         } else {
             unsafe {
-                global_var::BLACK_CAPTURED_STONE += board_state_info.stone_captured;
+                global_var::TOTAL_BLACK_CAPTURED_STONE += board_state_info.stone_captured;
             }
         }
         if board_state_info.is_winning.1 != 0 {
@@ -240,17 +244,17 @@ fn get_rust_box(board: Vec<Vec<i8>>) -> PyResult<Vec<(usize, usize)>> {
 #[pyfunction]
 fn reset_game() {
     unsafe {
-        global_var::WHITE_CAPTURED_STONE = 0;
-        global_var::BLACK_CAPTURED_STONE = 0;
+        global_var::TOTAL_WHITE_CAPTURED_STONE = 0;
+        global_var::TOTAL_BLACK_CAPTURED_STONE = 0;
     }
 }
 #[pyfunction]
-fn update_eat_for_player(player: i8, eated_stones: i8) {
+fn update_capture_for_player(player: i8, eated_stones: i8) {
     unsafe {
         if player == 1 {
-            global_var::WHITE_CAPTURED_STONE = eated_stones;
+            global_var::TOTAL_WHITE_CAPTURED_STONE = eated_stones;
         } else {
-            global_var::BLACK_CAPTURED_STONE = eated_stones;
+            global_var::TOTAL_BLACK_CAPTURED_STONE = eated_stones;
         }
     }
 }
@@ -288,7 +292,7 @@ fn gomoku_rust(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(ai_move, m)?)?;
     m.add_function(wrap_pyfunction!(check_move_is_still_winning, m)?)?;
     m.add_function(wrap_pyfunction!(reset_game, m)?)?;
-    m.add_function(wrap_pyfunction!(update_eat_for_player, m)?)?;
+    m.add_function(wrap_pyfunction!(update_capture_for_player, m)?)?;
     m.add_wrapped(wrap_pymodule!(gomoku_tests))?;
     Ok(())
 }

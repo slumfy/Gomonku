@@ -25,6 +25,8 @@ pub fn test_check_is_capturable() {
         160,
         0,
         0,
+        0,
+        0,
         (0, 0),
         0,
     );

@@ -149,10 +149,10 @@ class GoRules:
             for player in self.player_list:
                 if player == move_to_remove.player:
                     player.capture_piece -= move_to_remove.eated_stone
-                    gomoku_rust.update_eat_for_player(player.nb, player.capture_piece)
+                    gomoku_rust.update_capture_for_player(player.nb, player.capture_piece)
                 if offset == 3 and player == move_to_remove2.player:
                     player.capture_piece -= move_to_remove2.eated_stone
-                    gomoku_rust.update_eat_for_player(player.nb, player.capture_piece)
+                    gomoku_rust.update_capture_for_player(player.nb, player.capture_piece)
             if move_list_len == 0 or move_list_len == 1 or (offset == 3 and move_list_len <= 2):
                 self.move_list = []
                 self.reset_game()
