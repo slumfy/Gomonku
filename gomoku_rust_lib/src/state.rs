@@ -51,11 +51,7 @@ pub fn create_new_state(
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },
         axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
-<<<<<<< HEAD
 		max_eat_next_move: 0,
-=======
-        stone_threaten: 0,
->>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
     };
     if player == 1 {
         new_state.black_move_to_win = nb_move_to_win;
@@ -104,15 +100,9 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             nb_move_to_win,
         );
         child.heuristic = heuristic(&mut child);
-<<<<<<< HEAD
 		if child.board_info.stone_captured > state.max_eat_next_move {
 			state.max_eat_next_move = child.board_info.stone_captured;
 		}
-=======
-        if child.board_info.capturable == true {
-            stone_threaten += 1;
-        }
->>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
         if child.is_playable == global_var::VALID_MOVE
             && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
         {
@@ -149,10 +139,6 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         len = 10;
     }
     for child in 0..len {
-<<<<<<< HEAD
-=======
-        childs_list[child].stone_threaten = stone_threaten;
->>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
         new_list.push(childs_list[child].clone());
     }
     return new_list;
@@ -178,11 +164,5 @@ pub fn state_is_terminated(state: &mut State) -> bool {
 		}
         return true;
     }
-<<<<<<< HEAD
-=======
-    // if state.board_info.pattern_axe[0].0 == 0 && state.stone_threaten == 0 && state.board_info.capturable == false {
-    //     return true;
-    // }
->>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
     return false;
 }
