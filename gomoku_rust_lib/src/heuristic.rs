@@ -96,8 +96,7 @@ pub fn heuristic(state: &mut State) -> i64 {
         if numbers_of_blocker_on_pattern != 3 {
             // Checking if creating a triple that will prevent a double to be captured.
             if numbers_of_blocker_on_pattern > 0
-                && found_pattern_on_axe > 4
-                && found_pattern_on_axe < 6
+                && found_pattern_on_axe == 5
             {
                 value += checking_if_pattern_is_blocking_a_capture_and_return_value(
                     state.axes[current_player_axe][axe_index],
@@ -108,7 +107,7 @@ pub fn heuristic(state: &mut State) -> i64 {
             } else {
                 // Check if it's creating a pattern two with one blocker and the blocker is actually opponent stone, so it's a capturable move.
                 // Except this one, add pattern heuristic ratio to value.
-                if !(found_pattern_on_axe == 9
+                if !(found_pattern_on_axe == 8
                     && numbers_of_blocker_on_pattern == 1
                     && !pattern_two_is_capturable(
                         state.axes[current_player_axe][axe_index],
@@ -204,7 +203,7 @@ fn is_simple_blocking_two_pattern(
     current_player_axe: u16,
 ) -> i16 {
     // Check blocker table in heuristic_ratios.rs
-    if found_blocker_pattern_on_axe == 9
+    if found_blocker_pattern_on_axe == 8
         && ((opponent_axe & (1 << 7) == 1 << 7
             && opponent_axe & (1 << 6) == 1 << 6
             && current_player_axe & (1 << 5) != 1 << 5)
@@ -219,7 +218,7 @@ fn is_simple_blocking_two_pattern(
 
 fn is_blocking_two_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
     // Check blocker table in heuristic_ratios.rs
-    if found_blocker_pattern_on_axe == 9 {
+    if found_blocker_pattern_on_axe == 8 {
         return 1;
     }
     return 0;
@@ -227,7 +226,7 @@ fn is_blocking_two_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
 
 fn is_blocking_three_pattern(found_blocker_pattern_on_axe: usize) -> i16 {
     // Check blocker table in heuristic_ratios.rs
-    if found_blocker_pattern_on_axe > 4 && found_blocker_pattern_on_axe < 6 {
+    if found_blocker_pattern_on_axe == 5 {
         return 1;
     }
     return 0;
