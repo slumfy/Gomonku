@@ -47,9 +47,5 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, col
         }
     }
     state.heuristic = value;
-	println!();
-	println!("NEW VALUE OF NODE: {}", state.heuristic);
-	print_pos_in_human_format(state.current_move_pos);
-	println!();
     return value;
 }
