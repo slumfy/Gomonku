@@ -51,7 +51,7 @@ pub fn create_new_state(
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },
         axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
-        stone_threaten: 0,
+		max_eat_next_move: 0,
     };
     if player == 1 {
         new_state.black_move_to_win = nb_move_to_win;
@@ -100,9 +100,9 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             nb_move_to_win,
         );
         child.heuristic = heuristic(&mut child);
-        if child.board_info.capturable == true {
-            stone_threaten += 1;
-        }
+		if child.board_info.stone_captured > state.max_eat_next_move {
+			state.max_eat_next_move = child.board_info.stone_captured;
+		}
         if child.is_playable == global_var::VALID_MOVE
             && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
         {
@@ -139,7 +139,6 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         len = 10;
     }
     for child in 0..len {
-        childs_list[child].stone_threaten = stone_threaten;
         new_list.push(childs_list[child].clone());
     }
     return new_list;
@@ -149,11 +148,21 @@ pub fn state_is_terminated(state: &mut State) -> bool {
     if state.total_white_captured_stone >= 10 || state.total_black_captured_stone >= 10 {
         return true;
     }
-    if state.board_info.pattern_axe[0].1 == 5 && state.stone_threaten == 0 {
+	let mut opponent_capture_score: i8 = 0;
+	if state.current_player == global_var::PLAYER_WHITE_NB {
+		opponent_capture_score = state.total_black_captured_stone;
+	}
+	else {
+		opponent_capture_score = state.total_white_captured_stone;
+	}
+    if state.board_info.pattern_axe[0].1 == 5 {
+		if state.available_move.len() == 0 {
+			state.available_move = create_child(state);
+		}
+		if opponent_capture_score + state.max_eat_next_move >= 10 {
+			return false;
+		}
         return true;
     }
-    // if state.board_info.pattern_axe[0].0 == 0 && state.stone_threaten == 0 && state.board_info.capturable == false {
-    //     return true;
-    // }
     return false;
 }
