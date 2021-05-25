@@ -51,7 +51,7 @@ pub fn heuristic(state: &mut State) -> i64 {
         return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
     }
 
-    // Add stone captured value
+    // Add new stone captured value to current state to save for childrens.
     if move_stone_captured != 0 {
         if state.current_player == global_var::PLAYER_WHITE_NB {
             state.all_depth_white_captured_stone_value =
@@ -65,6 +65,7 @@ pub fn heuristic(state: &mut State) -> i64 {
                 );
         }
     }
+    // Add all past stone capture value and substract past oponnent capture value.
     if state.current_player == global_var::PLAYER_WHITE_NB {
         value += state.all_depth_white_captured_stone_value;
         value -= state.all_depth_black_captured_stone_value;
