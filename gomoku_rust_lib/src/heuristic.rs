@@ -55,19 +55,18 @@ pub fn heuristic(state: &mut State) -> i64 {
     } else {
         opponent_total_stone_captured = state.total_white_captured_stone;
     }
-
-    // Checking if undefeatable 5, every pattern_axe should be (0 , 5)
-    if board_state_info.pattern_axe[0].1 == 5 {
-        return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
-    }
-
-    // Add all past stone capture value and substract past oponnent capture value.
+    // Add all past stone capture value and substract past opponnent capture value.
     if state.current_player == global_var::PLAYER_WHITE_NB {
         value += state.all_depth_white_captured_stone_value;
         value -= state.all_depth_black_captured_stone_value;
     } else {
         value += state.all_depth_black_captured_stone_value;
         value -= state.all_depth_white_captured_stone_value;
+    }
+
+    // Checking if undefeatable 5, every pattern_axe should be (0 , 5)
+    if board_state_info.pattern_axe[0].1 == 5 {
+        return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
     }
 
     let mut count_blocking_triple = 0;
