@@ -7,7 +7,6 @@ use crate::data_struct::BoardStateInfo;
 use crate::data_struct::State;
 use crate::global_var;
 use crate::heuristic_ratios;
-use crate::player_win;
 
 pub fn heuristic(state: &mut State) -> i64 {
     let mut value: i64 = 0;
@@ -49,9 +48,6 @@ pub fn heuristic(state: &mut State) -> i64 {
     }
     // Checking if undefeatable 5, every pattern_axe should be (0 , 5)
     if board_state_info.pattern_axe[0].1 == 5 {
-        if player_win(state, -state.current_player) {
-            return heuristic_ratios::HEURISTIC_MAX_VALUE;
-        }
         return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
     }
 
