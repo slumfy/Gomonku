@@ -18,8 +18,10 @@ pub struct State {
     pub bitboards: Bitboards,
     pub available_move: Vec<State>,
     pub current_player: i8,
-    pub white_captured_stone: i8,
-    pub black_captured_stone: i8,
+    pub total_white_captured_stone: i8,
+    pub total_black_captured_stone: i8,
+    pub parent_state_white_captured_stone: i8,
+    pub parent_state_black_captured_stone: i8,
     pub white_move_to_win: i8,
     pub black_move_to_win: i8,
     pub heuristic: i64,
@@ -28,7 +30,11 @@ pub struct State {
     pub current_move_pos: usize,
     pub board_info: BoardStateInfo,
     pub axes: [[u16; 4]; 2],
+<<<<<<< HEAD
 	pub max_eat_next_move : i8,
+=======
+    pub stone_threaten: u32,
+>>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
 }
 
 /// Board state information for computing heuristic and validate move

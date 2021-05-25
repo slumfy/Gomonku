@@ -14,16 +14,20 @@ pub fn create_new_state(
     bitboards: &mut Bitboards,
     player: i8,
     current_move_pos: usize,
-    white_captured_stone: i8,
-    black_captured_stone: i8,
+    total_white_captured_stone: i8,
+    total_black_captured_stone: i8,
+    parent_state_white_captured_stone: i8,
+    parent_state_black_captured_stone: i8,
     win_state: (usize, i8),
     nb_move_to_win: i8,
 ) -> State {
     let mut new_state = State {
         bitboards: bitboards.clone(),
         current_player: player,
-        white_captured_stone: white_captured_stone,
-        black_captured_stone: black_captured_stone,
+        total_white_captured_stone: total_white_captured_stone,
+        total_black_captured_stone: total_black_captured_stone,
+        parent_state_white_captured_stone: parent_state_white_captured_stone,
+        parent_state_black_captured_stone: parent_state_black_captured_stone,
         white_move_to_win: 5,
         black_move_to_win: 5,
         available_move: vec![],
@@ -47,7 +51,11 @@ pub fn create_new_state(
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },
         axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
+<<<<<<< HEAD
 		max_eat_next_move: 0,
+=======
+        stone_threaten: 0,
+>>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
     };
     if player == 1 {
         new_state.black_move_to_win = nb_move_to_win;
@@ -67,13 +75,15 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         &mut state.bitboards.clone(),
         -state.current_player,
         index_box[0],
-        state.white_captured_stone,
-        state.black_captured_stone,
+        state.total_white_captured_stone,
+        state.total_black_captured_stone,
+        state.parent_state_white_captured_stone,
+        state.parent_state_black_captured_stone,
         state.win_state,
         0,
     );
     saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
-	let mut stone_threaten: u32 = 0;
+    let mut stone_threaten: u32 = 0;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let current_move_pos: usize = index_box[pos];
@@ -86,15 +96,23 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             &mut copy_bitboards,
             -state.current_player,
             current_move_pos,
-            state.white_captured_stone,
-            state.black_captured_stone,
+            state.total_white_captured_stone,
+            state.total_black_captured_stone,
+            state.parent_state_white_captured_stone,
+            state.parent_state_black_captured_stone,
             state.win_state,
             nb_move_to_win,
         );
         child.heuristic = heuristic(&mut child);
+<<<<<<< HEAD
 		if child.board_info.stone_captured > state.max_eat_next_move {
 			state.max_eat_next_move = child.board_info.stone_captured;
 		}
+=======
+        if child.board_info.capturable == true {
+            stone_threaten += 1;
+        }
+>>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
         if child.is_playable == global_var::VALID_MOVE
             && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
         {
@@ -131,13 +149,17 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         len = 10;
     }
     for child in 0..len {
+<<<<<<< HEAD
+=======
+        childs_list[child].stone_threaten = stone_threaten;
+>>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
         new_list.push(childs_list[child].clone());
     }
     return new_list;
 }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
-    if state.white_captured_stone >= 10 || state.black_captured_stone >= 10 {
+    if state.total_white_captured_stone >= 10 || state.total_black_captured_stone >= 10 {
         return true;
     }
 	let mut opponent_capture_score: i8 = 0;
@@ -156,5 +178,11 @@ pub fn state_is_terminated(state: &mut State) -> bool {
 		}
         return true;
     }
+<<<<<<< HEAD
+=======
+    // if state.board_info.pattern_axe[0].0 == 0 && state.stone_threaten == 0 && state.board_info.capturable == false {
+    //     return true;
+    // }
+>>>>>>> d0608f0de0493e9458851ae51bfcdc5f959612b5
     return false;
 }

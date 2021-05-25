@@ -34,6 +34,8 @@ pub fn test_negamax_benchmark() {
         pos,
         0,
         0,
+        0,
+        0,
         (0, 0),
         0,
     );

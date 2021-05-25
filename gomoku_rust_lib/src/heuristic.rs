@@ -27,11 +27,11 @@ pub fn heuristic(state: &mut State) -> i64 {
     let player_total_stone_captured;
     let opponent_total_stone_captured;
     if state.current_player == global_var::VALID_MOVE {
-        opponent_total_stone_captured = state.black_captured_stone;
-        player_total_stone_captured = state.white_captured_stone;
+        opponent_total_stone_captured = state.total_black_captured_stone;
+        player_total_stone_captured = state.total_white_captured_stone;
     } else {
-        opponent_total_stone_captured = state.white_captured_stone;
-        player_total_stone_captured = state.black_captured_stone;
+        opponent_total_stone_captured = state.total_white_captured_stone;
+        player_total_stone_captured = state.total_black_captured_stone;
     }
 
     // Instant return move
@@ -39,9 +39,9 @@ pub fn heuristic(state: &mut State) -> i64 {
     unsafe {
         if move_stone_captured != 0
             && ((state.current_player == global_var::PLAYER_WHITE_NB
-                && global_var::WHITE_CAPTURED_STONE + move_stone_captured >= 10)
+                && global_var::TOTAL_WHITE_CAPTURED_STONE + move_stone_captured >= 10)
                 || (state.current_player == global_var::PLAYER_BLACK_NB
-                    && global_var::BLACK_CAPTURED_STONE + move_stone_captured >= 10))
+                    && global_var::TOTAL_BLACK_CAPTURED_STONE + move_stone_captured >= 10))
         {
             return heuristic_ratios::HEURISTIC_MAX_VALUE;
         }
