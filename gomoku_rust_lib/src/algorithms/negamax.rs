@@ -12,27 +12,26 @@ use crate::state::create_child;
 use crate::state::state_is_terminated;
 use std::cmp::Reverse;
 
-pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, color: i8) -> i64 {
+pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
+    println!(
+        "depth {:?}, current_player {:?}",
+        depth, state.current_player,
+    );
+    print_pos_in_human_format(state.current_move_pos);
     if depth == 0 || state_is_terminated(state) == true {
         // transpotable::tt_insert(state,depth);
         // transpotable::tt_search(state,depth);
-		// println!("color of node {}, heuristic * color {}, depth {}", color, state.heuristic * color as i64,depth);
-        return state.heuristic * color as i64;
+        // println!("color of node {}, heuristic * color {}, depth {}", color, state.heuristic * color as i64,depth);
+        return state.heuristic;
     }
-    if depth != 0 && state.available_move.len() == 0 {
-        state.available_move = create_child(&mut state);
-        state.available_move.sort_by_key(|d| Reverse(d.heuristic));
-    }
-	unsafe {
-		if depth == global_var::DEPTH {
-			println!("nb of child {}", state.available_move.len());
-		}
-}
+    state.available_move = create_child(&mut state);
+    state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     if state.available_move.len() < 1 {
-        return state.heuristic * color as i64;
+        return state.heuristic;
     }
+
     let mut value: i64 = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value;
@@ -41,7 +40,6 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, col
             depth - 1,
             -beta,
             -alpha,
-            -color,
         );
 
         value = std::cmp::max(value, negamax_value);

@@ -49,7 +49,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
     assert_eq!(ai_returned_move.0, 175);
@@ -84,7 +83,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
     assert_eq!(ai_returned_move.0, 9);
@@ -120,7 +118,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -155,7 +152,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -195,7 +191,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
     print_board_from_bitboard(&bitboards);
@@ -232,7 +227,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -268,7 +262,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -308,7 +301,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -345,7 +337,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -382,7 +373,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -420,7 +410,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -455,7 +444,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -488,7 +476,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = return_move(&mut state);
 
@@ -524,7 +511,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = algorithms::return_move(&mut state);
 
@@ -563,7 +549,6 @@ pub fn test_ai_move() {
         depth,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        1,
     );
     let ai_returned_move = algorithms::return_move(&mut state);
 

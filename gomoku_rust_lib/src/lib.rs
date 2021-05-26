@@ -24,12 +24,13 @@ mod utils;
 #[macro_use]
 extern crate lazy_static;
 
-use crate::check_move::get_move_info;
-use crate::data_struct::BoardStateInfo;
 use bitboards::create_bits_axes_from_pos;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
+use check_move::get_move_info;
+use data_struct::BoardStateInfo;
+use state::create_child;
 
 use tests::__pyo3_get_function_pytest_ai_move;
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
@@ -90,15 +91,37 @@ pub fn ai_move(
     } else {
         if search_algorithm == "negamax" {
             println!("using negamax");
-            algorithms::negamax(
-                &mut state,
-                depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
-                heuristic_ratios::HEURISTIC_MAX_VALUE,
-                player,
-            );
+            let mut childs = create_child(&mut state);
+            let maximizing: bool;
+            if depth % 2 != 0 {
+                maximizing = false;
+            } else {
+                maximizing = true;
+            }
+            let mut max_heuristic: i64;
+            if maximizing {
+                max_heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
+            } else {
+                max_heuristic = heuristic_ratios::HEURISTIC_MAX_VALUE;
+            }
+            for mut child in &mut childs {
+                let value = algorithms::negamax(
+                    &mut child,
+                    depth - 1,
+                    heuristic_ratios::HEURISTIC_MIN_VALUE,
+                    heuristic_ratios::HEURISTIC_MAX_VALUE,
+                );
+                if maximizing {
+                    max_heuristic = std::cmp::max(max_heuristic, value);
+                } else {
+                    max_heuristic = std::cmp::min(max_heuristic, value);
+                }
+            }
+            state.heuristic = max_heuristic;
+            state.available_move = childs.clone();
         } else if search_algorithm == "negascout" {
             println!("using negascout");
+
             algorithms::negascout(
                 &mut state,
                 depth,
@@ -108,6 +131,7 @@ pub fn ai_move(
             );
         } else if search_algorithm == "minimax" {
             println!("using minimax");
+            println!("state.heuristic before : {:?}", state.heuristic);
             let ret = algorithms::minimax(
                 &mut state,
                 depth,
@@ -115,6 +139,7 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 true,
             );
+            println!("state.heuristic after : {:?}", state.heuristic);
             println!("minimax return value = {:?}", ret);
         }
         ai_move = algorithms::return_move(&mut state);
@@ -150,7 +175,6 @@ fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
         1,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        opponent,
     );
     ai_move = algorithms::return_move(state);
     if ai_move.1 == heuristic_ratios::HEURISTIC_MIN_VALUE {
