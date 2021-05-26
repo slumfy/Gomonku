@@ -42,6 +42,7 @@ pub fn heuristic(state: &mut State) -> i64 {
         } else {
             state.total_black_captured_stone += move_stone_captured;
             opponent_total_stone_captured = state.total_white_captured_stone;
+            // Winning by capture, instant return.
             if state.total_black_captured_stone >= 10 {
                 return heuristic_ratios::HEURISTIC_MAX_VALUE;
             }
@@ -95,9 +96,7 @@ pub fn heuristic(state: &mut State) -> i64 {
         // Blocker value of 3 means no pattern found, so no value to add on this axe.
         if numbers_of_blocker_on_pattern != 3 {
             // Checking if creating a triple that will prevent a double to be captured.
-            if numbers_of_blocker_on_pattern > 0
-                && found_pattern_on_axe == 5
-            {
+            if numbers_of_blocker_on_pattern > 0 && found_pattern_on_axe == 5 {
                 value += checking_if_pattern_is_blocking_a_capture_and_return_value(
                     state.axes[current_player_axe][axe_index],
                     state.axes[opponent_axe][axe_index],
