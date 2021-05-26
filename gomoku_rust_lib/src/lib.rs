@@ -90,7 +90,6 @@ pub fn ai_move(
     } else {
         if search_algorithm == "negamax" {
             println!("using negamax");
-            // For alpha, sending  min value + 1 to prevent overflow when changing sign.
             algorithms::negamax(
                 &mut state,
                 depth,
@@ -109,13 +108,14 @@ pub fn ai_move(
             );
         } else if search_algorithm == "minimax" {
             println!("using minimax");
-            algorithms::minimax(
+            let ret = algorithms::minimax(
                 &mut state,
                 depth,
                 heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 true,
             );
+            println!("minimax return value = {:?}", ret);
         }
         ai_move = algorithms::return_move(&mut state);
     }
