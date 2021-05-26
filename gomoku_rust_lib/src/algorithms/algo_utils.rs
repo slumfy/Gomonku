@@ -21,8 +21,7 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
 	// 		return(state.available_move[child].current_move_pos,
 	// 			state.available_move[child].heuristic);
 	// 	}
-		
-    // }
+	// }
 	state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     return (
         (state.available_move[0].current_move_pos),

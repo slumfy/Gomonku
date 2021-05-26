@@ -132,16 +132,17 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     if childs_list.len() == 0 {
         childs_list.push(saved_child);
     }
-    childs_list.sort_by_key(|d| Reverse(d.heuristic));
-    let mut new_list: Vec<State> = Vec::new();
-    let mut len = childs_list.len();
-    if len > 10 {
-        len = 10;
-    }
-    for child in 0..len {
-        new_list.push(childs_list[child].clone());
-    }
-    return new_list;
+	return(childs_list);
+    // childs_list.sort_by_key(|d| Reverse(d.heuristic));
+    // let mut new_list: Vec<State> = Vec::new();
+    // let mut len = childs_list.len();
+    // if len > 10 {
+    //     len = 10;
+    // }
+    // for child in 0..len {
+    //     new_list.push(childs_list[child].clone());
+    // }
+    // return new_list;
 }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
