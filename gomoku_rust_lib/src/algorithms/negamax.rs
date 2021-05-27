@@ -18,7 +18,6 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64) -> 
     if depth == 0 || state_is_terminated(state) == true {
         // transpotable::tt_insert(state,depth);
         // transpotable::tt_search(state,depth);
-        // println!("color of node {}, heuristic * color {}, depth {}", color, state.heuristic * color as i64,depth);
         return state.heuristic;
     }
     state.available_move = create_child(&mut state);
