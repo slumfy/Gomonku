@@ -24,6 +24,8 @@ class PyGameGo:
         search_box_status: bool = False,
         ai_helper: bool = True,
         depth: int = 5,
+        ai_helper_depth: int = 1,
+        ai_two_depth: int = 0,
         display_ai_time: bool = False,
         search_algorithm: str = "negamax",
     ):
@@ -34,6 +36,11 @@ class PyGameGo:
 
         self.logger = logger_factory("PyGameGo")
         self.depth = depth
+        self.ai_helper_depth = ai_helper_depth
+        if ai_two_depth == 0:
+            self.ai_two_depth = self.depth
+        else:
+            self.ai_two_depth = ai_two_depth
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
@@ -80,7 +87,6 @@ class PyGameGo:
             self.grey_stone_resize = pygame.transform.scale(self.grey_stone, STONE_SIZE)
             self.blue_stone = pygame.image.load("ressources/images/bluecircle.png")
             self.blue_stone_resize = pygame.transform.scale(self.blue_stone, STONE_SIZE)
-        self.player: Player = None
         self.starting_stone_color = PLAYER_WHITE_NB
 
     def update_sound_status(self, sound_status: bool, background_page):
@@ -331,7 +337,7 @@ class PyGameGo:
                     self.moves_count,
                     self.display_ai_time,
                     self.search_algorithm,
-                    self.depth,
+                    self.ai_helper_depth,
                 )
             if self.player.player_type == PlayerType.HUMAN.value and self.ai_helper == True:
                 self.print_ai_helper(ai_helper[0][1], ai_helper[0][0])
@@ -339,15 +345,26 @@ class PyGameGo:
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                AI_move = go_rules.AI_move(
-                    self.player,
-                    x,
-                    y,
-                    self.moves_count,
-                    self.display_ai_time,
-                    self.search_algorithm,
-                    self.depth,
-                )
+                if self.player.nb == PLAYER_WHITE_NB:
+                    AI_move = go_rules.AI_move(
+                        self.player,
+                        x,
+                        y,
+                        self.moves_count,
+                        self.display_ai_time,
+                        self.search_algorithm,
+                        self.depth,
+                    )
+                else:
+                    AI_move = go_rules.AI_move(
+                        self.player,
+                        x,
+                        y,
+                        self.moves_count,
+                        self.display_ai_time,
+                        self.search_algorithm,
+                        self.ai_two_depth,
+                    )
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(current_player=self.player, x=x, y=y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
