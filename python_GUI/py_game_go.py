@@ -88,6 +88,7 @@ class PyGameGo:
             self.blue_stone = pygame.image.load("ressources/images/bluecircle.png")
             self.blue_stone_resize = pygame.transform.scale(self.blue_stone, STONE_SIZE)
         self.starting_stone_color = PLAYER_WHITE_NB
+        self.ai_vs_ai = False
 
     def update_sound_status(self, sound_status: bool, background_page):
         self.sound_status = sound_status
@@ -258,6 +259,7 @@ class PyGameGo:
                     # Click on playing AI vs AI button
                     if event.pos[1] <= 505 and event.pos[1] >= 430:
                         print("AI vs AI clicked.")
+                        self.ai_vs_ai = True
                         go_rules.player_list[0].player_type = 1
                         go_rules.player_list[1].player_type = 1
                         go_rules.ai_versus = 1
@@ -345,7 +347,7 @@ class PyGameGo:
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                if self.player.nb == PLAYER_WHITE_NB:
+                if self.player.nb == PLAYER_WHITE_NB or not self.ai_vs_ai:
                     AI_move = go_rules.AI_move(
                         self.player,
                         x,

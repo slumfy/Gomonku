@@ -121,6 +121,10 @@ pub fn heuristic(state: &mut State) -> i64 {
                 state.axes[current_player_axe][axe_index],
             );
             count_blocking_two += is_blocking_two_pattern(found_blocker_pattern_on_axe);
+            if global_var::DEPTH == 1 {
+                value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
+                    [numbers_of_blocker_on_blocked_pattern];
+            }
         }
 
         // Checking if AI try to block a double triple and prevent it
