@@ -22,8 +22,6 @@ pub struct State {
     pub total_black_captured_stone: i8,
     pub all_depth_white_captured_stone_value: i64,
     pub all_depth_black_captured_stone_value: i64,
-    pub white_move_to_win: i8,
-    pub black_move_to_win: i8,
     pub heuristic: i64,
     pub is_playable: i8,
     pub win_state: (usize, i8),
@@ -46,8 +44,13 @@ pub struct BoardStateInfo {
     pub pattern_value: i64,
     pub blocker_value: i64,
     pub is_winning: (usize, i8),
-    pub nb_move_to_win: i8,
     pub axe_free_value: [bool; 4],
     pub pattern_axe: [(usize, usize); 4],
     pub blocker_axe: [(usize, usize); 4],
+}
+
+#[derive(Copy, Clone, Debug)]
+pub struct Boardpatternstate {
+	pub white_patterns: [[u8; 3]; 9],
+	pub black_patterns: [[u8; 3]; 9],
 }

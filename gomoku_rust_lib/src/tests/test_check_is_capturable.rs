@@ -28,7 +28,6 @@ pub fn test_check_is_capturable() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(182, &mut bitboards);
     // Testing for white, pointless because its a black move. Should be false

@@ -40,7 +40,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -75,7 +74,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -111,7 +109,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -146,7 +143,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -186,7 +182,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -223,7 +218,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -259,7 +253,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -299,7 +292,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -336,7 +328,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -373,7 +364,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -411,7 +401,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -446,7 +435,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -479,7 +467,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -515,7 +502,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
@@ -554,7 +540,6 @@ pub fn test_ai_move() {
         0,
         0,
         (0, 0),
-        0,
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);

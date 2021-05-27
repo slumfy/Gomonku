@@ -54,7 +54,6 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
         pattern_value: 0,
         blocker_value: 0,
         is_winning: (0, 0),
-        nb_move_to_win: 5,
         axe_free_value: [false, false, false, false],
         pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
@@ -78,11 +77,6 @@ pub fn checking_and_apply_bits_move(state: &mut State) -> BoardStateInfo {
             state.current_player,
         );
         state.axes = axes;
-        if state.current_player == global_var::PLAYER_WHITE_NB {
-            state.white_move_to_win = board_state_info.nb_move_to_win;
-        } else {
-            state.black_move_to_win = board_state_info.nb_move_to_win;
-        }
         return board_state_info;
     }
 }
@@ -99,7 +93,6 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         pattern_value: 0,
         blocker_value: 0,
         is_winning: (0, 0),
-        nb_move_to_win: 5,
         axe_free_value: [false, false, false, false],
         pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
@@ -112,11 +105,6 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
         state.current_move_pos as usize,
         state.current_player,
     );
-    if state.current_player == global_var::PLAYER_WHITE_NB {
-        state.white_move_to_win = board_state_info.nb_move_to_win;
-    } else {
-        state.black_move_to_win = board_state_info.nb_move_to_win;
-    }
     return board_state_info;
 }
 

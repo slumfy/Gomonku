@@ -77,7 +77,6 @@ fn set_move_to_win_and_is_winning(
             board_state_info.is_winning = (pos, player);
         }
     }
-    board_state_info.nb_move_to_win = move_to_win;
 }
 
 pub fn pattern_axes_finder(

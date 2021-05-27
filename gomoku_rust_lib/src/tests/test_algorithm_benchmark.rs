@@ -37,7 +37,6 @@ pub fn test_negamax_benchmark() {
         0,
         0,
         (0, 0),
-        0,
     );
 
     // Try with depth 1

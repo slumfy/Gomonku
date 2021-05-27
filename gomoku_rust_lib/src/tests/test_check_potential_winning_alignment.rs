@@ -24,7 +24,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     let mut ret = check_potential_winning_alignment(&state);
@@ -41,7 +40,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     ret = check_potential_winning_alignment(&state);
@@ -58,7 +56,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     ret = check_potential_winning_alignment(&state);
@@ -77,7 +74,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     ret = check_potential_winning_alignment(&state);
@@ -96,7 +92,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     ret = check_potential_winning_alignment(&state);
@@ -114,7 +109,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     ret = check_potential_winning_alignment(&state);
@@ -139,7 +133,6 @@ pub fn test_check_potential_winning_alignment() {
         0,
         0,
         (0, 0),
-        0,
     );
     state.axes = create_bits_axes_from_pos(pos, &mut bitboards);
     ret = check_potential_winning_alignment(&state);

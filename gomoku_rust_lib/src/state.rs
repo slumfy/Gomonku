@@ -19,7 +19,6 @@ pub fn create_new_state(
     all_depth_white_captured_stone_value: i64,
     all_depth_black_captured_stone_value: i64,
     win_state: (usize, i8),
-    nb_move_to_win: i8,
 ) -> State {
     let mut new_state = State {
         bitboards: bitboards.clone(),
@@ -28,8 +27,6 @@ pub fn create_new_state(
         total_black_captured_stone: total_black_captured_stone,
         all_depth_white_captured_stone_value: all_depth_white_captured_stone_value,
         all_depth_black_captured_stone_value: all_depth_black_captured_stone_value,
-        white_move_to_win: 5,
-        black_move_to_win: 5,
         available_move: vec![],
         heuristic: 0,
         is_playable: 0,
@@ -45,7 +42,6 @@ pub fn create_new_state(
             pattern_value: 0,
             blocker_value: 0,
             is_winning: (0, 0),
-            nb_move_to_win: 5,
             axe_free_value: [false, false, false, false],
             pattern_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
@@ -53,11 +49,6 @@ pub fn create_new_state(
         axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
 		max_eat_next_move: 0,
     };
-    if player == 1 {
-        new_state.black_move_to_win = nb_move_to_win;
-    } else {
-        new_state.white_move_to_win = nb_move_to_win;
-    }
     return new_state;
 }
 
@@ -76,18 +67,12 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         state.all_depth_white_captured_stone_value,
         state.all_depth_black_captured_stone_value,
         state.win_state,
-        0,
     );
     saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
     let mut stone_threaten: u32 = 0;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let current_move_pos: usize = index_box[pos];
-        let nb_move_to_win: i8 = if -state.current_player == 1 {
-            state.black_move_to_win
-        } else {
-            state.white_move_to_win
-        };
         let mut child = create_new_state(
             &mut copy_bitboards,
             -state.current_player,
@@ -97,7 +82,6 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.all_depth_white_captured_stone_value,
             state.all_depth_black_captured_stone_value,
             state.win_state,
-            nb_move_to_win,
         );
         child.heuristic = heuristic(&mut child);
 		if child.board_info.stone_captured > state.max_eat_next_move {

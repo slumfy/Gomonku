@@ -20,6 +20,7 @@ mod search_space;
 mod state;
 mod tests;
 mod utils;
+mod board_pattern_state;
 
 #[macro_use]
 extern crate lazy_static;
@@ -30,6 +31,9 @@ use bitboards::create_bits_axes_from_pos;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
+use crate::board_pattern_state::update_board_pattern_state;
+use crate::board_pattern_state::print_board_pattern_state; 
+
 
 use tests::__pyo3_get_function_pytest_ai_move;
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
@@ -53,7 +57,6 @@ pub fn ai_move(
     y: usize,
     turn: isize,
     wining_position: (usize, i8),
-    nb_move_to_win: i8,
     display_ai_time: bool,
     search_algorithm: String,
     depth: i32,
@@ -79,11 +82,8 @@ pub fn ai_move(
         0,
         0,
         wining_position,
-        nb_move_to_win,
     );
     get_move_info(&mut state);
-    // println!("Black move_to_win {}", state.black_move_to_win);
-    // println!("White move_to_win {}", state.white_move_to_win);
     let start_time = Instant::now();
     if turn == 0 {
         ai_move = (180, 0);
@@ -188,18 +188,19 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         0,
         0,
         (0, 0),
-        5,
     );
     state.axes = create_bits_axes_from_pos(current_move_pos, &mut bitboards);
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
+	state.board_info = board_state_info;
+	update_board_pattern_state(&state);
+	print_board_pattern_state();
     println!(
         "boardstate of returning move {} : {:?}",
         state.current_move_pos, board_state_info
     );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
-        dict.set_item("nb_move_to_win", board_state_info.nb_move_to_win)?;
         dict.set_item("stone_captured", board_state_info.stone_captured)?;
         if player == global_var::PLAYER_WHITE_NB {
             unsafe {
@@ -246,6 +247,8 @@ fn reset_game() {
     unsafe {
         global_var::TOTAL_WHITE_CAPTURED_STONE = 0;
         global_var::TOTAL_BLACK_CAPTURED_STONE = 0;
+		global_var::BOARD_PATTERN_STATE.white_patterns = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+		global_var::BOARD_PATTERN_STATE.black_patterns = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
     }
 }
 #[pyfunction]
