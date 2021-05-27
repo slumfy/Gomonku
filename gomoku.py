@@ -36,8 +36,22 @@ def main(argv=None):
         default=5,
     )
     parser.add_argument(
+        "--ai_helper_depth",
+        help="Set the depth of ai helper (from 1 to 10).",
+        choices=range(1, 11),
+        type=int,
+        default=0,
+    )
+    parser.add_argument(
+        "--ai_black_depth",
+        help="Set the depth of the second ai for ai fight (from 1 to 10).",
+        choices=range(1, 11),
+        type=int,
+        default=0,
+    )
+    parser.add_argument(
         "--search_algorithm",
-        choices=["negamax", "negascout","minimax","NTDF","BNS"],
+        choices=["negamax", "negascout", "minimax", "NTDF", "BNS"],
         help="""
     - negamax
     - negascout
@@ -47,7 +61,10 @@ def main(argv=None):
         default="negamax",
     )
     args = parser.parse_args(argv)
-    print("search_algorithm = ", args.search_algorithm)
+    if args.ai_black_depth == 0:
+        args.ai_black_depth = args.depth
+    if args.ai_helper_depth == 0:
+        args.ai_helper_depth = args.depth
     go_rules = GoRules()
     game = PyGameGo(
         sound_status=not args.no_sound,
@@ -55,6 +72,8 @@ def main(argv=None):
         search_box_status=args.with_search_box,
         display_ai_time=args.display_ai_time,
         depth=args.depth,
+        ai_helper_depth=args.ai_helper_depth,
+        ai_black_depth=args.ai_black_depth,
         search_algorithm=args.search_algorithm,
     )
     game.menu(go_rules=go_rules)
