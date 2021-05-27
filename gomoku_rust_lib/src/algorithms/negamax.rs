@@ -43,6 +43,16 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64) -> 
             break;
         }
     }
-    state.heuristic = state.heuristic - value;
-    return value;
+    if (state.heuristic as i128 - (value / 2) as i128)
+        > heuristic_ratios::HEURISTIC_MAX_VALUE as i128
+    {
+        state.heuristic = heuristic_ratios::HEURISTIC_MAX_VALUE;
+    } else if (state.heuristic as i128 - (value / 2) as i128)
+        < heuristic_ratios::HEURISTIC_MIN_VALUE as i128
+    {
+        state.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
+    } else {
+        state.heuristic = state.heuristic - value / 2;
+    }
+    return state.heuristic;
 }

@@ -89,6 +89,7 @@ pub fn ai_move(
     } else {
         if search_algorithm == "negamax" {
             println!("using negamax");
+            state.heuristic = 0;
             // For alpha, sending  min value + 1 to prevent overflow when changing sign.
             algorithms::negamax(
                 &mut state,
@@ -190,12 +191,6 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
     state.board_info = board_state_info;
-    update_board_pattern_state(&state);
-    print_board_pattern_state();
-    println!(
-        "boardstate of returning move {} : {:?}",
-        state.current_move_pos, board_state_info
-    );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_state_info.stone_captured)?;
