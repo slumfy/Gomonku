@@ -1,5 +1,4 @@
 //! Global variables used in rust.
-use crate::data_struct::Boardpatternstate;
 
 // Search algorithm global vars
 pub static mut DEPTH: i32 = 1;
@@ -80,8 +79,3 @@ pub static STONE_POS_IN_PAT: [[u8; 5]; 9] = [
 // 0x04 => 00000100
 // 0x02 => 00000010
 // 0x01 => 00000001
-
-pub static mut BOARD_PATTERN_STATE: Boardpatternstate = Boardpatternstate {
-	white_patterns : [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]],
-	black_patterns : [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]]
-};

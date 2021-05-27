@@ -48,9 +48,3 @@ pub struct BoardStateInfo {
     pub pattern_axe: [(usize, usize); 4],
     pub blocker_axe: [(usize, usize); 4],
 }
-
-#[derive(Copy, Clone, Debug)]
-pub struct Boardpatternstate {
-	pub white_patterns: [[u8; 3]; 9],
-	pub black_patterns: [[u8; 3]; 9],
-}
