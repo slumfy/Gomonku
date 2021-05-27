@@ -10,6 +10,7 @@ mod algorithms;
 mod bitboard_operations;
 mod bitboards;
 mod bitpattern;
+mod board_pattern_state;
 mod check_move;
 mod data_struct;
 mod global_var;
@@ -20,20 +21,18 @@ mod search_space;
 mod state;
 mod tests;
 mod utils;
-mod board_pattern_state;
 
 #[macro_use]
 extern crate lazy_static;
 
+use crate::board_pattern_state::print_board_pattern_state;
+use crate::board_pattern_state::update_board_pattern_state;
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
 use bitboards::create_bits_axes_from_pos;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
-use crate::board_pattern_state::update_board_pattern_state;
-use crate::board_pattern_state::print_board_pattern_state; 
-
 
 use tests::__pyo3_get_function_pytest_ai_move;
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
@@ -96,7 +95,6 @@ pub fn ai_move(
                 depth,
                 heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
-                player,
             );
         } else if search_algorithm == "negascout" {
             println!("using negascout");
@@ -192,9 +190,9 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     state.axes = create_bits_axes_from_pos(current_move_pos, &mut bitboards);
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
-	state.board_info = board_state_info;
-	update_board_pattern_state(&state);
-	print_board_pattern_state();
+    state.board_info = board_state_info;
+    update_board_pattern_state(&state);
+    print_board_pattern_state();
     println!(
         "boardstate of returning move {} : {:?}",
         state.current_move_pos, board_state_info
@@ -247,8 +245,28 @@ fn reset_game() {
     unsafe {
         global_var::TOTAL_WHITE_CAPTURED_STONE = 0;
         global_var::TOTAL_BLACK_CAPTURED_STONE = 0;
-		global_var::BOARD_PATTERN_STATE.white_patterns = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
-		global_var::BOARD_PATTERN_STATE.black_patterns = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
+        global_var::BOARD_PATTERN_STATE.white_patterns = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ];
+        global_var::BOARD_PATTERN_STATE.black_patterns = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ];
     }
 }
 #[pyfunction]
