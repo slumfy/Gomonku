@@ -53,7 +53,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -83,7 +82,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -114,7 +112,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -145,7 +142,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -176,7 +172,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -207,7 +202,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -238,7 +232,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -269,7 +262,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -300,7 +292,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();
@@ -331,7 +322,6 @@ pub fn test_negamax_benchmark() {
             depth,
             heuristic_ratios::HEURISTIC_MIN_VALUE,
             heuristic_ratios::HEURISTIC_MAX_VALUE,
-            1,
         );
         return_move(&mut copy_state);
         let end_time = Instant::now();

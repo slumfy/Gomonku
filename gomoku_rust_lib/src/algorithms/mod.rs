@@ -5,7 +5,7 @@ mod negascout;
 mod transpotable;
 use crate::data_struct::State;
 
-pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, color: i8) -> i64 {
+pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64) -> i64 {
     return (negamax::negamax(state, depth, alpha, beta));
 }
 

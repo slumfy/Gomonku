@@ -148,7 +148,6 @@ fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
         1,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        opponent,
     );
     ai_move = algorithms::return_move(state);
     if ai_move.1 == heuristic_ratios::HEURISTIC_MIN_VALUE {
