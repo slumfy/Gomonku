@@ -25,7 +25,7 @@ class PyGameGo:
         ai_helper: bool = True,
         depth: int = 5,
         ai_helper_depth: int = 1,
-        ai_two_depth: int = 0,
+        ai_black_depth: int = 0,
         display_ai_time: bool = False,
         search_algorithm: str = "negamax",
     ):
@@ -37,10 +37,10 @@ class PyGameGo:
         self.logger = logger_factory("PyGameGo")
         self.depth = depth
         self.ai_helper_depth = ai_helper_depth
-        if ai_two_depth == 0:
-            self.ai_two_depth = self.depth
+        if ai_black_depth == 0:
+            self.ai_black_depth = self.depth
         else:
-            self.ai_two_depth = ai_two_depth
+            self.ai_black_depth = ai_black_depth
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
@@ -363,7 +363,7 @@ class PyGameGo:
                         self.moves_count,
                         self.display_ai_time,
                         self.search_algorithm,
-                        self.ai_two_depth,
+                        self.ai_black_depth,
                     )
                 x, y = AI_move[0]
                 stone_status = go_rules.place_stone(current_player=self.player, x=x, y=y)

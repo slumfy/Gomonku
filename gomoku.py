@@ -43,7 +43,7 @@ def main(argv=None):
         default=0,
     )
     parser.add_argument(
-        "--ai_two_depth",
+        "--ai_black_depth",
         help="Set the depth of the second ai for ai fight (from 1 to 10).",
         choices=range(1, 11),
         type=int,
@@ -61,8 +61,8 @@ def main(argv=None):
         default="negamax",
     )
     args = parser.parse_args(argv)
-    if args.ai_two_depth == 0:
-        args.ai_two_depth = args.depth
+    if args.ai_black_depth == 0:
+        args.ai_black_depth = args.depth
     if args.ai_helper_depth == 0:
         args.ai_helper_depth = args.depth
     go_rules = GoRules()
@@ -73,7 +73,7 @@ def main(argv=None):
         display_ai_time=args.display_ai_time,
         depth=args.depth,
         ai_helper_depth=args.ai_helper_depth,
-        ai_two_depth=args.ai_two_depth,
+        ai_black_depth=args.ai_black_depth,
         search_algorithm=args.search_algorithm,
     )
     game.menu(go_rules=go_rules)
