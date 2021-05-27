@@ -16,7 +16,7 @@ pub fn minimax(
     beta: i64,
     maximizingplayer: bool,
 ) -> i64 {
-    return (minimax::minimax(state, depth, alpha, beta, true));
+    return (minimax::minimax(state, depth, alpha, beta, maximizingplayer));
 }
 
 pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, color: i8) -> i64 {
