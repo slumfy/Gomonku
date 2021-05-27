@@ -93,15 +93,17 @@ pub fn ai_move(
             println!("using negamax");
             let mut childs = create_child(&mut state);
             let maximizing: bool;
-            if depth % 2 != 0 {
+            if depth % 2 == 0 {
                 maximizing = false;
             } else {
                 maximizing = true;
             }
             let mut max_heuristic: i64;
             if maximizing {
+                println!("maximizing");
                 max_heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
             } else {
+                println!("minimizing");
                 max_heuristic = heuristic_ratios::HEURISTIC_MAX_VALUE;
             }
             for mut child in &mut childs {
@@ -117,6 +119,7 @@ pub fn ai_move(
                     max_heuristic = std::cmp::min(max_heuristic, value);
                 }
             }
+            println!("max heuristic found = {:?}", max_heuristic);
             state.heuristic = max_heuristic;
             state.available_move = childs.clone();
         } else if search_algorithm == "negascout" {
@@ -131,7 +134,6 @@ pub fn ai_move(
             );
         } else if search_algorithm == "minimax" {
             println!("using minimax");
-            println!("state.heuristic before : {:?}", state.heuristic);
             let ret = algorithms::minimax(
                 &mut state,
                 depth,
@@ -139,8 +141,6 @@ pub fn ai_move(
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
                 true,
             );
-            println!("state.heuristic after : {:?}", state.heuristic);
-            println!("minimax return value = {:?}", ret);
         }
         ai_move = algorithms::return_move(&mut state);
     }

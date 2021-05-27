@@ -66,7 +66,7 @@ pub fn exponential_heuristic_prevent_capture_stone_calculator(opponent_stone_cap
     if opponent_stone_captured >= 8 {
         return HEURISTIC_PREVENT_OPPONENT_WIN_BY_CAPTURE;
     }
-    while multiplier > 0 {
+    while multiplier > 1 {
         value = value * 2;
         multiplier -= 1;
     }

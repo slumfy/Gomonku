@@ -35,10 +35,18 @@ pub fn heuristic(state: &mut State) -> i64 {
             if state.total_white_captured_stone >= 10 {
                 return heuristic_ratios::HEURISTIC_MAX_VALUE;
             }
+            println!(
+                "state.total_white_captured_stone {:?}",
+                state.total_white_captured_stone
+            );
             state.all_depth_white_captured_stone_value =
                 heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
                     state.total_white_captured_stone,
                 );
+            println!(
+                "state.all_depth_white_captured_stone_value {:?}",
+                state.all_depth_white_captured_stone_value
+            );
         } else {
             state.total_black_captured_stone += move_stone_captured;
             opponent_total_stone_captured = state.total_white_captured_stone;
@@ -58,9 +66,27 @@ pub fn heuristic(state: &mut State) -> i64 {
     }
     // Add all past stone capture value and substract past opponnent capture value.
     if state.current_player == global_var::PLAYER_WHITE_NB {
+        // println!("state.current_player {:?}", state.current_player);
+        // println!(
+        //     "state.all_depth_white_captured_stone_value {:?}",
+        //     state.all_depth_white_captured_stone_value
+        // );
+        // println!(
+        //     "state.all_depth_black_captured_stone_value {:?}",
+        //     state.all_depth_black_captured_stone_value
+        // );
         value += state.all_depth_white_captured_stone_value;
         value -= state.all_depth_black_captured_stone_value;
     } else {
+        // println!("state.current_player {:?}", state.current_player);
+        // println!(
+        //     "state.all_depth_white_captured_stone_value {:?}",
+        //     state.all_depth_white_captured_stone_value
+        // );
+        // println!(
+        //     "state.all_depth_black_captured_stone_value {:?}",
+        //     state.all_depth_black_captured_stone_value
+        // );
         value += state.all_depth_black_captured_stone_value;
         value -= state.all_depth_white_captured_stone_value;
     }
