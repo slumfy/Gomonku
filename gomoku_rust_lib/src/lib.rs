@@ -86,13 +86,13 @@ pub fn ai_move(
     } else {
         if search_algorithm == "negamax" {
             println!("using negamax");
+            state.heuristic = 0;
             // For alpha, sending  min value + 1 to prevent overflow when changing sign.
             algorithms::negamax(
                 &mut state,
                 depth,
                 heuristic_ratios::HEURISTIC_MIN_VALUE,
                 heuristic_ratios::HEURISTIC_MAX_VALUE,
-                player,
             );
         } else if search_algorithm == "negascout" {
             println!("using negascout");
@@ -146,7 +146,6 @@ fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
         1,
         heuristic_ratios::HEURISTIC_MIN_VALUE,
         heuristic_ratios::HEURISTIC_MAX_VALUE,
-        opponent,
     );
     ai_move = algorithms::return_move(state);
     if ai_move.1 == heuristic_ratios::HEURISTIC_MIN_VALUE {

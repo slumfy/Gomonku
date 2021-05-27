@@ -26,43 +26,32 @@ pub fn heuristic(state: &mut State) -> i64 {
     let move_stone_captured = state.board_info.stone_captured;
 
     // Add new stone captured value to current state to save for childrens and add the current value to heuristic value.
-    let opponent_total_stone_captured;
     if move_stone_captured != 0 {
         if state.current_player == global_var::PLAYER_WHITE_NB {
             state.total_white_captured_stone += move_stone_captured;
-            opponent_total_stone_captured = state.total_black_captured_stone;
             // Winning by capture, instant return.
             if state.total_white_captured_stone >= 10 {
                 return heuristic_ratios::HEURISTIC_MAX_VALUE;
             }
-            state.all_depth_white_captured_stone_value =
-                heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
-                    state.total_white_captured_stone,
-                );
+            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+                state.total_white_captured_stone,
+            );
         } else {
             state.total_black_captured_stone += move_stone_captured;
-            opponent_total_stone_captured = state.total_white_captured_stone;
             // Winning by capture, instant return.
             if state.total_black_captured_stone >= 10 {
                 return heuristic_ratios::HEURISTIC_MAX_VALUE;
             }
-            state.all_depth_black_captured_stone_value =
-                heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
-                    state.total_black_captured_stone,
-                );
+            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+                state.total_black_captured_stone,
+            );
         }
-    } else if state.current_player == global_var::PLAYER_WHITE_NB {
+    }
+    let opponent_total_stone_captured;
+    if state.current_player == global_var::PLAYER_WHITE_NB {
         opponent_total_stone_captured = state.total_black_captured_stone;
     } else {
         opponent_total_stone_captured = state.total_white_captured_stone;
-    }
-    // Add all past stone capture value and substract past opponnent capture value.
-    if state.current_player == global_var::PLAYER_WHITE_NB {
-        value += state.all_depth_white_captured_stone_value;
-        value -= state.all_depth_black_captured_stone_value;
-    } else {
-        value += state.all_depth_black_captured_stone_value;
-        value -= state.all_depth_white_captured_stone_value;
     }
 
     // Checking if undefeatable 5, every pattern_axe should be (0 , 5)
@@ -132,8 +121,6 @@ pub fn heuristic(state: &mut State) -> i64 {
                 state.axes[current_player_axe][axe_index],
             );
             count_blocking_two += is_blocking_two_pattern(found_blocker_pattern_on_axe);
-            value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
-                [numbers_of_blocker_on_blocked_pattern];
         }
 
         // Checking if AI try to block a double triple and prevent it
