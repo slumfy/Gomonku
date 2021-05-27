@@ -6,6 +6,7 @@ use crate::data_struct::State;
 use crate::data_struct::Transpotablenode;
 use crate::global_var;
 use crate::heuristic_ratios;
+use crate::print::print_board_from_bitboard;
 use crate::print::print_heuristic_table;
 use crate::print::print_pos_in_human_format;
 use crate::state::create_child;
@@ -15,11 +16,12 @@ use std::cmp::Reverse;
 pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
-    println!(
-        "depth {:?}, current_player {:?}",
-        depth, state.current_player,
-    );
-    print_pos_in_human_format(state.current_move_pos);
+    // println!(
+    //     "depth {:?}, current_player {:?}",
+    //     depth, state.current_player,
+    // );
+    // print_pos_in_human_format(state.current_move_pos);
+    // print_board_from_bitboard(&state.bitboards);
     if depth == 0 || state_is_terminated(state) == true {
         // transpotable::tt_insert(state,depth);
         // transpotable::tt_search(state,depth);
