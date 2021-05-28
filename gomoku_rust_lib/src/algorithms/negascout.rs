@@ -15,7 +15,11 @@ pub fn negascout(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64, c
     update_node_checked_count();
     update_max_depth(depth);
     if depth != 0 && state.available_move.len() == 0 {
-        state.available_move = create_child(&mut state);
+        if depth == 1 {
+            state.available_move = create_child(&mut state);
+        } else {
+            state.available_move = create_child(&mut state);
+        }
         state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     }
     // println!("current state: {:?} player to play {} current heuristic {} depth {}", state.current_move, state.player_to_play, state.heuristic, depth);

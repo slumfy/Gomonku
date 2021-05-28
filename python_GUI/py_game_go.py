@@ -449,7 +449,15 @@ class PyGameGo:
             for pl in go_rules.player_list:
                 if pl.nb == win_status:
                     color = pl.color
-                    self.print_font(132, "player " + str(stone_status) + " win", 100, 300, color)
+                    self.print_font(
+                        100,
+                        ("white" if stone_status == PLAYER_WHITE_NB else "black")
+                        + " player"
+                        + " win",
+                        100,
+                        300,
+                        color,
+                    )
         pygame.display.flip()
         if win_status != 0:
             self.win(go_rules=go_rules)

@@ -39,7 +39,11 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64)
     if depth == 0 || state_is_terminated(state) == true {
         return state.heuristic;
     }
-    state.available_move = create_child(&mut state);
+    if depth == 1 {
+        state.available_move = create_child(&mut state);
+    } else {
+        state.available_move = create_child(&mut state);
+    }
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     if state.available_move.len() < 1 {
         return state.heuristic;
@@ -61,16 +65,16 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64)
             break;
         }
     }
-    if (state.heuristic as i128 - (value / 2) as i128)
+    if (state.heuristic as i128 - (value / 5) as i128)
         > heuristic_ratios::HEURISTIC_MAX_VALUE as i128
     {
         state.heuristic = heuristic_ratios::HEURISTIC_MAX_VALUE;
-    } else if (state.heuristic as i128 - (value / 2) as i128)
+    } else if (state.heuristic as i128 - (value / 5) as i128)
         < heuristic_ratios::HEURISTIC_MIN_VALUE as i128
     {
         state.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
     } else {
-        state.heuristic = state.heuristic - value / 2;
+        state.heuristic = state.heuristic - value / 5;
     }
 	//TT STORING
 	if state.heuristic <= alphaorigin {

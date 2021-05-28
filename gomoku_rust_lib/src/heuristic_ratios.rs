@@ -20,6 +20,8 @@ pub static HEURISTIC_POSSIBLE_AXE_DEVELOPMENT: i64 = 1;
 // Combinative heuristic blocker
 pub static HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO: i64 = HEURISTIC_FREE_THREE_IN_A_ROW * 5;
 pub static HEURISTIC_BLOCK_A_DOUBLE_THREE: i64 = -(HEURISTIC_SIMPLE_BLOCK_THREE_IN_A_ROW * 2);
+// Combinative heuristic blocker
+pub static HEURISTIC_FOUR_AND_OPEN_THREE: i64 = HEURISTIC_FREE_FOUR_IN_A_ROW / 2;
 
 //ratio of pattern
 // index 0 for no blocker or 2 blocked
@@ -31,9 +33,9 @@ pub static HEURISTIC_PATTERN: [[i64; 3]; 9] = [
         HEURISTIC_FIVE_IN_A_ROW,
     ], // five XXXXX...
     [HEURISTIC_FREE_FOUR_IN_A_ROW, 0, 0],      // four .XXXX...
-    [HEURISTIC_FREE_THREE_IN_A_ROW / 2, 0, 0], // split four 3 .XXX.X..
-    [HEURISTIC_FREE_THREE_IN_A_ROW / 2, 0, 0], // split four 1 .X.XXX..
-    [HEURISTIC_FREE_THREE_IN_A_ROW / 2, 0, 0], // split four 2 .XX.XX..
+    [HEURISTIC_FREE_THREE_IN_A_ROW / 3, 0, 0], // split four 3 .XXX.X..
+    [HEURISTIC_FREE_THREE_IN_A_ROW / 3, 0, 0], // split four 1 .X.XXX..
+    [HEURISTIC_FREE_THREE_IN_A_ROW / 3, 0, 0], // split four 2 .XX.XX..
     [
         HEURISTIC_FREE_THREE_IN_A_ROW,
         HEURISTIC_PREVENT_CAPTURE_STONE,
