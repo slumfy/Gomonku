@@ -7,9 +7,11 @@ import subprocess
 # except ImportError:
     # Build rust lib
 # process = subprocess.Popen("rust_compilation.sh", shell=True, stdout=subprocess.PIPE)
-process = subprocess.Popen("rust_compilation_release.sh", shell=True, stdout=subprocess.PIPE)
-process.wait()
-print(process.returncode)
+try:
+    process = subprocess.run("sh rust_compilation_release.sh", check=True)
+except subprocess.CalledProcessError:
+    print("Compilation error")
+    quit(1)
 import gomoku_rust
 
 from player import Player

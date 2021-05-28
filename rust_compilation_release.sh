@@ -4,8 +4,7 @@ cargo make --makefile Makefile.toml build-release
 RET=$?
 if [ $RET != 0 ]
 then
-	echo $RET
-	exit $RET
+	exit 1
 else
 	cp target/release/gomoku_rust.dll ../
 	cd ../
