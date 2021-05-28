@@ -88,7 +88,6 @@ pub fn ai_move(
         0,
         wining_position,
     );
-    state.search_box = get_search_box_bitboard(&state.bitboards);
     get_move_info(&mut state);
     let start_time = Instant::now();
     if turn == 0 {

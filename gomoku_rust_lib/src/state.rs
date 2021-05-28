@@ -27,7 +27,6 @@ pub fn create_new_state(
         all_depth_white_captured_stone_value: all_depth_white_captured_stone_value,
         all_depth_black_captured_stone_value: all_depth_black_captured_stone_value,
         available_move: vec![],
-        search_box: vec![],
         heuristic: 0,
         is_playable: 0,
         win_state: win_state,
@@ -55,11 +54,12 @@ pub fn create_new_state(
 pub fn create_child(state: &mut State) -> Vec<State> {
     let mut copy_bitboards: Bitboards;
     let mut childs_list: Vec<State>;
+    let search_box: Vec<usize> = get_search_box_bitboard(&state.bitboards);
     childs_list = Vec::new();
     let mut saved_child = create_new_state(
         &mut state.bitboards.clone(),
         -state.current_player,
-        state.search_box[0],
+        search_box[0],
         state.total_white_captured_stone,
         state.total_black_captured_stone,
         state.all_depth_white_captured_stone_value,
@@ -67,12 +67,12 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         state.win_state,
     );
     saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
-    for potential_move_pos in &state.search_box {
+    for current_move_pos in search_box {
         copy_bitboards = state.bitboards.clone();
         let mut child = create_new_state(
             &mut copy_bitboards,
             -state.current_player,
-            *potential_move_pos,
+            current_move_pos,
             state.total_white_captured_stone,
             state.total_black_captured_stone,
             state.all_depth_white_captured_stone_value,
@@ -106,12 +106,10 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             }
         }
         if playable == true {
-            child.search_box = get_search_box_bitboard(&child.bitboards);
             childs_list.push(child);
         }
     }
     if childs_list.len() == 0 {
-        saved_child.search_box = get_search_box_bitboard(&saved_child.bitboards);
         childs_list.push(saved_child);
     }
     return childs_list;

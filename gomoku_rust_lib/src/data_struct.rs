@@ -31,7 +31,6 @@ pub struct State {
     pub total_black_captured_stone: i8,
     pub all_depth_white_captured_stone_value: i64,
     pub all_depth_black_captured_stone_value: i64,
-    pub search_box: Vec<usize>,
     pub heuristic: i64,
     pub is_playable: i8,
     pub win_state: (usize, i8),

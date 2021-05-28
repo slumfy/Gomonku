@@ -49,7 +49,6 @@ pub fn test_negamax_benchmark() {
         ALL_MOVES_LIST.push(25);
         ALL_MOVES_LIST.push(pos);
     }
-    state.search_box = get_search_box_bitboard(&state.bitboards);
 
     // Try with depth 1
     let mut copy_state = state.clone();
