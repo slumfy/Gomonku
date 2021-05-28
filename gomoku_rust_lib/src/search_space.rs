@@ -2,19 +2,20 @@
 
 use crate::check_move::check_is_in_bitpos_list;
 use crate::data_struct::Bitboards;
+use crate::ALL_MOVES_LIST;
 
 pub fn get_search_box_bitboard(bitboard: &Bitboards) -> Vec<usize> {
     let mut box_position: Vec<usize> = vec![];
-    for x in 0..19 {
-        for y in 0..19 {
-            let real_pos = (x * 19 + y) % 64;
+    unsafe {
+        for pos in &ALL_MOVES_LIST {
+            let bitboard_index = pos / 64;
+            let real_pos = pos % 64;
             let bit_pos = 63 - real_pos;
-            let bitboard_index = (x * 19 + y) / 64;
             let mask = 1 << bit_pos;
             if bitboard.white_board[bitboard_index] & mask != 0
                 || bitboard.black_board[bitboard_index] & mask != 0
             {
-                create_box_for_bitpos(x * 19 + y, &mut box_position);
+                create_box_for_bitpos(*pos, &mut box_position);
             }
         }
     }

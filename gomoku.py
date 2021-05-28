@@ -61,10 +61,6 @@ def main(argv=None):
         default="negamax",
     )
     args = parser.parse_args(argv)
-    if args.ai_black_depth == 0:
-        args.ai_black_depth = args.depth
-    if args.ai_helper_depth == 0:
-        args.ai_helper_depth = args.depth
     go_rules = GoRules()
     game = PyGameGo(
         sound_status=not args.no_sound,

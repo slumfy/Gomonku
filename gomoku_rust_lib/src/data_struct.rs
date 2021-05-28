@@ -11,14 +11,14 @@ pub struct Transpotablenode {
     pub hash: u64,
     pub depth: i32,
     pub value: i64,
-	pub flag: Flag,
+    pub flag: Flag,
 }
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub enum Flag {
-	EXACT,
-	LOWERBOUND,
-	UPPERBOUND
+    EXACT,
+    LOWERBOUND,
+    UPPERBOUND,
 }
 
 /// State struct corresponding to an instant board value for a given player.
@@ -31,13 +31,14 @@ pub struct State {
     pub total_black_captured_stone: i8,
     pub all_depth_white_captured_stone_value: i64,
     pub all_depth_black_captured_stone_value: i64,
+    pub search_box: Vec<usize>,
     pub heuristic: i64,
     pub is_playable: i8,
     pub win_state: (usize, i8),
     pub current_move_pos: usize,
     pub board_info: BoardStateInfo,
     pub axes: [[u16; 4]; 2],
-	pub max_eat_next_move : i8,
+    pub max_eat_next_move: i8,
 }
 
 /// Board state information for computing heuristic and validate move

@@ -5,7 +5,9 @@ use crate::data_struct;
 use crate::data_struct::Bitboards;
 use crate::global_var;
 use crate::heuristic_ratios;
+use crate::search_space::get_search_box_bitboard;
 use crate::state;
+use crate::ALL_MOVES_LIST;
 use colour::{green_ln, red_ln};
 use std::thread;
 use std::time::Duration;
@@ -28,7 +30,7 @@ pub fn test_negamax_benchmark() {
     apply_bit(&mut bitboards, 25, global_var::PLAYER_BLACK_NB);
     apply_bit(&mut bitboards, pos, global_var::PLAYER_WHITE_NB);
 
-    let state: data_struct::State = state::create_new_state(
+    let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         global_var::PLAYER_WHITE_NB,
         pos,
@@ -38,6 +40,16 @@ pub fn test_negamax_benchmark() {
         0,
         (0, 0),
     );
+    unsafe {
+        ALL_MOVES_LIST.push(0);
+        ALL_MOVES_LIST.push(1);
+        ALL_MOVES_LIST.push(19);
+        ALL_MOVES_LIST.push(120);
+        ALL_MOVES_LIST.push(181);
+        ALL_MOVES_LIST.push(25);
+        ALL_MOVES_LIST.push(pos);
+    }
+    state.search_box = get_search_box_bitboard(&state.bitboards);
 
     // Try with depth 1
     let mut copy_state = state.clone();

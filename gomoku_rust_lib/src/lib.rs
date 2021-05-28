@@ -26,11 +26,11 @@ extern crate lazy_static;
 
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
+use crate::search_space::get_search_box_bitboard;
 use bitboards::create_bits_axes_from_pos;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
-
 use tests::__pyo3_get_function_pytest_ai_move;
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
 use tests::__pyo3_get_function_pytest_check_is_capturable;
@@ -44,6 +44,8 @@ use tests::__pyo3_get_function_pytest_returning_dict_to_python;
 use tests::__pyo3_get_function_pytest_test_blockers;
 use tests::__pyo3_get_function_pytest_updating_from_other_function;
 //END TEST BLOCKER
+
+pub static mut ALL_MOVES_LIST: Vec<usize> = vec![];
 
 #[pyfunction]
 pub fn ai_move(
@@ -61,6 +63,13 @@ pub fn ai_move(
     let total_white_captured_stone: i8;
     let total_black_captured_stone: i8;
 
+    use print::print_pos_in_human_format;
+    println!("Printing all previous move in rust:");
+    unsafe {
+        for pos in &ALL_MOVES_LIST {
+            print_pos_in_human_format(*pos);
+        }
+    }
     unsafe {
         total_white_captured_stone = global_var::TOTAL_WHITE_CAPTURED_STONE;
         total_black_captured_stone = global_var::TOTAL_BLACK_CAPTURED_STONE;
@@ -79,6 +88,7 @@ pub fn ai_move(
         0,
         wining_position,
     );
+    state.search_box = get_search_box_bitboard(&state.bitboards);
     get_move_info(&mut state);
     let start_time = Instant::now();
     if turn == 0 {
@@ -192,6 +202,9 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
         state.current_move_pos, board_state_info
     );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
+        unsafe {
+            ALL_MOVES_LIST.push(state.current_move_pos);
+        }
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_state_info.stone_captured)?;
         if player == global_var::PLAYER_WHITE_NB {
@@ -239,7 +252,8 @@ fn reset_game() {
     unsafe {
         global_var::TOTAL_WHITE_CAPTURED_STONE = 0;
         global_var::TOTAL_BLACK_CAPTURED_STONE = 0;
-		algorithms::reset_tt_table();
+        algorithms::reset_tt_table();
+        ALL_MOVES_LIST = vec![];
     }
 }
 #[pyfunction]
