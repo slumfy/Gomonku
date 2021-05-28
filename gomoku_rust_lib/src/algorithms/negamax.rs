@@ -20,7 +20,11 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, beta: i64) -> 
         // transpotable::tt_search(state,depth);
         return state.heuristic;
     }
-    state.available_move = create_child(&mut state);
+    if depth == 1 {
+        state.available_move = create_child(&mut state, true);
+    } else {
+        state.available_move = create_child(&mut state, false);
+    }
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     if state.available_move.len() < 1 {
         return state.heuristic;

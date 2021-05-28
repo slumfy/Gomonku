@@ -47,12 +47,12 @@ pub fn create_new_state(
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },
         axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
-		max_eat_next_move: 0,
+        max_eat_next_move: 0,
     };
     return new_state;
 }
 
-pub fn create_child(state: &mut State) -> Vec<State> {
+pub fn create_child(state: &mut State, last_depth: bool) -> Vec<State> {
     let mut copy_bitboards: Bitboards;
     let mut childs_list: Vec<State>;
     let index_box: Vec<usize> = get_search_box_bitboard(&state.bitboards);
@@ -83,10 +83,10 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.all_depth_black_captured_stone_value,
             state.win_state,
         );
-        child.heuristic = heuristic(&mut child);
-		if child.board_info.stone_captured > state.max_eat_next_move {
-			state.max_eat_next_move = child.board_info.stone_captured;
-		}
+        child.heuristic = heuristic(&mut child, last_depth);
+        if child.board_info.stone_captured > state.max_eat_next_move {
+            state.max_eat_next_move = child.board_info.stone_captured;
+        }
         if child.is_playable == global_var::VALID_MOVE
             && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
         {
@@ -116,7 +116,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     if childs_list.len() == 0 {
         childs_list.push(saved_child);
     }
-	return(childs_list);
+    return (childs_list);
     // childs_list.sort_by_key(|d| Reverse(d.heuristic));
     // let mut new_list: Vec<State> = Vec::new();
     // let mut len = childs_list.len();
@@ -133,20 +133,19 @@ pub fn state_is_terminated(state: &mut State) -> bool {
     if state.total_white_captured_stone >= 10 || state.total_black_captured_stone >= 10 {
         return true;
     }
-	let mut opponent_capture_score: i8 = 0;
-	if state.current_player == global_var::PLAYER_WHITE_NB {
-		opponent_capture_score = state.total_black_captured_stone;
-	}
-	else {
-		opponent_capture_score = state.total_white_captured_stone;
-	}
+    let mut opponent_capture_score: i8 = 0;
+    if state.current_player == global_var::PLAYER_WHITE_NB {
+        opponent_capture_score = state.total_black_captured_stone;
+    } else {
+        opponent_capture_score = state.total_white_captured_stone;
+    }
     if state.board_info.pattern_axe[0].1 == 5 {
-		if state.available_move.len() == 0 {
-			state.available_move = create_child(state);
-		}
-		if opponent_capture_score + state.max_eat_next_move >= 10 {
-			return false;
-		}
+        if state.available_move.len() == 0 {
+            state.available_move = create_child(state, false);
+        }
+        if opponent_capture_score + state.max_eat_next_move >= 10 {
+            return false;
+        }
         return true;
     }
     return false;
