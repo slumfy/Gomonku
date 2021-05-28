@@ -21,7 +21,7 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64)
 	if tt_entry != None {
 		let tt_unwrap = tt_entry.unwrap();
 		if tt_unwrap.depth >= depth {
-			println!("TTentry {:?}",tt_unwrap);
+			// println!("TTentry {:?}",tt_unwrap);
 			if tt_unwrap.flag == Flag::EXACT {
 				return(tt_unwrap.value);
 			}
