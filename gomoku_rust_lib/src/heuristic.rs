@@ -8,7 +8,7 @@ use crate::data_struct::State;
 use crate::global_var;
 use crate::heuristic_ratios;
 
-pub fn heuristic(state: &mut State, last_depth: bool) -> i64 {
+pub fn heuristic(state: &mut State) -> i64 {
     let mut value: i64 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
 

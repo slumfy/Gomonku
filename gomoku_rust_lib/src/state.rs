@@ -52,7 +52,7 @@ pub fn create_new_state(
     return new_state;
 }
 
-pub fn create_child(state: &mut State, last_depth: bool) -> Vec<State> {
+pub fn create_child(state: &mut State) -> Vec<State> {
     let mut copy_bitboards: Bitboards;
     let mut childs_list: Vec<State>;
     let index_box: Vec<usize> = get_search_box_bitboard(&state.bitboards);
@@ -83,7 +83,7 @@ pub fn create_child(state: &mut State, last_depth: bool) -> Vec<State> {
             state.all_depth_black_captured_stone_value,
             state.win_state,
         );
-        child.heuristic = heuristic(&mut child, last_depth);
+        child.heuristic = heuristic(&mut child);
         if child.board_info.stone_captured > state.max_eat_next_move {
             state.max_eat_next_move = child.board_info.stone_captured;
         }
@@ -141,7 +141,7 @@ pub fn state_is_terminated(state: &mut State) -> bool {
     }
     if state.board_info.pattern_axe[0].1 == 5 {
         if state.available_move.len() == 0 {
-            state.available_move = create_child(state, false);
+            state.available_move = create_child(state);
         }
         if opponent_capture_score + state.max_eat_next_move >= 10 {
             return false;

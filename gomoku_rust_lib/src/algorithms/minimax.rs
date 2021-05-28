@@ -21,9 +21,9 @@ pub fn minimax(
         return state.heuristic;
     }
     if depth == 1 {
-        state.available_move = create_child(&mut state, true);
+        state.available_move = create_child(&mut state);
     } else {
-        state.available_move = create_child(&mut state, false);
+        state.available_move = create_child(&mut state);
     }
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     let mut value: i64;
