@@ -24,7 +24,7 @@ class PyGameGo:
         search_box_status: bool = False,
         ai_helper: bool = True,
         depth: int = 5,
-        ai_helper_depth: int = 1,
+        ai_helper_depth: int = 0,
         ai_black_depth: int = 0,
         display_ai_time: bool = False,
         search_algorithm: str = "negamax",
@@ -37,10 +37,7 @@ class PyGameGo:
         self.logger = logger_factory("PyGameGo")
         self.depth = depth
         self.ai_helper_depth = ai_helper_depth
-        if ai_black_depth == 0:
-            self.ai_black_depth = self.depth
-        else:
-            self.ai_black_depth = ai_black_depth
+        self.ai_black_depth = ai_black_depth
         self.moves_count = 0
         # Creating GUI and sound
         if not self.test_mode:
@@ -332,22 +329,37 @@ class PyGameGo:
                 and self.player.player_type == PlayerType.HUMAN.value
                 and self.ai_helper == True
             ):
-                ai_helper = go_rules.AI_move(
-                    self.player,
-                    x,
-                    y,
-                    self.moves_count,
-                    self.display_ai_time,
-                    self.search_algorithm,
-                    self.ai_helper_depth,
-                )
+                if self.ai_helper_depth == 0:
+                    ai_helper = go_rules.AI_move(
+                        self.player,
+                        x,
+                        y,
+                        self.moves_count,
+                        self.display_ai_time,
+                        self.search_algorithm,
+                        self.depth,
+                    )
+                else:
+                    ai_helper = go_rules.AI_move(
+                        self.player,
+                        x,
+                        y,
+                        self.moves_count,
+                        self.display_ai_time,
+                        self.search_algorithm,
+                        self.ai_helper_depth,
+                    )
             if self.player.player_type == PlayerType.HUMAN.value and self.ai_helper == True:
                 self.print_ai_helper(ai_helper[0][1], ai_helper[0][0])
             pygame.display.flip()
             win_status = 0
             if self.player.player_type == PlayerType.AI.value:
                 self.screen.blit(self.go_board_resize, self.start_point)
-                if self.player.nb == PLAYER_WHITE_NB or not self.ai_vs_ai:
+                if (
+                    self.player.nb == PLAYER_WHITE_NB
+                    or not self.ai_vs_ai
+                    or self.ai_black_depth == 0
+                ):
                     AI_move = go_rules.AI_move(
                         self.player,
                         x,
