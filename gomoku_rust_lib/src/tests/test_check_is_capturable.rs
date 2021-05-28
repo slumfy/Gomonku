@@ -4,9 +4,9 @@ use crate::check_move::check_is_capturable;
 use crate::data_struct;
 use crate::data_struct::Bitboards;
 use crate::global_var;
-use crate::heuristic_ratios;
-use crate::print::print_board_from_bitboard;
-use crate::print::print_pos_in_human_format;
+// use crate::heuristic_ratios;
+// use crate::print::print_board_from_bitboard;
+// use crate::print::print_pos_in_human_format;
 use crate::state;
 
 pub fn test_check_is_capturable() {

@@ -134,7 +134,7 @@ pub fn ai_move(
     Ok(((ai_x_move, ai_y_move), ai_move.1))
 }
 
-fn player_win(state: &mut data_struct::State, opponent: i8) -> bool {
+fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {
     // Run negamax with depth 1 to see if only min_value is returned.
     // If it's the case, it means that the player have win.
     unsafe {
@@ -239,6 +239,7 @@ fn reset_game() {
     unsafe {
         global_var::TOTAL_WHITE_CAPTURED_STONE = 0;
         global_var::TOTAL_BLACK_CAPTURED_STONE = 0;
+		algorithms::reset_tt_table();
     }
 }
 #[pyfunction]

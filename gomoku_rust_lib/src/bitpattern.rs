@@ -11,7 +11,6 @@ use crate::data_struct::BoardStateInfo;
 use crate::global_var;
 use crate::global_var::BLOCKER;
 use crate::global_var::PATTERN;
-use crate::heuristic_ratios::HEURISTIC_PATTERN;
 
 pub fn pattern_axes_dispatcher(
     board_state_info: &mut BoardStateInfo,

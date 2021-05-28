@@ -3,7 +3,7 @@ use crate::bitboard_operations::remove_bit;
 use crate::check_move::check_pattern_is_not_capturable;
 use crate::data_struct::Bitboards;
 use crate::global_var;
-use crate::print::print_board_from_bitboard;
+// use crate::print::print_board_from_bitboard;
 
 pub fn test_check_pattern_is_not_capturable_five() {
     let mut bitboards: Bitboards = Bitboards {

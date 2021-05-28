@@ -25,14 +25,18 @@ pub fn tt_insert(state: &State, depth: i32, flag: Flag) {
         .insert(state_hash, new_table_node);
 }
 
-pub fn tt_search(state: &State, depth: i32) -> Option<Transpotablenode> {
+pub fn tt_search(state: &State) -> Option<Transpotablenode> {
     let mut hash = DefaultHasher::new();
 	let copy;
     state.bitboards.hash(&mut hash);
     let state_hash: u64 = hash.finish();
     if TT_STATES.read().unwrap().contains_key(&state_hash) {
 		copy = TT_STATES.read().unwrap().get(&state_hash).copied();
-		return(copy);
+		return copy;
     }
-	return(None);
+	return None;
+}
+
+pub fn clear_tt_table() {
+	TT_STATES.write().unwrap().clear();
 }

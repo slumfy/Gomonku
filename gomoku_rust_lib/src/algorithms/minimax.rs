@@ -1,7 +1,7 @@
 use crate::algorithms::algo_utils::update_max_depth;
 use crate::algorithms::algo_utils::update_node_checked_count;
-use crate::algorithms::algo_utils::update_pruning_count;
-use crate::algorithms::transpotable;
+// use crate::algorithms::algo_utils::update_pruning_count;
+// use crate::algorithms::transpotable;
 use crate::data_struct::State;
 use crate::heuristic_ratios;
 use crate::state::create_child;
