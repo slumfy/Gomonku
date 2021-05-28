@@ -348,4 +348,13 @@ pub fn test_negamax_benchmark() {
     thread::sleep(time_before_kill_process);
     println!("Stopping thread...");
     handle.stop();
+    unsafe {
+        ALL_MOVES_LIST.pop();
+        ALL_MOVES_LIST.pop();
+        ALL_MOVES_LIST.pop();
+        ALL_MOVES_LIST.pop();
+        ALL_MOVES_LIST.pop();
+        ALL_MOVES_LIST.pop();
+        ALL_MOVES_LIST.pop();
+    }
 }
