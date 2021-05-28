@@ -62,6 +62,8 @@ pub fn heuristic(state: &mut State, last_depth: bool) -> i64 {
     let mut count_blocking_triple = 0;
     let mut count_simple_blocking_two = 0;
     let mut count_blocking_two = 0;
+    let mut count_pattern_four = 0;
+    let mut count_pattern_free_three = 0;
     let current_player_axe;
     let opponent_axe;
     if state.current_player == global_var::PLAYER_WHITE_NB {
@@ -105,6 +107,14 @@ pub fn heuristic(state: &mut State, last_depth: bool) -> i64 {
                     // Add pattern values
                     value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
                         [numbers_of_blocker_on_pattern];
+                    if found_pattern_on_axe >= 1 && found_pattern_on_axe <= 4 {
+                        count_pattern_four += 1;
+                    }
+                    if found_pattern_on_axe >= 5 && found_pattern_on_axe <= 7 {
+                        if numbers_of_blocker_on_pattern == 0 {
+                            count_pattern_free_three += 1;
+                        }
+                    }
                 }
             }
         }
@@ -121,10 +131,13 @@ pub fn heuristic(state: &mut State, last_depth: bool) -> i64 {
                 state.axes[current_player_axe][axe_index],
             );
             count_blocking_two += is_blocking_two_pattern(found_blocker_pattern_on_axe);
-            if last_depth {
-                value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
-                    [numbers_of_blocker_on_blocked_pattern];
-            }
+            value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
+                [numbers_of_blocker_on_blocked_pattern];
+        }
+
+        // Cumulative pattern heuristic
+        if count_pattern_four >= 1 && count_pattern_free_three >= 1 {
+            value += heuristic_ratios::HEURISTIC_FOUR_AND_OPEN_THREE;
         }
 
         // Checking if AI try to block a double triple and prevent it
