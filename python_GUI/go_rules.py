@@ -8,7 +8,7 @@ import subprocess
     # Build rust lib
 # process = subprocess.Popen("rust_compilation.sh", shell=True, stdout=subprocess.PIPE)
 try:
-    process = subprocess.run("sh rust_compilation_release.sh", check=True)
+    process = subprocess.run("sh bash_script/rust_compilation_release.sh", check=True)
 except subprocess.CalledProcessError:
     print("Compilation error")
     quit(1)
