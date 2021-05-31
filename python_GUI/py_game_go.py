@@ -200,7 +200,7 @@ class PyGameGo:
                         and event.pos[1] > 265
                         and event.pos[1] < 285
                     ):
-                        if self.depth < 10:
+                        if self.depth < 15:
                             self.depth += 1
                         self.display_setting_page()
                     # substract depth

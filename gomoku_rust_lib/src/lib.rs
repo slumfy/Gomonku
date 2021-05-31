@@ -88,12 +88,7 @@ pub fn ai_move(
             println!("using negamax");
             state.heuristic = 0;
             // For alpha, sending  min value + 1 to prevent overflow when changing sign.
-            algorithms::negamax(
-                &mut state,
-                depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
-                heuristic_ratios::HEURISTIC_MAX_VALUE,
-            );
+            algorithms::negamax(&mut state, depth);
         } else if search_algorithm == "negascout" {
             println!("using negascout");
             algorithms::negascout(
@@ -141,12 +136,7 @@ fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {
         global_var::DEPTH = 1;
     }
     let ai_move: (usize, i64);
-    algorithms::negamax(
-        state,
-        1,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(state, 1);
     ai_move = algorithms::return_move(state);
     if ai_move.1 == heuristic_ratios::HEURISTIC_MIN_VALUE {
         return true;
@@ -239,7 +229,7 @@ fn reset_game() {
     unsafe {
         global_var::TOTAL_WHITE_CAPTURED_STONE = 0;
         global_var::TOTAL_BLACK_CAPTURED_STONE = 0;
-		algorithms::reset_tt_table();
+        algorithms::reset_tt_table();
     }
 }
 #[pyfunction]

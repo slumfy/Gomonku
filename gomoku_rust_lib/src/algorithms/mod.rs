@@ -5,8 +5,8 @@ mod negascout;
 mod transpotable;
 use crate::data_struct::State;
 
-pub fn negamax(state: &mut State, depth: i32, alpha: i64, beta: i64) -> i64 {
-    return negamax::negamax(state, depth, alpha, beta);
+pub fn negamax(state: &mut State, depth: i32) -> i64 {
+    return negamax::negamax(state, depth);
 }
 
 pub fn minimax(
@@ -28,5 +28,5 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
 }
 
 pub fn reset_tt_table() {
-	transpotable::clear_tt_table();
+    transpotable::clear_tt_table();
 }

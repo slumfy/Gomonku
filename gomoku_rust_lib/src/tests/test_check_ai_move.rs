@@ -42,12 +42,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
     assert_eq!(ai_returned_move.0, 175);
 
@@ -75,12 +70,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
     assert_eq!(ai_returned_move.0, 9);
 
@@ -109,12 +99,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 183);
@@ -142,12 +127,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 161);
@@ -180,12 +160,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
     print_board_from_bitboard(&bitboards);
 
@@ -215,12 +190,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 42);
@@ -249,12 +219,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 42);
@@ -287,12 +252,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 302);
@@ -322,12 +282,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 182);
@@ -357,12 +312,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 184);
@@ -393,12 +343,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 184);
@@ -426,12 +371,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 161);
@@ -457,12 +397,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 1);
@@ -491,12 +426,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = algorithms::return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 182);
@@ -528,12 +458,7 @@ pub fn test_ai_move() {
     );
     let depth = 1;
     state.axes = create_bits_axes_from_pos(160, &mut bitboards);
-    algorithms::negamax(
-        &mut state,
-        depth,
-        heuristic_ratios::HEURISTIC_MIN_VALUE,
-        heuristic_ratios::HEURISTIC_MAX_VALUE,
-    );
+    algorithms::negamax(&mut state, depth);
     let ai_returned_move = algorithms::return_move(&mut state);
 
     assert_eq!(ai_returned_move.0, 183);

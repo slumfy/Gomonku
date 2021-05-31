@@ -11,31 +11,9 @@ use crate::state::create_child;
 use crate::state::state_is_terminated;
 use std::cmp::Reverse;
 
-pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64) -> i64 {
-    let alphaorigin = alpha;
+pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
-    if unsafe { depth != global_var::DEPTH } {
-        let tt_entry = transpotable::tt_search(state);
-        if tt_entry != None {
-            let tt_unwrap = tt_entry.unwrap();
-            if tt_unwrap.depth >= depth {
-                // println!("TTentry {:?}",tt_unwrap);
-                if tt_unwrap.flag == Flag::EXACT {
-                    update_tt_count();
-                    return tt_unwrap.value;
-                } else if tt_unwrap.flag == Flag::LOWERBOUND {
-                    alpha = std::cmp::max(alpha, tt_unwrap.value);
-                } else if tt_unwrap.flag == Flag::UPPERBOUND {
-                    beta = std::cmp::min(beta, tt_unwrap.value);
-                }
-                if alpha >= beta {
-                    update_tt_count();
-                    return tt_unwrap.value;
-                }
-            }
-        }
-    }
     if depth == 0 || state_is_terminated(state) == true {
         return state.heuristic;
     }
@@ -49,15 +27,10 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64)
         return state.heuristic;
     }
     let mut value: i64 = heuristic_ratios::HEURISTIC_MIN_VALUE;
-    alpha = heuristic_ratios::HEURISTIC_MIN_VALUE;
+    let mut alpha = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value;
-        negamax_value = negamax(
-            &mut state.available_move[child_index],
-            depth - 1,
-            beta,
-            alpha,
-        );
+        negamax_value = negamax(&mut state.available_move[child_index], depth - 1);
 
         value = std::cmp::max(value, negamax_value);
         if value <= alpha {
@@ -77,16 +50,6 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64)
         state.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
     } else {
         state.heuristic = state.heuristic - value / 5;
-    }
-    //TT STORING
-    if unsafe { depth != global_var::DEPTH } {
-        if state.heuristic <= alphaorigin {
-            transpotable::tt_insert(state, depth, Flag::UPPERBOUND);
-        } else if state.heuristic >= beta {
-            transpotable::tt_insert(state, depth, Flag::LOWERBOUND);
-        } else {
-            transpotable::tt_insert(state, depth, Flag::EXACT);
-        }
     }
     return state.heuristic;
 }
