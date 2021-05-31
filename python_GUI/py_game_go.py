@@ -84,7 +84,7 @@ class PyGameGo:
             self.grey_stone_resize = pygame.transform.scale(self.grey_stone, STONE_SIZE)
             self.blue_stone = pygame.image.load("ressources/images/bluecircle.png")
             self.blue_stone_resize = pygame.transform.scale(self.blue_stone, STONE_SIZE)
-        self.starting_stone_color = PLAYER_WHITE_NB
+        self.starting_stone_color = PLAYER_BLACK_NB
         self.ai_vs_ai = False
 
     def update_sound_status(self, sound_status: bool, background_page):
