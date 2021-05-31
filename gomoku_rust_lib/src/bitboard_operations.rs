@@ -26,8 +26,11 @@ fn return_captured_pattern_blocking_value(
         let found_opponent_pattern_on_axe = opponent_pattern_axes[axe_index].0;
         let numbers_of_blocker_on_pattern = opponent_pattern_axes[axe_index].1;
         if numbers_of_blocker_on_pattern != 3 && numbers_of_blocker_on_pattern != 5 {
-            value += heuristic_ratios::HEURISTIC_BLOCKER[found_opponent_pattern_on_axe][1];
-            value += heuristic_ratios::HEURISTIC_BLOCKER[found_opponent_pattern_on_axe][2];
+            // Not additional capture value for capture pattern 4 and 5 because it will not prevent winning.
+            if found_opponent_pattern_on_axe > 4 {
+                value += heuristic_ratios::HEURISTIC_BLOCKER[found_opponent_pattern_on_axe][1];
+                value += heuristic_ratios::HEURISTIC_BLOCKER[found_opponent_pattern_on_axe][2];
+            }
         }
     }
     return value;
