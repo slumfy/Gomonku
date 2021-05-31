@@ -49,20 +49,22 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64)
         return state.heuristic;
     }
     let mut value: i64 = heuristic_ratios::HEURISTIC_MIN_VALUE;
+    alpha = heuristic_ratios::HEURISTIC_MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value;
         negamax_value = negamax(
             &mut state.available_move[child_index],
             depth - 1,
-            -beta,
-            -alpha,
+            beta,
+            alpha,
         );
 
         value = std::cmp::max(value, negamax_value);
-        alpha = std::cmp::max(alpha, value);
-        if alpha >= beta {
+        if value <= alpha {
             update_pruning_count();
             break;
+        } else {
+            alpha = value;
         }
     }
     if (state.heuristic as i128 - (value / 5) as i128)
