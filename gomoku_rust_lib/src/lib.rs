@@ -56,7 +56,7 @@ pub fn ai_move(
     display_ai_time: bool,
     search_algorithm: String,
     depth: i32,
-) -> PyResult<((usize, usize), i64)> {
+) -> PyResult<((usize, usize), u128)> {
     // println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let total_white_captured_stone: i8;
     let total_black_captured_stone: i8;
@@ -80,6 +80,7 @@ pub fn ai_move(
         wining_position,
     );
     get_move_info(&mut state);
+	let mut time: u128 = 0;
     let start_time = Instant::now();
     if turn == 0 {
         ai_move = (180, 0);
@@ -117,9 +118,9 @@ pub fn ai_move(
     }
     if display_ai_time {
         let end_time = Instant::now();
-        println!("time to process {:?}", end_time.duration_since(start_time));
+		time = end_time.duration_since(start_time).as_millis();
+		println!("time to process {:?}", time);
     }
-
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
     // println!(
@@ -131,7 +132,7 @@ pub fn ai_move(
     //     ai_x_move, ALPHABET[ai_y_move as usize], turn
     // );
     // println!("negamax {:?}", ai_move);
-    Ok(((ai_x_move, ai_y_move), ai_move.1))
+    Ok(((ai_x_move, ai_y_move), time))
 }
 
 fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {
