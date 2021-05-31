@@ -2,6 +2,7 @@ use crate::data_struct::State;
 use crate::global_var;
 use crate::print::print_heuristic_table;
 use std::cmp::Reverse;
+use crate::algorithms::transpotable::clear_tt_table;
 
 pub fn return_move(state: &mut State) -> (usize, i64) {
     print_heuristic_table(state);
@@ -15,6 +16,7 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
     reset_node_checked_count();
     reset_pruning_count();
     reset_tt_count();
+	clear_tt_table();
 	// state.available_move.sort_by_key(|d| d.heuristic);
     // for child in 0..state.available_move.len() {
 	// 	if state.available_move[child].heuristic == -state.heuristic {
