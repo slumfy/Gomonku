@@ -62,7 +62,7 @@ pub static HEURISTIC_BLOCKER: [[i64; 3]; 9] = [
     [0, HEURISTIC_SIMPLE_BLOCK_TWO_IN_A_ROW, 0],         // double 	.XX.....
 ];
 
-pub fn exponential_heuristic_prevent_capture_stone_calculator(opponent_stone_captured: i8) -> i64 {
+pub fn exponential_heuristic_capture_stone_calculator(opponent_stone_captured: i8) -> i64 {
     // let mut multiplier = opponent_stone_captured / 2;
     // let mut value = HEURISTIC_PREVENT_CAPTURE_STONE;
     if opponent_stone_captured >= 8 {

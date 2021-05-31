@@ -33,7 +33,7 @@ pub fn heuristic(state: &mut State) -> i64 {
             if state.total_white_captured_stone >= 10 {
                 return heuristic_ratios::HEURISTIC_MAX_VALUE;
             }
-            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+            value += heuristic_ratios::exponential_heuristic_capture_stone_calculator(
                 state.total_white_captured_stone,
             );
         } else {
@@ -42,7 +42,7 @@ pub fn heuristic(state: &mut State) -> i64 {
             if state.total_black_captured_stone >= 10 {
                 return heuristic_ratios::HEURISTIC_MAX_VALUE;
             }
-            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+            value += heuristic_ratios::exponential_heuristic_capture_stone_calculator(
                 state.total_black_captured_stone,
             );
         }
@@ -184,13 +184,13 @@ fn checking_if_pattern_is_blocking_a_capture_and_return_value(
     {
         // Only one blocker, good move
         if numbers_of_blocker_on_pattern == 1 {
-            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+            value += heuristic_ratios::exponential_heuristic_capture_stone_calculator(
                 opponent_stone_captured,
             );
         }
         // Two blocker, not really good move because we will create a two blocker three, unplayable.
         else {
-            value += heuristic_ratios::exponential_heuristic_prevent_capture_stone_calculator(
+            value += heuristic_ratios::exponential_heuristic_capture_stone_calculator(
                 opponent_stone_captured,
             ) / 3;
         }
