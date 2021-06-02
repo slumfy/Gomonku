@@ -40,12 +40,18 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
             alpha = value;
         }
     }
-    if check_i64_substraction_overflow(state.heuristic, value / 5) {
+    if check_i64_substraction_overflow(
+        state.heuristic,
+        value / heuristic_ratios::HEURISTIC_MULTIPLIER,
+    ) {
         state.heuristic = heuristic_ratios::MAX_VALUE;
-    } else if check_i64_substraction_underflow(state.heuristic, value / 5) {
+    } else if check_i64_substraction_underflow(
+        state.heuristic,
+        value / heuristic_ratios::HEURISTIC_MULTIPLIER,
+    ) {
         state.heuristic = heuristic_ratios::MIN_VALUE;
     } else {
-        state.heuristic = state.heuristic - value / 5;
+        state.heuristic = state.heuristic - value / heuristic_ratios::HEURISTIC_MULTIPLIER;
     }
     return state.heuristic;
 }
