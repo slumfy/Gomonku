@@ -5,7 +5,7 @@ import subprocess
 # try:
 #     import gomoku_rust
 # except ImportError:
-    # Build rust lib
+# Build rust lib
 # process = subprocess.Popen("rust_compilation.sh", shell=True, stdout=subprocess.PIPE)
 try:
     process = subprocess.run("sh bash_script/rust_compilation_release.sh", check=True)

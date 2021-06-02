@@ -27,13 +27,12 @@ class PyGameGo:
         ai_helper_depth: int = 0,
         ai_black_depth: int = 0,
         display_ai_time: bool = False,
-        search_algorithm: str = "negamax",
+        theme: int = 1,
     ):
         self.test_mode = test_mode
         self.ai_helper = ai_helper
         self.display_ai_time = display_ai_time
-        self.search_algorithm = search_algorithm
-
+        self.search_algorithm = "negamax"
         self.logger = logger_factory("PyGameGo")
         self.depth = depth
         self.ai_helper_depth = ai_helper_depth
@@ -51,7 +50,7 @@ class PyGameGo:
             self.reset_icon_size = width, height = 32, 32
             self.return_icon_size = width, height = 32, 32
             self.screen = pygame.display.set_mode(size=MAIN_WINDOW_SIZE)
-            self.theme_number = 1
+            self.theme_number = theme
             self.go_board = pygame.image.load("ressources/images/goboard-1.png")
             self.go_menu = pygame.image.load("ressources/images/gomenu-1.png")
             self.go_settings = pygame.image.load("ressources/images/gosettings-1.png")
@@ -539,9 +538,7 @@ class PyGameGo:
     def print_AI_timer(self, time):
         self.print_font(
             32,
-            "Time :  "
-            + str(time)
-            + " ms",
+            "Time :  " + str(time) + " ms",
             440,
             40,
             "BLACK_BLUE_ONE",

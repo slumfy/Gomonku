@@ -1,76 +1,58 @@
-import argparse
 import sys
+import json
 
 sys.path.append("./python_GUI/")
 from go_rules import GoRules
 from py_game_go import PyGameGo
 
 
+class Settings:
+    sound = None
+    ai_depth = None
+    second_ai_depth = None
+    ai_helper = None
+    ai_helper_depth = None
+    display_ai_time = None
+    search_box = None
+    theme = None
+
+    def __init__(self, data):
+        self.sound = data["sound"]
+        self.ai_depth = data["ai_depth"]
+        self.second_ai_depth = data["second_ai_depth"]
+        self.ai_helper = data["ai_helper"]
+        self.ai_helper_depth = data["ai_helper_depth"]
+        self.display_ai_time = data["display_ai_time"]
+        self.search_box = data["search_box"]
+        self.theme = data["theme"]
+
+
 def main(argv=None):
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--no_sound",
-        help="Disable or enable sound.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--ai_helper",
-        help="Disable or enable AI helper.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--display_ai_time",
-        help="Disable or enable the time it takes to the AI to do a move.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--with_search_box",
-        help="Disable or enable Search box.",
-        action="store_true",
-    )
-    parser.add_argument(
-        "--depth",
-        help="Set the depth of algorithm search (from 1 to 12).",
-        choices=range(1, 13),
-        type=int,
-        default=5,
-    )
-    parser.add_argument(
-        "--ai_helper_depth",
-        help="Set the depth of ai helper (from 1 to 12).",
-        choices=range(1, 13),
-        type=int,
-        default=0,
-    )
-    parser.add_argument(
-        "--ai_black_depth",
-        help="Set the depth of the second ai for ai fight (from 1 to 12).",
-        choices=range(1, 13),
-        type=int,
-        default=0,
-    )
-    parser.add_argument(
-        "--search_algorithm",
-        choices=["negamax", "negascout", "minimax", "NTDF", "BNS"],
-        help="""
-    - negamax
-    - negascout
-	- minimax
-	- NTDF
-	- BNS""",
-        default="negamax",
-    )
-    args = parser.parse_args(argv)
+    try:
+        with open("config.json") as config_file:
+            try:
+                data = json.load(config_file)
+            except ValueError:
+                print("Bad formatting of json file.")
+                exit()
+    except FileNotFoundError:
+        print("No config.json found.")
+        exit()
+    try:
+        settings = Settings(data)
+    except KeyError as Key:
+        print("Missing Key: ", Key)
+    print(settings.ai_depth)
     go_rules = GoRules()
     game = PyGameGo(
-        sound_status=not args.no_sound,
-        ai_helper=args.ai_helper,
-        search_box_status=args.with_search_box,
-        display_ai_time=args.display_ai_time,
-        depth=args.depth,
-        ai_helper_depth=args.ai_helper_depth,
-        ai_black_depth=args.ai_black_depth,
-        search_algorithm=args.search_algorithm,
+        sound_status=settings.sound,
+        ai_helper=settings.ai_helper,
+        search_box_status=settings.search_box,
+        display_ai_time=settings.display_ai_time,
+        depth=settings.ai_depth,
+        ai_helper_depth=settings.ai_helper_depth,
+        ai_black_depth=settings.second_ai_depth,
+        theme=settings.theme,
     )
     game.menu(go_rules=go_rules)
 
