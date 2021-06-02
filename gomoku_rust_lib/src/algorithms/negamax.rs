@@ -33,23 +33,36 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
         negamax_value = negamax(&mut state.available_move[child_index], depth - 1);
 
         value = std::cmp::max(value, negamax_value);
-        if value <= alpha {
+        if check_i64_substraction_overflow(state.heuristic, value / 5)
+            || check_i64_substraction_underflow(state.heuristic, value / 5)
+            || (alpha >= state.heuristic - (value / 5))
+        {
             update_pruning_count();
             break;
         } else {
-            alpha = value;
+            alpha = state.heuristic - value / 5
         }
     }
-    if (state.heuristic as i128 - (value / 5) as i128)
-        > heuristic_ratios::HEURISTIC_MAX_VALUE as i128
-    {
+    if check_i64_substraction_overflow(state.heuristic, value / 5) {
         state.heuristic = heuristic_ratios::HEURISTIC_MAX_VALUE;
-    } else if (state.heuristic as i128 - (value / 5) as i128)
-        < heuristic_ratios::HEURISTIC_MIN_VALUE as i128
-    {
+    } else if check_i64_substraction_underflow(state.heuristic, value / 5) {
         state.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
     } else {
         state.heuristic = state.heuristic - value / 5;
     }
     return state.heuristic;
+}
+
+fn check_i64_substraction_overflow(value_one: i64, value_two: i64) -> bool {
+    if (value_one as i128 - value_two as i128) > (heuristic_ratios::HEURISTIC_MAX_VALUE as i128) {
+        return true;
+    }
+    return false;
+}
+
+fn check_i64_substraction_underflow(value_one: i64, value_two: i64) -> bool {
+    if (value_one as i128 - value_two as i128) < (heuristic_ratios::HEURISTIC_MIN_VALUE as i128) {
+        return true;
+    }
+    return false;
 }
