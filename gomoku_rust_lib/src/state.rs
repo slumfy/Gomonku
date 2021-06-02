@@ -67,7 +67,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         state.all_depth_black_captured_stone_value,
         state.win_state,
     );
-    saved_child.heuristic = heuristic_ratios::MIN_VALUE - 1;
+    saved_child.heuristic = heuristic_ratios::MIN_VALUE;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let current_move_pos: usize = index_box[pos];
