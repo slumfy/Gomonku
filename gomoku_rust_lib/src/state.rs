@@ -128,22 +128,11 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
-    if state.total_white_captured_stone >= 10 || state.total_black_captured_stone >= 10 {
-        return true;
-    }
-    let opponent_capture_score: i8;
-    if state.current_player == global_var::PLAYER_WHITE_NB {
-        opponent_capture_score = state.total_black_captured_stone;
-    } else {
-        opponent_capture_score = state.total_white_captured_stone;
-    }
-    if state.board_info.pattern_axe[0].1 == 5 {
-        if state.available_move.len() == 0 {
-            state.available_move = create_child(state);
-        }
-        if opponent_capture_score + state.max_capturing_stone_next_move >= 10 {
-            return false;
-        }
+    if (state.current_player == global_var::PLAYER_WHITE_NB
+        && state.total_white_captured_stone >= 10)
+        || (state.current_player == global_var::PLAYER_BLACK_NB
+            && state.total_black_captured_stone >= 10)
+    {
         return true;
     }
     return false;

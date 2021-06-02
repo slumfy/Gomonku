@@ -16,11 +16,11 @@ pub static FREE_FOUR_IN_A_ROW: i64 = FOUR_IN_A_ROW_WITH_ONE_BLOCKER * HEURISTIC_
 
 pub static FOUR_IN_A_ROW_WITH_ONE_BLOCKER: i64 = SIMPLE_BLOCK_THREE_IN_A_ROW * HEURISTIC_MULTIPLIER;
 
-pub static SIMPLE_BLOCK_THREE_IN_A_ROW: i64 = FREE_THREE_IN_A_ROW * HEURISTIC_MULTIPLIER;
+pub static SIMPLE_BLOCK_THREE_IN_A_ROW: i64 = CAPTURE_STONE * HEURISTIC_MULTIPLIER;
 
-pub static FREE_THREE_IN_A_ROW: i64 = CAPTURE_STONE * HEURISTIC_MULTIPLIER;
+pub static CAPTURE_STONE: i64 = FREE_THREE_IN_A_ROW * HEURISTIC_MULTIPLIER;
 
-pub static CAPTURE_STONE: i64 = SIMPLE_BLOCK_TWO_IN_A_ROW * HEURISTIC_MULTIPLIER;
+pub static FREE_THREE_IN_A_ROW: i64 = SIMPLE_BLOCK_TWO_IN_A_ROW * HEURISTIC_MULTIPLIER;
 
 pub static SIMPLE_BLOCK_TWO_IN_A_ROW: i64 = FREE_TWO_IN_A_ROW * HEURISTIC_MULTIPLIER;
 
@@ -69,9 +69,9 @@ pub fn exponential_heuristic_capture_stone_calculator(opponent_stone_captured: i
     if opponent_stone_captured >= 8 {
         return CAPTURE_TEN_STONE;
     }
-    while multiplier > 1 {
-        value = value * 2;
-        multiplier -= 1;
-    }
-    return value;
+    // while multiplier > 1 {
+    //     value = value * HEURISTIC_MULTIPLIER;
+    //     multiplier -= 1;
+    // }
+    return CAPTURE_STONE;
 }

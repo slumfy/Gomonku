@@ -15,13 +15,14 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
-        return state.heuristic;
+        if state_is_terminated(state) == true {
+            println!("state is terminated");
+            return heuristic_ratios::MAX_VALUE;
+        } else {
+            return state.heuristic;
+        }
     }
-    if depth == 1 {
-        state.available_move = create_child(&mut state);
-    } else {
-        state.available_move = create_child(&mut state);
-    }
+    state.available_move = create_child(&mut state);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     if state.available_move.len() < 1 {
         return state.heuristic;
@@ -32,7 +33,18 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
         let negamax_value;
         negamax_value = negamax(&mut state.available_move[child_index], depth - 1);
 
+        // // Terminated state, break.
+        // if negamax_value == heuristic_ratios::MAX_VALUE
+        //     || negamax_value == heuristic_ratios::MIN_VALUE
+        // {
+        //     println!("in depth terminating state.")
+        //     value = negamax_value;
+        //     break;
+        // }
+
         value = std::cmp::max(value, negamax_value);
+
+        // Alpha pruning
         if value <= alpha {
             update_pruning_count();
             break;
@@ -40,6 +52,17 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
             alpha = value;
         }
     }
+
+    // // Terminated state on depth, return opposite value.
+    // if value == heuristic_ratios::MAX_VALUE {
+    //     state.heuristic = heuristic_ratios::MIN_VALUE;
+    //     return state.heuristic;
+    // } else if value == heuristic_ratios::MIN_VALUE {
+    //     state.heuristic = heuristic_ratios::MAX_VALUE;
+    //     return state.heuristic;
+    // }
+
+    // Check for underflow or overflow
     if check_i64_substraction_overflow(
         state.heuristic,
         value / heuristic_ratios::HEURISTIC_MULTIPLIER,
