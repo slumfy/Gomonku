@@ -30,8 +30,8 @@ fn return_captured_pattern_blocking_value(
             && numbers_of_blocker_on_pattern != 5
             && found_opponent_pattern_on_axe > 4
         {
-            value += heuristic_ratios::HEURISTIC_BLOCKER[found_opponent_pattern_on_axe][1];
-            value += heuristic_ratios::HEURISTIC_BLOCKER[found_opponent_pattern_on_axe][2];
+            value += heuristic_ratios::BLOCKER[found_opponent_pattern_on_axe][1];
+            value += heuristic_ratios::BLOCKER[found_opponent_pattern_on_axe][2];
         }
     }
     return value;

@@ -28,7 +28,7 @@ pub fn minimax(
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     let mut value: i64;
     if maximizingplayer == true {
-        value = heuristic_ratios::HEURISTIC_MIN_VALUE;
+        value = heuristic_ratios::MIN_VALUE;
         for child_index in 0..state.available_move.len() {
             let minimax_value;
             minimax_value = minimax(
@@ -45,7 +45,7 @@ pub fn minimax(
             }
         }
     } else {
-        value = heuristic_ratios::HEURISTIC_MAX_VALUE;
+        value = heuristic_ratios::MAX_VALUE;
         for child_index in 0..state.available_move.len() {
             let minimax_value;
             minimax_value = minimax(

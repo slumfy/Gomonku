@@ -26,8 +26,8 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
     if state.available_move.len() < 1 {
         return state.heuristic;
     }
-    let mut value: i64 = heuristic_ratios::HEURISTIC_MIN_VALUE;
-    let mut alpha = heuristic_ratios::HEURISTIC_MIN_VALUE;
+    let mut value: i64 = heuristic_ratios::MIN_VALUE;
+    let mut alpha = heuristic_ratios::MIN_VALUE;
     for child_index in 0..state.available_move.len() {
         let negamax_value;
         negamax_value = negamax(&mut state.available_move[child_index], depth - 1);
@@ -41,9 +41,9 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
         }
     }
     if check_i64_substraction_overflow(state.heuristic, value / 5) {
-        state.heuristic = heuristic_ratios::HEURISTIC_MAX_VALUE;
+        state.heuristic = heuristic_ratios::MAX_VALUE;
     } else if check_i64_substraction_underflow(state.heuristic, value / 5) {
-        state.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE;
+        state.heuristic = heuristic_ratios::MIN_VALUE;
     } else {
         state.heuristic = state.heuristic - value / 5;
     }
@@ -51,14 +51,14 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
 }
 
 fn check_i64_substraction_overflow(value_one: i64, value_two: i64) -> bool {
-    if (value_one as i128 - value_two as i128) > (heuristic_ratios::HEURISTIC_MAX_VALUE as i128) {
+    if (value_one as i128 - value_two as i128) > (heuristic_ratios::MAX_VALUE as i128) {
         return true;
     }
     return false;
 }
 
 fn check_i64_substraction_underflow(value_one: i64, value_two: i64) -> bool {
-    if (value_one as i128 - value_two as i128) < (heuristic_ratios::HEURISTIC_MIN_VALUE as i128) {
+    if (value_one as i128 - value_two as i128) < (heuristic_ratios::MIN_VALUE as i128) {
         return true;
     }
     return false;

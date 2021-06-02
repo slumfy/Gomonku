@@ -75,12 +75,9 @@ pub fn print_heuristic_table(state: &State) {
                 if (state.available_move[idx].current_move_pos) / 19 == x
                     && (state.available_move[idx].current_move_pos) % 19 == y
                 {
-                    if state.available_move[idx].heuristic >= heuristic_ratios::HEURISTIC_MAX_VALUE
-                    {
+                    if state.available_move[idx].heuristic >= heuristic_ratios::MAX_VALUE {
                         line.push("MAX".to_string());
-                    } else if state.available_move[idx].heuristic
-                        <= heuristic_ratios::HEURISTIC_MIN_VALUE
-                    {
+                    } else if state.available_move[idx].heuristic <= heuristic_ratios::MIN_VALUE {
                         line.push("MIN".to_string());
                     } else {
                         // Printing Million value move

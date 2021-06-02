@@ -80,7 +80,7 @@ pub fn ai_move(
         wining_position,
     );
     get_move_info(&mut state);
-	let mut time: u128 = 0;
+    let mut time: u128 = 0;
     let start_time = Instant::now();
     if turn == 0 {
         ai_move = (180, 0);
@@ -95,8 +95,8 @@ pub fn ai_move(
             algorithms::negascout(
                 &mut state,
                 depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
-                heuristic_ratios::HEURISTIC_MAX_VALUE,
+                heuristic_ratios::MIN_VALUE,
+                heuristic_ratios::MAX_VALUE,
                 player,
             );
         } else if search_algorithm == "minimax" {
@@ -104,8 +104,8 @@ pub fn ai_move(
             algorithms::minimax(
                 &mut state,
                 depth,
-                heuristic_ratios::HEURISTIC_MIN_VALUE,
-                heuristic_ratios::HEURISTIC_MAX_VALUE,
+                heuristic_ratios::MIN_VALUE,
+                heuristic_ratios::MAX_VALUE,
                 true,
             );
         }
@@ -113,8 +113,8 @@ pub fn ai_move(
     }
     if display_ai_time {
         let end_time = Instant::now();
-		time = end_time.duration_since(start_time).as_millis();
-		println!("time to process {:?}", time);
+        time = end_time.duration_since(start_time).as_millis();
+        println!("time to process {:?}", time);
     }
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
@@ -139,7 +139,7 @@ fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {
     let ai_move: (usize, i64);
     algorithms::negamax(state, 1);
     ai_move = algorithms::return_move(state);
-    if ai_move.1 == heuristic_ratios::HEURISTIC_MIN_VALUE {
+    if ai_move.1 == heuristic_ratios::MIN_VALUE {
         return true;
     } else {
         return false;

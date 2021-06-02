@@ -67,7 +67,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         state.all_depth_black_captured_stone_value,
         state.win_state,
     );
-    saved_child.heuristic = heuristic_ratios::HEURISTIC_MIN_VALUE - 1;
+    saved_child.heuristic = heuristic_ratios::MIN_VALUE - 1;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let current_move_pos: usize = index_box[pos];
@@ -92,7 +92,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         }
         //TEST improved selection
         let mut playable: bool = false;
-        if child.heuristic == heuristic_ratios::HEURISTIC_MAX_VALUE {
+        if child.heuristic == heuristic_ratios::MAX_VALUE {
             childs_list.clear();
             childs_list.push(child);
             break;

@@ -14,13 +14,12 @@ pub fn heuristic(state: &mut State) -> i64 {
 
     if !is_playable_move(state, &board_state_info) {
         state.is_playable = -1;
-        return heuristic_ratios::HEURISTIC_MIN_VALUE;
+        return heuristic_ratios::MIN_VALUE;
     }
     state.board_info = board_state_info.clone();
     value += board_state_info.captured_pattern_blocking_value;
     let ret = is_in_winning_pos(state);
-    if ret == heuristic_ratios::HEURISTIC_MAX_VALUE || ret == heuristic_ratios::HEURISTIC_MIN_VALUE
-    {
+    if ret == heuristic_ratios::MAX_VALUE || ret == heuristic_ratios::MIN_VALUE {
         return ret;
     }
     let move_stone_captured = state.board_info.stone_captured;
@@ -31,7 +30,7 @@ pub fn heuristic(state: &mut State) -> i64 {
             state.total_white_captured_stone += move_stone_captured;
             // Winning by capture, instant return.
             if state.total_white_captured_stone >= 10 {
-                return heuristic_ratios::HEURISTIC_MAX_VALUE;
+                return heuristic_ratios::MAX_VALUE;
             }
             value += heuristic_ratios::exponential_heuristic_capture_stone_calculator(
                 state.total_white_captured_stone,
@@ -40,7 +39,7 @@ pub fn heuristic(state: &mut State) -> i64 {
             state.total_black_captured_stone += move_stone_captured;
             // Winning by capture, instant return.
             if state.total_black_captured_stone >= 10 {
-                return heuristic_ratios::HEURISTIC_MAX_VALUE;
+                return heuristic_ratios::MAX_VALUE;
             }
             value += heuristic_ratios::exponential_heuristic_capture_stone_calculator(
                 state.total_black_captured_stone,
@@ -56,7 +55,7 @@ pub fn heuristic(state: &mut State) -> i64 {
 
     // Checking if undefeatable 5, every pattern_axe should be (0 , 5)
     if board_state_info.pattern_axe[0].1 == 5 {
-        return heuristic_ratios::HEURISTIC_UNBLOCKABLE_FIVE_IN_A_ROW;
+        return heuristic_ratios::UNBLOCKABLE_FIVE_IN_A_ROW;
     }
 
     let mut count_blocking_triple = 0;
@@ -78,7 +77,7 @@ pub fn heuristic(state: &mut State) -> i64 {
         // Check potential_winning_alignment
         let potential_winning_alignment = check_potential_winning_alignment(state);
         if potential_winning_alignment[axe_index] {
-            value += heuristic_ratios::HEURISTIC_POSSIBLE_AXE_DEVELOPMENT;
+            value += heuristic_ratios::POSSIBLE_AXE_DEVELOPMENT;
         }
 
         // Check pattern on axe and add the value
@@ -105,7 +104,7 @@ pub fn heuristic(state: &mut State) -> i64 {
                     ))
                 {
                     // Add pattern values
-                    value += heuristic_ratios::HEURISTIC_PATTERN[found_pattern_on_axe]
+                    value += heuristic_ratios::PATTERN[found_pattern_on_axe]
                         [numbers_of_blocker_on_pattern];
                     if found_pattern_on_axe >= 1 && found_pattern_on_axe <= 4 {
                         count_pattern_four += 1;
@@ -131,24 +130,24 @@ pub fn heuristic(state: &mut State) -> i64 {
                 state.axes[current_player_axe][axe_index],
             );
             count_blocking_two += is_blocking_two_pattern(found_blocker_pattern_on_axe);
-            value += heuristic_ratios::HEURISTIC_BLOCKER[found_blocker_pattern_on_axe]
+            value += heuristic_ratios::BLOCKER[found_blocker_pattern_on_axe]
                 [numbers_of_blocker_on_blocked_pattern];
         }
 
         // Cumulative pattern heuristic
         if count_pattern_four >= 1 && count_pattern_free_three >= 1 {
-            value += heuristic_ratios::HEURISTIC_FOUR_AND_OPEN_THREE;
+            value += heuristic_ratios::FOUR_AND_OPEN_THREE;
         }
 
         // Checking if AI try to block a double triple and prevent it
         if count_simple_blocking_two >= 2 {
             // Adding a negative value 2 times bigger than a free three.
-            value += heuristic_ratios::HEURISTIC_BLOCK_A_DOUBLE_THREE;
+            value += heuristic_ratios::BLOCK_A_DOUBLE_THREE;
         }
 
         // Force AI to block combination of free tree and free two
         if count_blocking_two >= 1 && count_blocking_triple >= 1 {
-            value += heuristic_ratios::HEURISTIC_SIMPLE_BLOCK_THREE_AND_TWO;
+            value += heuristic_ratios::SIMPLE_BLOCK_THREE_AND_TWO;
         }
     }
     return value;
@@ -194,8 +193,6 @@ fn checking_if_pattern_is_blocking_a_capture_and_return_value(
                 opponent_stone_captured,
             ) / 3;
         }
-    } else if numbers_of_blocker_on_pattern == 1 {
-        value += heuristic_ratios::HEURISTIC_THREE_IN_A_ROW_ONE_BLOCKER;
     }
     return value;
 }
@@ -247,9 +244,9 @@ fn is_in_winning_pos(state: &mut State) -> i64 {
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
             if state.current_player == state.win_state.1 {
-                return heuristic_ratios::HEURISTIC_MAX_VALUE;
+                return heuristic_ratios::MAX_VALUE;
             } else {
-                return heuristic_ratios::HEURISTIC_MIN_VALUE;
+                return heuristic_ratios::MIN_VALUE;
             }
         } else {
             state.win_state = (0, 0);
