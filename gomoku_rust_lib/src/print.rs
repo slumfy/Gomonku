@@ -80,29 +80,45 @@ pub fn print_heuristic_table(state: &State) {
                     } else if state.available_move[idx].heuristic <= heuristic_ratios::MIN_VALUE {
                         line.push("MIN".to_string());
                     } else {
-                        // Printing Million value move
-                        if state.available_move[idx].heuristic >= 1000000
-                            || state.available_move[idx].heuristic <= -1000000
+                        // Printing Billion value move
+                        if state.available_move[idx].heuristic >= 1_000_000_000
+                            || state.available_move[idx].heuristic <= -1_000_000_000
                         {
                             line.push(
                                 vec![
                                     "".to_string(),
-                                    (state.available_move[idx].heuristic / 1000000).to_string(),
+                                    (state.available_move[idx].heuristic / 1_000_000_000)
+                                        .to_string(),
+                                    "B".to_string(),
+                                ]
+                                .join(""),
+                            );
+                        }
+                        // Printing Million value move
+                        else if (state.available_move[idx].heuristic >= 1_000_000
+                            && state.available_move[idx].heuristic < 1_000_000_000)
+                            || (state.available_move[idx].heuristic <= -1_000_000
+                                && state.available_move[idx].heuristic > -1_000_000_000)
+                        {
+                            line.push(
+                                vec![
+                                    "".to_string(),
+                                    (state.available_move[idx].heuristic / 1_000_000).to_string(),
                                     "M".to_string(),
                                 ]
                                 .join(""),
                             );
                         }
                         // Printing Kilo value move
-                        else if (state.available_move[idx].heuristic >= 1000
-                            && state.available_move[idx].heuristic < 1000000)
-                            || (state.available_move[idx].heuristic <= -1000
-                                && state.available_move[idx].heuristic > -1000000)
+                        else if (state.available_move[idx].heuristic >= 1_000
+                            && state.available_move[idx].heuristic < 1_000_000)
+                            || (state.available_move[idx].heuristic <= -1_000
+                                && state.available_move[idx].heuristic > -1_000_000)
                         {
                             line.push(
                                 vec![
                                     "".to_string(),
-                                    (state.available_move[idx].heuristic / 1000).to_string(),
+                                    (state.available_move[idx].heuristic / 1_000).to_string(),
                                     "K".to_string(),
                                 ]
                                 .join(""),

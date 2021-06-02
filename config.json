@@ -1,10 +1,10 @@
 {
-	"sound": false,
-	"ai_depth": 10,
-	"second_ai_depth": 5,
-	"ai_helper": false,
-	"ai_helper_depth": 1,
-	"display_ai_time": true,
-	"search_box": false,
-	"theme": 1
+    "sound": false,
+    "ai_depth": 10,
+    "second_ai_depth": 5,
+    "ai_helper": true,
+    "ai_helper_depth": 1,
+    "display_ai_time": true,
+    "search_box": false,
+    "theme": 1
 }

@@ -46,7 +46,7 @@ pub fn create_new_state(
             blocker_axe: [(0, 3), (0, 3), (0, 3), (0, 3)],
         },
         axes: [[0, 0, 0, 0], [0, 0, 0, 0]],
-        max_eat_next_move: 0,
+        max_capturing_stone_next_move: 0,
     };
     return new_state;
 }
@@ -82,8 +82,8 @@ pub fn create_child(state: &mut State) -> Vec<State> {
             state.win_state,
         );
         child.heuristic = heuristic(&mut child);
-        if child.board_info.stone_captured > state.max_eat_next_move {
-            state.max_eat_next_move = child.board_info.stone_captured;
+        if child.board_info.stone_captured > state.max_capturing_stone_next_move {
+            state.max_capturing_stone_next_move = child.board_info.stone_captured;
         }
         if child.is_playable == global_var::VALID_MOVE
             && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
@@ -141,7 +141,7 @@ pub fn state_is_terminated(state: &mut State) -> bool {
         if state.available_move.len() == 0 {
             state.available_move = create_child(state);
         }
-        if opponent_capture_score + state.max_eat_next_move >= 10 {
+        if opponent_capture_score + state.max_capturing_stone_next_move >= 10 {
             return false;
         }
         return true;
