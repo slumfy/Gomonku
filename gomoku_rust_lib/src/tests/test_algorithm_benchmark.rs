@@ -48,12 +48,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -77,12 +72,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -107,12 +97,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -137,12 +122,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -167,12 +147,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -197,12 +172,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -227,12 +197,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -257,12 +222,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -287,12 +247,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));
@@ -317,12 +272,7 @@ pub fn test_negamax_benchmark() {
         }
         println!("DEPTH {} :", depth);
         let start_time = Instant::now();
-        algorithms::negamax(
-            &mut copy_state,
-            depth,
-            heuristic_ratios::HEURISTIC_MIN_VALUE,
-            heuristic_ratios::HEURISTIC_MAX_VALUE,
-        );
+        algorithms::negamax(&mut copy_state, depth);
         return_move(&mut copy_state);
         let end_time = Instant::now();
         println!("time to process {:?}", end_time.duration_since(start_time));

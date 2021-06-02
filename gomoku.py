@@ -30,22 +30,22 @@ def main(argv=None):
     )
     parser.add_argument(
         "--depth",
-        help="Set the depth of algorithm search (from 1 to 10).",
-        choices=range(1, 11),
+        help="Set the depth of algorithm search (from 1 to 12).",
+        choices=range(1, 13),
         type=int,
         default=5,
     )
     parser.add_argument(
         "--ai_helper_depth",
-        help="Set the depth of ai helper (from 1 to 10).",
-        choices=range(1, 11),
+        help="Set the depth of ai helper (from 1 to 12).",
+        choices=range(1, 13),
         type=int,
         default=0,
     )
     parser.add_argument(
         "--ai_black_depth",
-        help="Set the depth of the second ai for ai fight (from 1 to 10).",
-        choices=range(1, 11),
+        help="Set the depth of the second ai for ai fight (from 1 to 12).",
+        choices=range(1, 13),
         type=int,
         default=0,
     )
