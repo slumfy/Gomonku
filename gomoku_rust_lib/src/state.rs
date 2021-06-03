@@ -134,6 +134,8 @@ pub fn state_is_terminated(state: &mut State) -> bool {
             && state.total_black_captured_stone >= 10)
     {
         return true;
+    } else if state.board_info.pattern_axe[0].1 == 5 {
+        return true;
     }
     return false;
 }

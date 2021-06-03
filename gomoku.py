@@ -43,7 +43,7 @@ def main(argv=None):
         print("Missing Key: ", e)
     except Exception as e:
         print("An error occured: ", e)
-    print(settings.ai_depth)
+    print("Selected depth : ", settings.ai_depth)
     go_rules = GoRules()
     game = PyGameGo(
         sound_status=settings.sound,
