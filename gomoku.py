@@ -35,13 +35,14 @@ def main(argv=None):
             except ValueError:
                 print("Bad formatting of json file.")
                 exit()
+        settings = Settings(data)
     except FileNotFoundError:
         print("No config.json found.")
         exit()
-    try:
-        settings = Settings(data)
-    except KeyError as Key:
-        print("Missing Key: ", Key)
+    except KeyError as e:
+        print("Missing Key: ", e)
+    except Exception as e:
+        print("An error occured: ", e)
     print(settings.ai_depth)
     go_rules = GoRules()
     game = PyGameGo(
