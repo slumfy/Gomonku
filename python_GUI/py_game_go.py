@@ -581,7 +581,6 @@ class PyGameGo:
         WHITE = (255, 255, 255)
         RED = (218, 56, 21)
         BLACK_BLUE_ONE = (40, 61, 100)
-        sysfont = pygame.font.get_default_font()
         font = pygame.font.SysFont(None, size)
         if color == "Black":
             render = font.render(msg, True, BLACK)

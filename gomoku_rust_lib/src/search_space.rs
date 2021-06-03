@@ -17,7 +17,6 @@ pub fn get_search_box_bitboard(bitboard: &Bitboards) -> Vec<usize> {
             } else if bitboard.black_board[bitboard_index] & mask != 0 {
                 create_box_for_bitpos(x * 19 + y, &mut box_position);
             }
-            // println!("pos_box : {:?}",box_position);
         }
     }
     return box_position;

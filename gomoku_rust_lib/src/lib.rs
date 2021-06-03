@@ -118,15 +118,6 @@ pub fn ai_move(
     }
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
-    // println!(
-    //     "white eat: {:?} black eat: {:?}",
-    //     white_captured_stone, black_captured_stone
-    // );
-    // println!(
-    //     "negamax in board {:?}:{} turn {}",
-    //     ai_x_move, ALPHABET[ai_y_move as usize], turn
-    // );
-    // println!("negamax {:?}", ai_move);
     Ok(((ai_x_move, ai_y_move), time))
 }
 
@@ -204,9 +195,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
                 dict.set_item("player_win", false)?;
             }
         }
-        // println!("winstate =>> {:?}", board_state_info.is_winning);
     } else {
-        // println!("Wrong move status = {:?}", board_state_info.is_wrong_move);
         dict.set_item("game_status", board_state_info.is_wrong_move)?;
     }
     board = bitboards::create_vec_from_bitboards(&state.bitboards);
@@ -219,9 +208,7 @@ fn get_rust_box(board: Vec<Vec<i8>>) -> PyResult<Vec<(usize, usize)>> {
     let mutboard: Vec<Vec<i8>> = board;
     let bitboards = bitboards::create_bitboards_from_vec(&mutboard);
     let search_bitbox = search_space::get_search_box_bitboard(&bitboards);
-    // println!("bitbox: {:?}", search_bitbox);
     let search_box = search_space::unwrap_bitlist(search_bitbox);
-    // println!("searchbox: {:?}", search_box);
     Ok(search_box)
 }
 

@@ -47,7 +47,6 @@ class GoRules:
     def place_stone(self, current_player, x, y):
         # Return winning player, otherwise return 0. (-1 for black player, 1 for white player)
         rust_place_stone_res = gomoku_rust.place_stone(self.board, current_player.nb, x, y)
-        # print(rust_place_stone_res)
         if rust_place_stone_res["game_status"] != 0:
             return -2
         else:
@@ -164,7 +163,6 @@ class GoRules:
             else:
                 self.move_list.pop(-1)
                 self.move_list.pop(-1)
-            # self.print_move_list()
             return move.move // 19, move.move % 19
         return 0, 0
 

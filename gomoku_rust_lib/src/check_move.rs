@@ -110,7 +110,6 @@ pub fn get_move_info(state: &mut State) -> BoardStateInfo {
 
 pub fn check_is_double_triple(axe_pattern: [(usize, usize); 4]) -> bool {
     let mut count = 0;
-    // println!("axe: {:?}", axe_pattern);
     for axe in 0..axe_pattern.len() {
         if axe_pattern[axe].1 == 0 {
             if axe_pattern[axe].0 >= 5 && axe_pattern[axe].0 <= 7 {
@@ -159,7 +158,6 @@ fn check_in_map(
     direction_sign: i16,
 ) -> bool {
     let calcul = pattern_pos + axe_mouvement_value * offset * direction_sign;
-    // println!("calcul = {}", calcul);
     if calcul < 0 {
         return false;
     }
@@ -167,12 +165,10 @@ fn check_in_map(
     let line = pattern_pos / 19;
     // Ligne
     if axe_mouvement_value == 1 {
-        // println!("linechecked {} line {}", line_checked,line);
         if line_checked != line {
             return false;
         }
     } else {
-        // println!("not ligne checked {} calcul: {}",line_checked ,line + offset * direction_sign);
         if line_checked != line + offset * direction_sign {
             return false;
         }
@@ -186,15 +182,12 @@ fn check_border(pos: usize, l: usize, axe: usize, pattern_length: usize) -> usiz
     let low = pattern_pos + axe_mouvement_value;
     let high = pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16;
     let mut border_count: usize = 0;
-    // println!("pattern pos = {}, l = {}, axe = {}, pos = {}, pattern_length = {}, amv {}", pattern_pos, l, axe_mouvement_value, pos, pattern_length, axe_mouvement_value);
-    // println!("low = {} high = {}",pattern_pos + axe_mouvement_value,pattern_pos + axe_mouvement_value * (pattern_length - 2) as i16);
     if check_in_map(axe_mouvement_value, low, 1, -1) == false {
         border_count += 1;
     }
     if check_in_map(axe_mouvement_value, high, 1, 1) == false {
         border_count += 1;
     }
-    // println!("bordercount {}", border_count);
     return border_count;
 }
 
@@ -215,7 +208,6 @@ pub fn check_pattern_blocker(
     if PATTERN[p].2 != 0 {
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
-    // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value);
     let border_count = check_border(pos, l, axe, PATTERN[p].1);
     if PATTERN[p].2 != 0 && hole_value == true {
         is_blocked = 2;
@@ -252,7 +244,6 @@ pub fn check_blocker(
         hole_value = check_one_bit_in_pattern(&blocker_casted, PATTERN[p].2);
     }
     let border_count = check_border(pos, l, axe, PATTERN[p].1);
-    // println!("blocker {:08b} blocker_casted {:08b} blocker_checked {:08b}, l {} , p {} , b {}, hole {}, patternlenght {}",BLOCKER[b].0,blocker_casted,blocker_checker,l,p,b,hole_value, PATTERN[p].1);
     if PATTERN[p].2 != 0 && l != PATTERN[p].2 && hole_value == true {
         is_blocked = 0;
     } else if PATTERN[p].2 != 0 && hole_value == true {
@@ -366,7 +357,6 @@ pub fn check_potential_winning_alignment(state: &State) -> [bool; 4] {
 }
 
 pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool {
-    // println!("pos: {}, x: {} , y: {}", pos, pos / 19, pos % 19);
     let two_players_axes = create_bits_axes_from_pos(pos, &bitboards);
     let player_axes = if player == global_var::PLAYER_WHITE_NB {
         two_players_axes[0]
@@ -380,7 +370,6 @@ pub fn check_pos_still_win(bitboards: Bitboards, pos: usize, player: i8) -> bool
             let player_shifted = player_axe >> l;
             let player_casted = player_shifted as u8;
             if (player_casted & PATTERN[0].0) == PATTERN[0].0 {
-                // println!("pattern check: {:08b}", player_casted & PATTERN[0].0);
                 return true;
             }
         }
