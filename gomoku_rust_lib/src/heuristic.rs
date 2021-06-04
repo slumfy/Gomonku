@@ -115,6 +115,10 @@ pub fn heuristic(state: &mut State) -> i64 {
                         }
                     }
                 }
+				else if found_pattern_on_axe == 8
+				&& numbers_of_blocker_on_pattern == 1 {
+					value -= heuristic_ratios::exponential_heuristic_capture_stone_calculator(opponent_total_stone_captured);
+				}
             }
         }
 
@@ -131,7 +135,7 @@ pub fn heuristic(state: &mut State) -> i64 {
             );
             count_blocking_two += is_blocking_two_pattern(found_blocker_pattern_on_axe);
             value += heuristic_ratios::BLOCKER[found_blocker_pattern_on_axe]
-                [numbers_of_blocker_on_blocked_pattern];
+                [numbers_of_blocker_on_blocked_pattern] * 2;
         }
 
         // Cumulative pattern heuristic

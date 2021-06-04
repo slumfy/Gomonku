@@ -60,4 +60,4 @@ class PlayerType(Enum):
     HUMAN = 0
     AI = 1
 
-ALGORITHM = ["negamax", "negascout", "minimax", "NTDF", "BNS"]
+ALGORITHM = ["negamax", "negascout", "minimax"]
