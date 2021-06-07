@@ -124,9 +124,6 @@ pub fn ai_move(
 fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {
     // Run negamax with depth 1 to see if only min_value is returned.
     // If it's the case, it means that the player have win.
-    unsafe {
-        global_var::DEPTH = 1;
-    }
     let ai_move: (usize, i64);
     algorithms::negamax(state, 1);
     ai_move = algorithms::return_move(state);
