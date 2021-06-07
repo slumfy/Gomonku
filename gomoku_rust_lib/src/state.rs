@@ -6,6 +6,7 @@ use crate::global_var;
 use crate::heuristic::heuristic;
 use crate::heuristic_ratios;
 use crate::BoardStateInfo;
+use std::cmp::Reverse;
 
 use crate::search_space::get_search_box_bitboard;
 
@@ -114,7 +115,16 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     if childs_list.len() == 0 {
         childs_list.push(saved_child);
     }
-    return childs_list;
+    childs_list.sort_by_key(|d| Reverse(d.heuristic));
+    let mut new_list: Vec<State> = Vec::new();
+    let mut len = childs_list.len();
+    if len > 7 {
+        len = 7;
+    }
+    for child in 0..len {
+        new_list.push(childs_list[child].clone());
+    }
+    return new_list;
 }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
