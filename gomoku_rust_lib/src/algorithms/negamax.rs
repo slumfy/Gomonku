@@ -11,7 +11,7 @@ use crate::state::create_child;
 use crate::state::state_is_terminated;
 use std::cmp::Reverse;
 
-pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
+pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, player: bool) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
@@ -28,24 +28,26 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
         return state.heuristic;
     }
     let mut value: i64 = heuristic_ratios::MIN_VALUE;
-    let mut alpha: i128 = heuristic_ratios::MIN_VALUE as i128;
     for child_index in 0..state.available_move.len() {
         let negamax_value;
-        negamax_value = negamax(&mut state.available_move[child_index], depth - 1);
+        negamax_value = negamax(
+            &mut state.available_move[child_index],
+            depth - 1,
+            alpha,
+            !player,
+        );
 
         value = std::cmp::max(value, negamax_value);
 
         // Alpha pruning
-        if (state.heuristic as i128
-            - value as i128 / heuristic_ratios::HEURISTIC_MULTIPLIER as i128)
-            <= alpha
-            && alpha != heuristic_ratios::MIN_VALUE as i128
+        if alpha as i128
+            >= state.heuristic as i128 - (value / heuristic_ratios::HEURISTIC_MULTIPLIER) as i128
+            && player
         {
             update_pruning_count();
             break;
         } else {
-            alpha = state.heuristic as i128
-                - value as i128 / heuristic_ratios::HEURISTIC_MULTIPLIER as i128;
+            alpha = substract_depth_value_to_heuristic(state.heuristic, value);
         }
     }
 
@@ -54,22 +56,25 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
         state.heuristic = heuristic_ratios::MIN_VALUE;
         return state.heuristic;
     }
+    state.heuristic = substract_depth_value_to_heuristic(state.heuristic, value);
+    return state.heuristic;
+}
 
+fn substract_depth_value_to_heuristic(current_heuristic: i64, in_depth_heuristic: i64) -> i64 {
     // Check for underflow or overflow
     if check_i64_substraction_overflow(
-        state.heuristic,
-        value / heuristic_ratios::HEURISTIC_MULTIPLIER,
+        current_heuristic,
+        in_depth_heuristic / heuristic_ratios::HEURISTIC_MULTIPLIER,
     ) {
-        state.heuristic = heuristic_ratios::MAX_VALUE;
+        return heuristic_ratios::MAX_VALUE;
     } else if check_i64_substraction_underflow(
-        state.heuristic,
-        value / heuristic_ratios::HEURISTIC_MULTIPLIER,
+        current_heuristic,
+        in_depth_heuristic / heuristic_ratios::HEURISTIC_MULTIPLIER,
     ) {
-        state.heuristic = heuristic_ratios::MIN_VALUE;
+        return heuristic_ratios::MIN_VALUE;
     } else {
-        state.heuristic = state.heuristic - value / heuristic_ratios::HEURISTIC_MULTIPLIER;
+        return current_heuristic - in_depth_heuristic / heuristic_ratios::HEURISTIC_MULTIPLIER;
     }
-    return state.heuristic;
 }
 
 fn check_i64_substraction_overflow(value_one: i64, value_two: i64) -> bool {

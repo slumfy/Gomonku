@@ -89,7 +89,7 @@ pub fn ai_move(
             println!("using negamax");
             state.heuristic = 0;
             // For alpha, sending  min value + 1 to prevent overflow when changing sign.
-            algorithms::negamax(&mut state, depth);
+            algorithms::negamax(&mut state, depth, heuristic_ratios::MIN_VALUE, false);
         } else if search_algorithm == "negascout" {
             println!("using negascout");
             algorithms::negascout(
@@ -128,7 +128,7 @@ fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {
         global_var::DEPTH = 1;
     }
     let ai_move: (usize, i64);
-    algorithms::negamax(state, 1);
+    algorithms::negamax(state, 1, heuristic_ratios::MIN_VALUE, false);
     ai_move = algorithms::return_move(state);
     if ai_move.1 == heuristic_ratios::MIN_VALUE {
         return true;
