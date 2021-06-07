@@ -55,21 +55,25 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
         return state.heuristic;
     }
 
+    state.heuristic = substract_depth_value_to_heuristic(state.heuristic, value);
+    return state.heuristic;
+}
+
+fn substract_depth_value_to_heuristic(current_heuristic: i64, in_depth_heuristic: i64) -> i64 {
     // Check for underflow or overflow
     if check_i64_substraction_overflow(
-        state.heuristic,
-        value / heuristic_ratios::HEURISTIC_MULTIPLIER,
+        current_heuristic,
+        in_depth_heuristic / heuristic_ratios::HEURISTIC_MULTIPLIER,
     ) {
-        state.heuristic = heuristic_ratios::MAX_VALUE;
+        return heuristic_ratios::MAX_VALUE;
     } else if check_i64_substraction_underflow(
-        state.heuristic,
-        value / heuristic_ratios::HEURISTIC_MULTIPLIER,
+        current_heuristic,
+        in_depth_heuristic / heuristic_ratios::HEURISTIC_MULTIPLIER,
     ) {
-        state.heuristic = heuristic_ratios::MIN_VALUE;
+        return heuristic_ratios::MIN_VALUE;
     } else {
-        state.heuristic = state.heuristic - value / heuristic_ratios::HEURISTIC_MULTIPLIER;
+        return current_heuristic - in_depth_heuristic / heuristic_ratios::HEURISTIC_MULTIPLIER;
     }
-    return state.heuristic;
 }
 
 fn check_i64_substraction_overflow(value_one: i64, value_two: i64) -> bool {
