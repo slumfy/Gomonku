@@ -1,9 +1,9 @@
 {
     "sound": false,
-    "ai_depth": 10,
-    "second_ai_depth": 5,
+    "ai_depth": 2,
+    "second_ai_depth": 2,
     "ai_helper": true,
-    "ai_helper_depth": 10,
+    "ai_helper_depth": 2,
     "display_ai_time": true,
     "search_box": false,
     "theme": 1
