@@ -69,9 +69,10 @@ pub fn exponential_heuristic_capture_stone_calculator(opponent_stone_captured: i
     if opponent_stone_captured >= 8 {
         return CAPTURE_TEN_STONE;
     }
-    // while multiplier > 1 {
-    //     value = value * HEURISTIC_MULTIPLIER;
-    //     multiplier -= 1;
-    // }
-    return CAPTURE_STONE;
+    while multiplier > 1 {
+        value = value * HEURISTIC_MULTIPLIER;
+        multiplier -= 1;
+    }
+    // return CAPTURE_STONE;
+	return value;
 }

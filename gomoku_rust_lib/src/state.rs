@@ -106,7 +106,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         //     saved_child = child.clone();
         // }
         // let mut playable: bool = false;
-        if child.heuristic == heuristic_ratios::MAX_VALUE {
+        if child.heuristic == heuristic_ratios::MAX_VALUE { // ????
             childs_list.clear();
             childs_list.push(child);
             break;

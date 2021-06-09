@@ -1,7 +1,7 @@
 {
 	"sound": false,
-	"ai_depth": 2,
-	"second_ai_depth": 2,
+	"ai_depth": 5,
+	"second_ai_depth": 5,
 	"ai_helper": false,
 	"ai_helper_depth": 2,
 	"display_ai_time": true,
