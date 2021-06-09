@@ -150,6 +150,14 @@ pub fn heuristic(state: &mut State) -> i64 {
             value += heuristic_ratios::SIMPLE_BLOCK_THREE_AND_TWO;
         }
     }
+	if state.color == 1 {
+		println!("HERE +");
+		state.heuristic = state.heuristic + state.previous_heuristic;
+	}
+	else {
+		println!("HERE -");
+		state.heuristic = -state.heuristic + state.previous_heuristic;
+	}
     return value;
 }
 

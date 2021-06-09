@@ -26,11 +26,13 @@ pub enum Flag {
 pub struct State {
     pub bitboards: Bitboards,
     pub available_move: Vec<State>,
+	pub color: i8,
     pub current_player: i8,
     pub total_white_captured_stone: i8,
     pub total_black_captured_stone: i8,
     pub all_depth_white_captured_stone_value: i64,
     pub all_depth_black_captured_stone_value: i64,
+	pub previous_heuristic: i64,
     pub heuristic: i64,
     pub is_playable: i8,
     pub win_state: (usize, i8),

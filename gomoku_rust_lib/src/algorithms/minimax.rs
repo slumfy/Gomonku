@@ -20,11 +20,7 @@ pub fn minimax(
     if depth == 0 || state_is_terminated(state) == true {
         return state.heuristic;
     }
-    if depth == 1 {
-        state.available_move = create_child(&mut state);
-    } else {
-        state.available_move = create_child(&mut state);
-    }
+    state.available_move = create_child(&mut state);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
     let mut value: i64;
     if maximizingplayer == true {

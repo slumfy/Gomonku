@@ -72,12 +72,14 @@ pub fn ai_move(
     let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         -player,
+		-1,
         current_move_pos,
         total_white_captured_stone,
         total_black_captured_stone,
         0,
         0,
         wining_position,
+		0
     );
     get_move_info(&mut state);
     let mut time: u128 = 0;
@@ -163,12 +165,14 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     let mut state: data_struct::State = state::create_new_state(
         &mut bitboards,
         player,
+		-1,
         current_move_pos,
         total_white_captured_stone,
         total_black_captured_stone,
         0,
         0,
         (0, 0),
+		0
     );
     state.axes = create_bits_axes_from_pos(current_move_pos, &mut bitboards);
 

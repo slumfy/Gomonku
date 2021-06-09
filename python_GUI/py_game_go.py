@@ -32,7 +32,7 @@ class PyGameGo:
         self.test_mode = test_mode
         self.ai_helper = ai_helper
         self.display_ai_time = display_ai_time
-        self.search_algorithm = "negamax"
+        self.search_algorithm = "minimax" # "negamax"
         self.logger = logger_factory("PyGameGo")
         self.depth = depth
         self.ai_helper_depth = ai_helper_depth

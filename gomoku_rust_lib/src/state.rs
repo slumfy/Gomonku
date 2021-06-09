@@ -13,21 +13,25 @@ use crate::search_space::get_search_box_bitboard;
 pub fn create_new_state(
     bitboards: &mut Bitboards,
     player: i8,
+	color: i8,
     current_move_pos: usize,
     total_white_captured_stone: i8,
     total_black_captured_stone: i8,
     all_depth_white_captured_stone_value: i64,
     all_depth_black_captured_stone_value: i64,
     win_state: (usize, i8),
+	previous_heuristic: i64
 ) -> State {
     let new_state = State {
         bitboards: bitboards.clone(),
         current_player: player,
+		color: color,
         total_white_captured_stone: total_white_captured_stone,
         total_black_captured_stone: total_black_captured_stone,
         all_depth_white_captured_stone_value: all_depth_white_captured_stone_value,
         all_depth_black_captured_stone_value: all_depth_black_captured_stone_value,
         available_move: vec![],
+		previous_heuristic: previous_heuristic,
         heuristic: 0,
         is_playable: 0,
         win_state: win_state,
@@ -58,73 +62,77 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     let index_box: Vec<usize> = get_search_box_bitboard(&state.bitboards);
     let len = index_box.len();
     childs_list = Vec::new();
-    let mut saved_child = create_new_state(
-        &mut state.bitboards.clone(),
-        -state.current_player,
-        index_box[0],
-        state.total_white_captured_stone,
-        state.total_black_captured_stone,
-        state.all_depth_white_captured_stone_value,
-        state.all_depth_black_captured_stone_value,
-        state.win_state,
-    );
-    saved_child.heuristic = heuristic_ratios::MIN_VALUE;
+    // let mut saved_child = create_new_state(
+    //     &mut state.bitboards.clone(),
+    //     -state.current_player,
+	// 	-state.color,
+    //     index_box[0],
+    //     state.total_white_captured_stone,
+    //     state.total_black_captured_stone,
+    //     state.all_depth_white_captured_stone_value,
+    //     state.all_depth_black_captured_stone_value,
+    //     state.win_state,
+	// 	state.heuristic,
+    // );
+    // saved_child.heuristic = heuristic_ratios::MIN_VALUE;
     for pos in 0..len {
         copy_bitboards = state.bitboards.clone();
         let current_move_pos: usize = index_box[pos];
         let mut child = create_new_state(
             &mut copy_bitboards,
             -state.current_player,
+			-state.color,
             current_move_pos,
             state.total_white_captured_stone,
             state.total_black_captured_stone,
             state.all_depth_white_captured_stone_value,
             state.all_depth_black_captured_stone_value,
             state.win_state,
+			state.heuristic,
         );
         child.heuristic = heuristic(&mut child);
         if child.board_info.stone_captured > state.max_capturing_stone_next_move {
             state.max_capturing_stone_next_move = child.board_info.stone_captured;
         }
-        if child.is_playable == global_var::VALID_MOVE
-            && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
-        {
-            saved_child = child.clone();
-        }
-        //TEST improved selection
-        let mut playable: bool = false;
+        // if child.is_playable == global_var::VALID_MOVE
+        //     && (saved_child.current_move_pos == 0 || child.heuristic > saved_child.heuristic)
+        // {
+        //     saved_child = child.clone();
+        // }
+        // let mut playable: bool = false;
         if child.heuristic == heuristic_ratios::MAX_VALUE {
             childs_list.clear();
             childs_list.push(child);
             break;
         }
-        if child.is_playable == 0 {
-            for x in 0..4 {
-                if child.board_info.pattern_axe[x].1 != 3 {
-                    playable = true;
-                }
-                if child.board_info.blocker_axe[x].1 != 3 {
-                    playable = true;
-                }
-            }
-        }
-        if playable == true {
+        // if child.is_playable == 0 {
+        //     for x in 0..4 {
+        //         if child.board_info.pattern_axe[x].1 != 3 {
+        //             playable = true;
+        //         }
+        //         if child.board_info.blocker_axe[x].1 != 3 {
+        //             playable = true;
+        //         }
+        //     }
+        // }
+        if child.is_playable == global_var::VALID_MOVE {
             childs_list.push(child);
         }
     }
-    if childs_list.len() == 0 {
-        childs_list.push(saved_child);
-    }
-    childs_list.sort_by_key(|d| Reverse(d.heuristic));
-    let mut new_list: Vec<State> = Vec::new();
-    let mut len = childs_list.len();
-    if len > 7 {
-        len = 7;
-    }
-    for child in 0..len {
-        new_list.push(childs_list[child].clone());
-    }
-    return new_list;
+	return childs_list;
+    // if childs_list.len() == 0 {
+    //     childs_list.push(saved_child);
+    // }
+    // childs_list.sort_by_key(|d| Reverse(d.heuristic));
+    // let mut new_list: Vec<State> = Vec::new();
+    // let mut len = childs_list.len();
+    // if len > 7 {
+    //     len = 7;
+    // }
+    // for child in 0..len {
+    //     new_list.push(childs_list[child].clone());
+    // }
+    // return new_list;
 }
 
 pub fn state_is_terminated(state: &mut State) -> bool {
