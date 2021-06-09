@@ -72,5 +72,6 @@ pub fn negamax(mut state: &mut State, depth: i32, mut alpha: i64, mut beta: i64)
 	else {
         transpotable::tt_insert(state,depth,Flag::EXACT);
 	}
+	state.heuristic = value;
     return state.heuristic;
 }
