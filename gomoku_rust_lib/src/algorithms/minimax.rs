@@ -18,7 +18,12 @@ pub fn minimax(
     update_node_checked_count();
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
-        return state.heuristic;
+		if state_is_terminated(state) == true {
+            state.heuristic = heuristic_ratios::MAX_VALUE;
+            return heuristic_ratios::MAX_VALUE;
+        } else {
+            return state.heuristic;
+        }
     }
     state.available_move = create_child(&mut state);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));

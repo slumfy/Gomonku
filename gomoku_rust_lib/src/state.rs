@@ -91,10 +91,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 			state.heuristic,
         );
         child.heuristic = heuristic(&mut child);
-		if child.color == -1 && state.heuristic == heuristic_ratios::MAX_VALUE {
-			child.heuristic == heuristic_ratios::MAX_VALUE;
-		}
-		else if child.color == 1 {
+		if child.color == 1 {
 			child.heuristic = child.heuristic + child.previous_heuristic;
 		}
 		else {
@@ -153,6 +150,6 @@ pub fn state_is_terminated(state: &mut State) -> bool {
         return true;
     } else if state.board_info.pattern_axe[0].1 == 5 {
         return true;
-    }
+	}
     return false;
 }
