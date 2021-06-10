@@ -30,6 +30,7 @@ use bitboards::create_bits_axes_from_pos;
 use check_move::__pyo3_get_function_check_move_is_still_winning;
 use check_move::check_pos_still_win;
 use check_move::checking_and_apply_bits_move;
+use crate::heuristic::heuristic;
 
 use tests::__pyo3_get_function_pytest_ai_move;
 use tests::__pyo3_get_function_pytest_algorithm_benchmark;
@@ -81,7 +82,8 @@ pub fn ai_move(
         wining_position,
 		0
     );
-    get_move_info(&mut state);
+    state.board_info = get_move_info(&mut state);
+	// state.heuristic = heuristic(&mut state);
     let mut time: u128 = 0;
     let start_time = Instant::now();
     if turn == 0 {
@@ -136,7 +138,7 @@ fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {
     let ai_move: (usize, i64);
     algorithms::negamax(state, 1,heuristic_ratios::MIN_VALUE, heuristic_ratios::MAX_VALUE);
     ai_move = algorithms::return_move(state);
-    if ai_move.1 == heuristic_ratios::MIN_VALUE {
+    if ai_move.1 == heuristic_ratios::MIN_VALUE || ai_move.1 == heuristic_ratios::MAX_VALUE {
         return true;
     } else {
         return false;

@@ -91,10 +91,10 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 			state.heuristic,
         );
         child.heuristic = heuristic(&mut child);
-		if child.color == 1 {
+		if child.color == 1 && child.heuristic != heuristic_ratios::MAX_VALUE && child.heuristic != heuristic_ratios::MIN_VALUE {
 			child.heuristic = child.heuristic + child.previous_heuristic;
 		}
-		else {
+		else if child.heuristic != heuristic_ratios::MAX_VALUE && child.heuristic != heuristic_ratios::MIN_VALUE {
 			child.heuristic = -child.heuristic + child.previous_heuristic;
 		}
         if child.board_info.stone_captured > state.max_capturing_stone_next_move {
@@ -106,11 +106,11 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         //     saved_child = child.clone();
         // }
         // let mut playable: bool = false;
-        if child.heuristic == heuristic_ratios::MAX_VALUE { // ????
-            childs_list.clear();
-            childs_list.push(child);
-            break;
-        }
+        // if child.heuristic == heuristic_ratios::MAX_VALUE {
+        //     childs_list.clear();
+        //     childs_list.push(child);
+        //     break;
+        // }
         // if child.is_playable == 0 {
         //     for x in 0..4 {
         //         if child.board_info.pattern_axe[x].1 != 3 {
@@ -148,8 +148,9 @@ pub fn state_is_terminated(state: &mut State) -> bool {
             && state.total_black_captured_stone >= 10)
     {
         return true;
-    } else if state.board_info.pattern_axe[0].1 == 5 {
-        return true;
+    }
+	if state.win_state.1 != 0 && state.win_state.1 != state.current_player {
+		return true;
 	}
     return false;
 }

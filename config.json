@@ -3,7 +3,7 @@
 	"ai_depth": 5,
 	"second_ai_depth": 5,
 	"ai_helper": false,
-	"ai_helper_depth": 2,
+	"ai_helper_depth": 5,
 	"display_ai_time": true,
 	"search_box": false,
 	"theme": 1

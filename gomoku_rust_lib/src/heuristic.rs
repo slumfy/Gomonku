@@ -11,7 +11,6 @@ use crate::heuristic_ratios;
 pub fn heuristic(state: &mut State) -> i64 {
     let mut value: i64 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
-
     if !is_playable_move(state, &board_state_info) {
         state.is_playable = -1;
         return heuristic_ratios::MIN_VALUE;
@@ -243,11 +242,13 @@ fn is_playable_move(state: &mut State, board_state_info: &BoardStateInfo) -> boo
 fn is_in_winning_pos(state: &mut State) -> i64 {
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
-            if state.current_player == state.win_state.1 {
-                return heuristic_ratios::MAX_VALUE;
-            } else {
-                return heuristic_ratios::MIN_VALUE;
-            }
+            if state.current_player != state.win_state.1 {
+				if state.color == -1 {
+					return heuristic_ratios::MAX_VALUE;
+				} else {
+					return heuristic_ratios::MIN_VALUE;
+				}
+			}
         } else {
             state.win_state = (0, 0);
         }

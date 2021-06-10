@@ -1,5 +1,6 @@
 use crate::algorithms::algo_utils::update_max_depth;
 use crate::algorithms::algo_utils::update_node_checked_count;
+use crate::algorithms::algo_utils::update_pruning_count;
 // use crate::algorithms::algo_utils::update_pruning_count;
 // use crate::algorithms::transpotable;
 use crate::data_struct::State;
@@ -19,11 +20,9 @@ pub fn minimax(
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
 		if state_is_terminated(state) == true {
-            state.heuristic = heuristic_ratios::MAX_VALUE;
-            return heuristic_ratios::MAX_VALUE;
-        } else {
-            return state.heuristic;
-        }
+		println!("heuristic {} player {}",state.heuristic, state.current_player);
+		}
+        return state.heuristic;
     }
     state.available_move = create_child(&mut state);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
@@ -40,10 +39,11 @@ pub fn minimax(
                 false,
             );
             value = std::cmp::max(value, minimax_value);
-            alpha = std::cmp::max(alpha, value);
-            if alpha >= beta {
+            if value >= beta {
+				update_pruning_count();
                 break;
             }
+			alpha = std::cmp::max(alpha, value);
         }
     } else {
         value = heuristic_ratios::MAX_VALUE;
@@ -57,10 +57,11 @@ pub fn minimax(
                 true,
             );
             value = std::cmp::min(value, minimax_value);
-            beta = std::cmp::min(alpha, value);
-            if alpha >= beta {
+            if value <= alpha {
+				update_pruning_count();
                 break;
             }
+			beta = std::cmp::min(alpha, value);
         }
     }
     state.heuristic = value;
