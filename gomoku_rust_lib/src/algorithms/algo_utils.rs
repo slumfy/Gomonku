@@ -28,12 +28,29 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
 		println!("player {},  heuristic {}",state.available_move[child].current_player, state.available_move[child].heuristic);
 	}
 	state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+	print_tree_path(state);
 	println!("return move {:?} {:?}",state.available_move[0].current_move_pos,
 	state.available_move[0].heuristic);
     return (
         (state.available_move[0].current_move_pos),
         state.available_move[0].heuristic,
     );
+}
+
+fn print_tree_path(state: &mut State) {
+	let mut node = state;
+	while true {
+		for child in 0..node.available_move.len() {
+			if node.available_move[child].heuristic == node.heuristic {
+				println!("PLAYER {} MOVE {}", node.available_move[child].current_player,node.available_move[child].current_move_pos);
+				node = &mut node.available_move[child];
+				break ;
+			}
+		}
+		if node.available_move.len() == 0 {
+			break;
+		}
+	}
 }
 
 pub fn update_max_depth(depth: i32) {

@@ -21,7 +21,7 @@ pub fn minimax(
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
 		if state_is_terminated(state) == true {
-		println!("heuristic {} winstate {:?} player {}",state.heuristic, state.win_state, state.current_player);
+		// println!("heuristic {} winstate {:?} player {}",state.heuristic, state.win_state, state.current_player);
 		}
         return state.heuristic;
     }
