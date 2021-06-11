@@ -92,9 +92,11 @@ pub fn create_child(state: &mut State) -> Vec<State> {
         );
         child.heuristic = heuristic(&mut child);
 		if child.color == 1 && child.heuristic != heuristic_ratios::MAX_VALUE && child.heuristic != heuristic_ratios::MIN_VALUE {
+			// println!("ADD heur {} previous {}", child.heuristic, child.previous_heuristic);
 			child.heuristic = child.heuristic + child.previous_heuristic;
 		}
 		else if child.heuristic != heuristic_ratios::MAX_VALUE && child.heuristic != heuristic_ratios::MIN_VALUE {
+			// println!("SUB heur {} previous {}", child.heuristic, child.previous_heuristic);
 			child.heuristic = -child.heuristic + child.previous_heuristic;
 		}
         if child.board_info.stone_captured > state.max_capturing_stone_next_move {

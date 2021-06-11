@@ -8,6 +8,7 @@ use crate::heuristic_ratios;
 use crate::state::create_child;
 use crate::state::state_is_terminated;
 use std::cmp::Reverse;
+use crate::global_var;
 
 pub fn minimax(
     mut state: &mut State,
@@ -20,14 +21,22 @@ pub fn minimax(
     update_max_depth(depth);
     if depth == 0 || state_is_terminated(state) == true {
 		if state_is_terminated(state) == true {
-		println!("heuristic {} player {}",state.heuristic, state.current_player);
+		println!("heuristic {} winstate {:?} player {}",state.heuristic, state.win_state, state.current_player);
 		}
         return state.heuristic;
     }
     state.available_move = create_child(&mut state);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
+	unsafe {
+	if depth == global_var::DEPTH {
+		for child in 0..state.available_move.len() {
+			println!("player {},  heuristic {}",state.available_move[child].current_player, state.available_move[child].heuristic);
+		}
+	}
+}
     let mut value: i64;
     if maximizingplayer == true {
+		state.available_move.sort_by_key(|d| Reverse(d.heuristic));
         value = heuristic_ratios::MIN_VALUE;
         for child_index in 0..state.available_move.len() {
             let minimax_value;
@@ -46,6 +55,7 @@ pub fn minimax(
 			alpha = std::cmp::max(alpha, value);
         }
     } else {
+		state.available_move.sort_by_key(|d| d.heuristic);
         value = heuristic_ratios::MAX_VALUE;
         for child_index in 0..state.available_move.len() {
             let minimax_value;
