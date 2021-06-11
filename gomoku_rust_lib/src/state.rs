@@ -32,6 +32,7 @@ pub fn create_new_state(
         all_depth_black_captured_stone_value: all_depth_black_captured_stone_value,
         available_move: vec![],
 		previous_heuristic: previous_heuristic,
+		saved_heuristic: 0,
         heuristic: 0,
         is_playable: 0,
         win_state: win_state,
@@ -91,6 +92,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 			state.heuristic,
         );
         child.heuristic = heuristic(&mut child);
+		child.saved_heuristic = child.heuristic;
 		if child.color == 1 && child.heuristic != heuristic_ratios::MAX_VALUE && child.heuristic != heuristic_ratios::MIN_VALUE {
 			// println!("ADD heur {} previous {}", child.heuristic, child.previous_heuristic);
 			child.heuristic = child.heuristic + child.previous_heuristic;

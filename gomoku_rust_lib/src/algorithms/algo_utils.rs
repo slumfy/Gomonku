@@ -42,7 +42,7 @@ fn print_tree_path(state: &mut State) {
 	while true {
 		for child in 0..node.available_move.len() {
 			if node.available_move[child].heuristic == node.heuristic {
-				println!("PLAYER {} MOVE {}", node.available_move[child].current_player,node.available_move[child].current_move_pos);
+				println!("PLAYER {} MOVE {} previous heuristic {} saved heuristic {} heuristic {}", node.available_move[child].current_player,node.available_move[child].current_move_pos,node.available_move[child].previous_heuristic,node.available_move[child].saved_heuristic,node.available_move[child].heuristic);
 				node = &mut node.available_move[child];
 				break ;
 			}
