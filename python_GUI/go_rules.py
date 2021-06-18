@@ -58,7 +58,7 @@ class GoRules:
                     rust_place_stone_res["stone_captured"],
                 )
             )
-            self.print_move_list()
+            # self.print_move_list()
             self.board = rust_place_stone_res["board"]
             current_player.capture_piece += rust_place_stone_res["stone_captured"]
             # gomoku_rust.show_state(rust_place_stone_res["board"], player.nb, x, y)

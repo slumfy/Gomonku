@@ -57,7 +57,6 @@ pub fn ai_move(
     search_algorithm: String,
     depth: i32,
 ) -> PyResult<((usize, usize), u128)> {
-    // println!("AIplayer {:?} x {:?} y {:?}", player, x, y);
     let total_white_captured_stone: i8;
     let total_black_captured_stone: i8;
 
@@ -85,30 +84,8 @@ pub fn ai_move(
     if turn == 0 {
         ai_move = (180, 0);
     } else {
-        if search_algorithm == "negamax" {
-            println!("using negamax");
-            state.heuristic = 0;
-            // For alpha, sending  min value + 1 to prevent overflow when changing sign.
-            algorithms::negamax(&mut state, depth);
-        } else if search_algorithm == "negascout" {
-            println!("using negascout");
-            algorithms::negascout(
-                &mut state,
-                depth,
-                heuristic_ratios::MIN_VALUE,
-                heuristic_ratios::MAX_VALUE,
-                player,
-            );
-        } else if search_algorithm == "minimax" {
-            println!("using minimax");
-            algorithms::minimax(
-                &mut state,
-                depth,
-                heuristic_ratios::MIN_VALUE,
-                heuristic_ratios::MAX_VALUE,
-                true,
-            );
-        }
+        state.heuristic = 0;
+        algorithms::negamax(&mut state, depth);
         ai_move = algorithms::return_move(&mut state);
     }
     if display_ai_time {
@@ -145,10 +122,6 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     unsafe {
         total_white_captured_stone = global_var::TOTAL_WHITE_CAPTURED_STONE;
         total_black_captured_stone = global_var::TOTAL_BLACK_CAPTURED_STONE;
-        println!(
-            "whitcap {} blackcap {}",
-            total_white_captured_stone, total_black_captured_stone
-        );
     }
     let current_move_pos: usize = x * 19 + y;
 
@@ -166,10 +139,10 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     state.axes = create_bits_axes_from_pos(current_move_pos, &mut bitboards);
 
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(&mut state);
-    println!(
-        "boardstate of returning move {} : {:?}",
-        state.current_move_pos, board_state_info
-    );
+    // println!(
+    //     "boardstate of returning move {} : {:?}",
+    //     state.current_move_pos, board_state_info
+    // );
     if board_state_info.is_wrong_move == global_var::VALID_MOVE {
         dict.set_item("game_status", 0)?;
         dict.set_item("stone_captured", board_state_info.stone_captured)?;
@@ -197,6 +170,7 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     }
     board = bitboards::create_vec_from_bitboards(&state.bitboards);
     dict.set_item("board", board)?;
+	println!("");
     Ok(dict.to_object(py))
 }
 
