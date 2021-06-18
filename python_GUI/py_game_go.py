@@ -129,24 +129,17 @@ class PyGameGo:
         )
         self.print_font(
             64,
-            "Algorithm: " + self.search_algorithm,
+            "Starting color: "
+            + ("White" if self.starting_stone_color == PLAYER_WHITE_NB else "Black"),
             145,
             350,
             "BLACK_BLUE_ONE",
         )
         self.print_font(
             64,
-            "Starting color: "
-            + ("White" if self.starting_stone_color == PLAYER_WHITE_NB else "Black"),
-            145,
-            450,
-            "BLACK_BLUE_ONE",
-        )
-        self.print_font(
-            64,
             "AI Helper: " + ("True" if self.ai_helper else "False"),
             145,
-            550,
+            450,
             "BLACK_BLUE_ONE",
         )
         pygame.display.flip()
@@ -212,23 +205,12 @@ class PyGameGo:
                         if self.depth > 1:
                             self.depth -= 1
                         self.display_setting_page()
-                    # change algorithm
-                    elif event.pos[1] >= 300 and event.pos[1] < 400:
-                        for algo in range(0, ALGORITHM.__len__()):
-                            if algo == ALGORITHM.__len__() - 1:
-                                self.search_algorithm = ALGORITHM[0]
-                                break
-                            if ALGORITHM[algo] == self.search_algorithm:
-                                self.search_algorithm = ALGORITHM[algo + 1]
-                                print(self.search_algorithm)
-                                break
-                        self.display_setting_page()
                     # change first player color
-                    elif event.pos[1] >= 400 and event.pos[1] < 500:
+                    elif event.pos[1] >= 300 and event.pos[1] < 400:
                         self.starting_stone_color = -self.starting_stone_color
                         self.display_setting_page()
                     # change first player color
-                    elif event.pos[1] >= 500 and event.pos[1] < 600:
+                    elif event.pos[1] >= 400 and event.pos[1] < 600:
                         self.ai_helper = False if self.ai_helper else True
                         self.display_setting_page()
                     # Click on sound icon
@@ -252,26 +234,18 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    # Click on playing AI vs AI button
-                    if event.pos[1] <= 505 and event.pos[1] >= 430:
-                        print("AI vs AI clicked.")
-                        self.ai_vs_ai = True
-                        go_rules.player_list[0].player_type = 1
-                        go_rules.player_list[1].player_type = 1
-                        go_rules.ai_versus = 1
-                        self.playing(go_rules=go_rules)
                     # Click on playing human vs AI button
-                    if event.pos[1] <= 585 and event.pos[1] > 505:
+                    if event.pos[1] <= 505 and event.pos[1] >= 430:
                         print("Human vs AI clicked.")
                         go_rules.player_list[1].player_type = PlayerType.AI.value
                         self.playing(go_rules=go_rules)
                     # Click on playing human vs human button
-                    if event.pos[1] <= 665 and event.pos[1] > 585:
+                    if event.pos[1] <= 585 and event.pos[1] > 505:
                         print("Human vs Human clicked.")
                         go_rules.player_list[1].player_type = PlayerType.HUMAN.value
                         self.playing(go_rules=go_rules)
                     # Click on settings
-                    if event.pos[1] <= 765 and event.pos[1] > 665:
+                    if event.pos[1] <= 665 and event.pos[1] > 585:
                         print("Settings clicked.")
                         go_rules.player_list[1].player_type = PlayerType.HUMAN.value
                         self.settings()
