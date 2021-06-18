@@ -25,7 +25,7 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
 	// 	}
 	// }
 	for child in 0..state.available_move.len() {
-		println!("player {},  heuristic {}",state.available_move[child].current_player, state.available_move[child].heuristic);
+		// println!("player {},  heuristic {}",state.available_move[child].current_player, state.available_move[child].heuristic);
 	}
 	state.available_move.sort_by_key(|d| Reverse(d.heuristic));
 	print_tree_path(state);
@@ -42,7 +42,8 @@ fn print_tree_path(state: &mut State) {
 	while true {
 		for child in 0..node.available_move.len() {
 			if node.available_move[child].heuristic == node.heuristic {
-				println!("PLAYER {} MOVE {} previous heuristic {} saved heuristic {} heuristic {}", node.available_move[child].current_player,node.available_move[child].current_move_pos,node.available_move[child].previous_heuristic,node.available_move[child].saved_heuristic,node.available_move[child].heuristic);
+				println!("PLAYER {} color {} MOVE {} previous heuristic {} saved heuristic {} heuristic {}", node.available_move[child].current_player,node.available_move[child].color,node.available_move[child].current_move_pos,node.available_move[child].previous_heuristic,node.available_move[child].saved_heuristic,node.available_move[child].heuristic);
+				println!("stateinfo {:?}", node.available_move[child].board_info);
 				node = &mut node.available_move[child];
 				break ;
 			}

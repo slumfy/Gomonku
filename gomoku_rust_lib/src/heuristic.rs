@@ -7,7 +7,7 @@ use crate::data_struct::BoardStateInfo;
 use crate::data_struct::State;
 use crate::global_var;
 use crate::heuristic_ratios;
-
+ 
 pub fn heuristic(state: &mut State) -> i64 {
     let mut value: i64 = 0;
     let board_state_info: BoardStateInfo = checking_and_apply_bits_move(state);
@@ -240,9 +240,9 @@ fn is_playable_move(state: &mut State, board_state_info: &BoardStateInfo) -> boo
 }
 
 fn is_in_winning_pos(state: &mut State) -> i64 {
-	if state.win_state.1 != 0 {
-		println!("winstate {:?}", state.win_state);
-	}
+	// if state.win_state.1 != 0 {
+	// 	println!("winstate {:?}", state.win_state);
+	// }
     if state.win_state.1 != 0 {
         if check_pos_still_win(state.bitboards, state.win_state.0, state.win_state.1) == true {
             if state.current_player != state.win_state.1 {

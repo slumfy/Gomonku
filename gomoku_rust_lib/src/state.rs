@@ -97,7 +97,7 @@ pub fn create_child(state: &mut State) -> Vec<State> {
 			// println!("ADD heur {} previous {}", child.heuristic, child.previous_heuristic);
 			child.heuristic = child.heuristic + child.previous_heuristic;
 		}
-		else if child.heuristic != heuristic_ratios::MAX_VALUE && child.heuristic != heuristic_ratios::MIN_VALUE {
+		else if child.color == -1 && child.heuristic != heuristic_ratios::MAX_VALUE && child.heuristic != heuristic_ratios::MIN_VALUE {
 			// println!("SUB heur {} previous {}", child.heuristic, child.previous_heuristic);
 			child.heuristic = -child.heuristic + child.previous_heuristic;
 		}

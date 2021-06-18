@@ -26,7 +26,6 @@ pub fn minimax(
         return state.heuristic;
     }
     state.available_move = create_child(&mut state);
-    state.available_move.sort_by_key(|d| Reverse(d.heuristic));
 	unsafe {
 	if depth == global_var::DEPTH {
 		for child in 0..state.available_move.len() {
