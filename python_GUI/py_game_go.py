@@ -152,7 +152,6 @@ class PyGameGo:
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    print(event.pos)
                     # Return to menu button
                     if (
                         event.pos[1] >= 0
