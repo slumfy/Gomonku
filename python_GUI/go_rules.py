@@ -86,7 +86,7 @@ class GoRules:
             return 0
 
     def AI_move(self, player, x, y, turn, display_ai_time: bool, search_algorithm: str, depth):
-        print("player nb = ", player.nb, "x = ", x, "y = ", y)
+        # print("player nb = ", player.nb, "x = ", x, "y = ", y)
         winpos = (0, 0)
         for p in self.player_list:
             if p.wining_position[1] != 0:
@@ -103,7 +103,7 @@ class GoRules:
             search_algorithm,
             depth,
         )
-        print("AI: ", move)
+        # print("AI: ", move)
         return move
 
     def print_search_box(self, player, x, y, turn):

@@ -91,7 +91,7 @@ pub fn ai_move(
     if display_ai_time {
         let end_time = Instant::now();
         time = end_time.duration_since(start_time).as_millis();
-        println!("time to process {:?}", time);
+        // println!("time to process {:?}", time);
     }
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
@@ -170,7 +170,6 @@ fn place_stone(mut board: Vec<Vec<i8>>, player: i8, x: usize, y: usize) -> PyRes
     }
     board = bitboards::create_vec_from_bitboards(&state.bitboards);
     dict.set_item("board", board)?;
-	println!("");
     Ok(dict.to_object(py))
 }
 
