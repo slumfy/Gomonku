@@ -64,13 +64,6 @@ class GoRules:
             # gomoku_rust.show_state(rust_place_stone_res["board"], player.nb, x, y)
             if current_player.capture_piece >= 10:
                 return current_player.nb
-            if "wining_position" in rust_place_stone_res.keys():
-                for player in self.player_list:
-                    if player.nb == current_player.nb:
-                        player.wining_position = rust_place_stone_res["wining_position"]
-                        # If player win, no need to go further, return the winning player.
-                        if rust_place_stone_res["player_win"]:
-                            return player.nb
             for player in self.player_list:
                 if player != current_player:
                     if player.wining_position[1] != 0:
@@ -83,6 +76,13 @@ class GoRules:
                             return player.nb
                         else:
                             player.wining_position = (0, 0)
+            if "wining_position" in rust_place_stone_res.keys():
+                for player in self.player_list:
+                    if player.nb == current_player.nb:
+                        player.wining_position = rust_place_stone_res["wining_position"]
+                        # If player win, no need to go further, return the winning player.
+                        if rust_place_stone_res["player_win"]:
+                            return player.nb
             return 0
 
     def AI_move(self, player, x, y, turn, display_ai_time: bool, depth):
