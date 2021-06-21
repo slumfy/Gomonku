@@ -9,7 +9,7 @@ pub static mut NODE_CHECKED_COUNT: i32 = 0;
 // nb of pruning cut
 pub static mut PRUNING_COUNT: i32 = 0;
 // nb of transpotable cut
-pub static mut TT_COUNT: i32 = 0;
+//	 pub static mut TT_COUNT: i32 = 0;
 // Capturing stone count
 pub static mut TOTAL_WHITE_CAPTURED_STONE: i8 = 0;
 pub static mut TOTAL_BLACK_CAPTURED_STONE: i8 = 0;

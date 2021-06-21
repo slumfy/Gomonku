@@ -64,8 +64,8 @@ pub static BLOCKER: [[i64; 3]; 9] = [
 ];
 
 pub fn exponential_heuristic_capture_stone_calculator(opponent_stone_captured: i8) -> i64 {
-    let mut multiplier = opponent_stone_captured / 2;
-    let mut value = CAPTURE_STONE;
+    // let mut multiplier = opponent_stone_captured / 2;
+    // let mut value = CAPTURE_STONE;
     if opponent_stone_captured >= 8 {
         return CAPTURE_TEN_STONE;
     }

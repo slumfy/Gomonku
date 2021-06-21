@@ -6,20 +6,21 @@ pub struct Bitboards {
 }
 
 /// Transpo table Node
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
-pub struct Transpotablenode {
-    pub hash: u64,
-    pub depth: i32,
-    pub value: i64,
-    pub flag: Flag,
-}
+// #[derive(Copy, Clone, Eq, PartialEq, Debug)]
+// pub struct Transpotablenode {
+//     pub hash: u64,
+//     pub depth: i32,
+// 	pub player: i8,
+//     pub value: i64,
+//     pub flag: Flag,
+// }
 
-#[derive(Copy, Clone, Eq, PartialEq, Debug)]
-pub enum Flag {
-    EXACT,
-    LOWERBOUND,
-    UPPERBOUND,
-}
+// #[derive(Copy, Clone, Eq, PartialEq, Debug)]
+// pub enum Flag {
+//     EXACT,
+//     LOWERBOUND,
+//     UPPERBOUND,
+// }
 
 /// State struct corresponding to an instant board value for a given player.
 #[derive(Clone, Debug)]

@@ -12,10 +12,12 @@ lazy_static! {
 pub fn tt_insert(state: &State, depth: i32, flag: Flag) {
     let mut hash = DefaultHasher::new();
     state.bitboards.hash(&mut hash);
+	state.current_player.hash(&mut hash);
     let state_hash: u64 = hash.finish();
     let new_table_node = Transpotablenode {
         hash: state_hash,
         depth: depth,
+		player: state.current_player,
         value: state.heuristic,
 		flag,
     };

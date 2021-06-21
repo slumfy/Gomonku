@@ -308,7 +308,6 @@ class PyGameGo:
                         y,
                         self.moves_count,
                         self.display_ai_time,
-                        self.search_algorithm,
                         self.depth,
                     )
                 else:
@@ -318,7 +317,6 @@ class PyGameGo:
                         y,
                         self.moves_count,
                         self.display_ai_time,
-                        self.search_algorithm,
                         self.ai_helper_depth,
                     )
             if self.player.player_type == PlayerType.HUMAN.value and self.ai_helper == True:
@@ -338,7 +336,6 @@ class PyGameGo:
                         y,
                         self.moves_count,
                         self.display_ai_time,
-                        self.search_algorithm,
                         self.depth,
                     )
                 else:
@@ -348,7 +345,6 @@ class PyGameGo:
                         y,
                         self.moves_count,
                         self.display_ai_time,
-                        self.search_algorithm,
                         self.ai_black_depth,
                     )
                 x, y = AI_move[0]

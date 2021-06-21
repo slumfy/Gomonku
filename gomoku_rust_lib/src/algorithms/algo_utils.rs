@@ -1,8 +1,7 @@
 use crate::data_struct::State;
 use crate::global_var;
-use crate::print::print_heuristic_table;
+// use crate::print::print_heuristic_table;
 use std::cmp::Reverse;
-use crate::algorithms::transpotable::clear_tt_table;
 
 pub fn return_move(state: &mut State) -> (usize, i64) {
     // print_heuristic_table(state);
@@ -15,8 +14,8 @@ pub fn return_move(state: &mut State) -> (usize, i64) {
 	reset_max_depth();
     reset_node_checked_count();
     reset_pruning_count();
-    reset_tt_count();
-	clear_tt_table();
+    // reset_tt_count();
+	// clear_tt_table();
 	state.available_move.sort_by_key(|d| Reverse(d.heuristic));
 	// println!("return move {:?} {:?}",state.available_move[0].current_move_pos,
 	// state.available_move[0].heuristic);
@@ -64,14 +63,14 @@ pub fn reset_pruning_count() {
     }
 }
 
-pub fn update_tt_count() {
-    unsafe {
-        global_var::TT_COUNT += 1;
-    }
-}
+// pub fn update_tt_count() {
+//     unsafe {
+//         global_var::TT_COUNT += 1;
+//     }
+// }
 
-pub fn reset_tt_count() {
-    unsafe {
-        global_var::TT_COUNT = 0;
-    }
-}
+// pub fn reset_tt_count() {
+//     unsafe {
+//         global_var::TT_COUNT = 0;
+//     }
+// }

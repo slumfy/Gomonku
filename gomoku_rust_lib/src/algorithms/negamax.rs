@@ -1,11 +1,11 @@
 use crate::algorithms::algo_utils::update_max_depth;
 use crate::algorithms::algo_utils::update_node_checked_count;
 use crate::algorithms::algo_utils::update_pruning_count;
-use crate::algorithms::algo_utils::update_tt_count;
-use crate::algorithms::transpotable;
-use crate::data_struct::Flag;
+// use crate::algorithms::algo_utils::update_tt_count;
+// use crate::algorithms::transpotable;
+// use crate::data_struct::Flag;
 use crate::data_struct::State;
-use crate::global_var;
+// use crate::global_var;
 use crate::heuristic_ratios;
 use crate::state::create_child;
 use crate::state::state_is_terminated;

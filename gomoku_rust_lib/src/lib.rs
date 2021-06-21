@@ -21,8 +21,8 @@ mod state;
 mod tests;
 mod utils;
 
-#[macro_use]
-extern crate lazy_static;
+// #[macro_use]
+// extern crate lazy_static;
 
 use crate::check_move::get_move_info;
 use crate::data_struct::BoardStateInfo;
@@ -54,7 +54,6 @@ pub fn ai_move(
     turn: isize,
     wining_position: (usize, i8),
     display_ai_time: bool,
-    search_algorithm: String,
     depth: i32,
 ) -> PyResult<((usize, usize), u128)> {
     let total_white_captured_stone: i8;
@@ -187,7 +186,7 @@ fn reset_game() {
     unsafe {
         global_var::TOTAL_WHITE_CAPTURED_STONE = 0;
         global_var::TOTAL_BLACK_CAPTURED_STONE = 0;
-        algorithms::reset_tt_table();
+        // algorithms::reset_tt_table();
     }
 }
 #[pyfunction]

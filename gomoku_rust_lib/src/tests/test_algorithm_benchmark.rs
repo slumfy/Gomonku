@@ -4,7 +4,7 @@ use crate::bitboard_operations::apply_bit;
 use crate::data_struct;
 use crate::data_struct::Bitboards;
 use crate::global_var;
-use crate::heuristic_ratios;
+// use crate::heuristic_ratios;
 use crate::state;
 use colour::{green_ln, red_ln};
 use std::thread;
