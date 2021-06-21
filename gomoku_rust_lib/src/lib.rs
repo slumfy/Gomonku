@@ -55,7 +55,7 @@ pub fn ai_move(
     wining_position: (usize, i8),
     display_ai_time: bool,
     depth: i32,
-) -> PyResult<((usize, usize), u128)> {
+) -> PyResult<((usize, usize), u128, i32)> {
     let total_white_captured_stone: i8;
     let total_black_captured_stone: i8;
 
@@ -78,6 +78,7 @@ pub fn ai_move(
         wining_position,
     );
     get_move_info(&mut state);
+	let mut depth_reach: i32 = 0;
     let mut time: u128 = 0;
     let start_time = Instant::now();
     if turn == 0 {
@@ -85,6 +86,7 @@ pub fn ai_move(
     } else {
         state.heuristic = 0;
         algorithms::negamax(&mut state, depth);
+		unsafe {depth_reach = global_var::MAX_DEPTH_REACH;}
         ai_move = algorithms::return_move(&mut state);
     }
     if display_ai_time {
@@ -94,7 +96,7 @@ pub fn ai_move(
     }
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;
-    Ok(((ai_x_move, ai_y_move), time))
+    Ok(((ai_x_move, ai_y_move), time, depth_reach))
 }
 
 fn player_win(state: &mut data_struct::State, _opponent: i8) -> bool {

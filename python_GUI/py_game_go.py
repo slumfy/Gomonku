@@ -351,7 +351,7 @@ class PyGameGo:
                 stone_status = go_rules.place_stone(current_player=self.player, x=x, y=y)
                 self.play_piece(go_rules, stone_status, win_status, x, y)
                 self.print_player_to_move()
-                self.print_AI_timer(AI_move[1])
+                self.print_AI_timer(AI_move[1], AI_move[2])
                 ai_helper = None
             else:
                 for event in pygame.event.get():
@@ -504,11 +504,11 @@ class PyGameGo:
             "BLACK_BLUE_ONE",
         )
 
-    def print_AI_timer(self, time):
+    def print_AI_timer(self, time, depth):
         self.print_font(
             32,
-            "Time :  " + str(time) + " ms",
-            440,
+            "Time :  " + str(time) + " ms " + "Depth : " + str(depth),
+            400,
             40,
             "BLACK_BLUE_ONE",
         )
