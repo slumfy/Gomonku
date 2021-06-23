@@ -117,15 +117,16 @@ pub fn create_child(state: &mut State) -> Vec<State> {
     return childs_list;
 }
 
-pub fn state_is_terminated(state: &mut State) -> bool {
+pub fn state_is_terminated(state: &mut State) -> i8 {
     if (state.current_player == global_var::PLAYER_WHITE_NB
         && state.total_white_captured_stone >= 10)
         || (state.current_player == global_var::PLAYER_BLACK_NB
             && state.total_black_captured_stone >= 10)
     {
-        return true;
-    } else if state.board_info.pattern_axe[0].1 == 5 {
-        return true;
+        return 1;
     }
-    return false;
+	if state.win_state.1 != 0 && state.win_state.1 != state.current_player {
+		return -1;
+	}
+    return 0;
 }

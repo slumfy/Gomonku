@@ -1,16 +1,16 @@
 use crate::data_struct::State;
 use crate::global_var;
-// use crate::print::print_heuristic_table;
+use crate::print::print_heuristic_table;
 use std::cmp::Reverse;
 
 pub fn return_move(state: &mut State) -> (usize, i64) {
-    // print_heuristic_table(state);
-    // unsafe {
-    //     println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
-    //     println!("nb of node checked: {:?}", global_var::NODE_CHECKED_COUNT);
-    //     println!("pruning count: {:?}", global_var::PRUNING_COUNT);
-    //     println!("TT cut count: {:?}", global_var::TT_COUNT);
-    // }
+    print_heuristic_table(state);
+    unsafe {
+        println!("MAX DEPTH: {}", global_var::MAX_DEPTH_REACH);
+        println!("nb of node checked: {:?}", global_var::NODE_CHECKED_COUNT);
+        println!("pruning count: {:?}", global_var::PRUNING_COUNT);
+        // println!("TT cut count: {:?}", global_var::TT_COUNT);
+    }
 	reset_max_depth();
     reset_node_checked_count();
     reset_pruning_count();

@@ -14,13 +14,14 @@ use std::cmp::Reverse;
 pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
     update_node_checked_count();
     update_max_depth(depth);
-    if depth == 0 || state_is_terminated(state) == true {
-        if state_is_terminated(state) == true {
+	let terminated_value = state_is_terminated(state);
+    if depth == 0 || terminated_value != 0 {
+        if terminated_value == 1 {
             state.heuristic = heuristic_ratios::MAX_VALUE;
-            return heuristic_ratios::MAX_VALUE;
-        } else {
+        } else if terminated_value == -1 {
+			state.heuristic = heuristic_ratios::MIN_VALUE;
+		}
             return state.heuristic;
-        }
     }
     state.available_move = create_child(&mut state);
     state.available_move.sort_by_key(|d| Reverse(d.heuristic));
@@ -52,6 +53,10 @@ pub fn negamax(mut state: &mut State, depth: i32) -> i64 {
     // Terminated state on depth, return opposite value.
     if value == heuristic_ratios::MAX_VALUE {
         state.heuristic = heuristic_ratios::MIN_VALUE;
+        return state.heuristic;
+    }
+	if value == heuristic_ratios::MIN_VALUE {
+        state.heuristic = heuristic_ratios::MAX_VALUE;
         return state.heuristic;
     }
 
