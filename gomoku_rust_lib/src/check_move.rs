@@ -13,7 +13,6 @@ use crate::global_var;
 use crate::global_var::BLOCKER;
 use crate::global_var::CAPTURE_PATTERN;
 use crate::global_var::PATTERN;
-// use crate::print::print_axes;
 use crate::utils::is_on_axe;
 use pyo3::prelude::*;
 
