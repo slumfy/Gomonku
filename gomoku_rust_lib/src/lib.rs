@@ -92,7 +92,6 @@ pub fn ai_move(
     if display_ai_time {
         let end_time = Instant::now();
         time = end_time.duration_since(start_time).as_millis();
-        // println!("time to process {:?}", time);
     }
     let ai_x_move = (ai_move.0 / 19) as usize;
     let ai_y_move = (ai_move.0 % 19) as usize;

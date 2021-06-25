@@ -164,13 +164,13 @@ pub fn print_heuristic_table(state: &State) {
         table.push(line);
         line = vec![];
     }
-    println!("heuristic table:");
-    for x in 0..(table.len()) {
-        for y in 0..(table.len()) {
-            print!("{:5}", table[x][y]);
-        }
-        println!("");
-    }
+    // println!("heuristic table:");
+    // for x in 0..(table.len()) {
+    //     for y in 0..(table.len()) {
+    //         print!("{:5}", table[x][y]);
+    //     }
+    //     println!("");
+    // }
 }
 
 #[allow(dead_code)]

@@ -58,10 +58,8 @@ class GoRules:
                     rust_place_stone_res["stone_captured"],
                 )
             )
-            # self.print_move_list()
             self.board = rust_place_stone_res["board"]
             current_player.capture_piece += rust_place_stone_res["stone_captured"]
-            # gomoku_rust.show_state(rust_place_stone_res["board"], player.nb, x, y)
             if current_player.capture_piece >= 10:
                 return current_player.nb
             for player in self.player_list:
@@ -86,7 +84,6 @@ class GoRules:
             return 0
 
     def AI_move(self, player, x, y, turn, display_ai_time: bool, depth):
-        # print("player nb = ", player.nb, "x = ", x, "y = ", y)
         winpos = (0, 0)
         for p in self.player_list:
             if p.wining_position[1] != 0:
@@ -102,7 +99,6 @@ class GoRules:
             display_ai_time,
             depth,
         )
-        # print("AI: ", move)
         return move
 
     def print_search_box(self, player, x, y, turn):
